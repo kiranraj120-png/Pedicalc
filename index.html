@@ -802,7 +802,7 @@
                         <div class="drug-info">
                             <div class="dose-info">${drug.range}</div>
                             <div class="calculation">
-                                <div class="calculation-result">${doseDisplay} ${drug.unit}</div>
+                                <div class="calculation-result">${doseDisplay} ${(drug.unit)*(kg)}</div>
                                 <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${drug.concentration} ${drug.concentrationUnit})</div>
                                 <div class="dose-info">Using: ${drug.defaultDose} ${drug.unit}</div>
                             </div>

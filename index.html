@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pediatric Anesthesia Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #212121;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+            
+            --induction: #4CAF50;
+            --muscle-relaxant: #2196F3;
+            --analgesic: #FF9800;
+            --adjunct: #9C27B0;
+            --reversal: #F44336;
+            --emergency: #E91E63;
+            --steroid: #00BCD4;
+            --antiemetic: #8BC34A;
+        }
+
+        body.dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #2a2a2a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --border-color: #404040;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: var(--text-primary);
+        }
+
+        .dark-mode-toggle {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .patient-info {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-field label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .input-field input {
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1em;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: border-color 0.3s;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+
+        .section {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .drugs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .drug-card {
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 5px solid;
+            background: var(--bg-secondary);
+            transition: all 0.3s;
+        }
+
+        .drug-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .drug-card.induction { border-left-color: var(--induction); }
+        .drug-card.muscle-relaxant { border-left-color: var(--muscle-relaxant); }
+        .drug-card.analgesic { border-left-color: var(--analgesic); }
+        .drug-card.adjunct { border-left-color: var(--adjunct); }
+        .drug-card.reversal { border-left-color: var(--reversal); }
+        .drug-card.emergency { border-left-color: var(--emergency); }
+        .drug-card.steroid { border-left-color: var(--steroid); }
+        .drug-card.antiemetic { border-left-color: var(--antiemetic); }
+
+        .drug-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .drug-name {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: var(--text-primary);
+        }
+
+        .drug-category {
+            font-size: 0.75em;
+            padding: 3px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .drug-category.induction { background: var(--induction); }
+        .drug-category.muscle-relaxant { background: var(--muscle-relaxant); }
+        .drug-category.analgesic { background: var(--analgesic); }
+        .drug-category.adjunct { background: var(--adjunct); }
+        .drug-category.reversal { background: var(--reversal); }
+        .drug-category.emergency { background: var(--emergency); }
+        .drug-category.steroid { background: var(--steroid); }
+        .drug-category.antiemetic { background: var(--antiemetic); }
+
+        .drug-info {
+            margin: 8px 0;
+        }
+
+        .dose-info {
+            font-size: 0.75em;
+            color: var(--text-tertiary);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        .calculation {
+            background: var(--bg-primary);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .calculation-result {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: var(--text-primary);
+        }
+
+        .volume-result {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .edit-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            cursor: pointer;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+
+        .edit-btn:hover {
+            background: var(--bg-secondary);
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+
+        .edit-inputs {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--bg-card);
+            border-radius: 4px;
+        }
+
+        .edit-inputs.active {
+            display: block;
+        }
+
+        .edit-inputs input {
+            width: 100%;
+            padding: 6px;
+            margin: 5px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.85em;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .equipment-card {
+            background: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .equipment-title {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .equipment-value {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .equipment-detail {
+            font-size: 0.8em;
+            color: var(--text-tertiary);
+            margin-top: 5px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #856404;
+        }
+
+        body.dark-mode .warning {
+            background: #4a3f00;
+            color: #ffeb3b;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .dark-mode-toggle, .edit-btn {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.4em;
+            }
+            
+            .drugs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pediatric Anesthesia Calculator</h1>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+        </header>
+
+        <div class="warning">
+            ⚠️ This calculator is for reference only. Always verify calculations and use clinical judgment. Dosages may need adjustment based on patient condition and local protocols.
+        </div>
+
+        <section class="patient-info">
+            <h2>Patient Information</h2>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="age">Age (years)</label>
+                    <input type="number" id="age" placeholder="Enter age" step="0.1" min="0" oninput="calculateAll()">
+                </div>
+                <div class="input-field">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
+                </div>
+                <div class="input-field">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" placeholder="Enter height" step="0.1" min="0" oninput="calculateAll()">
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Airway Equipment Sizing</h2>
+            <div id="equipment-results" class="equipment-grid"></div>
+        </section>
+
+        <section class="section">
+            <h2>Fluid Requirements</h2>
+            <div id="fluid-results" class="equipment-grid"></div>
+        </section>
+
+        <section class="section">
+            <h2>Drug Calculations</h2>
+            <div id="drug-results" class="drugs-grid"></div>
+        </section>
+    </div>
+
+    <script>
+        const drugs = [
+            {
+                name: 'Propofol',
+                category: 'induction',
+                categoryLabel: 'Induction Agent',
+                defaultDose: 2.5,
+                unit: 'mg/kg',
+                concentration: 10,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '2-3 mg/kg'
+            },
+            {
+                name: 'Thiopentone',
+                category: 'induction',
+                categoryLabel: 'Induction Agent',
+                defaultDose: 5,
+                unit: 'mg/kg',
+                concentration: 25,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '4-6 mg/kg'
+            },
+            {
+                name: 'Ketamine',
+                category: 'induction',
+                categoryLabel: 'Induction Agent',
+                defaultDose: 2,
+                unit: 'mg/kg',
+                concentration: 50,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '1-2 mg/kg IV, 4-6 mg/kg IM'
+            },
+            {
+                name: 'Vecuronium',
+                category: 'muscle-relaxant',
+                categoryLabel: 'Muscle Relaxant',
+                defaultDose: 0.1,
+                unit: 'mg/kg',
+                concentration: 1,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.08-0.1 mg/kg'
+            },
+            {
+                name: 'Rocuronium',
+                category: 'muscle-relaxant',
+                categoryLabel: 'Muscle Relaxant',
+                defaultDose: 0.6,
+                unit: 'mg/kg',
+                concentration: 10,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.6-1.2 mg/kg'
+            },
+            {
+                name: 'Atracurium',
+                category: 'muscle-relaxant',
+                categoryLabel: 'Muscle Relaxant',
+                defaultDose: 0.5,
+                unit: 'mg/kg',
+                concentration: 10,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.4-0.5 mg/kg'
+            },
+            {
+                name: 'Succinylcholine',
+                category: 'muscle-relaxant',
+                categoryLabel: 'Muscle Relaxant',
+                defaultDose: 1.5,
+                unit: 'mg/kg',
+                concentration: 20,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '1-2 mg/kg IV, 3-4 mg/kg IM'
+            },
+            {
+                name: 'Fentanyl',
+                category: 'analgesic',
+                categoryLabel: 'Opioid Analgesic',
+                defaultDose: 2,
+                unit: 'mcg/kg',
+                concentration: 50,
+                concentrationUnit: 'mcg/mL',
+                useParam: 'weight',
+                range: '1-3 mcg/kg'
+            },
+            {
+                name: 'Morphine',
+                category: 'analgesic',
+                categoryLabel: 'Opioid Analgesic',
+                defaultDose: 0.1,
+                unit: 'mg/kg',
+                concentration: 1,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.05-0.2 mg/kg'
+            },
+            {
+                name: 'Tramadol',
+                category: 'analgesic',
+                categoryLabel: 'Analgesic',
+                defaultDose: 1,
+                unit: 'mg/kg',
+                concentration: 50,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '1-2 mg/kg'
+            },
+            {
+                name: 'Paracetamol (IV)',
+                category: 'analgesic',
+                categoryLabel: 'Analgesic',
+                defaultDose: 15,
+                unit: 'mg/kg',
+                concentration: 10,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '10-15 mg/kg (max 1g)',
+                maxDose: 1000
+            },
+            {
+                name: 'Midazolam',
+                category: 'adjunct',
+                categoryLabel: 'Sedative',
+                defaultDose: 0.1,
+                unit: 'mg/kg',
+                concentration: 1,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.05-0.2 mg/kg'
+            },
+            {
+                name: 'Lidocaine (Xylocard)',
+                category: 'adjunct',
+                categoryLabel: 'Local Anesthetic',
+                defaultDose: 1.5,
+                unit: 'mg/kg',
+                concentration: 10,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '1-1.5 mg/kg IV',
+                maxDose: 3
+            },
+            {
+                name: 'Dexamethasone',
+                category: 'steroid',
+                categoryLabel: 'Steroid',
+                defaultDose: 0.15,
+                unit: 'mg/kg',
+                concentration: 4,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.1-0.2 mg/kg (max 8mg)',
+                maxDose: 8
+            },
+            {
+                name: 'Hydrocortisone',
+                category: 'steroid',
+                categoryLabel: 'Steroid',
+                defaultDose: 1,
+                unit: 'mg/kg',
+                concentration: 50,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '1-2 mg/kg'
+            },
+            {
+                name: 'Ondansetron',
+                category: 'antiemetic',
+                categoryLabel: 'Antiemetic',
+                defaultDose: 0.1,
+                unit: 'mg/kg',
+                concentration: 2,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.05-0.15 mg/kg (max 4mg)',
+                maxDose: 4
+            },
+            {
+                name: 'Metoclopramide',
+                category: 'antiemetic',
+                categoryLabel: 'Antiemetic',
+                defaultDose: 0.15,
+                unit: 'mg/kg',
+                concentration: 5,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.1-0.2 mg/kg (max 10mg)',
+                maxDose: 10
+            },
+            {
+                name: 'Atropine',
+                category: 'emergency',
+                categoryLabel: 'Anticholinergic',
+                defaultDose: 0.02,
+                unit: 'mg/kg',
+                concentration: 0.6,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.01-0.02 mg/kg (min 0.1mg)',
+                minDose: 0.1
+            },
+            {
+                name: 'Neostigmine',
+                category: 'reversal',
+                categoryLabel: 'Reversal Agent',
+                defaultDose: 0.05,
+                unit: 'mg/kg',
+                concentration: 2.5,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.04-0.08 mg/kg (max 5mg)',
+                maxDose: 5
+            },
+            {
+                name: 'Glycopyrrolate',
+                category: 'reversal',
+                categoryLabel: 'Anticholinergic',
+                defaultDose: 0.01,
+                unit: 'mg/kg',
+                concentration: 0.2,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.008-0.01 mg/kg'
+            },
+            {
+                name: 'Sugammadex',
+                category: 'reversal',
+                categoryLabel: 'Reversal Agent',
+                defaultDose: 2,
+                unit: 'mg/kg',
+                concentration: 100,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '2-4 mg/kg (routine reversal)'
+            },
+            {
+                name: 'Ephedrine',
+                category: 'emergency',
+                categoryLabel: 'Vasopressor',
+                defaultDose: 0.1,
+                unit: 'mg/kg',
+                concentration: 3,
+                concentrationUnit: 'mg/mL',
+                useParam: 'weight',
+                range: '0.05-0.1 mg/kg'
+            },
+            {
+                name: 'Adrenaline (Epinephrine)',
+                category: 'emergency',
+                categoryLabel: 'Emergency',
+                defaultDose: 10,
+                unit: 'mcg/kg',
+                concentration: 10,
+                concentrationUnit: 'mcg/mL',
+                useParam: 'weight',
+                range: '10 mcg/kg IV (1:100,000)'
+            }
+        ];
+
+        function getPatientData() {
+            return {
+                age: parseFloat(document.getElementById('age').value) || 0,
+                weight: parseFloat(document.getElementById('weight').value) || 0,
+                height: parseFloat(document.getElementById('height').value) || 0
+            };
+        }
+
+        function calculateETTSize(age) {
+            if (age < 1) return ((age * 12) / 4 + 3.5).toFixed(1);
+            if (age < 2) return '4.0';
+            return ((age / 4) + 4).toFixed(1);
+        }
+
+        function calculateETTDepth(age) {
+            const size = parseFloat(calculateETTSize(age));
+            return (size * 3).toFixed(1);
+        }
+
+        function calculateLMASize(weight) {
+            if (weight < 5) return '1';
+            if (weight < 10) return '1.5';
+            if (weight < 20) return '2';
+            if (weight < 30) return '2.5';
+            if (weight < 50) return '3';
+            return '4';
+        }
+
+        function calculateIGelSize(weight) {
+            if (weight < 5) return '1';
+            if (weight < 10) return '1.5';
+            if (weight < 25) return '2';
+            if (weight < 35) return '2.5';
+            if (weight < 60) return '3';
+            if (weight < 90) return '4';
+            return '5';
+        }
+
+        function calculateMaintenanceFluid(weight) {
+            let rate = 0;
+            if (weight <= 10) {
+                rate = weight * 4;
+            } else if (weight <= 20) {
+                rate = 40 + (weight - 10) * 2;
+            } else {
+                rate = 60 + (weight - 20) * 1;
+            }
+            return rate;
+        }
+
+        function calculateEquipment() {
+            const patient = getPatientData();
+            const equipmentHTML = `
+                <div class="equipment-card">
+                    <div class="equipment-title">ETT Size (Uncuffed)</div>
+                    <div class="equipment-value">${calculateETTSize(patient.age)}</div>
+                    <div class="equipment-detail">Depth: ${calculateETTDepth(patient.age)} cm at lips</div>
+                </div>
+                <div class="equipment-card">
+                    <div class="equipment-title">ETT Size (Cuffed)</div>
+                    <div class="equipment-value">${(calculateETTSize(patient.age) - 0.5).toFixed(1)}</div>
+                    <div class="equipment-detail">Depth: ${calculateETTDepth(patient.age)} cm at lips</div>
+                </div>
+                <div class="equipment-card">
+                    <div class="equipment-title">LMA Size</div>
+                    <div class="equipment-value">${calculateLMASize(patient.weight)}</div>
+                    <div class="equipment-detail">Based on weight</div>
+                </div>
+                <div class="equipment-card">
+                    <div class="equipment-title">i-gel Size</div>
+                    <div class="equipment-value">${calculateIGelSize(patient.weight)}</div>
+                    <div class="equipment-detail">Based on weight</div>
+                </div>
+            `;
+            document.getElementById('equipment-results').innerHTML = equipmentHTML;
+        }
+
+        function calculateFluids() {
+            const patient = getPatientData();
+            if (!patient.weight) {
+                document.getElementById('fluid-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate fluids</p>';
+                return;
+            }
+
+            const maintenance = calculateMaintenanceFluid(patient.weight);
+            const bolus = patient.weight * 10;
+            const bloodVolume = patient.weight * 70;
+
+            const fluidHTML = `
+                <div class="equipment-card">
+                    <div class="equipment-title">Maintenance Fluid</div>
+                    <div class="equipment-value">${maintenance.toFixed(0)} mL/hr</div>
+                    <div class="equipment-detail">4-2-1 rule</div>
+                </div>
+                <div class="equipment-card">
+                    <div class="equipment-title">Fluid Bolus</div>
+                    <div class="equipment-value">${bolus.toFixed(0)} mL</div>
+                    <div class="equipment-detail">10 mL/kg</div>
+                </div>
+                <div class="equipment-card">
+                    <div class="equipment-title">Blood Volume</div>
+                    <div class="equipment-value">${bloodVolume.toFixed(0)} mL</div>
+                    <div class="equipment-detail">70 mL/kg (estimated)</div>
+                </div>
+                <div class="equipment-card">
+                    <div class="equipment-title">Max Allowable Blood Loss (30%)</div>
+                    <div class="equipment-value">${(bloodVolume * 0.3).toFixed(0)} mL</div>
+                    <div class="equipment-detail">Before transfusion</div>
+                </div>
+            `;
+            document.getElementById('fluid-results').innerHTML = fluidHTML;
+        }
+
+        function calculateDrugs() {
+            const patient = getPatientData();
+            if (!patient.weight) {
+                document.getElementById('drug-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate drug doses</p>';
+                return;
+            }
+
+            let drugHTML = '';
+            drugs.forEach((drug, index) => {
+                const paramValue = patient[drug.useParam];
+                let dose = paramValue * drug.defaultDose;
+                
+                if (drug.maxDose && dose > drug.maxDose) {
+                    dose = drug.maxDose;
+                }
+                if (drug.minDose && dose < drug.minDose) {
+                    dose = drug.minDose;
+                }
+
+                const volume = dose / drug.concentration;
+                const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
+                const volumeDisplay = volume.toFixed(2);
+
+                drugHTML += `
+                    <div class="drug-card ${drug.category}">
+                        <div class="drug-header">
+                            <div class="drug-name">${drug.name}</div>
+                            <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
+                        </div>
+                        <div class="drug-info">
+                            <div class="dose-info">${drug.range}</div>
+                            <div class="calculation">
+                                <div class="calculation-result">${doseDisplay} ${drug.unit}</div>
+                                <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${drug.concentration} ${drug.concentrationUnit})</div>
+                                <div class="dose-info">Using: ${drug.defaultDose} ${drug.unit}</div>
+                            </div>
+                            <button class="edit-btn" onclick="toggleEdit(${index})">Edit Dose/Dilution</button>
+                            <div class="edit-inputs" id="edit-${index}">
+                                <input type="number" step="0.01" placeholder="Dose (${drug.unit})" 
+                                    id="dose-${index}" value="${drug.defaultDose}" 
+                                    onchange="updateDrug(${index})">
+                                <input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" 
+                                    id="conc-${index}" value="${drug.concentration}"
+                                    onchange="updateDrug(${index})">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('drug-results').innerHTML = drugHTML;
+        }
+
+        function toggleEdit(index) {
+            const editDiv = document.getElementById(`edit-${index}`);
+            editDiv.classList.toggle('active');
+        }
+
+        function updateDrug(index) {
+            const newDose = parseFloat(document.getElementById(`dose-${index}`).value);
+            const newConc = parseFloat(document.getElementById(`conc-${index}`).value);
+            
+            if (newDose > 0) drugs[index].defaultDose = newDose;
+            if (newConc > 0) drugs[index].concentration = newConc;
+            
+            calculateDrugs();
+        }
+
+        function calculateAll() {
+            calculateEquipment();
+            calculateFluids();
+            calculateDrugs();
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        window.onload = function() {
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (savedDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.querySelector('.dark-mode-toggle').textContent = '☀️ Light Mode';
+            }
+            calculateAll();
+        };
+    </script>
+</body>
+</html>

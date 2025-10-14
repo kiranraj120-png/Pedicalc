@@ -277,6 +277,16 @@
             font-size: 0.85em;
         }
 
+        .edit-inputs input::placeholder {
+            color: var(--text-tertiary);
+            opacity: 0.8;
+        }
+
+        .input-field input::placeholder {
+            color: var(--text-tertiary);
+            opacity: 0.7;
+        }
+
         .equipment-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -369,10 +379,6 @@
                 <div class="input-field">
                     <label for="weight">Weight (kg)</label>
                     <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
-                </div>
-                <div class="input-field">
-                    <label for="height">Height (cm)</label>
-                    <input type="number" id="height" placeholder="Enter height" step="0.1" min="0" oninput="calculateAll()">
                 </div>
             </div>
         </section>
@@ -660,8 +666,7 @@
         function getPatientData() {
             return {
                 age: parseFloat(document.getElementById('age').value) || 0,
-                weight: parseFloat(document.getElementById('weight').value) || 0,
-                height: parseFloat(document.getElementById('height').value) || 0
+                weight: parseFloat(document.getElementById('weight').value) || 0
             };
         }
 
@@ -762,9 +767,9 @@
                     <div class="equipment-detail">70 mL/kg (estimated)</div>
                 </div>
                 <div class="equipment-card">
-                    <div class="equipment-title">Max Allowable Blood Loss (30%)</div>
+                    <div class="equipment-title">Max Allowable Blood Loss</div>
                     <div class="equipment-value">${(bloodVolume * 0.3).toFixed(0)} mL</div>
-                    <div class="equipment-detail">Before transfusion</div>
+                    <div class="equipment-detail">30% of EBV | Formula: EBV × (Hb<sub>initial</sub> - Hb<sub>target</sub>) / Hb<sub>initial</sub></div>
                 </div>
             `;
             document.getElementById('fluid-results').innerHTML = fluidHTML;
@@ -792,6 +797,7 @@
                 const volume = dose / drug.concentration;
                 const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
                 const volumeDisplay = volume.toFixed(2);
+                const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
 
                 drugHTML += `
                     <div class="drug-card ${drug.category}">
@@ -802,13 +808,13 @@
                         <div class="drug-info">
                             <div class="dose-info">${drug.range}</div>
                             <div class="calculation">
-                                <div class="calculation-result">${doseDisplay} ${drug.unit}</div>
+                                <div class="calculation-result">${doseDisplay} ${totalDoseUnit}</div>
                                 <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${drug.concentration} ${drug.concentrationUnit})</div>
                                 <div class="dose-info">Using: ${drug.defaultDose} ${drug.unit}</div>
                             </div>
                             <button class="edit-btn" onclick="toggleEdit(${index})">Edit Dose/Dilution</button>
                             <div class="edit-inputs" id="edit-${index}">
-                                <input type="number" step="0.01" placeholder="Dose (${drug.unit})" 
+                                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit})" 
                                     id="dose-${index}" value="${drug.defaultDose}" 
                                     onchange="updateDrug(${index})">
                                 <input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" 

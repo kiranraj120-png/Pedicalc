@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pediatric Anesthesia Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Modern Vibrant Material-Inspired CSS - INCREASED CONTRAST */
         * {
             margin: 0;
             padding: 0;
@@ -12,159 +14,173 @@
         }
 
         :root {
+            /* Punchy Vibrant Palette - Increased Contrast */
             --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
+            --bg-secondary: #f0f4f8; /* Light background for lift, subtle contrast */
             --bg-card: #ffffff;
-            --text-primary: #212121;
-            --text-secondary: #666666;
-            --text-tertiary: #999999;
-            --border-color: #e0e0e0;
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
-            
-            --induction: #4CAF50;
-            --muscle-relaxant: #2196F3;
-            --analgesic: #FF9800;
-            --adjunct: #9C27B0;
-            --reversal: #F44336;
-            --emergency: #E91E63;
-            --steroid: #00BCD4;
-            --antiemetic: #8BC34A;
+            --text-primary: #121212; /* Very high contrast dark grey/black */
+            --text-secondary: #546e7a; /* Blue Grey for detail */
+            --text-tertiary: #b0bec5;
+            --border-color: #e1f5fe; /* Lighter, more vibrant border */
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.2);
+
+            /* Very Vibrant Accent Colors (HIGH SATURATION) */
+            --induction: #00e5ff; /* Vibrant Cyan */
+            --muscle-relaxant: #ff6d00; /* Vibrant Deep Orange */
+            --analgesic: #00c853; /* Vibrant Emerald Green */
+            --adjunct: #d500f9; /* Vibrant Magenta */
+            --reversal: #ff1744; /* Vibrant Red */
+            --emergency: #ffc400; /* Deep Amber/Gold */
+            --steroid: #3f51b5; /* Deeper Indigo */
+            --antiemetic: #8bc34a; /* Light Green */
+            --primary-accent: #0089f0; /* Brighter Blue */
+
+            --radius-card: 16px;
+            --radius-input: 10px;
         }
 
         body.dark-mode {
-            --bg-primary: #121212;
-            --bg-secondary: #1e1e1e;
-            --bg-card: #2a2a2a;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --text-tertiary: #808080;
-            --border-color: #404040;
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --bg-primary: #121212; /* Darker primary */
+            --bg-secondary: #1e1e1e; /* Darker secondary */
+            --bg-card: #282828;
+            --text-primary: #e0e0e0; /* High contrast white/grey */
+            --text-secondary: #9e9e9e;
+            --border-color: #3e3e3e;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.8);
+            
+            /* Dark Mode Accents - kept bright for contrast against dark background */
+            --emergency: #ffeb3b;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background: var(--bg-secondary);
             color: var(--text-primary);
             line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.4s, color 0.4s;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         header {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--primary-accent);
+            color: var(--bg-primary);
+            padding: 30px;
+            border-radius: var(--radius-card);
             box-shadow: var(--shadow);
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            animation: fadeInDown 0.5s ease-out;
         }
 
         h1 {
-            font-size: 1.8em;
-            color: var(--text-primary);
+            font-size: 2.2em;
+            font-weight: 700;
         }
 
         .dark-mode-toggle {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            padding: 8px 16px;
+            background: var(--bg-primary);
+            color: var(--primary-accent);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
             cursor: pointer;
             font-size: 0.9em;
-            color: var(--text-primary);
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .dark-mode-toggle:hover {
             transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
-        .patient-info {
+        .section, .patient-info {
             background: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
+            padding: 25px;
+            border-radius: var(--radius-card);
             box-shadow: var(--shadow);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            transition: box-shadow 0.3s ease;
         }
 
+        .section h2 {
+            font-size: 1.6em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            border-bottom: 3px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Input Styling */
         .input-group {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 20px;
             margin-top: 15px;
-        }
-
-        .input-field {
-            display: flex;
-            flex-direction: column;
         }
 
         .input-field label {
             font-size: 0.9em;
             color: var(--text-secondary);
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: block;
         }
 
         .input-field input {
-            padding: 10px;
+            width: 100%;
+            padding: 12px 15px;
             border: 2px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: var(--radius-input);
             font-size: 1em;
             background: var(--bg-primary);
             color: var(--text-primary);
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .input-field input:focus {
             outline: none;
-            border-color: #2196F3;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(0, 137, 240, 0.2);
         }
 
-        .section {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
+        .input-field input::placeholder {
+            color: var(--text-tertiary);
+            opacity: 0.8;
         }
 
-        .section h2 {
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
+        /* Drug Card Styling */
         .drugs-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
             margin-top: 15px;
         }
 
         .drug-card {
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 5px solid;
+            border-radius: var(--radius-card);
+            padding: 20px;
+            border-left: 8px solid;
             background: var(--bg-secondary);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .drug-card:hover {
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            background: var(--bg-card);
         }
 
         .drug-card.induction { border-left-color: var(--induction); }
@@ -179,22 +195,25 @@
         .drug-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            align-items: flex-start;
+            margin-bottom: 15px;
         }
 
         .drug-name {
-            font-weight: 600;
-            font-size: 1.1em;
+            font-weight: 700;
+            font-size: 1.3em;
             color: var(--text-primary);
         }
 
         .drug-category {
             font-size: 0.75em;
-            padding: 3px 8px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 500;
+            padding: 5px 12px;
+            border-radius: 25px;
+            color: var(--bg-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .drug-category.induction { background: var(--induction); }
@@ -202,64 +221,65 @@
         .drug-category.analgesic { background: var(--analgesic); }
         .drug-category.adjunct { background: var(--adjunct); }
         .drug-category.reversal { background: var(--reversal); }
-        .drug-category.emergency { background: var(--emergency); }
+        .drug-category.emergency { background: var(--emergency); color: var(--text-primary); }
         .drug-category.steroid { background: var(--steroid); }
         .drug-category.antiemetic { background: var(--antiemetic); }
 
-        .drug-info {
-            margin: 8px 0;
-        }
-
         .dose-info {
-            font-size: 0.75em;
-            color: var(--text-tertiary);
+            font-size: 0.8em;
+            color: var(--text-secondary);
             font-style: italic;
             margin-top: 4px;
         }
 
         .calculation {
-            background: var(--bg-primary);
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 8px;
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: var(--radius-input);
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
         }
 
         .calculation-result {
-            font-weight: 600;
-            font-size: 1.1em;
-            color: var(--text-primary);
+            font-weight: 800; /* Increased weight for punch */
+            font-size: 1.4em; /* Slightly larger for emphasis */
+            color: var(--reversal); /* Vibrant Red for the final dose number */
         }
 
         .volume-result {
             font-size: 0.9em;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 5px;
+            font-weight: 500;
         }
 
         .edit-btn {
             background: transparent;
-            border: 1px solid var(--border-color);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.8em;
+            border: 2px solid var(--primary-accent);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85em;
             cursor: pointer;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            transition: all 0.3s;
+            color: var(--primary-accent);
+            margin-top: 12px;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
 
         .edit-btn:hover {
-            background: var(--bg-secondary);
-            border-color: #2196F3;
-            color: #2196F3;
+            background: var(--primary-accent);
+            color: var(--bg-primary);
+            box-shadow: 0 4px 10px rgba(0, 137, 240, 0.3);
         }
 
         .edit-inputs {
             display: none;
-            margin-top: 10px;
-            padding: 10px;
-            background: var(--bg-card);
-            border-radius: 4px;
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-input);
+            border: 1px dashed var(--text-tertiary);
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         .edit-inputs.active {
@@ -268,92 +288,109 @@
 
         .edit-inputs input {
             width: 100%;
-            padding: 6px;
-            margin: 5px 0;
+            padding: 10px;
+            margin: 8px 0;
             border: 1px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 6px;
             background: var(--bg-primary);
             color: var(--text-primary);
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
 
         .edit-inputs input::placeholder {
             color: var(--text-tertiary);
-            opacity: 0.8;
+            font-weight: 400;
         }
 
-        .input-field input::placeholder {
-            color: var(--text-tertiary);
-            opacity: 0.7;
-        }
-
+        /* Equipment Card Styling */
         .equipment-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            gap: 20px;
             margin-top: 15px;
         }
 
         .equipment-card {
             background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: var(--radius-card);
             text-align: center;
+            border-top: 5px solid var(--primary-accent);
+            transition: all 0.3s ease;
+        }
+
+        .equipment-card:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
         }
 
         .equipment-title {
-            font-size: 0.9em;
+            font-size: 0.95em;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .equipment-value {
-            font-size: 1.5em;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-size: 1.9em;
+            font-weight: 800;
+            color: var(--primary-accent);
+            line-height: 1.1;
         }
 
         .equipment-detail {
             font-size: 0.8em;
-            color: var(--text-tertiary);
-            margin-top: 5px;
+            color: var(--text-secondary);
+            margin-top: 8px;
         }
 
         .warning {
             background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 10px 15px;
-            margin: 15px 0;
-            border-radius: 4px;
-            font-size: 0.9em;
+            border-left: 5px solid #ffc107;
+            padding: 15px 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 0.95em;
             color: #856404;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         body.dark-mode .warning {
             background: #4a3f00;
             color: #ffeb3b;
+            border-left: 5px solid #ff9800;
         }
 
-        @media print {
-            body {
-                background: white;
-            }
-            .dark-mode-toggle, .edit-btn {
-                display: none;
-            }
+        /* Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 15px 10px;
             }
-            
+
             h1 {
-                font-size: 1.4em;
+                font-size: 1.8em;
             }
-            
+
             .drugs-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .equipment-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+
+            header {
+                padding: 20px;
             }
         }
     </style>
@@ -380,6 +417,14 @@
                     <label for="weight">Weight (kg)</label>
                     <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
                 </div>
+                <div class="input-field">
+                    <label for="currentHb">Current Hb (g/dL)</label>
+                    <input type="number" id="currentHb" placeholder="e.g., 12.0" step="0.1" min="0" oninput="calculateAll()">
+                </div>
+                <div class="input-field">
+                    <label for="targetHb">Target Hb (g/dL)</label>
+                    <input type="number" id="targetHb" placeholder="e.g., 8.0" step="0.1" min="0" oninput="calculateAll()">
+                </div>
             </div>
         </section>
 
@@ -389,7 +434,7 @@
         </section>
 
         <section class="section">
-            <h2>Fluid Requirements</h2>
+            <h2>Fluid & Blood Loss Requirements</h2>
             <div id="fluid-results" class="equipment-grid"></div>
         </section>
 
@@ -544,7 +589,7 @@
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '1-1.5 mg/kg IV',
-                
+
             },
             {
                 name: 'Dexamethasone',
@@ -578,8 +623,8 @@
                 concentration: 2,
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
-                range: '0.05-0.15 mg/kg (max 4mg)',
-                maxDose: 4
+                range: '0.05-0.15 mg/kg (max 8mg)',
+                maxDose: 8
             },
             {
                 name: 'Metoclopramide',
@@ -634,7 +679,7 @@
                 categoryLabel: 'Reversal Agent',
                 defaultDose: 2,
                 unit: 'mg/kg',
-                concentration: 100,
+                concentration: 20,
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '2-4 mg/kg (routine reversal)'
@@ -666,7 +711,9 @@
         function getPatientData() {
             return {
                 age: parseFloat(document.getElementById('age').value) || 0,
-                weight: parseFloat(document.getElementById('weight').value) || 0
+                weight: parseFloat(document.getElementById('weight').value) || 0,
+                currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
+                targetHb: parseFloat(document.getElementById('targetHb').value) || 0
             };
         }
 
@@ -712,6 +759,21 @@
             return rate;
         }
 
+        function calculateEBV(weight, age) {
+            if (age < 0.1) return weight * 90; // Neonate (<1 month): 90 mL/kg
+            if (age < 1) return weight * 85;    // Infant (1 month to 1 year): 85 mL/kg
+            if (age < 3) return weight * 80;    // Toddler (1-3 years): 80 mL/kg
+            if (age < 6) return weight * 75;    // Preschooler (3-6 years): 75 mL/kg
+            if (age < 12) return weight * 70;   // School age (6-12 years): 70 mL/kg
+            return weight * 65;                 // Adolescent (>12 years): 65 mL/kg (or 70 based on practice)
+        }
+
+        function calculateMABL(EBV, initialHb, targetHb) {
+            if (initialHb <= targetHb || initialHb === 0) return 0;
+            const MABL = EBV * (initialHb - targetHb) / initialHb;
+            return Math.max(0, MABL); // Ensure MABL is not negative
+        }
+
         function calculateEquipment() {
             const patient = getPatientData();
             const equipmentHTML = `
@@ -742,13 +804,25 @@
         function calculateFluids() {
             const patient = getPatientData();
             if (!patient.weight) {
-                document.getElementById('fluid-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate fluids</p>';
+                document.getElementById('fluid-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight and age to calculate fluids</p>';
                 return;
             }
 
             const maintenance = calculateMaintenanceFluid(patient.weight);
             const bolus = patient.weight * 10;
-            const bloodVolume = patient.weight * 70;
+            const EBV = calculateEBV(patient.weight, patient.age);
+            let MABL_Result = "N/A";
+            let MABL_Detail = "Requires Current & Target Hb";
+
+            if (patient.currentHb > 0 && patient.targetHb > 0) {
+                const calculatedMABL = calculateMABL(EBV, patient.currentHb, patient.targetHb);
+                MABL_Result = `${calculatedMABL.toFixed(0)} mL`;
+                MABL_Detail = `Hb Drop: ${patient.currentHb.toFixed(1)} → ${patient.targetHb.toFixed(1)} g/dL`;
+            } else {
+                 MABL_Result = `${(EBV * 0.15).toFixed(0)} - ${(EBV * 0.3).toFixed(0)} mL`;
+                 MABL_Detail = `Estimated Max (15-30% of EBV)`;
+            }
+
 
             const fluidHTML = `
                 <div class="equipment-card">
@@ -762,14 +836,14 @@
                     <div class="equipment-detail">10 mL/kg</div>
                 </div>
                 <div class="equipment-card">
-                    <div class="equipment-title">Blood Volume</div>
-                    <div class="equipment-value">${bloodVolume.toFixed(0)} mL</div>
-                    <div class="equipment-detail">70 mL/kg (estimated)</div>
+                    <div class="equipment-title">Est. Blood Volume (EBV)</div>
+                    <div class="equipment-value">${EBV.toFixed(0)} mL</div>
+                    <div class="equipment-detail">Age-based mL/kg used</div>
                 </div>
                 <div class="equipment-card">
-                    <div class="equipment-title">Max Allowable Blood Loss</div>
-                    <div class="equipment-value">${(bloodVolume * 0.3).toFixed(0)} mL</div>
-                    <div class="equipment-detail">30% of EBV | Formula: EBV × (Hb<sub>initial</sub> - Hb<sub>target</sub>) / Hb<sub>initial</sub></div>
+                    <div class="equipment-title">Max Allowable Blood Loss (MABL)</div>
+                    <div class="equipment-value">${MABL_Result}</div>
+                    <div class="equipment-detail">${MABL_Detail}</div>
                 </div>
             `;
             document.getElementById('fluid-results').innerHTML = fluidHTML;
@@ -786,7 +860,7 @@
             drugs.forEach((drug, index) => {
                 const paramValue = patient[drug.useParam];
                 let dose = paramValue * drug.defaultDose;
-                
+
                 if (drug.maxDose && dose > drug.maxDose) {
                     dose = drug.maxDose;
                 }
@@ -806,11 +880,11 @@
                             <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
                         </div>
                         <div class="drug-info">
-                            <div class="dose-info">${drug.range}</div>
+                            <div class="dose-info">Dose Range: ${drug.range}</div>
                             <div class="calculation">
                                 <div class="calculation-result">${doseDisplay} ${totalDoseUnit}</div>
                                 <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${drug.concentration} ${drug.concentrationUnit})</div>
-                                <div class="dose-info">Using: ${drug.defaultDose} ${drug.unit}</div>
+                                <div class="dose-info">Default: ${drug.defaultDose} ${drug.unit}</div>
                             </div>
                             <button class="edit-btn" onclick="toggleEdit(${index})">Edit Dose/Dilution</button>
                             <div class="edit-inputs" id="edit-${index}">
@@ -837,10 +911,11 @@
         function updateDrug(index) {
             const newDose = parseFloat(document.getElementById(`dose-${index}`).value);
             const newConc = parseFloat(document.getElementById(`conc-${index}`).value);
-            
-            if (newDose > 0) drugs[index].defaultDose = newDose;
-            if (newConc > 0) drugs[index].concentration = newConc;
-            
+
+            // Only update if a positive number is entered
+            if (!isNaN(newDose) && newDose > 0) drugs[index].defaultDose = newDose;
+            if (!isNaN(newConc) && newConc > 0) drugs[index].concentration = newConc;
+
             calculateDrugs();
         }
 
@@ -866,6 +941,6 @@
             calculateAll();
         };
     </script>
-    <p style="text-align: center;"><font color="grey">Ⓡ︎ Dr. Kiranraj</p></font>
+    <p style="text-align: center; margin-top: 20px;"><font color="grey" style="font-size: 0.85em;">Ⓡ︎ Dr. Kiranraj</p></font>
 </body>
 </html>

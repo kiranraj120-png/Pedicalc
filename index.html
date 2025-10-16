@@ -164,8 +164,10 @@
             padding: 15px; /* Reduced card padding */
             border-left: 6px solid; /* Thinner accent border */
             background: var(--bg-secondary);
+            /* IMPROVED ANIMATION: Added will-change */
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            will-change: transform, box-shadow, background-color; 
         }
 
         .drug-card:hover {
@@ -189,7 +191,12 @@
             justify-content: space-between;
             align-items: flex-start;
             cursor: pointer; 
+            /* MODIFICATION 1: Remove selection and tap highlight for fluid UX */
             user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            /* END MODIFICATION 1 */
             padding-bottom: 0; 
             transition: padding-bottom 0.3s ease;
             flex-direction: column; /* Default stack on mobile */
@@ -221,8 +228,8 @@
             font-size: 1.1em;
             margin-right: 8px;
             transform: rotate(0deg); 
-            transition: transform 0.3s ease;
-            color: var(--primary-accent);
+            /* IMPROVED ANIMATION: Smoother transition curve for rotation */
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .drug-card.expanded .drug-name .toggle-icon {
@@ -234,7 +241,11 @@
             overflow: hidden;
             opacity: 0;
             padding-top: 0; 
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            /* IMPROVED ANIMATION: Fluid mobile-app cubic-bezier and added padding-top transition */
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.3s ease-in-out,
+                        padding-top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: max-height, opacity, padding-top; /* Performance hint */
         }
 
         .drug-card.expanded .drug-details {
@@ -464,7 +475,6 @@
 
         <section class="section">
             <h2>Drug Calculations</h2>
-            <!-- NEW: Expand All / Collapse All Button -->
             <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
             <div id="drug-results" class="drugs-grid"></div>
         </section>
@@ -1037,4 +1047,3 @@
     <p style="text-align: center; margin-top: 20px;"><font color="grey" style="font-size: 0.85em;">Ⓡ︎ Dr. Kiranraj</p></font>
 </body>
 </html>
-

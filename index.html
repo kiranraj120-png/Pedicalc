@@ -11,6 +11,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* FIX: Remove tap highlight (the blinking transparent box on press) */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         :root {
@@ -38,11 +40,18 @@
 
             --radius-card: 16px;
             --radius-input: 10px;
+            
+            /* NEW: Custom timing functions for smoother, bouncier feel */
+            --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1); /* Smoother, more 'lift' */
+            
+            /* Add variables for direct color access in JS */
+            --light-bg-secondary: #fff8e1;
+            --dark-bg-secondary: #111111;
         }
 
         body.dark-mode {
             --bg-primary: #000000; /* Pitch Black Primary */
-            --bg-secondary: #111111; /* Very Dark Secondary (main background) */
+            --bg-secondary: var(--dark-bg-secondary); /* Very Dark Secondary (main background) */
             --bg-card: #222222; /* Very Dark Card */
             --text-primary: #f5f5f5; /* High contrast white/grey */
             --text-secondary: #bbbbbb;
@@ -58,24 +67,36 @@
             font-family: 'Montserrat', sans-serif;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            line-height: 1.5; /* Slightly tighter line height */
-            transition: background-color 0.4s, color 0.4s;
-            font-size: 0.95rem; /* Base font size reduction */
+            line-height: 1.5;
+            /* FIX 3: Smoother transition for text color */
+            transition: color var(--ease-out-quint) 0.4s; 
+            font-size: 0.95rem;
+            
+            /* FIX 2: Prevent text selection */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE/Edge */
+            user-select: none; /* Standard syntax */
+        }
+        
+        /* FIX 3: Separate, longer transition for the main background color */
+        /* Must be on body.dark-mode and body for the transition to work correctly when class is toggled */
+        body, body.dark-mode {
+             transition: background-color 0.8s var(--ease-out-quint), color var(--ease-out-quint) 0.4s;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 10px; /* Reduced padding for mobile */
+            padding: 20px 10px;
         }
 
         header {
             background: var(--primary-accent);
             color: var(--bg-primary);
-            padding: 20px; /* Reduced header padding */
+            padding: 20px;
             border-radius: var(--radius-card);
             box-shadow: var(--shadow);
-            margin-bottom: 20px; /* Reduced margin */
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -83,7 +104,7 @@
         }
 
         h1 {
-            font-size: 1.8em; /* Reduced font size */
+            font-size: 1.8em;
             font-weight: 700;
         }
 
@@ -92,37 +113,61 @@
             color: var(--primary-accent);
             border: none;
             border-radius: 50px;
-            padding: 8px 16px; /* Reduced padding */
+            padding: 8px 16px;
             cursor: pointer;
             font-size: 0.8em;
             font-weight: 600;
-            transition: all 0.3s ease;
+            /* FIX 4: Smoother toggle animation */
+            transition: all 0.4s var(--ease-out-quint);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        /* FIX 1: Remove distracting focus outlines on click/active */
+        .dark-mode-toggle:focus,
+        .edit-btn:focus,
+        .drug-header:focus {
+            outline: none !important;
+            box-shadow: none;
+        }
+
+        /* FIX 1: Re-add subtle, accessible focus for keyboard users */
+        .dark-mode-toggle:focus-visible,
+        .edit-btn:focus-visible,
+        .drug-header:focus-visible {
+            outline: 2px solid var(--primary-accent);
+            outline-offset: 2px;
+        }
+        
+        /* FIX 4: Bouncy/lift effect for toggle button */
+        .dark-mode-toggle:hover {
+            transform: scale(1.05);
+        }
+        .dark-mode-toggle:active {
+            transform: scale(0.95);
         }
 
         .section, .patient-info {
             background: var(--bg-card);
-            padding: 20px; /* Reduced section padding */
+            padding: 20px;
             border-radius: var(--radius-card);
             box-shadow: var(--shadow);
-            margin-bottom: 20px; /* Reduced margin */
+            margin-bottom: 20px;
             transition: box-shadow 0.3s ease;
         }
 
         .section h2 {
-            font-size: 1.4em; /* Reduced font size */
+            font-size: 1.4em;
             font-weight: 600;
-            margin-bottom: 15px; /* Reduced margin */
+            margin-bottom: 15px;
             color: var(--text-primary);
-            border-bottom: 2px solid var(--border-color); /* Thinner border */
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 8px;
         }
 
         /* Input Styling */
         .input-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Slightly tighter grid */
-            gap: 15px; /* Reduced gap */
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
             margin-top: 10px;
         }
 
@@ -138,7 +183,7 @@
         /* END NEW */
 
         .input-field label {
-            font-size: 0.85em; /* Reduced label font size */
+            font-size: 0.85em;
             color: var(--text-secondary);
             margin-bottom: 5px;
             font-weight: 600;
@@ -147,10 +192,10 @@
 
         .input-field input {
             width: 100%;
-            padding: 10px 12px; /* Reduced input padding */
-            border: 1px solid var(--border-color); /* Thinner border */
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-input);
-            font-size: 0.95em; /* Slightly reduced input text size */
+            font-size: 0.95em;
             background: var(--bg-primary);
             color: var(--text-primary);
             transition: border-color 0.3s, box-shadow 0.3s;
@@ -165,17 +210,18 @@
         /* Drug Card Styling */
         .drugs-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Force single column on mobile */
+            grid-template-columns: 1fr;
             gap: 15px;
             margin-top: 10px;
         }
 
         .drug-card {
             border-radius: var(--radius-card);
-            padding: 15px; /* Reduced card padding */
-            border-left: 6px solid; /* Thinner accent border */
+            padding: 15px;
+            border-left: 6px solid;
             background: var(--bg-secondary);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            /* FIX 4: Smoother card transition */
+            transition: all 0.5s var(--ease-out-quint); 
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             will-change: transform, box-shadow, background-color; 
             position: relative; 
@@ -191,7 +237,7 @@
 
         .drug-card:hover {
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08); 
-            transform: translateY(-1px);
+            transform: translateY(-2px); /* Slightly more aggressive lift */
             background: var(--bg-card);
         }
 
@@ -216,8 +262,8 @@
             outline: none;
             padding-bottom: 0; 
             transition: padding-bottom 0.3s ease;
-            flex-direction: column; /* Default stack on mobile */
-            gap: 5px; /* Space between name and category */
+            flex-direction: column;
+            gap: 5px;
         }
         
         .drug-card.expanded .drug-header {
@@ -230,15 +276,14 @@
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            /* position: relative; Removed this as popup is now relative to card */
         }
         
         .drug-name .toggle-icon {
             font-size: 1.1em;
             margin-right: 8px;
             transform: rotate(0deg); 
-            /* IMPROVED ANIMATION: Smoother deceleration */
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            /* FIX 4: Smoother toggle animation */
+            transition: transform 0.4s var(--ease-out-quint);
         }
 
         .drug-card.expanded .drug-name .toggle-icon {
@@ -250,10 +295,10 @@
             overflow: hidden;
             opacity: 0;
             padding-top: 0; 
-            /* IMPROVED ANIMATION: Smoother deceleration */
-            transition: max-height 0.35s cubic-bezier(0.19, 1, 0.22, 1), 
+            /* FIX 4: Smoother height/padding transition */
+            transition: max-height 0.5s var(--ease-out-quint), 
                         opacity 0.3s ease-in-out,
-                        padding-top 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+                        padding-top 0.5s var(--ease-out-quint);
             will-change: max-height, opacity, padding-top; 
         }
 
@@ -301,22 +346,23 @@
             line-height: 18px;
             text-align: center;
             border-radius: 50%;
-            background-color: var(--emergency); /* Amber/Gold for Caution */
+            background-color: var(--emergency);
             color: var(--text-primary);
             font-weight: bold;
             font-size: 0.7em;
             cursor: pointer;
-            margin-left: 10px; /* Space from category/name */
+            margin-left: 10px;
             flex-shrink: 0; 
-            align-self: flex-start; /* Keeps it aligned to the top of the header flex container */
+            align-self: flex-start;
+            transition: transform 0.3s var(--ease-out-quint); /* FIX 4: Bouncy icon hover */
         }
         .caution-icon:hover {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         .caution-popup {
             display: none;
             position: absolute;
-            z-index: 30; /* Higher than caution-active z-index */
+            z-index: 30;
             padding: 10px;
             background-color: var(--bg-primary); 
             color: var(--text-primary);
@@ -325,13 +371,13 @@
             box-shadow: var(--shadow-hover);
             width: 250px;
             font-size: 0.75em;
-            top: 15px; /* Position from top of the card (matching padding) */
-            right: 15px; /* Position from right of the card (matching padding) */
+            top: 15px;
+            right: 15px;
             white-space: normal;
         }
         .dose-limit-applied {
              font-size: 0.75em;
-             color: var(--reversal); /* Use Red for warning/limit */
+             color: var(--reversal);
              font-weight: 600;
              display: block;
              margin-top: 2px;
@@ -339,20 +385,20 @@
 
         .calculation {
             background: var(--bg-card);
-            padding: 12px; /* Reduced padding */
+            padding: 12px;
             border-radius: var(--radius-input);
-            margin-top: 10px; /* Reduced margin */
+            margin-top: 10px;
             border: 1px solid var(--border-color);
         }
 
         .calculation-result {
             font-weight: 800; 
-            font-size: 1.3em; /* Reduced font size */
+            font-size: 1.3em;
             color: var(--reversal); 
         }
 
         .volume-result {
-            font-size: 0.85em; /* Reduced font size */
+            font-size: 0.85em;
             color: var(--text-secondary);
             margin-top: 3px;
             font-weight: 500;
@@ -360,27 +406,29 @@
 
         .edit-btn {
             background: transparent;
-            border: 1px solid var(--primary-accent); /* Thinner border */
-            padding: 6px 14px; /* Reduced padding */
+            border: 1px solid var(--primary-accent);
+            padding: 6px 14px;
             border-radius: 50px;
-            font-size: 0.8em; /* Reduced font size */
+            font-size: 0.8em;
             cursor: pointer;
             color: var(--primary-accent);
             margin-top: 10px;
-            transition: all 0.3s ease;
+            /* FIX 4: Smoother button transition */
+            transition: all 0.4s var(--ease-out-quint);
             font-weight: 600;
-            max-width: fit-content; /* Make button only as wide as content */
+            max-width: fit-content;
         }
 
         .edit-btn:hover {
             background: var(--primary-accent);
             color: var(--bg-primary);
             box-shadow: 0 4px 10px rgba(0, 137, 240, 0.3);
+            transform: translateY(-1px);
         }
 
         .expand-all-btn {
             margin-top: 5px;
-            margin-bottom: 15px; /* Reduced margin */
+            margin-bottom: 15px;
             display: block;
             width: 100%;
             max-width: 400px;
@@ -391,13 +439,13 @@
             /* Now defaults to hidden */
             display: none; 
             margin-top: 10px;
-            padding: 10px; /* Reduced padding */
+            padding: 10px;
             background: var(--bg-secondary);
             border-radius: var(--radius-input);
             border: 1px dashed var(--text-tertiary);
             animation: fadeIn 0.3s ease-in-out;
-            flex-direction: column; /* Stack inputs vertically */
-            gap: 10px; /* Space between inputs */
+            flex-direction: column;
+            gap: 10px;
         }
         
         /* CRITICAL FIX: Add the .active class rule to show the inputs */
@@ -408,7 +456,7 @@
         /* Equipment Card Styling */
         .equipment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted min-width for mobile */
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             margin-top: 10px;
         }
@@ -437,7 +485,7 @@
         }
 
         .equipment-value {
-            font-size: 1.6em; /* Reduced font size */
+            font-size: 1.6em;
             font-weight: 800;
             color: var(--primary-accent);
             line-height: 1.1;
@@ -1118,12 +1166,9 @@
                 let limitApplied = false; // For minDose/maxDose limits
 
                 // --- 1. SPECIAL DOSAGE ADJUSTMENTS BASED ON WEIGHT ---
-                // Paracetamol (IV) adjustment for small infants (< 10 kg) - ONLY if user hasn't customized it significantly
+                // Paracetamol (IV) adjustment for small infants (< 10 kg)
                 if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10) {
-                     // Only apply reduction if the user's current dose is > 7.5 (i.e., they are using the default or an unnecessarily high custom dose)
-                     // If the user manually sets it to 7.5, we respect that. If they set it to 10, we don't auto-adjust.
-                     // The safer, more robust logic is to keep the SPECIAL adjustment separate from user customization logic.
-                    if (drug.defaultDose === 15) { // Check if it's the standard default
+                    if (drug.defaultDose === 15) { // Only apply reduction if using the standard default
                          dosePerKg = 7.5; 
                          doseAdjusted = true;
                     }
@@ -1380,18 +1425,37 @@
             }
         });
 
+        // FIX 3: Updated dark mode function for a smoother background transition
+        function toggleDarkMode() {
+            const isDark = !document.body.classList.contains('dark-mode');
+            
+            // Step 1: Immediately toggle the class for all foreground elements (text, card colors)
+            document.body.classList.toggle('dark-mode', isDark);
+
+            // Determine the final background color based on the new mode
+            // Using the new CSS variables for reliable access
+            const targetBgSecondary = isDark 
+                ? getComputedStyle(document.documentElement).getPropertyValue('--dark-bg-secondary').trim()
+                : getComputedStyle(document.documentElement).getPropertyValue('--light-bg-secondary').trim();
+
+            // Step 2: Set the inline style to start the color change immediately
+            document.body.style.backgroundColor = targetBgSecondary;
+
+            // Step 3: Schedule the removal of the inline style after a small delay.
+            // This re-enables the CSS transition property on the body for the smooth 'surrounding' effect.
+            setTimeout(() => {
+                document.body.style.backgroundColor = ''; 
+            }, 50); 
+
+            // Step 4: Update text and storage
+            localStorage.setItem('darkMode', isDark);
+            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
 
         function calculateAll() {
             calculateEquipment();
             calculateFluids();
             calculateDrugs();
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
-            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
         }
 
         window.onload = function() {

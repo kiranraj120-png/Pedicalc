@@ -61,11 +61,6 @@
             line-height: 1.5; /* Slightly tighter line height */
             transition: background-color 0.4s, color 0.4s;
             font-size: 0.95rem; /* Base font size reduction */
-            /* FIX 2: Make ALL text unselectable */
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
         .container {
@@ -103,9 +98,6 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            /* FIX 1: Remove highlight/flicker on this button */
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .section, .patient-info {
@@ -134,17 +126,23 @@
             margin-top: 10px;
         }
 
+        /* NEW: Split age input field */
+        .age-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .age-input-group > div {
+            flex: 1;
+        }
+        /* END NEW */
+
         .input-field label {
             font-size: 0.85em; /* Reduced label font size */
             color: var(--text-secondary);
             margin-bottom: 5px;
             font-weight: 600;
             display: block;
-            /* Allow label text to be selectable if needed for input access (optional) */
-             user-select: text; 
-             -webkit-user-select: text; 
-             -moz-user-select: text;
-             -ms-user-select: text;
         }
 
         .input-field input {
@@ -156,11 +154,6 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             transition: border-color 0.3s, box-shadow 0.3s;
-            /* Ensure input text itself is selectable for editing */
-            user-select: text; 
-            -webkit-user-select: text; 
-            -moz-user-select: text;
-            -ms-user-select: text;
         }
 
         .input-field input:focus {
@@ -210,9 +203,11 @@
             align-items: flex-start;
             cursor: pointer; 
             /* MODIFICATION 1: Remove selection and tap highlight for fluid UX */
+            user-select: none;
+            -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             outline: none;
-            /* user-select inherited from body now */
+            /* END MODIFICATION 1 */
             padding-bottom: 0; 
             transition: padding-bottom 0.3s ease;
             flex-direction: column; /* Default stack on mobile */
@@ -332,8 +327,6 @@
             transition: all 0.3s ease;
             font-weight: 600;
             max-width: fit-content; /* Make button only as wide as content */
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .edit-btn:hover {
@@ -391,6 +384,13 @@
             color: var(--text-secondary);
             margin-bottom: 8px;
             font-weight: 600;
+        }
+        
+        .equipment-value.error {
+            color: var(--reversal);
+            font-size: 0.9em;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         .equipment-value {
@@ -463,8 +463,11 @@
             <h2>Patient Information</h2>
             <div class="input-group">
                 <div class="input-field">
-                    <label for="age">Age (years)</label>
-                    <input type="number" id="age" placeholder="Enter age" step="0.1" min="0" oninput="calculateAll()">
+                    <label for="age-years">Age</label>
+                    <div class="age-input-group">
+                        <input type="number" id="age-years" placeholder="Years (max 18)" step="1" min="0" max="18" oninput="clampAgeAndCalculate()">
+                        <input type="number" id="age-months" placeholder="Months (0-11)" step="1" min="0" max="11" oninput="clampAgeAndCalculate()">
+                    </div>
                 </div>
                 <div class="input-field">
                     <label for="weight">Weight (kg)</label>
@@ -766,25 +769,113 @@
         
         // Variable to hold the index of the drug card that should remain open after a recalculation
         let activeEditIndex = null; 
+        
+        /**
+         * Clamps the age inputs to their limits (Years: 0-18, Months: 0-11) and triggers calculation.
+         */
+        function clampAgeAndCalculate() {
+            const ageYearsInput = document.getElementById('age-years');
+            const ageMonthsInput = document.getElementById('age-months');
+            
+            let years = parseFloat(ageYearsInput.value);
+            let months = parseFloat(ageMonthsInput.value);
+
+            // Clamp Years (0 to 18)
+            if (!isNaN(years)) {
+                if (years < 0) years = 0;
+                if (years > 18) years = 18;
+                ageYearsInput.value = years;
+            } else if (ageYearsInput.value) {
+                // If the input is not empty but not a valid number, clear it or set to 0
+                ageYearsInput.value = '';
+            }
+
+            // Clamp Months (0 to 11)
+            if (!isNaN(months)) {
+                if (months < 0) months = 0;
+                if (months > 11) months = 11;
+                // Only show months if years is 18 or less (to prevent 18y 11m, which is allowed)
+                // However, we must ensure if years is 18, months MUST be 0 if we strictly cap at 18.0 years.
+                // Since the user asks for cap at 18, we allow 18 years 0 months, but nothing more.
+                 if (years === 18) months = 0;
+                ageMonthsInput.value = months;
+            } else if (ageMonthsInput.value) {
+                ageMonthsInput.value = '';
+            }
+
+            calculateAll();
+        }
+
 
         function getPatientData() {
+            // Read years and months (clamped values)
+            const years = parseFloat(document.getElementById('age-years').value) || 0;
+            const months = parseFloat(document.getElementById('age-months').value) || 0;
+            
+            // Calculate total age in years (e.g., 2 years and 6 months = 2.5)
+            const totalAge = years + (months / 12);
+
             return {
-                age: parseFloat(document.getElementById('age').value) || 0,
+                age: totalAge,
                 weight: parseFloat(document.getElementById('weight').value) || 0,
                 currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
                 targetHb: parseFloat(document.getElementById('targetHb').value) || 0
             };
         }
 
-        function calculateETTSize(age) {
-            if (age < 1) return ((age * 12) / 4 + 3.5).toFixed(1);
-            if (age < 2) return '4.0';
-            return ((age / 4) + 4).toFixed(1);
+        /**
+         * Calculates the Uncuffed Endotracheal Tube (ETT) ID size.
+         * Logic: Weight-based for infants (<1 year), Age-based formula for children (>=1 year).
+         * @param {number} age - Total age in years (e.g., 0.5 for 6 months).
+         * @param {number} weight - Weight in kilograms.
+         * @returns {string} The ETT size (ID in mm) or an error message.
+         */
+        function calculateETTSize(age, weight) {
+            
+            // 1. INFANTS (Age < 1 year) - Requires weight
+            if (age < 1) {
+                if (weight === 0) {
+                    return 'Enter Weight (kg)';
+                }
+                
+                // Use weight-based guidelines for infants
+                if (weight < 1.0) return '2.5';       // < 1000g
+                if (weight >= 1.0 && weight <= 2.0) return '3.0'; // 1000g - 2000g
+                // > 2.0 kg and < 1 year old (standard infant size)
+                return '3.5';
+            }
+
+            // 2. CHILDREN (Age >= 1 year, capped at 18) - Use age-based formula
+            // Uncuffed ETT size (mm ID) = (age in years / 4) + 4
+            if (age >= 1 && age <= 18) {
+                return ((age / 4) + 4).toFixed(1);
+            }
+            
+            // 3. ADULT/TEENAGER FALLBACK (>18 years, though clamped)
+            // This is technically unreachable due to clamping, but included for robustness.
+            return '7.5'; 
         }
 
-        function calculateETTDepth(age) {
-            const size = parseFloat(calculateETTSize(age));
-            return (size * 3).toFixed(1);
+        /**
+         * Calculates the appropriate depth for ETT insertion.
+         * @param {number} age - Total age in years (e.g., 0.5 for 6 months).
+         * @param {number} weight - Weight in kilograms.
+         * @returns {string} The ETT depth (in cm) or 'N/A'.
+         */
+        function calculateETTDepth(age, weight) {
+            const ETT_ID_Uncuffed_str = calculateETTSize(age, weight);
+            
+            if (ETT_ID_Uncuffed_str.includes('Enter') || ETT_ID_Uncuffed_str === 'N/A') return 'N/A';
+            
+            const ETT_ID_Uncuffed = parseFloat(ETT_ID_Uncuffed_str);
+
+            if (age < 0.1 && weight > 0) { // Neonate (<1 month)
+                 // Common formula for neonates: Depth (cm) = Weight (kg) + 6 cm
+                 return (weight + 6).toFixed(1);
+            }
+            
+            // General formula: Depth (cm) = ID x 3
+            return (ETT_ID_Uncuffed * 3).toFixed(1);
         }
 
         function calculateLMASize(weight) {
@@ -819,6 +910,7 @@
         }
 
         function calculateEBV(weight, age) {
+            if (weight === 0) return 0;
             if (age < 0.1) return weight * 90; // Neonate (<1 month): 90 mL/kg
             if (age < 1) return weight * 85;    // Infant (1 month to 1 year): 85 mL/kg
             if (age < 3) return weight * 80;    // Toddler (1-3 years): 80 mL/kg
@@ -828,32 +920,55 @@
         }
 
         function calculateMABL(EBV, initialHb, targetHb) {
-            if (initialHb <= targetHb || initialHb === 0) return 0;
+            if (initialHb <= targetHb || initialHb === 0 || EBV === 0) return 0;
             const MABL = EBV * (initialHb - targetHb) / initialHb;
             return Math.max(0, MABL); // Ensure MABL is not negative
         }
 
         function calculateEquipment() {
             const patient = getPatientData();
+            
+            const uncuffedSize = calculateETTSize(patient.age, patient.weight);
+            const depth = calculateETTDepth(patient.age, patient.weight);
+
+            let cuffedSize, uncuffedID;
+            let uncuffedValueClass = 'equipment-value';
+
+            if (uncuffedSize.includes('Enter')) {
+                // ETT size is an error message
+                cuffedSize = 'N/A';
+                uncuffedValueClass += ' error';
+            } else {
+                // ETT size is a number
+                uncuffedID = parseFloat(uncuffedSize);
+                // Cuffed size is 0.5mm smaller
+                cuffedSize = (uncuffedID - 0.5).toFixed(1);
+            }
+            
+            // Check LMA/i-gel dependency on weight
+            const lmaSize = patient.weight === 0 ? 'N/A' : calculateLMASize(patient.weight);
+            const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
+
+
             const equipmentHTML = `
                 <div class="equipment-card">
                     <div class="equipment-title">ETT Size (Uncuffed)</div>
-                    <div class="equipment-value">${calculateETTSize(patient.age)}</div>
-                    <div class="equipment-detail">Depth: ${calculateETTDepth(patient.age)} cm at lips</div>
+                    <div class="${uncuffedValueClass}">${uncuffedSize}</div>
+                    <div class="equipment-detail">Depth: ${depth} cm at lips</div>
                 </div>
                 <div class="equipment-card">
                     <div class="equipment-title">ETT Size (Cuffed)</div>
-                    <div class="equipment-value">${(calculateETTSize(patient.age) - 0.5).toFixed(1)}</div>
-                    <div class="equipment-detail">Depth: ${calculateETTDepth(patient.age)} cm at lips</div>
+                    <div class="equipment-value">${cuffedSize}</div>
+                    <div class="equipment-detail">Depth: ${depth} cm at lips</div>
                 </div>
                 <div class="equipment-card">
                     <div class="equipment-title">LMA Size</div>
-                    <div class="equipment-value">${calculateLMASize(patient.weight)}</div>
+                    <div class="equipment-value">${lmaSize}</div>
                     <div class="equipment-detail">Based on weight</div>
                 </div>
                 <div class="equipment-card">
                     <div class="equipment-title">i-gel Size</div>
-                    <div class="equipment-value">${calculateIGelSize(patient.weight)}</div>
+                    <div class="equipment-value">${igelSize}</div>
                     <div class="equipment-detail">Based on weight</div>
                 </div>
             `;
@@ -863,7 +978,7 @@
         function calculateFluids() {
             const patient = getPatientData();
             if (!patient.weight) {
-                document.getElementById('fluid-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight and age to calculate fluids</p>';
+                document.getElementById('fluid-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate fluids and drug doses</p>';
                 return;
             }
 

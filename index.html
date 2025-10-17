@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Pediatric Anesthesia Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -11,8 +11,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            /* FIX: Remove tap highlight (the blinking transparent box on press) */
-            -webkit-tap-highlight-color: transparent; 
         }
 
         :root {
@@ -40,74 +38,61 @@
 
             --radius-card: 16px;
             --radius-input: 10px;
-            
-            /* NEW: Custom timing functions for smoother, bouncier feel */
-            --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1); /* Smoother, more 'lift' */
-            
-            /* Add variables for direct color access in JS */
-            --light-bg-secondary: #fff8e1;
-            --dark-bg-secondary: #111111;
         }
 
         body.dark-mode {
             --bg-primary: #000000; /* Pitch Black Primary */
-            --bg-secondary: var(--dark-bg-secondary); /* Very Dark Secondary (main background) */
+            --bg-secondary: #111111; /* Very Dark Secondary (main background) */
             --bg-card: #222222; /* Very Dark Card */
             --text-primary: #f5f5f5; /* High contrast white/grey */
             --text-secondary: #bbbbbb;
             --border-color: #4a4a4a;
             --shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
             --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.8);
-            
+
             /* Dark Mode Accents - kept bright for contrast against dark background */
             --emergency: #ffeb3b;
         }
-        
-        /* FIX 3: Induction category text to black in Dark Mode */
-        body.dark-mode .drug-category.induction {
-             color: #121212; /* Explicit black/dark color */
-        }
-        
-        /* FIX 2: Emergency category text to black in Dark Mode for high contrast on bright yellow background */
-        body.dark-mode .drug-category.emergency {
-             color: #121212; /* Explicit black/dark color */
-        }
 
+        /* Make all text unselectable except inputs/textarea (so users can still type) */
+        html, body, .container, header, section, .section, .drug-card, .drug-name, .drug-category,
+        .dose-info, .equipment-card, .equipment-title, .equipment-value, .warning, .edit-btn,
+        .calculation, .calculation-result, .volume-result, .drug-details {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* Allow selecting inside inputs & textareas */
+        input, textarea {
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
 
         body {
             font-family: 'Montserrat', sans-serif;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            line-height: 1.5;
-            /* FIX 3: Smoother transition for text color */
-            transition: color var(--ease-out-quint) 0.4s; 
-            font-size: 0.95rem;
-            
-            /* FIX 2: Prevent text selection */
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE/Edge */
-            user-select: none; /* Standard syntax */
-        }
-        
-        /* FIX 3: Separate, longer transition for the main background color */
-        /* Must be on body.dark-mode and body for the transition to work correctly when class is toggled */
-        body, body.dark-mode {
-             transition: background-color 0.8s var(--ease-out-quint), color var(--ease-out-quint) 0.4s;
+            line-height: 1.5; /* Slightly tighter line height */
+            transition: background-color 0.4s, color 0.4s;
+            font-size: 0.95rem; /* Base font size reduction */
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 10px;
+            padding: 20px 10px; /* Reduced padding for mobile */
         }
 
         header {
             background: var(--primary-accent);
             color: var(--bg-primary);
-            padding: 20px;
+            padding: 20px; /* Reduced header padding */
             border-radius: var(--radius-card);
             box-shadow: var(--shadow);
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Reduced margin */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -115,7 +100,7 @@
         }
 
         h1 {
-            font-size: 1.8em;
+            font-size: 1.8em; /* Reduced font size */
             font-weight: 700;
         }
 
@@ -124,61 +109,48 @@
             color: var(--primary-accent);
             border: none;
             border-radius: 50px;
-            padding: 8px 16px;
+            padding: 8px 16px; /* Reduced padding */
             cursor: pointer;
             font-size: 0.8em;
             font-weight: 600;
-            /* FIX 4: Smoother toggle animation */
-            transition: all 0.4s var(--ease-out-quint);
+            transition: all 0.18s ease;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            -webkit-tap-highlight-color: transparent; /* remove tap highlight on mobile */
+            outline: none; /* remove focus outline */
         }
-        /* FIX 1: Remove distracting focus outlines on click/active */
-        .dark-mode-toggle:focus,
-        .edit-btn:focus,
-        .drug-header:focus {
-            outline: none !important;
+        .dark-mode-toggle:focus {
+            outline: none;
             box-shadow: none;
         }
-
-        /* FIX 1: Re-add subtle, accessible focus for keyboard users */
-        .dark-mode-toggle:focus-visible,
-        .edit-btn:focus-visible,
-        .drug-header:focus-visible {
-            outline: 2px solid var(--primary-accent);
-            outline-offset: 2px;
-        }
-        
-        /* FIX 4: Bouncy/lift effect for toggle button */
-        .dark-mode-toggle:hover {
-            transform: scale(1.05);
-        }
         .dark-mode-toggle:active {
-            transform: scale(0.95);
+            transform: translateY(1px);
         }
+        /* firefox inner focus fix */
+        .dark-mode-toggle::-moz-focus-inner { border: 0; }
 
         .section, .patient-info {
             background: var(--bg-card);
-            padding: 20px;
+            padding: 20px; /* Reduced section padding */
             border-radius: var(--radius-card);
             box-shadow: var(--shadow);
-            margin-bottom: 20px;
+            margin-bottom: 20px; /* Reduced margin */
             transition: box-shadow 0.3s ease;
         }
 
         .section h2 {
-            font-size: 1.4em;
+            font-size: 1.4em; /* Reduced font size */
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 15px; /* Reduced margin */
             color: var(--text-primary);
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color); /* Thinner border */
             padding-bottom: 8px;
         }
 
         /* Input Styling */
         .input-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Slightly tighter grid */
+            gap: 15px; /* Reduced gap */
             margin-top: 10px;
         }
 
@@ -194,7 +166,7 @@
         /* END NEW */
 
         .input-field label {
-            font-size: 0.85em;
+            font-size: 0.85em; /* Reduced label font size */
             color: var(--text-secondary);
             margin-bottom: 5px;
             font-weight: 600;
@@ -203,10 +175,10 @@
 
         .input-field input {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
+            padding: 10px 12px; /* Reduced input padding */
+            border: 1px solid var(--border-color); /* Thinner border */
             border-radius: var(--radius-input);
-            font-size: 0.95em;
+            font-size: 0.95em; /* Slightly reduced input text size */
             background: var(--bg-primary);
             color: var(--text-primary);
             transition: border-color 0.3s, box-shadow 0.3s;
@@ -221,34 +193,32 @@
         /* Drug Card Styling */
         .drugs-grid {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr; /* Force single column on mobile */
             gap: 15px;
             margin-top: 10px;
         }
 
         .drug-card {
             border-radius: var(--radius-card);
-            padding: 15px;
-            border-left: 6px solid;
+            padding: 15px; /* Reduced card padding */
+            border-left: 6px solid; /* Thinner accent border */
             background: var(--bg-secondary);
-            /* FIX 4: Smoother card transition */
-            transition: all 0.5s var(--ease-out-quint); 
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            will-change: transform, box-shadow, background-color; 
-            position: relative; 
-            z-index: 1; 
+            will-change: transform, box-shadow, background-color;
+            position: relative;
+            z-index: 1;
         }
-        
+
         /* FIX 1: Raise z-index for the active card to prevent caution pop-up clipping */
         .drug-card.caution-active {
-            z-index: 20; 
+            z-index: 20;
         }
         /* END FIX 1 */
 
-
         .drug-card:hover {
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08); 
-            transform: translateY(-2px); /* Slightly more aggressive lift */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
             background: var(--bg-card);
         }
 
@@ -266,65 +236,72 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            cursor: pointer; 
+            cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             outline: none;
-            padding-bottom: 0; 
+            padding-bottom: 0;
             transition: padding-bottom 0.3s ease;
-            flex-direction: column;
-            gap: 5px;
+            flex-direction: column; /* Default stack on mobile */
+            gap: 5px; /* Space between name and category */
         }
-        
+
         .drug-card.expanded .drug-header {
              padding-bottom: 10px;
         }
 
         .drug-name {
             font-weight: 700;
-            font-size: 1.2em; 
+            font-size: 1.2em;
             color: var(--text-primary);
             display: flex;
             align-items: center;
         }
-        
+
         .drug-name .toggle-icon {
             font-size: 1.1em;
             margin-right: 8px;
-            transform: rotate(0deg); 
-            /* FIX 4: Smoother toggle animation */
-            transition: transform 0.4s var(--ease-out-quint);
+            transform: rotate(0deg);
+            /* IMPROVED ANIMATION: Smoother spring-like motion */
+            transition: transform 350ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+            will-change: transform;
         }
 
         .drug-card.expanded .drug-name .toggle-icon {
-            transform: rotate(90deg); 
+            transform: rotate(90deg);
         }
-        
+
+        /* BOUNCY DETAILS ANIMATION:
+           - use transform + max-height + opacity to give a fluid, slightly bouncy feel
+        */
         .drug-details {
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            padding-top: 0; 
-            /* FIX 4: Smoother height/padding transition */
-            transition: max-height 0.5s var(--ease-out-quint), 
-                        opacity 0.3s ease-in-out,
-                        padding-top 0.5s var(--ease-out-quint);
-            will-change: max-height, opacity, padding-top; 
+            padding-top: 0;
+            transform: translateY(-6px);
+            transition:
+                max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 260ms ease-in-out,
+                transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+                padding-top 420ms cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: max-height, opacity, transform, padding-top;
         }
 
         .drug-card.expanded .drug-details {
-            max-height: 500px; 
+            max-height: 520px; /* generous max */
             opacity: 1;
-            padding-top: 15px; 
+            padding-top: 15px;
+            transform: translateY(0);
         }
         /* END COLLAPSIBLE DRUG STYLES */
 
 
         .drug-category {
-            font-size: 0.7em; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
+            font-size: 0.7em;
+            padding: 4px 10px;
+            border-radius: 20px;
             color: var(--bg-primary);
             font-weight: 600;
             text-transform: uppercase;
@@ -333,19 +310,14 @@
             flex-shrink: 0;
         }
 
-        /* FIX 1: Induction category text to black for light mode (on light cyan background) */
-        .drug-category.induction { 
-            background: var(--induction); 
-            color: var(--text-primary); 
-        }
-        
+        /* Category backgrounds unchanged, but make text color black for induction and emergency categories
+           (so induction agents, Atropine and Adrenaline have black label text in both modes) */
+        .drug-category.induction { background: var(--induction); color: #000; }
         .drug-category.muscle-relaxant { background: var(--muscle-relaxant); }
         .drug-category.analgesic { background: var(--analgesic); }
         .drug-category.adjunct { background: var(--adjunct); }
         .drug-category.reversal { background: var(--reversal); }
-        /* Keep existing emergency style for light mode/default, which uses var(--text-primary) (black) */
-        .drug-category.emergency { background: var(--emergency); color: var(--text-primary); } 
-        
+        .drug-category.emergency { background: var(--emergency); color: #000; } /* Atropine & Adrenaline -> black text */
         .drug-category.steroid { background: var(--steroid); }
         .drug-category.antiemetic { background: var(--antiemetic); }
 
@@ -355,7 +327,7 @@
             font-style: italic;
             margin-top: 4px;
         }
-        
+
         /* NEW: Caution and Dose Limit Styling */
         .caution-icon {
             display: inline-block;
@@ -364,38 +336,38 @@
             line-height: 18px;
             text-align: center;
             border-radius: 50%;
-            background-color: var(--emergency);
-            color: var(--text-primary);
+            background-color: var(--emergency); /* Amber/Gold for Caution */
+            color: #000; /* make the 'i' letter black in both modes */
             font-weight: bold;
             font-size: 0.7em;
             cursor: pointer;
-            margin-left: 10px;
-            flex-shrink: 0; 
-            align-self: flex-start;
-            transition: transform 0.3s var(--ease-out-quint); /* FIX 4: Bouncy icon hover */
+            margin-left: 10px; /* Space from category/name */
+            flex-shrink: 0;
+            align-self: flex-start; /* Keeps it aligned to the top of the header flex container */
+            -webkit-tap-highlight-color: transparent;
         }
         .caution-icon:hover {
-            transform: scale(1.15);
+            transform: scale(1.1);
         }
         .caution-popup {
             display: none;
             position: absolute;
-            z-index: 30;
+            z-index: 30; /* Higher than caution-active z-index */
             padding: 10px;
-            background-color: var(--bg-primary); 
+            background-color: var(--bg-primary);
             color: var(--text-primary);
             border: 1px solid var(--emergency);
             border-radius: 5px;
             box-shadow: var(--shadow-hover);
             width: 250px;
             font-size: 0.75em;
-            top: 15px;
-            right: 15px;
+            top: 15px; /* Position from top of the card (matching padding) */
+            right: 15px; /* Position from right of the card (matching padding) */
             white-space: normal;
         }
         .dose-limit-applied {
              font-size: 0.75em;
-             color: var(--reversal);
+             color: var(--reversal); /* Use Red for warning/limit */
              font-weight: 600;
              display: block;
              margin-top: 2px;
@@ -403,20 +375,20 @@
 
         .calculation {
             background: var(--bg-card);
-            padding: 12px;
+            padding: 12px; /* Reduced padding */
             border-radius: var(--radius-input);
-            margin-top: 10px;
+            margin-top: 10px; /* Reduced margin */
             border: 1px solid var(--border-color);
         }
 
         .calculation-result {
-            font-weight: 800; 
-            font-size: 1.3em;
-            color: var(--reversal); 
+            font-weight: 800;
+            font-size: 1.3em; /* Reduced font size */
+            color: var(--reversal);
         }
 
         .volume-result {
-            font-size: 0.85em;
+            font-size: 0.85em; /* Reduced font size */
             color: var(--text-secondary);
             margin-top: 3px;
             font-weight: 500;
@@ -424,29 +396,27 @@
 
         .edit-btn {
             background: transparent;
-            border: 1px solid var(--primary-accent);
-            padding: 6px 14px;
+            border: 1px solid var(--primary-accent); /* Thinner border */
+            padding: 6px 14px; /* Reduced padding */
             border-radius: 50px;
-            font-size: 0.8em;
+            font-size: 0.8em; /* Reduced font size */
             cursor: pointer;
             color: var(--primary-accent);
             margin-top: 10px;
-            /* FIX 4: Smoother button transition */
-            transition: all 0.4s var(--ease-out-quint);
+            transition: all 0.3s ease;
             font-weight: 600;
-            max-width: fit-content;
+            max-width: fit-content; /* Make button only as wide as content */
         }
 
         .edit-btn:hover {
             background: var(--primary-accent);
             color: var(--bg-primary);
             box-shadow: 0 4px 10px rgba(0, 137, 240, 0.3);
-            transform: translateY(-1px);
         }
 
         .expand-all-btn {
             margin-top: 5px;
-            margin-bottom: 15px;
+            margin-bottom: 15px; /* Reduced margin */
             display: block;
             width: 100%;
             max-width: 400px;
@@ -455,17 +425,17 @@
 
         .edit-inputs {
             /* Now defaults to hidden */
-            display: none; 
+            display: none;
             margin-top: 10px;
-            padding: 10px;
+            padding: 10px; /* Reduced padding */
             background: var(--bg-secondary);
             border-radius: var(--radius-input);
             border: 1px dashed var(--text-tertiary);
             animation: fadeIn 0.3s ease-in-out;
-            flex-direction: column;
-            gap: 10px;
+            flex-direction: column; /* Stack inputs vertically */
+            gap: 10px; /* Space between inputs */
         }
-        
+
         /* CRITICAL FIX: Add the .active class rule to show the inputs */
         .edit-inputs.active {
             display: flex;
@@ -474,7 +444,7 @@
         /* Equipment Card Styling */
         .equipment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted min-width for mobile */
             gap: 15px;
             margin-top: 10px;
         }
@@ -494,7 +464,7 @@
             margin-bottom: 8px;
             font-weight: 600;
         }
-        
+
         .equipment-value.error {
             color: var(--reversal);
             font-size: 0.9em;
@@ -503,7 +473,7 @@
         }
 
         .equipment-value {
-            font-size: 1.6em;
+            font-size: 1.6em; /* Reduced font size */
             font-weight: 800;
             color: var(--primary-accent);
             line-height: 1.1;
@@ -532,7 +502,7 @@
             color: #ffeb3b;
             border-left: 5px solid #ff9800;
         }
-        
+
         /* Responsive Overrides (Mobile First) */
         @media (min-width: 768px) {
             .container {
@@ -693,7 +663,7 @@
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '1-2 mg/kg IV, 3-4 mg/kg IM',
-                caution: 'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.' 
+                caution: 'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.'
             },
             {
                 name: 'Fentanyl',
@@ -739,7 +709,7 @@
                 useParam: 'weight',
                 range: '10-15 mg/kg (max 1g)',
                 maxDose: 1000,
-                caution: 'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.' 
+                caution: 'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.'
             },
             {
                 name: 'Midazolam',
@@ -751,7 +721,7 @@
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '0.05-0.2 mg/kg',
-                caution: 'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.' 
+                caution: 'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.'
             },
             {
                 name: 'Lidocaine (Xylocard)',
@@ -763,7 +733,7 @@
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '1-1.5 mg/kg IV',
-                caution: 'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.' 
+                caution: 'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.'
             },
             {
                 name: 'Dexamethasone',
@@ -816,7 +786,7 @@
                 name: 'Atropine',
                 category: 'emergency',
                 categoryLabel: 'Anticholinergic',
-                defaultDose: 0.02,
+                defaultDose: 0.01,
                 unit: 'mg/kg',
                 concentration: 0.6,
                 concentrationUnit: 'mg/mL',
@@ -830,7 +800,7 @@
                 categoryLabel: 'Reversal Agent',
                 defaultDose: 0.05,
                 unit: 'mg/kg',
-                concentration: 2.5,
+                concentration: 0.5,
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '0.04-0.08 mg/kg (max 5mg)',
@@ -859,17 +829,6 @@
                 range: '2-4 mg/kg (routine reversal)'
             },
             {
-                name: 'Ephedrine',
-                category: 'emergency',
-                categoryLabel: 'Vasopressor',
-                defaultDose: 0.1,
-                unit: 'mg/kg',
-                concentration: 3,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.05-0.1 mg/kg'
-            },
-            {
                 name: 'Adrenaline (Epinephrine)',
                 category: 'emergency',
                 categoryLabel: 'Emergency',
@@ -881,19 +840,29 @@
                 range: '10 mcg/kg IV (1:100,000)'
             }
         ];
-        
-        let allExpanded = false; 
-        
+
+        // Dynamic Concentration Tiers for Volume < 1mL
+        const dilutionTiers = {
+            'Fentanyl': [50, 10, 5], // mcg/mL
+            'Atropine': [0.6, 0.1], // mg/mL
+            'Glycopyrrolate': [0.2, 0.04], // mg/mL
+            'Ondansetron': [2, 1], // mg/mL
+            'Vecuronium': [1, 0.5], // mg/mL
+            'Atracurium': [10, 5, 2.5] // mg/mL
+        };
+
+        let allExpanded = false;
+
         // Variable to hold the index of the drug card that should remain open after a recalculation
-        let activeEditIndex = null; 
-        
+        let activeEditIndex = null;
+
         /**
          * Clamps the age inputs to their limits (Years: 0-18, Months: 0-11) and triggers calculation.
          */
         function clampAgeAndCalculate() {
             const ageYearsInput = document.getElementById('age-years');
             const ageMonthsInput = document.getElementById('age-months');
-            
+
             let years = parseFloat(ageYearsInput.value);
             let months = parseFloat(ageMonthsInput.value);
 
@@ -926,7 +895,7 @@
             // Read years and months (clamped values)
             const years = parseFloat(document.getElementById('age-years').value) || 0;
             const months = parseFloat(document.getElementById('age-months').value) || 0;
-            
+
             // Calculate total age in years (e.g., 2 years and 6 months = 2.5)
             const totalAge = years + (months / 12);
 
@@ -946,13 +915,13 @@
          * @returns {string} The ETT size (ID in mm) or an error message.
          */
         function calculateETTSize(age, weight) {
-            
+
             // 1. INFANTS (Age < 1 year) - Requires weight
             if (age < 1) {
                 if (weight === 0) {
                     return 'Enter Weight (kg)';
                 }
-                
+
                 // Use weight-based guidelines for infants
                 if (weight < 1.0) return '2.5';       // < 1000g
                 if (weight >= 1.0 && weight <= 2.0) return '3.0'; // 1000g - 2000g
@@ -965,10 +934,10 @@
             if (age >= 1 && age <= 18) {
                 return ((age / 4) + 4).toFixed(1);
             }
-            
+
             // 3. ADULT/TEENAGER FALLBACK (>18 years, though clamped)
             // This is technically unreachable due to clamping, but included for robustness.
-            return '7.5'; 
+            return '7.5';
         }
 
         /**
@@ -979,16 +948,16 @@
          */
         function calculateETTDepth(age, weight) {
             const ETT_ID_Uncuffed_str = calculateETTSize(age, weight);
-            
+
             if (ETT_ID_Uncuffed_str.includes('Enter') || ETT_ID_Uncuffed_str === 'N/A') return 'N/A';
-            
+
             const ETT_ID_Uncuffed = parseFloat(ETT_ID_Uncuffed_str);
 
             if (age < 0.1 && weight > 0) { // Neonate (<1 month)
                  // Common formula for neonates: Depth (cm) = Weight (kg) + 6 cm
                  return (weight + 6).toFixed(1);
             }
-            
+
             // General formula: Depth (cm) = ID x 3
             return (ETT_ID_Uncuffed * 3).toFixed(1);
         }
@@ -1042,7 +1011,7 @@
 
         function calculateEquipment() {
             const patient = getPatientData();
-            
+
             const uncuffedSize = calculateETTSize(patient.age, patient.weight);
             const depth = calculateETTDepth(patient.age, patient.weight);
 
@@ -1059,7 +1028,7 @@
                 // Cuffed size is 0.5mm smaller
                 cuffedSize = (uncuffedID - 0.5).toFixed(1);
             }
-            
+
             // Check LMA/i-gel dependency on weight
             const lmaSize = patient.weight === 0 ? 'N/A' : calculateLMASize(patient.weight);
             const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
@@ -1137,17 +1106,17 @@
             `;
             document.getElementById('fluid-results').innerHTML = fluidHTML;
         }
-        
+
         /**
          * Utility function to parse the maximum dose from the range string.
          * Attempts to find the highest number that precedes the unit (mg/kg or mcg/kg).
          */
         function parseMaxDoseFromRange(rangeString) {
             if (!rangeString) return null;
-            
+
             // Regex to find all numbers (including decimals)
             const numbers = rangeString.match(/(\d+\.?\d*)/g);
-            
+
             if (!numbers || numbers.length === 0) return null;
 
             // Find the highest number, assuming it's the upper limit of the dose range
@@ -1158,7 +1127,7 @@
                 }
                 return max;
             }, 0);
-            
+
             // A common dose range like '1-2 mg/kg' or '10 mcg/kg IV' should give a maxDose > 0
             return maxDose > 0 ? maxDose : null;
         }
@@ -1166,7 +1135,7 @@
         function calculateDrugs() {
             const patient = getPatientData();
             const drugResultsDiv = document.getElementById('drug-results');
-            
+
             if (!patient.weight) {
                 drugResultsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate drug doses</p>';
                 document.getElementById('toggleAllBtn').style.display = 'none';
@@ -1178,7 +1147,7 @@
             let drugHTML = '';
             drugs.forEach((drug, index) => {
                 const paramValue = patient[drug.useParam];
-                
+
                 let dosePerKg = drug.defaultDose; // Default dose (or custom dose from updateDrug)
                 let doseAdjusted = false; // For Paracetamol specific dose
                 let limitApplied = false; // For minDose/maxDose limits
@@ -1186,8 +1155,8 @@
                 // --- 1. SPECIAL DOSAGE ADJUSTMENTS BASED ON WEIGHT ---
                 // Paracetamol (IV) adjustment for small infants (< 10 kg)
                 if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10) {
-                    if (drug.defaultDose === 15) { // Only apply reduction if using the standard default
-                         dosePerKg = 7.5; 
+                    if (drug.defaultDose === 15) {
+                         dosePerKg = 7.5;
                          doseAdjusted = true;
                     }
                 } else {
@@ -1197,7 +1166,7 @@
 
                 // Calculate base total dose (using the potentially adjusted dosePerKg)
                 let dose = paramValue * dosePerKg;
-                
+
                 // --- 2. APPLY MIN/MAX TOTAL DOSE LIMITS (Safety) ---
 
                 // Apply Maximum Total Dose
@@ -1205,20 +1174,46 @@
                     dose = drug.maxDose;
                     limitApplied = true;
                 }
-                
+
                 // Apply Minimum Total Dose
                 if (drug.minDose && dose < drug.minDose) {
                     dose = drug.minDose;
                     limitApplied = true;
                 }
-                
-                // Calculate final metrics
+
+                // --- 3. DYNAMIC CONCENTRATION LOGIC (NEW) ---
+                const initialConcentration = drug.concentration;
+                let finalConcentration = initialConcentration;
+                let dilutionApplied = false;
+
+                const tiers = dilutionTiers[drug.name];
+
+                if (tiers) {
+                    // Iterate from highest concentration (tiers[0]) to lowest
+                    for (const conc of tiers) {
+                        const calculatedVolume = dose / conc;
+                        if (calculatedVolume >= 1.0) {
+                            // Found the highest tier concentration that gives >= 1.0 mL
+                            finalConcentration = conc;
+                            dilutionApplied = conc !== initialConcentration;
+                            break;
+                        }
+                        // If volume < 1.0 mL, the last (most dilute) tier is the final choice.
+                        finalConcentration = conc;
+                        dilutionApplied = true;
+                    }
+                }
+
+                // Calculate final metrics using the determined concentration
+                const volume = dose / finalConcentration;
                 const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
-                const volume = dose / drug.concentration;
                 const volumeDisplay = volume.toFixed(2);
                 const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
-                
-                // --- 3. CAUTION BUTTON/POPUP LOGIC ---
+
+                // Prepare concentration display text (REMOVED DYNAMIC DILUTION MENTION)
+                let concentrationDisplay = `${finalConcentration} ${drug.concentrationUnit}`;
+
+                // --- 4. CAUTION BUTTON/POPUP LOGIC ---
                 let isCautionNeeded = false;
                 if (drug.caution) {
                     // Succinylcholine: Caution for all typical pediatric patients (e.g., < 50 kg)
@@ -1232,21 +1227,21 @@
 
                 if (isCautionNeeded) {
                     cautionIconHtml = `
-                        <span class="caution-icon" id="caution-icon-${index}" 
+                        <span class="caution-icon" id="caution-icon-${index}"
                               onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>
                     `;
-                    
+
                     cautionPopupHtml = `
                         <div id="caution-popup-${index}" class="caution-popup">
                             <strong>CAUTION:</strong> ${drug.caution}
                         </div>
                     `;
                 }
-                
-                // --- 4. DISPLAY STRINGS ---
-                
+
+                // --- 5. DISPLAY STRINGS ---
+
                 let doseInfoHtml = `<div class="dose-info">Dose Range: ${drug.range}</div>`;
-                
+
                 if (doseAdjusted) {
                      doseInfoHtml = `<div class="dose-info dose-limit-applied">Dose reduced to ${dosePerKg} ${drug.unit} for <10 kg weight.</div>`;
                 }
@@ -1256,12 +1251,11 @@
                     limitInfoHtml = `<span class="dose-limit-applied">${dose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
                 }
 
-
                 // Determine if this card should be expanded and the inputs active after redraw
                 const isExpandedClass = (allExpanded || index === activeEditIndex) ? 'expanded' : '';
                 const isActiveEditClass = (index === activeEditIndex) ? 'active' : '';
-                
-                // --- 5. CUSTOM DOSE WARNING ---
+
+                // --- 6. CUSTOM DOSE WARNING ---
                 let customDoseWarning = '';
                 if (drug.isCustomDoseHigh) {
                     customDoseWarning = `
@@ -1270,7 +1264,6 @@
                         </div>
                     `;
                 }
-
 
                 drugHTML += `
                     <div class="drug-card ${drug.category} ${isExpandedClass}" id="drug-card-${index}">
@@ -1287,7 +1280,7 @@
                                 ${doseInfoHtml}
                                 <div class="calculation">
                                     <div class="calculation-result">${doseDisplay} ${totalDoseUnit} ${limitInfoHtml}</div>
-                                    <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${drug.concentration} ${drug.concentrationUnit})</div>
+                                    <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>
                                     <div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>
                                 </div>
                                 <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
@@ -1306,7 +1299,7 @@
             });
 
             drugResultsDiv.innerHTML = drugHTML;
-            activeEditIndex = null; 
+            activeEditIndex = null;
             document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
         }
 
@@ -1314,7 +1307,7 @@
             const card = document.getElementById(`drug-card-${index}`);
             card.classList.toggle('expanded');
         }
-        
+
         function toggleAllDrugs() {
             allExpanded = !allExpanded;
             const cards = document.querySelectorAll('.drug-card');
@@ -1345,7 +1338,7 @@
         function toggleEdit(index) {
             const editDiv = document.getElementById(`edit-${index}`);
             editDiv.classList.toggle('active');
-            
+
             // Ensure the parent card is expanded when the edit panel is opened
             if (editDiv.classList.contains('active')) {
                 document.getElementById(`drug-card-${index}`).classList.add('expanded');
@@ -1356,13 +1349,13 @@
             const drug = drugs[index];
             const doseInput = document.getElementById(`dose-${index}`);
             const concInput = document.getElementById(`conc-${index}`);
-            
+
             const newDose = parseFloat(doseInput.value);
             const newConc = parseFloat(concInput.value);
 
             // Note: parseMaxDoseFromRange handles parsing the 'range' string (e.g., '2-3 mg/kg') to get '3'.
             const maxDose = parseMaxDoseFromRange(drug.range);
-            
+
             // --- NEW WARNING LOGIC ---
             drug.isCustomDoseHigh = false; // Reset flag
 
@@ -1377,13 +1370,13 @@
             if (!isNaN(newConc) && newConc > 0) {
                 drug.concentration = newConc;
             }
-            
+
             // Set the index of the drug card to keep open and active
             activeEditIndex = index;
 
             // Recalculate and redraw. The activeEditIndex logic handles re-opening the card/inputs.
             calculateDrugs();
-            
+
             // Attempt to restore focus after redrawing (better UX)
             // Need a slight delay because the DOM element is technically new
             setTimeout(() => {
@@ -1391,12 +1384,12 @@
                 if (updatedDoseInput) updatedDoseInput.focus();
             }, 50);
         }
-        
+
         // Global function to toggle the caution pop-up
         function toggleCautionPopup(index) {
             const card = document.getElementById(`drug-card-${index}`);
             const popup = document.getElementById(`caution-popup-${index}`);
-            
+
             // Hide all other popups AND remove the active class from their cards
             document.querySelectorAll('.caution-popup').forEach(p => {
                 if (p.id !== popup.id) {
@@ -1405,7 +1398,7 @@
                     if (parentCard) parentCard.classList.remove('caution-active');
                 }
             });
-            
+
             if (popup) {
                 // Toggle current popup
                 if (popup.style.display === 'block') {
@@ -1417,7 +1410,7 @@
                 }
             }
         }
-        
+
         // Close pop-up when clicking anywhere else
         document.addEventListener('click', (e) => {
             // Check if the click target is NOT the caution icon and is NOT inside a caution popup
@@ -1443,37 +1436,18 @@
             }
         });
 
-        // FIX 3: Updated dark mode function for a smoother background transition
-        function toggleDarkMode() {
-            const isDark = !document.body.classList.contains('dark-mode');
-            
-            // Step 1: Immediately toggle the class for all foreground elements (text, card colors)
-            document.body.classList.toggle('dark-mode', isDark);
-
-            // Determine the final background color based on the new mode
-            // Using the new CSS variables for reliable access
-            const targetBgSecondary = isDark 
-                ? getComputedStyle(document.documentElement).getPropertyValue('--dark-bg-secondary').trim()
-                : getComputedStyle(document.documentElement).getPropertyValue('--light-bg-secondary').trim();
-
-            // Step 2: Set the inline style to start the color change immediately
-            document.body.style.backgroundColor = targetBgSecondary;
-
-            // Step 3: Schedule the removal of the inline style after a small delay.
-            // This re-enables the CSS transition property on the body for the smooth 'surrounding' effect.
-            setTimeout(() => {
-                document.body.style.backgroundColor = ''; 
-            }, 50); 
-
-            // Step 4: Update text and storage
-            localStorage.setItem('darkMode', isDark);
-            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-        }
 
         function calculateAll() {
             calculateEquipment();
             calculateFluids();
             calculateDrugs();
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
         }
 
         window.onload = function() {

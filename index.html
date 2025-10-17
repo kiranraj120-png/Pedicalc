@@ -175,11 +175,19 @@
             padding: 15px; /* Reduced card padding */
             border-left: 6px solid; /* Thinner accent border */
             background: var(--bg-secondary);
-            /* IMPROVED ANIMATION: Added will-change */
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             will-change: transform, box-shadow, background-color; 
+            position: relative; 
+            z-index: 1; 
         }
+        
+        /* FIX 1: Raise z-index for the active card to prevent caution pop-up clipping */
+        .drug-card.caution-active {
+            z-index: 20; 
+        }
+        /* END FIX 1 */
+
 
         .drug-card:hover {
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08); 
@@ -202,45 +210,35 @@
             justify-content: space-between;
             align-items: flex-start;
             cursor: pointer; 
-            /* MODIFICATION 1: Remove selection and tap highlight for fluid UX */
             user-select: none;
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             outline: none;
-            /* END MODIFICATION 1 */
             padding-bottom: 0; 
             transition: padding-bottom 0.3s ease;
             flex-direction: column; /* Default stack on mobile */
             gap: 5px; /* Space between name and category */
         }
-
-        /* Ensure horizontal layout on larger screens */
-        @media (min-width: 600px) {
-            .drug-header {
-                flex-direction: row;
-                align-items: center;
-            }
-        }
         
-        /* Add slight padding back when expanded for better layout */
         .drug-card.expanded .drug-header {
              padding-bottom: 10px;
         }
 
         .drug-name {
             font-weight: 700;
-            font-size: 1.2em; /* Reduced font size */
+            font-size: 1.2em; 
             color: var(--text-primary);
             display: flex;
             align-items: center;
+            /* position: relative; Removed this as popup is now relative to card */
         }
         
         .drug-name .toggle-icon {
             font-size: 1.1em;
             margin-right: 8px;
             transform: rotate(0deg); 
-            /* IMPROVED ANIMATION: Smoother transition curve for rotation */
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* IMPROVED ANIMATION: Smoother deceleration */
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .drug-card.expanded .drug-name .toggle-icon {
@@ -252,11 +250,11 @@
             overflow: hidden;
             opacity: 0;
             padding-top: 0; 
-            /* IMPROVED ANIMATION: Fluid mobile-app cubic-bezier and added padding-top transition */
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+            /* IMPROVED ANIMATION: Smoother deceleration */
+            transition: max-height 0.35s cubic-bezier(0.19, 1, 0.22, 1), 
                         opacity 0.3s ease-in-out,
-                        padding-top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: max-height, opacity, padding-top; /* Performance hint */
+                        padding-top 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+            will-change: max-height, opacity, padding-top; 
         }
 
         .drug-card.expanded .drug-details {
@@ -268,14 +266,15 @@
 
 
         .drug-category {
-            font-size: 0.7em; /* Reduced font size */
-            padding: 4px 10px; /* Reduced padding */
-            border-radius: 20px; /* Reduced border radius */
+            font-size: 0.7em; 
+            padding: 4px 10px; 
+            border-radius: 20px; 
             color: var(--bg-primary);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
         }
 
         .drug-category.induction { background: var(--induction); }
@@ -292,6 +291,50 @@
             color: var(--text-secondary);
             font-style: italic;
             margin-top: 4px;
+        }
+        
+        /* NEW: Caution and Dose Limit Styling */
+        .caution-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: var(--emergency); /* Amber/Gold for Caution */
+            color: var(--text-primary);
+            font-weight: bold;
+            font-size: 0.7em;
+            cursor: pointer;
+            margin-left: 10px; /* Space from category/name */
+            flex-shrink: 0; 
+            align-self: flex-start; /* Keeps it aligned to the top of the header flex container */
+        }
+        .caution-icon:hover {
+            transform: scale(1.1);
+        }
+        .caution-popup {
+            display: none;
+            position: absolute;
+            z-index: 30; /* Higher than caution-active z-index */
+            padding: 10px;
+            background-color: var(--bg-primary); 
+            color: var(--text-primary);
+            border: 1px solid var(--emergency);
+            border-radius: 5px;
+            box-shadow: var(--shadow-hover);
+            width: 250px;
+            font-size: 0.75em;
+            top: 15px; /* Position from top of the card (matching padding) */
+            right: 15px; /* Position from right of the card (matching padding) */
+            white-space: normal;
+        }
+        .dose-limit-applied {
+             font-size: 0.75em;
+             color: var(--reversal); /* Use Red for warning/limit */
+             font-weight: 600;
+             display: block;
+             margin-top: 2px;
         }
 
         .calculation {
@@ -445,6 +488,11 @@
              .drug-name {
                 font-size: 1.3em;
             }
+            /* Make drug-header a row with space-between on desktop */
+            .drug-header {
+                flex-direction: row;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -578,7 +626,8 @@
                 concentration: 20,
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
-                range: '1-2 mg/kg IV, 3-4 mg/kg IM'
+                range: '1-2 mg/kg IV, 3-4 mg/kg IM',
+                caution: 'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.' 
             },
             {
                 name: 'Fentanyl',
@@ -623,7 +672,8 @@
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '10-15 mg/kg (max 1g)',
-                maxDose: 1000
+                maxDose: 1000,
+                caution: 'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.' 
             },
             {
                 name: 'Midazolam',
@@ -634,7 +684,8 @@
                 concentration: 1,
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
-                range: '0.05-0.2 mg/kg'
+                range: '0.05-0.2 mg/kg',
+                caution: 'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.' 
             },
             {
                 name: 'Lidocaine (Xylocard)',
@@ -646,7 +697,7 @@
                 concentrationUnit: 'mg/mL',
                 useParam: 'weight',
                 range: '1-1.5 mg/kg IV',
-
+                caution: 'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.' 
             },
             {
                 name: 'Dexamethasone',
@@ -794,9 +845,7 @@
             if (!isNaN(months)) {
                 if (months < 0) months = 0;
                 if (months > 11) months = 11;
-                // Only show months if years is 18 or less (to prevent 18y 11m, which is allowed)
-                // However, we must ensure if years is 18, months MUST be 0 if we strictly cap at 18.0 years.
-                // Since the user asks for cap at 18, we allow 18 years 0 months, but nothing more.
+                // If years is 18, months MUST be 0
                  if (years === 18) months = 0;
                 ageMonthsInput.value = months;
             } else if (ageMonthsInput.value) {
@@ -953,7 +1002,7 @@
             const equipmentHTML = `
                 <div class="equipment-card">
                     <div class="equipment-title">ETT Size (Uncuffed)</div>
-                    <div class="${uncuffedValueClass}">${uncuffedSize}</div>
+                    <div class="equipment-value ${uncuffedValueClass}">${uncuffedSize}</div>
                     <div class="equipment-detail">Depth: ${depth} cm at lips</div>
                 </div>
                 <div class="equipment-card">
@@ -1022,6 +1071,31 @@
             `;
             document.getElementById('fluid-results').innerHTML = fluidHTML;
         }
+        
+        /**
+         * Utility function to parse the maximum dose from the range string.
+         * Attempts to find the highest number that precedes the unit (mg/kg or mcg/kg).
+         */
+        function parseMaxDoseFromRange(rangeString) {
+            if (!rangeString) return null;
+            
+            // Regex to find all numbers (including decimals)
+            const numbers = rangeString.match(/(\d+\.?\d*)/g);
+            
+            if (!numbers || numbers.length === 0) return null;
+
+            // Find the highest number, assuming it's the upper limit of the dose range
+            const maxDose = numbers.reduce((max, current) => {
+                const num = parseFloat(current);
+                if (!isNaN(num) && num > max) {
+                    return num;
+                }
+                return max;
+            }, 0);
+            
+            // A common dose range like '1-2 mg/kg' or '10 mcg/kg IV' should give a maxDose > 0
+            return maxDose > 0 ? maxDose : null;
+        }
 
         function calculateDrugs() {
             const patient = getPatientData();
@@ -1038,37 +1112,120 @@
             let drugHTML = '';
             drugs.forEach((drug, index) => {
                 const paramValue = patient[drug.useParam];
-                let dose = paramValue * drug.defaultDose;
+                
+                let dosePerKg = drug.defaultDose; // Default dose (or custom dose from updateDrug)
+                let doseAdjusted = false; // For Paracetamol specific dose
+                let limitApplied = false; // For minDose/maxDose limits
 
+                // --- 1. SPECIAL DOSAGE ADJUSTMENTS BASED ON WEIGHT ---
+                // Paracetamol (IV) adjustment for small infants (< 10 kg) - ONLY if user hasn't customized it significantly
+                if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10) {
+                     // Only apply reduction if the user's current dose is > 7.5 (i.e., they are using the default or an unnecessarily high custom dose)
+                     // If the user manually sets it to 7.5, we respect that. If they set it to 10, we don't auto-adjust.
+                     // The safer, more robust logic is to keep the SPECIAL adjustment separate from user customization logic.
+                    if (drug.defaultDose === 15) { // Check if it's the standard default
+                         dosePerKg = 7.5; 
+                         doseAdjusted = true;
+                    }
+                } else {
+                    // Use the defaultDose (which might have been edited by user)
+                    dosePerKg = drug.defaultDose;
+                }
+
+                // Calculate base total dose (using the potentially adjusted dosePerKg)
+                let dose = paramValue * dosePerKg;
+                
+                // --- 2. APPLY MIN/MAX TOTAL DOSE LIMITS (Safety) ---
+
+                // Apply Maximum Total Dose
                 if (drug.maxDose && dose > drug.maxDose) {
                     dose = drug.maxDose;
+                    limitApplied = true;
                 }
+                
+                // Apply Minimum Total Dose
                 if (drug.minDose && dose < drug.minDose) {
                     dose = drug.minDose;
+                    limitApplied = true;
                 }
-
+                
+                // Calculate final metrics
                 const volume = dose / drug.concentration;
                 const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
                 const volumeDisplay = volume.toFixed(2);
                 const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
                 
+                // --- 3. CAUTION BUTTON/POPUP LOGIC ---
+                let isCautionNeeded = false;
+                if (drug.caution) {
+                    // Succinylcholine: Caution for all typical pediatric patients (e.g., < 50 kg)
+                    if (drug.name === 'Succinylcholine' && patient.weight > 0 && patient.weight < 50) isCautionNeeded = true;
+                    // Paracetamol, Midazolam, Lidocaine: Caution for small infants (< 10 kg)
+                    else if ((drug.name === 'Paracetamol (IV)' || drug.name === 'Midazolam' || drug.name === 'Lidocaine (Xylocard)') && patient.weight > 0 && patient.weight < 10) isCautionNeeded = true;
+                }
+
+                let cautionIconHtml = '';
+                let cautionPopupHtml = '';
+
+                if (isCautionNeeded) {
+                    cautionIconHtml = `
+                        <span class="caution-icon" id="caution-icon-${index}" 
+                              onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>
+                    `;
+                    
+                    cautionPopupHtml = `
+                        <div id="caution-popup-${index}" class="caution-popup">
+                            <strong>CAUTION:</strong> ${drug.caution}
+                        </div>
+                    `;
+                }
+                
+                // --- 4. DISPLAY STRINGS ---
+                
+                let doseInfoHtml = `<div class="dose-info">Dose Range: ${drug.range}</div>`;
+                
+                if (doseAdjusted) {
+                     doseInfoHtml = `<div class="dose-info dose-limit-applied">Dose reduced to ${dosePerKg} ${drug.unit} for <10 kg weight.</div>`;
+                }
+
+                let limitInfoHtml = '';
+                if (limitApplied) {
+                    limitInfoHtml = `<span class="dose-limit-applied">${dose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
+                }
+
+
                 // Determine if this card should be expanded and the inputs active after redraw
                 const isExpandedClass = (allExpanded || index === activeEditIndex) ? 'expanded' : '';
                 const isActiveEditClass = (index === activeEditIndex) ? 'active' : '';
+                
+                // --- 5. CUSTOM DOSE WARNING ---
+                let customDoseWarning = '';
+                if (drug.isCustomDoseHigh) {
+                    customDoseWarning = `
+                        <div class="dose-limit-applied" style="color: var(--reversal); font-weight: 700; border: 1px solid var(--reversal); display: block; padding: 5px; border-radius: 5px; margin-bottom: 10px; background-color: var(--bg-card);">
+                            ⚠️ Custom Dose (${drug.defaultDose} ${drug.unit}) is **ABOVE** recommended range.
+                        </div>
+                    `;
+                }
+
 
                 drugHTML += `
                     <div class="drug-card ${drug.category} ${isExpandedClass}" id="drug-card-${index}">
-                        <div class="drug-header" onclick="toggleDrugCard(${index})">
-                            <div class="drug-name"><span class="toggle-icon">▶</span> ${drug.name}</div>
+                        ${cautionPopupHtml} <div class="drug-header" onclick="toggleDrugCard(${index})">
+                            <div class="drug-name">
+                                <span class="toggle-icon">▶</span> 
+                                ${drug.name}
+                            </div>
                             <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
-                        </div>
+                            ${cautionIconHtml} </div>
                         <div class="drug-details" id="drug-details-${index}">
                             <div class="drug-info">
-                                <div class="dose-info">Dose Range: ${drug.range}</div>
+                                ${customDoseWarning}
+                                ${doseInfoHtml}
                                 <div class="calculation">
-                                    <div class="calculation-result">${doseDisplay} ${totalDoseUnit}</div>
+                                    <div class="calculation-result">${doseDisplay} ${totalDoseUnit} ${limitInfoHtml}</div>
                                     <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${drug.concentration} ${drug.concentrationUnit})</div>
-                                    <div class="dose-info">Default: ${drug.defaultDose} ${drug.unit}</div>
+                                    <div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>
                                 </div>
                                 <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
                                 <div class="edit-inputs ${isActiveEditClass}" id="edit-${index}">
@@ -1086,7 +1243,6 @@
             });
 
             drugResultsDiv.innerHTML = drugHTML;
-            // Clear the active index after rendering to prevent subsequent calls from keeping it open
             activeEditIndex = null; 
             document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
         }
@@ -1134,12 +1290,30 @@
         }
 
         function updateDrug(index) {
-            const newDose = parseFloat(document.getElementById(`dose-${index}`).value);
-            const newConc = parseFloat(document.getElementById(`conc-${index}`).value);
+            const drug = drugs[index];
+            const doseInput = document.getElementById(`dose-${index}`);
+            const concInput = document.getElementById(`conc-${index}`);
+            
+            const newDose = parseFloat(doseInput.value);
+            const newConc = parseFloat(concInput.value);
 
-            // Only update if a positive number is entered
-            if (!isNaN(newDose) && newDose > 0) drugs[index].defaultDose = newDose;
-            if (!isNaN(newConc) && newConc > 0) drugs[index].concentration = newConc;
+            // Note: parseMaxDoseFromRange handles parsing the 'range' string (e.g., '2-3 mg/kg') to get '3'.
+            const maxDose = parseMaxDoseFromRange(drug.range);
+            
+            // --- NEW WARNING LOGIC ---
+            drug.isCustomDoseHigh = false; // Reset flag
+
+            // Only update dose/concentration if a positive number is entered
+            if (!isNaN(newDose) && newDose > 0) {
+                drug.defaultDose = newDose;
+                // Check if the new dose exceeds the parsed maximum dose from the range
+                if (maxDose !== null && newDose > maxDose) {
+                    drug.isCustomDoseHigh = true;
+                }
+            }
+            if (!isNaN(newConc) && newConc > 0) {
+                drug.concentration = newConc;
+            }
             
             // Set the index of the drug card to keep open and active
             activeEditIndex = index;
@@ -1150,10 +1324,62 @@
             // Attempt to restore focus after redrawing (better UX)
             // Need a slight delay because the DOM element is technically new
             setTimeout(() => {
-                const doseInput = document.getElementById(`dose-${index}`);
-                if (doseInput) doseInput.focus();
+                const updatedDoseInput = document.getElementById(`dose-${index}`);
+                if (updatedDoseInput) updatedDoseInput.focus();
             }, 50);
         }
+        
+        // Global function to toggle the caution pop-up
+        function toggleCautionPopup(index) {
+            const card = document.getElementById(`drug-card-${index}`);
+            const popup = document.getElementById(`caution-popup-${index}`);
+            
+            // Hide all other popups AND remove the active class from their cards
+            document.querySelectorAll('.caution-popup').forEach(p => {
+                if (p.id !== popup.id) {
+                    p.style.display = 'none';
+                    const parentCard = p.closest('.drug-card');
+                    if (parentCard) parentCard.classList.remove('caution-active');
+                }
+            });
+            
+            if (popup) {
+                // Toggle current popup
+                if (popup.style.display === 'block') {
+                    popup.style.display = 'none';
+                    card.classList.remove('caution-active');
+                } else {
+                    popup.style.display = 'block';
+                    card.classList.add('caution-active'); // Add class to elevate Z-index
+                }
+            }
+        }
+        
+        // Close pop-up when clicking anywhere else
+        document.addEventListener('click', (e) => {
+            // Check if the click target is NOT the caution icon and is NOT inside a caution popup
+            let clickedInsidePopup = false;
+            let current = e.target;
+            while(current) {
+                if (current.classList && (current.classList.contains('caution-popup') || current.classList.contains('caution-icon'))) {
+                    clickedInsidePopup = true;
+                    break;
+                }
+                current = current.parentElement;
+            }
+
+            if (!clickedInsidePopup) {
+                // Hide pop-ups
+                document.querySelectorAll('.caution-popup').forEach(p => {
+                    p.style.display = 'none';
+                });
+                // Remove the z-index class from cards
+                document.querySelectorAll('.drug-card.caution-active').forEach(card => {
+                     card.classList.remove('caution-active');
+                });
+            }
+        });
+
 
         function calculateAll() {
             calculateEquipment();

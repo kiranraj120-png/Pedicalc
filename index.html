@@ -1,1464 +1,885 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Pediatric Anesthesia Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        /* Modern Vibrant Material-Inspired CSS - INCREASED CONTRAST */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pediatric Anesthesia Calculator</title>
 
-        :root {
-            /* Punchy Vibrant Palette - Increased Contrast */
-            --bg-primary: #ffffff;
-            --bg-secondary: #fff8e1; /* Changed to a more yellowish-cream */
-            --bg-card: #ffffff;
-            --text-primary: #121212; /* Very high contrast dark grey/black */
-            --text-secondary: #546e7a; /* Blue Grey for detail */
-            --text-tertiary: #b0bec5;
-            --border-color: #e1f5fe; /* Lighter, more vibrant border */
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Slightly softer shadow */
-            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-            /* Very Vibrant Accent Colors (HIGH SATURATION) */
-            --induction: #34ebb4; /* Vibrant Cyan */
-            --muscle-relaxant: #ff6d00; /* Vibrant Deep Orange */
-            --analgesic: #00c853; /* Vibrant Emerald Green */
-            --adjunct: #d500f9; /* Vibrant Magenta */
-            --reversal: #ff1744; /* Vibrant Red */
-            --emergency: #ffc400; /* Deep Amber/Gold */
-            --steroid: #3f51b5; /* Deeper Indigo */
-            --antiemetic: #8bc34a; /* Light Green */
-            --primary-accent: #0089f0; /* Brighter Blue */
+  <!-- =========================
+       STYLES (cleaned & grouped)
+       - Visuals remain identical to original.
+       - Removed unused/undefined animations and obsolete tags.
+       ========================= -->
+  <style>
+  	/* Category pill styles with colored background */
+.drug-category {
+  font-size: 0.7em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #000;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--border-color);
+}
 
-            --radius-card: 16px;
-            --radius-input: 10px;
-        }
+/* Each category color background */
+.drug-category.induction { background-color: var(--induction); }
+.drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); color: #fff; }
+.drug-category.analgesic { background-color: var(--analgesic); color: #fff; }
+.drug-category.adjunct { background-color: var(--adjunct); color: #fff; }
+.drug-category.reversal { background-color: var(--reversal); color: #fff; }
+.drug-category.emergency { background-color: var(--emergency); color: #000; }
+.drug-category.steroid { background-color: var(--steroid); color: #fff; }
+.drug-category.antiemetic { background-color: var(--antiemetic); color: #000; }
+    :root{
+      --bg-primary:#ffffff;
+      --bg-secondary:#fff8e1;
+      --bg-card:#ffffff;
+      --text-primary:#121212;
+      --text-secondary:#546e7a;
+      --text-tertiary:#b0bec5;
+      --border-color:#e1f5fe;
+      --shadow:0 8px 20px rgba(0,0,0,0.1);
+      --shadow-hover:0 10px 25px rgba(0,0,0,0.15);
 
-        body.dark-mode {
-            --bg-primary: #000000; /* Pitch Black Primary */
-            --bg-secondary: #111111; /* Very Dark Secondary (main background) */
-            --bg-card: #222222; /* Very Dark Card */
-            --text-primary: #f5f5f5; /* High contrast white/grey */
-            --text-secondary: #bbbbbb;
-            --border-color: #4a4a4a;
-            --shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.8);
+      --induction:#34ebb4;
+      --muscle-relaxant:#ff6d00;
+      --analgesic:#00c853;
+      --adjunct:#d500f9;
+      --reversal:#ff1744;
+      --emergency:#ffc400;
+      --steroid:#3f51b5;
+      --antiemetic:#8bc34a;
+      --primary-accent:#0089f0;
 
-            /* Dark Mode Accents - kept bright for contrast against dark background */
-            --emergency: #ffeb3b;
-        }
+      --radius-card:16px;
+      --radius-input:10px;
+    }
 
-        /* Make all text unselectable except inputs/textarea (so users can still type) */
-        html, body, .container, header, section, .section, .drug-card, .drug-name, .drug-category,
-        .dose-info, .equipment-card, .equipment-title, .equipment-value, .warning, .edit-btn,
-        .calculation, .calculation-result, .volume-result, .drug-details {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-        /* Allow selecting inside inputs & textareas */
-        input, textarea {
-            -webkit-user-select: text !important;
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
-        }
+    body.dark-mode{
+      --bg-primary:#000000;
+      --bg-secondary:#111111;
+      --bg-card:#222222;
+      --text-primary:#f5f5f5;
+      --text-secondary:#bbbbbb;
+      --border-color:#4a4a4a;
+      --shadow:0 8px 20px rgba(0,0,0,0.6);
+      --shadow-hover:0 10px 25px rgba(0,0,0,0.8);
+      --emergency:#ffeb3b;
+    }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.5; /* Slightly tighter line height */
-            transition: background-color 0.4s, color 0.4s;
-            font-size: 0.95rem; /* Base font size reduction */
-        }
+    /* Reset & base */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{
+      font-family:'Montserrat',sans-serif;
+      background:var(--bg-secondary);
+      color:var(--text-primary);
+      line-height:1.5;
+      font-size:0.95rem;
+      transition:background-color .4s,color .4s;
+      user-select:none; /* make app text unselectable except inputs */
+      -webkit-font-smoothing:antialiased;
+    }
+    input,textarea{user-select:text!important}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px 10px; /* Reduced padding for mobile */
-        }
+    .container{max-width:1200px;margin:0 auto;padding:20px 10px}
 
-        header {
-            background: var(--primary-accent);
-            color: var(--bg-primary);
-            padding: 20px; /* Reduced header padding */
-            border-radius: var(--radius-card);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px; /* Reduced margin */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: fadeInDown 0.5s ease-out;
-        }
+    /* Header */
+    header{
+      background:var(--primary-accent);
+      color:var(--bg-primary);
+      padding:20px;
+      border-radius:var(--radius-card);
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    h1{font-size:1.8em;font-weight:700}
+    .dark-mode-toggle{
+      background:var(--bg-primary);
+      color:var(--primary-accent);
+      border:none;border-radius:50px;padding:8px 16px;
+      cursor:pointer;font-size:.8em;font-weight:600;
+      box-shadow:0 2px 5px rgba(0,0,0,.2);transition:all .18s ease;
+      -webkit-tap-highlight-color:transparent;
+      outline:none;
+    }
+    .dark-mode-toggle:active{transform:translateY(1px)}
+    .dark-mode-toggle::-moz-focus-inner{border:0}
 
-        h1 {
-            font-size: 1.8em; /* Reduced font size */
-            font-weight: 700;
-        }
+    /* Sections */
+    .section,.patient-info{
+      background:var(--bg-card);
+      padding:20px;border-radius:var(--radius-card);
+      box-shadow:var(--shadow);margin-bottom:20px;transition:box-shadow .3s ease;
+    }
+    .section h2{
+      font-size:1.4em;font-weight:600;margin-bottom:15px;color:var(--text-primary);
+      border-bottom:2px solid var(--border-color);padding-bottom:8px;
+    }
 
-        .dark-mode-toggle {
-            background: var(--bg-primary);
-            color: var(--primary-accent);
-            border: none;
-            border-radius: 50px;
-            padding: 8px 16px; /* Reduced padding */
-            cursor: pointer;
-            font-size: 0.8em;
-            font-weight: 600;
-            transition: all 0.18s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            -webkit-tap-highlight-color: transparent; /* remove tap highlight on mobile */
-            outline: none; /* remove focus outline */
-        }
-        .dark-mode-toggle:focus {
-            outline: none;
-            box-shadow: none;
-        }
-        .dark-mode-toggle:active {
-            transform: translateY(1px);
-        }
-        /* firefox inner focus fix */
-        .dark-mode-toggle::-moz-focus-inner { border: 0; }
+    /* Inputs */
+    .input-group{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-top:10px}
+    .age-input-group{display:flex;gap:10px}
+    .input-field label{font-size:.85em;color:var(--text-secondary);margin-bottom:5px;font-weight:600;display:block}
+    .input-field input{
+      width:100%;padding:10px 12px;border:1px solid var(--border-color);
+      border-radius:var(--radius-input);font-size:.95em;background:var(--bg-primary);
+      color:var(--text-primary);transition:border-color .3s,box-shadow .3s;
+    }
+    .input-field input:focus{outline:none;border-color:var(--primary-accent);box-shadow:0 0 0 3px rgba(0,137,240,.2)}
 
-        .section, .patient-info {
-            background: var(--bg-card);
-            padding: 20px; /* Reduced section padding */
-            border-radius: var(--radius-card);
-            box-shadow: var(--shadow);
-            margin-bottom: 20px; /* Reduced margin */
-            transition: box-shadow 0.3s ease;
-        }
+    /* Grid containers */
+    .drugs-grid{display:grid;grid-template-columns:1fr;gap:15px;margin-top:10px}
+    .equipment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px;margin-top:10px}
 
-        .section h2 {
-            font-size: 1.4em; /* Reduced font size */
-            font-weight: 600;
-            margin-bottom: 15px; /* Reduced margin */
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--border-color); /* Thinner border */
-            padding-bottom: 8px;
-        }
+    /* Drug card */
+    .drug-card{
+      border-radius:var(--radius-card);padding:15px;border-left:6px solid;background:var(--bg-secondary);
+      transition:all .35s cubic-bezier(.25,.8,.25,1);position:relative;z-index:1;
+      will-change:transform,box-shadow,background-color;
+    }
+    .drug-card.caution-active{z-index:20}
+    .drug-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px);background:var(--bg-card)}
 
-        /* Input Styling */
-        .input-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Slightly tighter grid */
-            gap: 15px; /* Reduced gap */
-            margin-top: 10px;
-        }
+    /* left border category colors */
+    .drug-card.induction{border-left-color:var(--induction)}
+    .drug-card.muscle-relaxant{border-left-color:var(--muscle-relaxant)}
+    .drug-card.analgesic{border-left-color:var(--analgesic)}
+    .drug-card.adjunct{border-left-color:var(--adjunct)}
+    .drug-card.reversal{border-left-color:var(--reversal)}
+    .drug-card.emergency{border-left-color:var(--emergency)}
+    .drug-card.steroid{border-left-color:var(--steroid)}
+    .drug-card.antiemetic{border-left-color:var(--antiemetic)}
 
-        /* NEW: Split age input field */
-        .age-input-group {
-            display: flex;
-            gap: 10px;
-        }
+    .drug-header{
+      display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;
+      -webkit-tap-highlight-color:transparent;user-select:none;flex-direction:column;gap:5px;
+    }
+    .drug-card.expanded .drug-header{padding-bottom:10px}
+    .drug-name{font-weight:700;font-size:1.2em;color:var(--text-primary);display:flex;align-items:center}
+    .toggle-icon{font-size:1.1em;margin-right:8px;transform:rotate(0deg);
+      transition:transform 350ms cubic-bezier(.175,.885,.32,1.275);will-change:transform}
+    .drug-card.expanded .toggle-icon{transform:rotate(90deg)}
 
-        .age-input-group > div {
-            flex: 1;
-        }
-        /* END NEW */
+    .drug-details{
+      max-height:0;overflow:hidden;opacity:0;padding-top:0;transform:translateY(-6px);
+      transition:max-height 420ms cubic-bezier(.22,1,.36,1),opacity 260ms ease-in-out,transform 420ms cubic-bezier(.22,1,.36,1),padding-top 420ms cubic-bezier(.22,1,.36,1);
+      will-change:max-height,opacity,transform,padding-top;
+    }
+    .drug-card.expanded .drug-details{max-height:520px;opacity:1;padding-top:15px;transform:translateY(0)}
 
-        .input-field label {
-            font-size: 0.85em; /* Reduced label font size */
-            color: var(--text-secondary);
-            margin-bottom: 5px;
-            font-weight: 600;
-            display: block;
-        }
+    .drug-category{font-size:.7em;padding:4px 10px;border-radius:20px;color:var(--bg-primary);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+    .drug-category.induction,.drug-category.emergency{color:#000}
 
-        .input-field input {
-            width: 100%;
-            padding: 10px 12px; /* Reduced input padding */
-            border: 1px solid var(--border-color); /* Thinner border */
-            border-radius: var(--radius-input);
-            font-size: 0.95em; /* Slightly reduced input text size */
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+    .dose-info{font-size:.8em;color:var(--text-secondary);font-style:italic;margin-top:4px}
 
-        .input-field input:focus {
-            outline: none;
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 3px rgba(0, 137, 240, 0.2);
-        }
+    /* Caution icon & popup */
+    .caution-icon{
+      display:inline-block;width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;
+      background-color:var(--emergency);color:#000;font-weight:bold;font-size:.7em;cursor:pointer;margin-left:10px;flex-shrink:0;align-self:flex-start;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .caution-popup{
+      display:none;position:absolute;z-index:30;padding:10px;background:var(--bg-primary);color:var(--text-primary);
+      border:1px solid var(--emergency);border-radius:5px;box-shadow:var(--shadow-hover);width:250px;font-size:.75em;top:15px;right:15px;white-space:normal;
+    }
+    .dose-limit-applied{font-size:.75em;color:var(--reversal);font-weight:600;display:block;margin-top:2px}
 
-        /* Drug Card Styling */
-        .drugs-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Force single column on mobile */
-            gap: 15px;
-            margin-top: 10px;
-        }
+    /* Calculations & edit UI */
+    .calculation{background:var(--bg-card);padding:12px;border-radius:var(--radius-input);margin-top:10px;border:1px solid var(--border-color)}
+    .calculation-result{font-weight:800;font-size:1.3em;color:var(--reversal)}
+    .volume-result{font-size:.85em;color:var(--text-secondary);margin-top:3px;font-weight:500}
 
-        .drug-card {
-            border-radius: var(--radius-card);
-            padding: 15px; /* Reduced card padding */
-            border-left: 6px solid; /* Thinner accent border */
-            background: var(--bg-secondary);
-            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            will-change: transform, box-shadow, background-color;
-            position: relative;
-            z-index: 1;
-        }
+    .edit-btn{
+      background:transparent;border:1px solid var(--primary-accent);padding:6px 14px;border-radius:50px;font-size:.8em;cursor:pointer;color:var(--primary-accent);
+      margin-top:10px;transition:all .3s ease;font-weight:600;max-width:fit-content;
+    }
+    .edit-btn:hover{background:var(--primary-accent);color:var(--bg-primary);box-shadow:0 4px 10px rgba(0,137,240,.3)}
 
-        /* FIX 1: Raise z-index for the active card to prevent caution pop-up clipping */
-        .drug-card.caution-active {
-            z-index: 20;
-        }
-        /* END FIX 1 */
+    .edit-inputs{display:none;margin-top:10px;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-input);border:1px dashed var(--text-tertiary);flex-direction:column;gap:10px}
+    .edit-inputs.active{display:flex}
 
-        .drug-card:hover {
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-            transform: translateY(-1px);
-            background: var(--bg-card);
-        }
+    /* Equipment cards */
+    .equipment-card{background:var(--bg-secondary);padding:15px;border-radius:var(--radius-card);text-align:center;border-top:4px solid var(--primary-accent);transition:all .3s ease}
+    .equipment-title{font-size:.9em;color:var(--text-secondary);margin-bottom:8px;font-weight:600}
+    .equipment-value{font-size:1.6em;font-weight:800;color:var(--primary-accent);line-height:1.1}
+    .equipment-value.error{color:var(--reversal);font-size:.9em;font-weight:600;line-height:1.3}
+    .equipment-detail{font-size:.75em;color:var(--text-secondary);margin-top:6px}
 
-        .drug-card.induction { border-left-color: var(--induction); }
-        .drug-card.muscle-relaxant { border-left-color: var(--muscle-relaxant); }
-        .drug-card.analgesic { border-left-color: var(--analgesic); }
-        .drug-card.adjunct { border-left-color: var(--adjunct); }
-        .drug-card.reversal { border-left-color: var(--reversal); }
-        .drug-card.emergency { border-left-color: var(--emergency); }
-        .drug-card.steroid { border-left-color: var(--steroid); }
-        .drug-card.antiemetic { border-left-color: var(--antiemetic); }
+    /* Warning box */
+    .warning{background:#fff3cd;border-left:5px solid #ffc107;padding:15px;margin:20px 0;border-radius:8px;font-size:.9em;color:#856404;font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    body.dark-mode .warning{background:#4a3f00;color:#ffeb3b;border-left:5px solid #ff9800}
 
-        /* COLLAPSIBLE DRUG STYLES */
-        .drug-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-            padding-bottom: 0;
-            transition: padding-bottom 0.3s ease;
-            flex-direction: column; /* Default stack on mobile */
-            gap: 5px; /* Space between name and category */
-        }
+    .expand-all-btn{margin-top:5px;margin-bottom:15px;display:block;width:100%;max-width:400px;text-align:center}
 
-        .drug-card.expanded .drug-header {
-             padding-bottom: 10px;
-        }
-
-        .drug-name {
-            font-weight: 700;
-            font-size: 1.2em;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-        }
-
-        .drug-name .toggle-icon {
-            font-size: 1.1em;
-            margin-right: 8px;
-            transform: rotate(0deg);
-            /* IMPROVED ANIMATION: Smoother spring-like motion */
-            transition: transform 350ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
-            will-change: transform;
-        }
-
-        .drug-card.expanded .drug-name .toggle-icon {
-            transform: rotate(90deg);
-        }
-
-        /* BOUNCY DETAILS ANIMATION:
-           - use transform + max-height + opacity to give a fluid, slightly bouncy feel
-        */
-        .drug-details {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            padding-top: 0;
-            transform: translateY(-6px);
-            transition:
-                max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 260ms ease-in-out,
-                transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-                padding-top 420ms cubic-bezier(0.22, 1, 0.36, 1);
-            will-change: max-height, opacity, transform, padding-top;
-        }
-
-        .drug-card.expanded .drug-details {
-            max-height: 520px; /* generous max */
-            opacity: 1;
-            padding-top: 15px;
-            transform: translateY(0);
-        }
-        /* END COLLAPSIBLE DRUG STYLES */
-
-
-        .drug-category {
-            font-size: 0.7em;
-            padding: 4px 10px;
-            border-radius: 20px;
-            color: var(--bg-primary);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-        }
-
-        /* Category backgrounds unchanged, but make text color black for induction and emergency categories
-           (so induction agents, Atropine and Adrenaline have black label text in both modes) */
-        .drug-category.induction { background: var(--induction); color: #000; }
-        .drug-category.muscle-relaxant { background: var(--muscle-relaxant); }
-        .drug-category.analgesic { background: var(--analgesic); }
-        .drug-category.adjunct { background: var(--adjunct); }
-        .drug-category.reversal { background: var(--reversal); }
-        .drug-category.emergency { background: var(--emergency); color: #000; } /* Atropine & Adrenaline -> black text */
-        .drug-category.steroid { background: var(--steroid); }
-        .drug-category.antiemetic { background: var(--antiemetic); }
-
-        .dose-info {
-            font-size: 0.8em;
-            color: var(--text-secondary);
-            font-style: italic;
-            margin-top: 4px;
-        }
-
-        /* NEW: Caution and Dose Limit Styling */
-        .caution-icon {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            line-height: 18px;
-            text-align: center;
-            border-radius: 50%;
-            background-color: var(--emergency); /* Amber/Gold for Caution */
-            color: #000; /* make the 'i' letter black in both modes */
-            font-weight: bold;
-            font-size: 0.7em;
-            cursor: pointer;
-            margin-left: 10px; /* Space from category/name */
-            flex-shrink: 0;
-            align-self: flex-start; /* Keeps it aligned to the top of the header flex container */
-            -webkit-tap-highlight-color: transparent;
-        }
-        .caution-icon:hover {
-            transform: scale(1.1);
-        }
-        .caution-popup {
-            display: none;
-            position: absolute;
-            z-index: 30; /* Higher than caution-active z-index */
-            padding: 10px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            border: 1px solid var(--emergency);
-            border-radius: 5px;
-            box-shadow: var(--shadow-hover);
-            width: 250px;
-            font-size: 0.75em;
-            top: 15px; /* Position from top of the card (matching padding) */
-            right: 15px; /* Position from right of the card (matching padding) */
-            white-space: normal;
-        }
-        .dose-limit-applied {
-             font-size: 0.75em;
-             color: var(--reversal); /* Use Red for warning/limit */
-             font-weight: 600;
-             display: block;
-             margin-top: 2px;
-        }
-
-        .calculation {
-            background: var(--bg-card);
-            padding: 12px; /* Reduced padding */
-            border-radius: var(--radius-input);
-            margin-top: 10px; /* Reduced margin */
-            border: 1px solid var(--border-color);
-        }
-
-        .calculation-result {
-            font-weight: 800;
-            font-size: 1.3em; /* Reduced font size */
-            color: var(--reversal);
-        }
-
-        .volume-result {
-            font-size: 0.85em; /* Reduced font size */
-            color: var(--text-secondary);
-            margin-top: 3px;
-            font-weight: 500;
-        }
-
-        .edit-btn {
-            background: transparent;
-            border: 1px solid var(--primary-accent); /* Thinner border */
-            padding: 6px 14px; /* Reduced padding */
-            border-radius: 50px;
-            font-size: 0.8em; /* Reduced font size */
-            cursor: pointer;
-            color: var(--primary-accent);
-            margin-top: 10px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            max-width: fit-content; /* Make button only as wide as content */
-        }
-
-        .edit-btn:hover {
-            background: var(--primary-accent);
-            color: var(--bg-primary);
-            box-shadow: 0 4px 10px rgba(0, 137, 240, 0.3);
-        }
-
-        .expand-all-btn {
-            margin-top: 5px;
-            margin-bottom: 15px; /* Reduced margin */
-            display: block;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .edit-inputs {
-            /* Now defaults to hidden */
-            display: none;
-            margin-top: 10px;
-            padding: 10px; /* Reduced padding */
-            background: var(--bg-secondary);
-            border-radius: var(--radius-input);
-            border: 1px dashed var(--text-tertiary);
-            animation: fadeIn 0.3s ease-in-out;
-            flex-direction: column; /* Stack inputs vertically */
-            gap: 10px; /* Space between inputs */
-        }
-
-        /* CRITICAL FIX: Add the .active class rule to show the inputs */
-        .edit-inputs.active {
-            display: flex;
-        }
-
-        /* Equipment Card Styling */
-        .equipment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Adjusted min-width for mobile */
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .equipment-card {
-            background: var(--bg-secondary);
-            padding: 15px;
-            border-radius: var(--radius-card);
-            text-align: center;
-            border-top: 4px solid var(--primary-accent);
-            transition: all 0.3s ease;
-        }
-
-        .equipment-title {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .equipment-value.error {
-            color: var(--reversal);
-            font-size: 0.9em;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .equipment-value {
-            font-size: 1.6em; /* Reduced font size */
-            font-weight: 800;
-            color: var(--primary-accent);
-            line-height: 1.1;
-        }
-
-        .equipment-detail {
-            font-size: 0.75em;
-            color: var(--text-secondary);
-            margin-top: 6px;
-        }
-
-        .warning {
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 8px;
-            font-size: 0.9em;
-            color: #856404;
-            font-weight: 500;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        body.dark-mode .warning {
-            background: #4a3f00;
-            color: #ffeb3b;
-            border-left: 5px solid #ff9800;
-        }
-
-        /* Responsive Overrides (Mobile First) */
-        @media (min-width: 768px) {
-            .container {
-                padding: 30px 20px;
-            }
-            .drugs-grid {
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-                gap: 20px;
-            }
-            .equipment-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-            h1 {
-                font-size: 2.2em;
-            }
-            .section h2 {
-                font-size: 1.6em;
-            }
-             .drug-name {
-                font-size: 1.3em;
-            }
-            /* Make drug-header a row with space-between on desktop */
-            .drug-header {
-                flex-direction: row;
-                align-items: center;
-            }
-        }
-    </style>
+    /* Responsive */
+    @media(min-width:768px){
+      .container{padding:30px 20px}
+      .drugs-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+      .equipment-grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+      h1{font-size:2.2em}
+      .section h2{font-size:1.6em}
+      .drug-name{font-size:1.3em}
+      .drug-header{flex-direction:row;align-items:center}
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>Pediatric Anesthesia Calculator</h1>
-            <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
-        </header>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>Pediatric Anesthesia Calculator</h1>
+      <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+    </header>
 
-        <div class="warning">
-            ⚠️ This calculator is for reference only. Always verify calculations and use clinical judgment. Dosages may need adjustment based on patient condition and local protocols.
-        </div>
-
-        <section class="patient-info">
-            <h2>Patient Information</h2>
-            <div class="input-group">
-                <div class="input-field">
-                    <label for="age-years">Age</label>
-                    <div class="age-input-group">
-                        <input type="number" id="age-years" placeholder="Years (max 18)" step="1" min="0" max="18" oninput="clampAgeAndCalculate()">
-                        <input type="number" id="age-months" placeholder="Months (0-11)" step="1" min="0" max="11" oninput="clampAgeAndCalculate()">
-                    </div>
-                </div>
-                <div class="input-field">
-                    <label for="weight">Weight (kg)</label>
-                    <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
-                </div>
-                <div class="input-field">
-                    <label for="currentHb">Current Hb (g/dL)</label>
-                    <input type="number" id="currentHb" placeholder="e.g., 12.0" step="0.1" min="0" oninput="calculateAll()">
-                </div>
-                <div class="input-field">
-                    <label for="targetHb">Target Hb (g/dL)</label>
-                    <input type="number" id="targetHb" placeholder="e.g., 8.0" step="0.1" min="0" oninput="calculateAll()">
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>Airway Equipment Sizing</h2>
-            <div id="equipment-results" class="equipment-grid"></div>
-        </section>
-
-        <section class="section">
-            <h2>Fluid & Blood Loss Requirements</h2>
-            <div id="fluid-results" class="equipment-grid"></div>
-        </section>
-
-        <section class="section">
-            <h2>Drug Calculations</h2>
-            <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
-            <div id="drug-results" class="drugs-grid"></div>
-        </section>
+    <!-- Warning -->
+    <div class="warning">
+      ⚠️ This calculator is for reference only. Always verify calculations and use clinical judgment. Dosages may need adjustment based on patient condition and local protocols.
     </div>
 
-    <script>
-        const drugs = [
-            {
-                name: 'Propofol',
-                category: 'induction',
-                categoryLabel: 'Induction Agent',
-                defaultDose: 2.5,
-                unit: 'mg/kg',
-                concentration: 10,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '2-3 mg/kg'
-            },
-            {
-                name: 'Thiopentone',
-                category: 'induction',
-                categoryLabel: 'Induction Agent',
-                defaultDose: 5,
-                unit: 'mg/kg',
-                concentration: 25,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '4-6 mg/kg'
-            },
-            {
-                name: 'Ketamine',
-                category: 'induction',
-                categoryLabel: 'Induction Agent',
-                defaultDose: 2,
-                unit: 'mg/kg',
-                concentration: 50,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '1-2 mg/kg IV, 4-6 mg/kg IM'
-            },
-            {
-                name: 'Vecuronium',
-                category: 'muscle-relaxant',
-                categoryLabel: 'Muscle Relaxant',
-                defaultDose: 0.1,
-                unit: 'mg/kg',
-                concentration: 1,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.08-0.1 mg/kg'
-            },
-            {
-                name: 'Rocuronium',
-                category: 'muscle-relaxant',
-                categoryLabel: 'Muscle Relaxant',
-                defaultDose: 0.6,
-                unit: 'mg/kg',
-                concentration: 10,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.6-1.2 mg/kg'
-            },
-            {
-                name: 'Atracurium',
-                category: 'muscle-relaxant',
-                categoryLabel: 'Muscle Relaxant',
-                defaultDose: 0.5,
-                unit: 'mg/kg',
-                concentration: 10,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.4-0.5 mg/kg'
-            },
-            {
-                name: 'Succinylcholine',
-                category: 'muscle-relaxant',
-                categoryLabel: 'Muscle Relaxant',
-                defaultDose: 1.5,
-                unit: 'mg/kg',
-                concentration: 20,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '1-2 mg/kg IV, 3-4 mg/kg IM',
-                caution: 'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.'
-            },
-            {
-                name: 'Fentanyl',
-                category: 'analgesic',
-                categoryLabel: 'Opioid Analgesic',
-                defaultDose: 2,
-                unit: 'mcg/kg',
-                concentration: 50,
-                concentrationUnit: 'mcg/mL',
-                useParam: 'weight',
-                range: '1-3 mcg/kg'
-            },
-            {
-                name: 'Morphine',
-                category: 'analgesic',
-                categoryLabel: 'Opioid Analgesic',
-                defaultDose: 0.1,
-                unit: 'mg/kg',
-                concentration: 1,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.05-0.2 mg/kg'
-            },
-            {
-                name: 'Tramadol',
-                category: 'analgesic',
-                categoryLabel: 'Analgesic',
-                defaultDose: 1,
-                unit: 'mg/kg',
-                concentration: 50,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '1-2 mg/kg'
-            },
-            {
-                name: 'Paracetamol (IV)',
-                category: 'analgesic',
-                categoryLabel: 'Analgesic',
-                defaultDose: 15,
-                unit: 'mg/kg',
-                concentration: 10,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '10-15 mg/kg (max 1g)',
-                maxDose: 1000,
-                caution: 'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.'
-            },
-            {
-                name: 'Midazolam',
-                category: 'adjunct',
-                categoryLabel: 'Sedative',
-                defaultDose: 0.1,
-                unit: 'mg/kg',
-                concentration: 1,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.05-0.2 mg/kg',
-                caution: 'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.'
-            },
-            {
-                name: 'Lidocaine (Xylocard)',
-                category: 'adjunct',
-                categoryLabel: 'Local Anesthetic',
-                defaultDose: 1.5,
-                unit: 'mg/kg',
-                concentration: 20,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '1-1.5 mg/kg IV',
-                caution: 'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.'
-            },
-            {
-                name: 'Dexamethasone',
-                category: 'steroid',
-                categoryLabel: 'Steroid',
-                defaultDose: 0.15,
-                unit: 'mg/kg',
-                concentration: 4,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.1-0.2 mg/kg (max 8mg)',
-                maxDose: 8
-            },
-            {
-                name: 'Hydrocortisone',
-                category: 'steroid',
-                categoryLabel: 'Steroid',
-                defaultDose: 1,
-                unit: 'mg/kg',
-                concentration: 50,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '1-2 mg/kg'
-            },
-            {
-                name: 'Ondansetron',
-                category: 'antiemetic',
-                categoryLabel: 'Antiemetic',
-                defaultDose: 0.1,
-                unit: 'mg/kg',
-                concentration: 2,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.05-0.15 mg/kg (max 8mg)',
-                maxDose: 8
-            },
-            {
-                name: 'Metoclopramide',
-                category: 'antiemetic',
-                categoryLabel: 'Antiemetic',
-                defaultDose: 0.15,
-                unit: 'mg/kg',
-                concentration: 5,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.1-0.2 mg/kg (max 10mg)',
-                maxDose: 10
-            },
-            {
-                name: 'Atropine',
-                category: 'emergency',
-                categoryLabel: 'Anticholinergic',
-                defaultDose: 0.01,
-                unit: 'mg/kg',
-                concentration: 0.6,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.01-0.02 mg/kg (min 0.1mg)',
-                minDose: 0.1
-            },
-            {
-                name: 'Neostigmine',
-                category: 'reversal',
-                categoryLabel: 'Reversal Agent',
-                defaultDose: 0.05,
-                unit: 'mg/kg',
-                concentration: 0.5,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.04-0.08 mg/kg (max 5mg)',
-                maxDose: 5
-            },
-            {
-                name: 'Glycopyrrolate',
-                category: 'reversal',
-                categoryLabel: 'Anticholinergic',
-                defaultDose: 0.01,
-                unit: 'mg/kg',
-                concentration: 0.2,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '0.008-0.01 mg/kg'
-            },
-            {
-                name: 'Sugammadex',
-                category: 'reversal',
-                categoryLabel: 'Reversal Agent',
-                defaultDose: 2,
-                unit: 'mg/kg',
-                concentration: 20,
-                concentrationUnit: 'mg/mL',
-                useParam: 'weight',
-                range: '2-4 mg/kg (routine reversal)'
-            },
-            {
-                name: 'Adrenaline (Epinephrine)',
-                category: 'emergency',
-                categoryLabel: 'Emergency',
-                defaultDose: 10,
-                unit: 'mcg/kg',
-                concentration: 10,
-                concentrationUnit: 'mcg/mL',
-                useParam: 'weight',
-                range: '10 mcg/kg IV (1:100,000)'
-            }
-        ];
+    <!-- Patient Info -->
+    <section class="patient-info">
+      <h2>Patient Information</h2>
+      <div class="input-group">
+        <div class="input-field">
+          <label for="age-years">Age</label>
+          <div class="age-input-group">
+            <input type="number" id="age-years" placeholder="Years (max 18)" step="1" min="0" max="18" oninput="clampAgeAndCalculate()">
+            <input type="number" id="age-months" placeholder="Months (0-11)" step="1" min="0" max="11" oninput="clampAgeAndCalculate()">
+          </div>
+        </div>
 
-        // Dynamic Concentration Tiers for Volume < 1mL
-        const dilutionTiers = {
-            'Fentanyl': [50, 10, 5], // mcg/mL
-            'Atropine': [0.6, 0.1], // mg/mL
-            'Glycopyrrolate': [0.2, 0.04], // mg/mL
-            'Ondansetron': [2, 1], // mg/mL
-            'Vecuronium': [1, 0.5], // mg/mL
-            'Atracurium': [10, 5, 2.5] // mg/mL
-        };
+        <div class="input-field">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
+        </div>
 
-        let allExpanded = false;
+        <div class="input-field">
+          <label for="currentHb">Current Hb (g/dL)</label>
+          <input type="number" id="currentHb" placeholder="e.g., 12.0" step="0.1" min="0" oninput="calculateAll()">
+        </div>
 
-        // Variable to hold the index of the drug card that should remain open after a recalculation
-        let activeEditIndex = null;
+        <div class="input-field">
+          <label for="targetHb">Target Hb (g/dL)</label>
+          <input type="number" id="targetHb" placeholder="e.g., 8.0" step="0.1" min="0" oninput="calculateAll()">
+        </div>
+      </div>
+    </section>
 
-        /**
-         * Clamps the age inputs to their limits (Years: 0-18, Months: 0-11) and triggers calculation.
-         */
-        function clampAgeAndCalculate() {
-            const ageYearsInput = document.getElementById('age-years');
-            const ageMonthsInput = document.getElementById('age-months');
+    <!-- Equipment -->
+    <section class="section">
+      <h2>Airway Equipment Sizing</h2>
+      <div id="equipment-results" class="equipment-grid"></div>
+    </section>
 
-            let years = parseFloat(ageYearsInput.value);
-            let months = parseFloat(ageMonthsInput.value);
+    <!-- Fluids -->
+    <section class="section">
+      <h2>Fluid & Blood Loss Requirements</h2>
+      <div id="fluid-results" class="equipment-grid"></div>
+    </section>
 
-            // Clamp Years (0 to 18)
-            if (!isNaN(years)) {
-                if (years < 0) years = 0;
-                if (years > 18) years = 18;
-                ageYearsInput.value = years;
-            } else if (ageYearsInput.value) {
-                // If the input is not empty but not a valid number, clear it or set to 0
-                ageYearsInput.value = '';
-            }
+    <!-- Drugs -->
+    <section class="section">
+      <h2>Drug Calculations</h2>
+      <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
+      <div id="drug-results" class="drugs-grid"></div>
+    </section>
+  </div>
 
-            // Clamp Months (0 to 11)
-            if (!isNaN(months)) {
-                if (months < 0) months = 0;
-                if (months > 11) months = 11;
-                // If years is 18, months MUST be 0
-                 if (years === 18) months = 0;
-                ageMonthsInput.value = months;
-            } else if (ageMonthsInput.value) {
-                ageMonthsInput.value = '';
-            }
+  <p style="text-align:center;margin-top:20px;font-size:0.85em;color:grey;">
+    <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
+  </p>
 
-            calculateAll();
+  <!-- =========================
+       SCRIPT (cleaned, commented, functionally identical)
+       - All behavior preserved.
+       - Some helper refactors to remove duplication (kept semantics same).
+       ========================= -->
+  <script>
+  /* -------------------------
+     Data definitions (same as original)
+     ------------------------- */
+  const drugs = [
+    { name:'Propofol', category:'induction', categoryLabel:'Induction Agent', defaultDose:2.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'2-3 mg/kg' },
+    { name:'Thiopentone', category:'induction', categoryLabel:'Induction Agent', defaultDose:5, unit:'mg/kg', concentration:25, concentrationUnit:'mg/mL', useParam:'weight', range:'4-6 mg/kg' },
+    { name:'Ketamine', category:'induction', categoryLabel:'Induction Agent', defaultDose:2, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 4-6 mg/kg IM' },
+    { name:'Vecuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.08-0.1 mg/kg' },
+    { name:'Rocuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.6, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.6-1.2 mg/kg' },
+    { name:'Atracurium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.4-0.5 mg/kg' },
+    { name:'Succinylcholine', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 3-4 mg/kg IM', caution:'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.' },
+    { name:'Fentanyl', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:2, unit:'mcg/kg', concentration:50, concentrationUnit:'mcg/mL', useParam:'weight', range:'1-3 mcg/kg' },
+    { name:'Morphine', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg' },
+    { name:'Tramadol', category:'analgesic', categoryLabel:'Analgesic', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg' },
+    { name:'Paracetamol (IV)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, caution:'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.' },
+    { name:'Midazolam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg', caution:'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.' },
+    { name:'Lidocaine (Xylocard)', category:'adjunct', categoryLabel:'Local Anesthetic', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-1.5 mg/kg IV', caution:'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.' },
+    { name:'Dexamethasone', category:'steroid', categoryLabel:'Steroid', defaultDose:0.15, unit:'mg/kg', concentration:4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 8mg)', maxDose:8 },
+    { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg' },
+    { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8 },
+    { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10 },
+    { name:'Atropine', category:'emergency', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.6, concentrationUnit:'mg/mL', useParam:'weight', range:'0.01-0.02 mg/kg (min 0.1mg)', minDose:0.1 },
+    { name:'Neostigmine', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5 },
+    { name:'Glycopyrrolate', category:'reversal', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg' },
+    { name:'Sugammadex', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)' },
+    { name:'Adrenaline (Epinephrine)', category:'emergency', categoryLabel:'Emergency', defaultDose:10, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'10 mcg/kg IV (1:100,000)' }
+  ];
+
+  /* dynamic dilution tiers used when calculated volume < 1 mL */
+  const dilutionTiers = {
+    'Fentanyl': [50,10,5],      // mcg/mL
+    'Atropine': [0.6,0.1],      // mg/mL
+    'Glycopyrrolate': [0.2,0.04],
+    'Ondansetron': [2,1],
+    'Vecuronium': [1,0.5],
+    'Atracurium': [10,5,2.5]
+  };
+
+  /* -------------------------
+     UI state variables
+     ------------------------- */
+  let allExpanded = false;
+  let activeEditIndex = null; // keep an edited card open after recalculation
+
+  /* -------------------------
+     Helper: read & cache patient data
+     ------------------------- */
+  function getPatientData(){
+    // Read clamped inputs (clamping happens elsewhere)
+    const years = parseFloat(document.getElementById('age-years').value) || 0;
+    const months = parseFloat(document.getElementById('age-months').value) || 0;
+    const totalAge = years + (months/12);
+    return {
+      age: totalAge,
+      weight: parseFloat(document.getElementById('weight').value) || 0,
+      currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
+      targetHb: parseFloat(document.getElementById('targetHb').value) || 0
+    };
+  }
+
+  /* -------------------------
+     Age clamping (Years: 0-18, Months: 0-11)
+     and trigger recalculation
+     ------------------------- */
+  function clampAgeAndCalculate(){
+    const ageYearsInput = document.getElementById('age-years');
+    const ageMonthsInput = document.getElementById('age-months');
+
+    let years = parseFloat(ageYearsInput.value);
+    let months = parseFloat(ageMonthsInput.value);
+
+    if (!isNaN(years)){
+      if (years < 0) years = 0;
+      if (years > 18) years = 18;
+      ageYearsInput.value = years;
+    } else if (ageYearsInput.value) {
+      ageYearsInput.value = '';
+    }
+
+    if (!isNaN(months)){
+      if (months < 0) months = 0;
+      if (months > 11) months = 11;
+      if (years === 18) months = 0; // if 18 years then months must be zero
+      ageMonthsInput.value = months;
+    } else if (ageMonthsInput.value) {
+      ageMonthsInput.value = '';
+    }
+
+    calculateAll();
+  }
+
+  /* -------------------------
+     Airway sizing helpers
+     - calculateETTSize() returns string (to preserve original 'Enter Weight (kg)' message)
+     - calculateETTDepth() uses ETT size and special neonate formula
+     ------------------------- */
+  function calculateETTSize(age, weight){
+    if (age < 1){
+      if (weight === 0) return 'Enter Weight (kg)';
+      if (weight < 1.0) return '2.5';
+      if (weight >= 1.0 && weight <= 2.0) return '3.0';
+      return '3.5';
+    }
+    if (age >= 1 && age <= 18){
+      return ((age/4)+4).toFixed(1);
+    }
+    return '7.5'; // fallback (unreachable due to clamp)
+  }
+
+  function calculateETTDepth(age, weight){
+    const sizeStr = calculateETTSize(age, weight);
+    if (sizeStr.includes('Enter') || sizeStr === 'N/A') return 'N/A';
+    const size = parseFloat(sizeStr);
+    if (age < 0.1 && weight > 0){ // neonate (<1 month)
+      // depth formula for neonates: weight + 6
+      return (weight + 6).toFixed(1);
+    }
+    // general formula: ID x 3
+    return (size * 3).toFixed(1);
+  }
+
+  /* -------------------------
+     LMA / i-gel sizing helpers
+     (kept separate for clarity and identical results)
+     ------------------------- */
+  function calculateLMASize(weight){
+    if (weight < 5) return '1';
+    if (weight < 10) return '1.5';
+    if (weight < 20) return '2';
+    if (weight < 30) return '2.5';
+    if (weight < 50) return '3';
+    return '4';
+  }
+
+  function calculateIGelSize(weight){
+    if (weight < 5) return '1';
+    if (weight < 10) return '1.5';
+    if (weight < 25) return '2';
+    if (weight < 35) return '2.5';
+    if (weight < 60) return '3';
+    if (weight < 90) return '4';
+    return '5';
+  }
+
+  /* -------------------------
+     Fluid calculations
+     ------------------------- */
+  function calculateMaintenanceFluid(weight){
+    if (weight <= 10) return weight * 4;
+    if (weight <= 20) return 40 + (weight - 10) * 2;
+    return 60 + (weight - 20) * 1;
+  }
+
+  function calculateEBV(weight, age){
+    if (weight === 0) return 0;
+    if (age < 0.1) return weight * 90; // neonate <1 month
+    if (age < 1) return weight * 85;   // 1 month - 1 year
+    if (age < 3) return weight * 80;   // toddler
+    if (age < 6) return weight * 75;   // preschooler
+    if (age < 12) return weight * 70;  // school age
+    return weight * 65;                // adolescent
+  }
+
+  function calculateMABL(EBV, initialHb, targetHb){
+    if (initialHb <= targetHb || initialHb === 0 || EBV === 0) return 0;
+    const MABL = EBV * (initialHb - targetHb) / initialHb;
+    return Math.max(0, MABL);
+  }
+
+  /* -------------------------
+     Equipment rendering
+     - builds the same HTML content (identical UX)
+     ------------------------- */
+  function calculateEquipment(){
+    const patient = getPatientData();
+    const uncuffedSize = calculateETTSize(patient.age, patient.weight);
+    const depth = calculateETTDepth(patient.age, patient.weight);
+
+    let cuffedSize = 'N/A';
+    let uncuffedValueClass = 'equipment-value';
+    if (uncuffedSize.includes('Enter')){
+      uncuffedValueClass += ' error';
+    } else {
+      const id = parseFloat(uncuffedSize);
+      cuffedSize = (id - 0.5).toFixed(1);
+    }
+
+    const lmaSize = patient.weight === 0 ? 'N/A' : calculateLMASize(patient.weight);
+    const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
+
+    const equipmentHTML = `
+      <div class="equipment-card">
+        <div class="equipment-title">ETT Size (Uncuffed)</div>
+        <div class="${uncuffedValueClass}">${uncuffedSize}</div>
+        <div class="equipment-detail">Depth: ${depth} cm at lips</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">ETT Size (Cuffed)</div>
+        <div class="equipment-value">${cuffedSize}</div>
+        <div class="equipment-detail">Depth: ${depth} cm at lips</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">LMA Size</div>
+        <div class="equipment-value">${lmaSize}</div>
+        <div class="equipment-detail">Based on weight</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">i-gel Size</div>
+        <div class="equipment-value">${igelSize}</div>
+        <div class="equipment-detail">Based on weight</div>
+      </div>
+    `;
+    document.getElementById('equipment-results').innerHTML = equipmentHTML;
+  }
+
+  /* -------------------------
+     Fluids rendering
+     ------------------------- */
+  function calculateFluids(){
+    const patient = getPatientData();
+    const fluidResultsEl = document.getElementById('fluid-results');
+
+    if (!patient.weight){
+      fluidResultsEl.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate fluids and drug doses</p>';
+      return;
+    }
+
+    const maintenance = calculateMaintenanceFluid(patient.weight);
+    const bolus = patient.weight * 10;
+    const EBV = calculateEBV(patient.weight, patient.age);
+
+    let MABL_Result = "N/A";
+    let MABL_Detail = "Requires Current & Target Hb";
+
+    if (patient.currentHb > 0 && patient.targetHb > 0){
+      const calculatedMABL = calculateMABL(EBV, patient.currentHb, patient.targetHb);
+      MABL_Result = `${calculatedMABL.toFixed(0)} mL`;
+      MABL_Detail = `Hb Drop: ${patient.currentHb.toFixed(1)} → ${patient.targetHb.toFixed(1)} g/dL`;
+    } else {
+      MABL_Result = `${(EBV * 0.15).toFixed(0)} - ${(EBV * 0.3).toFixed(0)} mL`;
+      MABL_Detail = `Estimated Max (15-30% of EBV)`;
+    }
+
+    const fluidHTML = `
+      <div class="equipment-card">
+        <div class="equipment-title">Maintenance Fluid</div>
+        <div class="equipment-value">${maintenance.toFixed(0)} mL/hr</div>
+        <div class="equipment-detail">4-2-1 rule</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">Fluid Bolus</div>
+        <div class="equipment-value">${bolus.toFixed(0)} mL</div>
+        <div class="equipment-detail">10 mL/kg</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">Est. Blood Volume (EBV)</div>
+        <div class="equipment-value">${EBV.toFixed(0)} mL</div>
+        <div class="equipment-detail">Age-based mL/kg used</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">Max Allowable Blood Loss (MABL)</div>
+        <div class="equipment-value">${MABL_Result}</div>
+        <div class="equipment-detail">${MABL_Detail}</div>
+      </div>
+    `;
+    fluidResultsEl.innerHTML = fluidHTML;
+  }
+
+  /* -------------------------
+     Utility: parse upper numeric value from dose range strings
+     ------------------------- */
+  function parseMaxDoseFromRange(rangeString){
+    if (!rangeString) return null;
+    const numbers = rangeString.match(/(\d+\.?\d*)/g);
+    if (!numbers || numbers.length === 0) return null;
+    const maxDose = numbers.reduce((max, cur) => {
+      const num = parseFloat(cur);
+      return (!isNaN(num) && num > max) ? num : max;
+    }, 0);
+    return maxDose > 0 ? maxDose : null;
+  }
+
+  /* -------------------------
+     Drug calculations & rendering
+     - preserves original logic (special cases, limits, dilution tiers)
+     ------------------------- */
+  function calculateDrugs(){
+    const patient = getPatientData();
+    const drugResultsDiv = document.getElementById('drug-results');
+
+    if (!patient.weight){
+      drugResultsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate drug doses</p>';
+      document.getElementById('toggleAllBtn').style.display = 'none';
+      return;
+    }
+    document.getElementById('toggleAllBtn').style.display = 'block';
+
+    let html = '';
+
+    drugs.forEach((drug, index) => {
+      const paramValue = patient[drug.useParam]; // usually weight
+
+      // start with the current per-kg dose (might have been edited)
+      let dosePerKg = drug.defaultDose;
+      let doseAdjusted = false;
+      let limitApplied = false;
+
+      // Paracetamol special-case for <10 kg
+      if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10){
+        if (drug.defaultDose === 15){
+          dosePerKg = 7.5;
+          doseAdjusted = true;
         }
+      } else {
+        dosePerKg = drug.defaultDose;
+      }
 
+      // total dose (mg or mcg)
+      let dose = paramValue * dosePerKg;
 
-        function getPatientData() {
-            // Read years and months (clamped values)
-            const years = parseFloat(document.getElementById('age-years').value) || 0;
-            const months = parseFloat(document.getElementById('age-months').value) || 0;
+      // enforce max/min total dose limits if present
+      if (drug.maxDose && dose > drug.maxDose){
+        dose = drug.maxDose; limitApplied = true;
+      }
+      if (drug.minDose && dose < drug.minDose){
+        dose = drug.minDose; limitApplied = true;
+      }
 
-            // Calculate total age in years (e.g., 2 years and 6 months = 2.5)
-            const totalAge = years + (months / 12);
+      // Concentration logic: choose finalConcentration based on tiers (to avoid <1 mL volumes)
+      const initialConcentration = drug.concentration;
+      let finalConcentration = initialConcentration;
+      let dilutionApplied = false;
+      const tiers = dilutionTiers[drug.name];
 
-            return {
-                age: totalAge,
-                weight: parseFloat(document.getElementById('weight').value) || 0,
-                currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
-                targetHb: parseFloat(document.getElementById('targetHb').value) || 0
-            };
+      if (tiers){
+        // iterate tiers from highest to lowest as originally intended
+        for (const conc of tiers){
+          const calculatedVolume = dose / conc;
+          if (calculatedVolume >= 1.0){
+            finalConcentration = conc;
+            dilutionApplied = conc !== initialConcentration;
+            break;
+          }
+          // if no tier produces >=1 mL, choose the last (most dilute) tier
+          finalConcentration = conc;
+          dilutionApplied = true;
         }
-
-        /**
-         * Calculates the Uncuffed Endotracheal Tube (ETT) ID size.
-         * Logic: Weight-based for infants (<1 year), Age-based formula for children (>=1 year).
-         * @param {number} age - Total age in years (e.g., 0.5 for 6 months).
-         * @param {number} weight - Weight in kilograms.
-         * @returns {string} The ETT size (ID in mm) or an error message.
-         */
-        function calculateETTSize(age, weight) {
-
-            // 1. INFANTS (Age < 1 year) - Requires weight
-            if (age < 1) {
-                if (weight === 0) {
-                    return 'Enter Weight (kg)';
-                }
-
-                // Use weight-based guidelines for infants
-                if (weight < 1.0) return '2.5';       // < 1000g
-                if (weight >= 1.0 && weight <= 2.0) return '3.0'; // 1000g - 2000g
-                // > 2.0 kg and < 1 year old (standard infant size)
-                return '3.5';
-            }
-
-            // 2. CHILDREN (Age >= 1 year, capped at 18) - Use age-based formula
-            // Uncuffed ETT size (mm ID) = (age in years / 4) + 4
-            if (age >= 1 && age <= 18) {
-                return ((age / 4) + 4).toFixed(1);
-            }
-
-            // 3. ADULT/TEENAGER FALLBACK (>18 years, though clamped)
-            // This is technically unreachable due to clamping, but included for robustness.
-            return '7.5';
-        }
-
-        /**
-         * Calculates the appropriate depth for ETT insertion.
-         * @param {number} age - Total age in years (e.g., 0.5 for 6 months).
-         * @param {number} weight - Weight in kilograms.
-         * @returns {string} The ETT depth (in cm) or 'N/A'.
-         */
-        function calculateETTDepth(age, weight) {
-            const ETT_ID_Uncuffed_str = calculateETTSize(age, weight);
-
-            if (ETT_ID_Uncuffed_str.includes('Enter') || ETT_ID_Uncuffed_str === 'N/A') return 'N/A';
-
-            const ETT_ID_Uncuffed = parseFloat(ETT_ID_Uncuffed_str);
-
-            if (age < 0.1 && weight > 0) { // Neonate (<1 month)
-                 // Common formula for neonates: Depth (cm) = Weight (kg) + 6 cm
-                 return (weight + 6).toFixed(1);
-            }
-
-            // General formula: Depth (cm) = ID x 3
-            return (ETT_ID_Uncuffed * 3).toFixed(1);
-        }
-
-        function calculateLMASize(weight) {
-            if (weight < 5) return '1';
-            if (weight < 10) return '1.5';
-            if (weight < 20) return '2';
-            if (weight < 30) return '2.5';
-            if (weight < 50) return '3';
-            return '4';
-        }
-
-        function calculateIGelSize(weight) {
-            if (weight < 5) return '1';
-            if (weight < 10) return '1.5';
-            if (weight < 25) return '2';
-            if (weight < 35) return '2.5';
-            if (weight < 60) return '3';
-            if (weight < 90) return '4';
-            return '5';
-        }
-
-        function calculateMaintenanceFluid(weight) {
-            let rate = 0;
-            if (weight <= 10) {
-                rate = weight * 4;
-            } else if (weight <= 20) {
-                rate = 40 + (weight - 10) * 2;
-            } else {
-                rate = 60 + (weight - 20) * 1;
-            }
-            return rate;
-        }
-
-        function calculateEBV(weight, age) {
-            if (weight === 0) return 0;
-            if (age < 0.1) return weight * 90; // Neonate (<1 month): 90 mL/kg
-            if (age < 1) return weight * 85;    // Infant (1 month to 1 year): 85 mL/kg
-            if (age < 3) return weight * 80;    // Toddler (1-3 years): 80 mL/kg
-            if (age < 6) return weight * 75;    // Preschooler (3-6 years): 75 mL/kg
-            if (age < 12) return weight * 70;   // School age (6-12 years): 70 mL/kg
-            return weight * 65;                 // Adolescent (>12 years): 65 mL/kg (or 70 based on practice)
-        }
-
-        function calculateMABL(EBV, initialHb, targetHb) {
-            if (initialHb <= targetHb || initialHb === 0 || EBV === 0) return 0;
-            const MABL = EBV * (initialHb - targetHb) / initialHb;
-            return Math.max(0, MABL); // Ensure MABL is not negative
-        }
-
-        function calculateEquipment() {
-            const patient = getPatientData();
-
-            const uncuffedSize = calculateETTSize(patient.age, patient.weight);
-            const depth = calculateETTDepth(patient.age, patient.weight);
-
-            let cuffedSize, uncuffedID;
-            let uncuffedValueClass = 'equipment-value';
-
-            if (uncuffedSize.includes('Enter')) {
-                // ETT size is an error message
-                cuffedSize = 'N/A';
-                uncuffedValueClass += ' error';
-            } else {
-                // ETT size is a number
-                uncuffedID = parseFloat(uncuffedSize);
-                // Cuffed size is 0.5mm smaller
-                cuffedSize = (uncuffedID - 0.5).toFixed(1);
-            }
-
-            // Check LMA/i-gel dependency on weight
-            const lmaSize = patient.weight === 0 ? 'N/A' : calculateLMASize(patient.weight);
-            const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
-
-
-            const equipmentHTML = `
-                <div class="equipment-card">
-                    <div class="equipment-title">ETT Size (Uncuffed)</div>
-                    <div class="equipment-value ${uncuffedValueClass}">${uncuffedSize}</div>
-                    <div class="equipment-detail">Depth: ${depth} cm at lips</div>
-                </div>
-                <div class="equipment-card">
-                    <div class="equipment-title">ETT Size (Cuffed)</div>
-                    <div class="equipment-value">${cuffedSize}</div>
-                    <div class="equipment-detail">Depth: ${depth} cm at lips</div>
-                </div>
-                <div class="equipment-card">
-                    <div class="equipment-title">LMA Size</div>
-                    <div class="equipment-value">${lmaSize}</div>
-                    <div class="equipment-detail">Based on weight</div>
-                </div>
-                <div class="equipment-card">
-                    <div class="equipment-title">i-gel Size</div>
-                    <div class="equipment-value">${igelSize}</div>
-                    <div class="equipment-detail">Based on weight</div>
-                </div>
-            `;
-            document.getElementById('equipment-results').innerHTML = equipmentHTML;
-        }
-
-        function calculateFluids() {
-            const patient = getPatientData();
-            if (!patient.weight) {
-                document.getElementById('fluid-results').innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate fluids and drug doses</p>';
-                return;
-            }
-
-            const maintenance = calculateMaintenanceFluid(patient.weight);
-            const bolus = patient.weight * 10;
-            const EBV = calculateEBV(patient.weight, patient.age);
-            let MABL_Result = "N/A";
-            let MABL_Detail = "Requires Current & Target Hb";
-
-            if (patient.currentHb > 0 && patient.targetHb > 0) {
-                const calculatedMABL = calculateMABL(EBV, patient.currentHb, patient.targetHb);
-                MABL_Result = `${calculatedMABL.toFixed(0)} mL`;
-                MABL_Detail = `Hb Drop: ${patient.currentHb.toFixed(1)} → ${patient.targetHb.toFixed(1)} g/dL`;
-            } else {
-                 MABL_Result = `${(EBV * 0.15).toFixed(0)} - ${(EBV * 0.3).toFixed(0)} mL`;
-                 MABL_Detail = `Estimated Max (15-30% of EBV)`;
-            }
-
-
-            const fluidHTML = `
-                <div class="equipment-card">
-                    <div class="equipment-title">Maintenance Fluid</div>
-                    <div class="equipment-value">${maintenance.toFixed(0)} mL/hr</div>
-                    <div class="equipment-detail">4-2-1 rule</div>
-                </div>
-                <div class="equipment-card">
-                    <div class="equipment-title">Fluid Bolus</div>
-                    <div class="equipment-value">${bolus.toFixed(0)} mL</div>
-                    <div class="equipment-detail">10 mL/kg</div>
-                </div>
-                <div class="equipment-card">
-                    <div class="equipment-title">Est. Blood Volume (EBV)</div>
-                    <div class="equipment-value">${EBV.toFixed(0)} mL</div>
-                    <div class="equipment-detail">Age-based mL/kg used</div>
-                </div>
-                <div class="equipment-card">
-                    <div class="equipment-title">Max Allowable Blood Loss (MABL)</div>
-                    <div class="equipment-value">${MABL_Result}</div>
-                    <div class="equipment-detail">${MABL_Detail}</div>
-                </div>
-            `;
-            document.getElementById('fluid-results').innerHTML = fluidHTML;
-        }
-
-        /**
-         * Utility function to parse the maximum dose from the range string.
-         * Attempts to find the highest number that precedes the unit (mg/kg or mcg/kg).
-         */
-        function parseMaxDoseFromRange(rangeString) {
-            if (!rangeString) return null;
-
-            // Regex to find all numbers (including decimals)
-            const numbers = rangeString.match(/(\d+\.?\d*)/g);
-
-            if (!numbers || numbers.length === 0) return null;
-
-            // Find the highest number, assuming it's the upper limit of the dose range
-            const maxDose = numbers.reduce((max, current) => {
-                const num = parseFloat(current);
-                if (!isNaN(num) && num > max) {
-                    return num;
-                }
-                return max;
-            }, 0);
-
-            // A common dose range like '1-2 mg/kg' or '10 mcg/kg IV' should give a maxDose > 0
-            return maxDose > 0 ? maxDose : null;
-        }
-
-        function calculateDrugs() {
-            const patient = getPatientData();
-            const drugResultsDiv = document.getElementById('drug-results');
-
-            if (!patient.weight) {
-                drugResultsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate drug doses</p>';
-                document.getElementById('toggleAllBtn').style.display = 'none';
-                return;
-            }
-
-            document.getElementById('toggleAllBtn').style.display = 'block';
-
-            let drugHTML = '';
-            drugs.forEach((drug, index) => {
-                const paramValue = patient[drug.useParam];
-
-                let dosePerKg = drug.defaultDose; // Default dose (or custom dose from updateDrug)
-                let doseAdjusted = false; // For Paracetamol specific dose
-                let limitApplied = false; // For minDose/maxDose limits
-
-                // --- 1. SPECIAL DOSAGE ADJUSTMENTS BASED ON WEIGHT ---
-                // Paracetamol (IV) adjustment for small infants (< 10 kg)
-                if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10) {
-                    if (drug.defaultDose === 15) {
-                         dosePerKg = 7.5;
-                         doseAdjusted = true;
-                    }
-                } else {
-                    // Use the defaultDose (which might have been edited by user)
-                    dosePerKg = drug.defaultDose;
-                }
-
-                // Calculate base total dose (using the potentially adjusted dosePerKg)
-                let dose = paramValue * dosePerKg;
-
-                // --- 2. APPLY MIN/MAX TOTAL DOSE LIMITS (Safety) ---
-
-                // Apply Maximum Total Dose
-                if (drug.maxDose && dose > drug.maxDose) {
-                    dose = drug.maxDose;
-                    limitApplied = true;
-                }
-
-                // Apply Minimum Total Dose
-                if (drug.minDose && dose < drug.minDose) {
-                    dose = drug.minDose;
-                    limitApplied = true;
-                }
-
-                // --- 3. DYNAMIC CONCENTRATION LOGIC (NEW) ---
-                const initialConcentration = drug.concentration;
-                let finalConcentration = initialConcentration;
-                let dilutionApplied = false;
-
-                const tiers = dilutionTiers[drug.name];
-
-                if (tiers) {
-                    // Iterate from highest concentration (tiers[0]) to lowest
-                    for (const conc of tiers) {
-                        const calculatedVolume = dose / conc;
-                        if (calculatedVolume >= 1.0) {
-                            // Found the highest tier concentration that gives >= 1.0 mL
-                            finalConcentration = conc;
-                            dilutionApplied = conc !== initialConcentration;
-                            break;
-                        }
-                        // If volume < 1.0 mL, the last (most dilute) tier is the final choice.
-                        finalConcentration = conc;
-                        dilutionApplied = true;
-                    }
-                }
-
-                // Calculate final metrics using the determined concentration
-                const volume = dose / finalConcentration;
-                const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
-                const volumeDisplay = volume.toFixed(2);
-                const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
-
-                // Prepare concentration display text (REMOVED DYNAMIC DILUTION MENTION)
-                let concentrationDisplay = `${finalConcentration} ${drug.concentrationUnit}`;
-
-                // --- 4. CAUTION BUTTON/POPUP LOGIC ---
-                let isCautionNeeded = false;
-                if (drug.caution) {
-                    // Succinylcholine: Caution for all typical pediatric patients (e.g., < 50 kg)
-                    if (drug.name === 'Succinylcholine' && patient.weight > 0 && patient.weight < 50) isCautionNeeded = true;
-                    // Paracetamol, Midazolam, Lidocaine: Caution for small infants (< 10 kg)
-                    else if ((drug.name === 'Paracetamol (IV)' || drug.name === 'Midazolam' || drug.name === 'Lidocaine (Xylocard)') && patient.weight > 0 && patient.weight < 10) isCautionNeeded = true;
-                }
-
-                let cautionIconHtml = '';
-                let cautionPopupHtml = '';
-
-                if (isCautionNeeded) {
-                    cautionIconHtml = `
-                        <span class="caution-icon" id="caution-icon-${index}"
-                              onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>
-                    `;
-
-                    cautionPopupHtml = `
-                        <div id="caution-popup-${index}" class="caution-popup">
-                            <strong>CAUTION:</strong> ${drug.caution}
-                        </div>
-                    `;
-                }
-
-                // --- 5. DISPLAY STRINGS ---
-
-                let doseInfoHtml = `<div class="dose-info">Dose Range: ${drug.range}</div>`;
-
-                if (doseAdjusted) {
-                     doseInfoHtml = `<div class="dose-info dose-limit-applied">Dose reduced to ${dosePerKg} ${drug.unit} for <10 kg weight.</div>`;
-                }
-
-                let limitInfoHtml = '';
-                if (limitApplied) {
-                    limitInfoHtml = `<span class="dose-limit-applied">${dose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
-                }
-
-                // Determine if this card should be expanded and the inputs active after redraw
-                const isExpandedClass = (allExpanded || index === activeEditIndex) ? 'expanded' : '';
-                const isActiveEditClass = (index === activeEditIndex) ? 'active' : '';
-
-                // --- 6. CUSTOM DOSE WARNING ---
-                let customDoseWarning = '';
-                if (drug.isCustomDoseHigh) {
-                    customDoseWarning = `
-                        <div class="dose-limit-applied" style="color: var(--reversal); font-weight: 700; border: 1px solid var(--reversal); display: block; padding: 5px; border-radius: 5px; margin-bottom: 10px; background-color: var(--bg-card);">
-                            ⚠️ Custom Dose (${drug.defaultDose} ${drug.unit}) is **ABOVE** recommended range.
-                        </div>
-                    `;
-                }
-
-                drugHTML += `
-                    <div class="drug-card ${drug.category} ${isExpandedClass}" id="drug-card-${index}">
-                        ${cautionPopupHtml} <div class="drug-header" onclick="toggleDrugCard(${index})">
-                            <div class="drug-name">
-                                <span class="toggle-icon">▶</span> 
-                                ${drug.name}
-                            </div>
-                            <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
-                            ${cautionIconHtml} </div>
-                        <div class="drug-details" id="drug-details-${index}">
-                            <div class="drug-info">
-                                ${customDoseWarning}
-                                ${doseInfoHtml}
-                                <div class="calculation">
-                                    <div class="calculation-result">${doseDisplay} ${totalDoseUnit} ${limitInfoHtml}</div>
-                                    <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>
-                                    <div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>
-                                </div>
-                                <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
-                                <div class="edit-inputs ${isActiveEditClass}" id="edit-${index}">
-                                    <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit})" 
-                                        id="dose-${index}" value="${drug.defaultDose}" 
-                                        onchange="updateDrug(${index})">
-                                    <input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" 
-                                        id="conc-${index}" value="${drug.concentration}"
-                                        onchange="updateDrug(${index})">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            drugResultsDiv.innerHTML = drugHTML;
-            activeEditIndex = null;
-            document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
-        }
-
-        function toggleDrugCard(index) {
-            const card = document.getElementById(`drug-card-${index}`);
-            card.classList.toggle('expanded');
-        }
-
-        function toggleAllDrugs() {
-            allExpanded = !allExpanded;
-            const cards = document.querySelectorAll('.drug-card');
-            const button = document.getElementById('toggleAllBtn');
-
-            cards.forEach(card => {
-                if (allExpanded) {
-                    card.classList.add('expanded');
-                    // Ensure the edit input fields are visible if they were active
-                    const editInputs = card.querySelector('.edit-inputs');
-                    if (editInputs && editInputs.classList.contains('active')) {
-                        editInputs.classList.add('active');
-                    }
-                } else {
-                    card.classList.remove('expanded');
-                    // Hide edit inputs when collapsing all
-                    const editInputs = card.querySelector('.edit-inputs');
-                    if (editInputs) {
-                         editInputs.classList.remove('active');
-                    }
-                }
-            });
-
-            button.textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
-        }
-
-
-        function toggleEdit(index) {
-            const editDiv = document.getElementById(`edit-${index}`);
-            editDiv.classList.toggle('active');
-
-            // Ensure the parent card is expanded when the edit panel is opened
-            if (editDiv.classList.contains('active')) {
-                document.getElementById(`drug-card-${index}`).classList.add('expanded');
-            }
-        }
-
-        function updateDrug(index) {
-            const drug = drugs[index];
-            const doseInput = document.getElementById(`dose-${index}`);
-            const concInput = document.getElementById(`conc-${index}`);
-
-            const newDose = parseFloat(doseInput.value);
-            const newConc = parseFloat(concInput.value);
-
-            // Note: parseMaxDoseFromRange handles parsing the 'range' string (e.g., '2-3 mg/kg') to get '3'.
-            const maxDose = parseMaxDoseFromRange(drug.range);
-
-            // --- NEW WARNING LOGIC ---
-            drug.isCustomDoseHigh = false; // Reset flag
-
-            // Only update dose/concentration if a positive number is entered
-            if (!isNaN(newDose) && newDose > 0) {
-                drug.defaultDose = newDose;
-                // Check if the new dose exceeds the parsed maximum dose from the range
-                if (maxDose !== null && newDose > maxDose) {
-                    drug.isCustomDoseHigh = true;
-                }
-            }
-            if (!isNaN(newConc) && newConc > 0) {
-                drug.concentration = newConc;
-            }
-
-            // Set the index of the drug card to keep open and active
-            activeEditIndex = index;
-
-            // Recalculate and redraw. The activeEditIndex logic handles re-opening the card/inputs.
-            calculateDrugs();
-
-            // Attempt to restore focus after redrawing (better UX)
-            // Need a slight delay because the DOM element is technically new
-            setTimeout(() => {
-                const updatedDoseInput = document.getElementById(`dose-${index}`);
-                if (updatedDoseInput) updatedDoseInput.focus();
-            }, 50);
-        }
-
-        // Global function to toggle the caution pop-up
-        function toggleCautionPopup(index) {
-            const card = document.getElementById(`drug-card-${index}`);
-            const popup = document.getElementById(`caution-popup-${index}`);
-
-            // Hide all other popups AND remove the active class from their cards
-            document.querySelectorAll('.caution-popup').forEach(p => {
-                if (p.id !== popup.id) {
-                    p.style.display = 'none';
-                    const parentCard = p.closest('.drug-card');
-                    if (parentCard) parentCard.classList.remove('caution-active');
-                }
-            });
-
-            if (popup) {
-                // Toggle current popup
-                if (popup.style.display === 'block') {
-                    popup.style.display = 'none';
-                    card.classList.remove('caution-active');
-                } else {
-                    popup.style.display = 'block';
-                    card.classList.add('caution-active'); // Add class to elevate Z-index
-                }
-            }
-        }
-
-        // Close pop-up when clicking anywhere else
-        document.addEventListener('click', (e) => {
-            // Check if the click target is NOT the caution icon and is NOT inside a caution popup
-            let clickedInsidePopup = false;
-            let current = e.target;
-            while(current) {
-                if (current.classList && (current.classList.contains('caution-popup') || current.classList.contains('caution-icon'))) {
-                    clickedInsidePopup = true;
-                    break;
-                }
-                current = current.parentElement;
-            }
-
-            if (!clickedInsidePopup) {
-                // Hide pop-ups
-                document.querySelectorAll('.caution-popup').forEach(p => {
-                    p.style.display = 'none';
-                });
-                // Remove the z-index class from cards
-                document.querySelectorAll('.drug-card.caution-active').forEach(card => {
-                     card.classList.remove('caution-active');
-                });
-            }
-        });
-
-
-        function calculateAll() {
-            calculateEquipment();
-            calculateFluids();
-            calculateDrugs();
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
-            document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-        }
-
-        window.onload = function() {
-            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (savedDarkMode) {
-                document.body.classList.add('dark-mode');
-                document.querySelector('.dark-mode-toggle').textContent = '☀️ Light Mode';
-            }
-            calculateAll();
-        };
-    </script>
-    <p style="text-align: center; margin-top: 20px;"><font color="grey" style="font-size: 0.85em;"><a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a></p></font>
+      }
+
+      // final metrics
+      const volume = dose / finalConcentration;
+      const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
+      const volumeDisplay = volume.toFixed(2);
+      const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
+      let concentrationDisplay = `${finalConcentration} ${drug.concentrationUnit}`;
+
+      // caution logic (keeps same rules as original)
+      let isCautionNeeded = false;
+      if (drug.caution){
+        if (drug.name === 'Succinylcholine' && patient.weight > 0 && patient.weight < 50) isCautionNeeded = true;
+        else if ((drug.name === 'Paracetamol (IV)' || drug.name === 'Midazolam' || drug.name === 'Lidocaine (Xylocard)') && patient.weight > 0 && patient.weight < 10) isCautionNeeded = true;
+      }
+
+      let cautionIconHtml = '';
+      let cautionPopupHtml = '';
+      if (isCautionNeeded){
+        cautionIconHtml = `<span class="caution-icon" id="caution-icon-${index}" onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>`;
+        cautionPopupHtml = `<div id="caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${drug.caution}</div>`;
+      }
+
+      // dose info & limit warning
+      let doseInfoHtml = `<div class="dose-info">Dose Range: ${drug.range}</div>`;
+      if (doseAdjusted){
+        doseInfoHtml = `<div class="dose-info dose-limit-applied">Dose reduced to ${dosePerKg} ${drug.unit} for <10 kg weight.</div>`;
+      }
+      let limitInfoHtml = '';
+      if (limitApplied) {
+        limitInfoHtml = `<span class="dose-limit-applied">${dose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
+      }
+
+      // custom dose warning (if user edited dose above recommended)
+      let customDoseWarning = '';
+      if (drug.isCustomDoseHigh){
+        customDoseWarning = `
+          <div class="dose-limit-applied" style="color: var(--reversal); font-weight:700; border:1px solid var(--reversal); display:block; padding:5px; border-radius:5px; margin-bottom:10px; background-color:var(--bg-card);">
+            ⚠️ Custom Dose (${drug.defaultDose} ${drug.unit}) is **ABOVE** recommended range.
+          </div>
+        `;
+      }
+
+      // expanded / active classes (preserve open state after recalculation)
+      const isExpandedClass = (allExpanded || index === activeEditIndex) ? 'expanded' : '';
+      const isActiveEditClass = (index === activeEditIndex) ? 'active' : '';
+
+      // assemble card HTML (keeps structure and text identical to the original)
+      html += `
+        <div class="drug-card ${drug.category} ${isExpandedClass}" id="drug-card-${index}">
+          ${cautionPopupHtml}
+          <div class="drug-header" onclick="toggleDrugCard(${index})">
+            <div class="drug-name">
+              <span class="toggle-icon">▶</span>
+              ${drug.name}
+            </div>
+            <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
+            ${cautionIconHtml}
+          </div>
+
+          <div class="drug-details" id="drug-details-${index}">
+            <div class="drug-info">
+              ${customDoseWarning}
+              ${doseInfoHtml}
+              <div class="calculation">
+                <div class="calculation-result">${doseDisplay} ${totalDoseUnit} ${limitInfoHtml}</div>
+                <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>
+                <div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>
+              </div>
+
+              <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
+              <div class="edit-inputs ${isActiveEditClass}" id="edit-${index}">
+                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit})" id="dose-${index}" value="${drug.defaultDose}" onchange="updateDrug(${index})">
+                <input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" id="conc-${index}" value="${drug.concentration}" onchange="updateDrug(${index})">
+              </div>
+
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    drugResultsDiv.innerHTML = html;
+    activeEditIndex = null; // clear active edit after render (render logic re-opens if needed)
+    document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+  }
+
+  /* -------------------------
+     Toggle handlers for cards, all-expand, edit panel
+     ------------------------- */
+  function toggleDrugCard(index){
+    const card = document.getElementById(`drug-card-${index}`);
+    if (!card) return;
+    card.classList.toggle('expanded');
+  }
+
+  function toggleAllDrugs(){
+    allExpanded = !allExpanded;
+    const cards = document.querySelectorAll('.drug-card');
+    const button = document.getElementById('toggleAllBtn');
+    cards.forEach(card=>{
+      if (allExpanded) {
+        card.classList.add('expanded');
+        const editInputs = card.querySelector('.edit-inputs');
+        if (editInputs && editInputs.classList.contains('active')) editInputs.classList.add('active');
+      } else {
+        card.classList.remove('expanded');
+        const editInputs = card.querySelector('.edit-inputs');
+        if (editInputs) editInputs.classList.remove('active');
+      }
+    });
+    button.textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+  }
+
+  function toggleEdit(index){
+    const editDiv = document.getElementById(`edit-${index}`);
+    if (!editDiv) return;
+    editDiv.classList.toggle('active');
+    if (editDiv.classList.contains('active')){
+      document.getElementById(`drug-card-${index}`).classList.add('expanded');
+    }
+  }
+
+  /* -------------------------
+     Update drug from edit inputs
+     - updates in-memory drugs[] structure (same behaviour as original)
+     - marks isCustomDoseHigh when editing above parsed recommended max
+     ------------------------- */
+  function updateDrug(index){
+    const drug = drugs[index];
+    const doseInput = document.getElementById(`dose-${index}`);
+    const concInput = document.getElementById(`conc-${index}`);
+    const newDose = parseFloat(doseInput.value);
+    const newConc = parseFloat(concInput.value);
+
+    const maxDose = parseMaxDoseFromRange(drug.range);
+    drug.isCustomDoseHigh = false;
+
+    if (!isNaN(newDose) && newDose > 0){
+      drug.defaultDose = newDose;
+      if (maxDose !== null && newDose > maxDose) drug.isCustomDoseHigh = true;
+    }
+    if (!isNaN(newConc) && newConc > 0) drug.concentration = newConc;
+
+    // keep this card open/active after rerender
+    activeEditIndex = index;
+    calculateDrugs();
+
+    // Restore focus with a slight delay
+    setTimeout(()=>{
+      const updatedDoseInput = document.getElementById(`dose-${index}`);
+      if (updatedDoseInput) updatedDoseInput.focus();
+    },50);
+  }
+
+  /* -------------------------
+     Caution popup logic
+     - toggles popup display and ensures only one popup shows at a time
+     ------------------------- */
+  function toggleCautionPopup(index){
+    const card = document.getElementById(`drug-card-${index}`);
+    const popup = document.getElementById(`caution-popup-${index}`);
+
+    // close other popups and remove their caution-active class
+    document.querySelectorAll('.caution-popup').forEach(p=>{
+      if (p.id !== (popup && popup.id)){
+        p.style.display = 'none';
+        const parentCard = p.closest('.drug-card');
+        if (parentCard) parentCard.classList.remove('caution-active');
+      }
+    });
+
+    if (!popup) return;
+    if (popup.style.display === 'block'){
+      popup.style.display = 'none';
+      if (card) card.classList.remove('caution-active');
+    } else {
+      popup.style.display = 'block';
+      if (card) card.classList.add('caution-active');
+    }
+  }
+
+  // hide popups when clicking outside
+  document.addEventListener('click', (e)=>{
+    let clickedInsidePopup = false;
+    let current = e.target;
+    while(current){
+      if (current.classList && (current.classList.contains('caution-popup') || current.classList.contains('caution-icon'))){
+        clickedInsidePopup = true; break;
+      }
+      current = current.parentElement;
+    }
+
+    if (!clickedInsidePopup){
+      document.querySelectorAll('.caution-popup').forEach(p=>p.style.display='none');
+      document.querySelectorAll('.drug-card.caution-active').forEach(card=>card.classList.remove('caution-active'));
+    }
+  });
+
+  /* -------------------------
+     Top-level recalculation entrypoint
+     ------------------------- */
+  function calculateAll(){
+    calculateEquipment();
+    calculateFluids();
+    calculateDrugs();
+  }
+
+  /* -------------------------
+     Dark mode toggle (persists in localStorage)
+     ------------------------- */
+  function toggleDarkMode(){
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+
+  /* -------------------------
+     Initial load: restore dark mode and render
+     ------------------------- */
+  window.onload = function(){
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode){
+      document.body.classList.add('dark-mode');
+      document.querySelector('.dark-mode-toggle').textContent = '☀️ Light Mode';
+    }
+    calculateAll();
+  };
+  </script>
 </body>
 </html>

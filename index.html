@@ -62,6 +62,17 @@
             /* Dark Mode Accents - kept bright for contrast against dark background */
             --emergency: #ffeb3b;
         }
+        
+        /* FIX 3: Induction category text to black in Dark Mode */
+        body.dark-mode .drug-category.induction {
+             color: #121212; /* Explicit black/dark color */
+        }
+        
+        /* FIX 2: Emergency category text to black in Dark Mode for high contrast on bright yellow background */
+        body.dark-mode .drug-category.emergency {
+             color: #121212; /* Explicit black/dark color */
+        }
+
 
         body {
             font-family: 'Montserrat', sans-serif;
@@ -322,12 +333,19 @@
             flex-shrink: 0;
         }
 
-        .drug-category.induction { background: var(--induction); }
+        /* FIX 1: Induction category text to black for light mode (on light cyan background) */
+        .drug-category.induction { 
+            background: var(--induction); 
+            color: var(--text-primary); 
+        }
+        
         .drug-category.muscle-relaxant { background: var(--muscle-relaxant); }
         .drug-category.analgesic { background: var(--analgesic); }
         .drug-category.adjunct { background: var(--adjunct); }
         .drug-category.reversal { background: var(--reversal); }
-        .drug-category.emergency { background: var(--emergency); color: var(--text-primary); }
+        /* Keep existing emergency style for light mode/default, which uses var(--text-primary) (black) */
+        .drug-category.emergency { background: var(--emergency); color: var(--text-primary); } 
+        
         .drug-category.steroid { background: var(--steroid); }
         .drug-category.antiemetic { background: var(--antiemetic); }
 
@@ -514,7 +532,7 @@
             color: #ffeb3b;
             border-left: 5px solid #ff9800;
         }
-
+        
         /* Responsive Overrides (Mobile First) */
         @media (min-width: 768px) {
             .container {
@@ -1195,8 +1213,8 @@
                 }
                 
                 // Calculate final metrics
-                const volume = dose / drug.concentration;
                 const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
+                const volume = dose / drug.concentration;
                 const volumeDisplay = volume.toFixed(2);
                 const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
                 

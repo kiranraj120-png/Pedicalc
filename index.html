@@ -138,6 +138,18 @@
     .info-box strong {
       color: var(--primary-accent);
     }
+    /* Specific styling for the generated Ketorolac info box */
+    .info-box.ketorolac-specific {
+      border-left-color: var(--analgesic);
+      margin-top: 5px;
+      margin-bottom: 5px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.8em;
+      padding: 8px 10px;
+    }
+
 
     /* Inputs */
     .input-group{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:10px}
@@ -412,6 +424,22 @@
     { name:'Paracetamol (IV)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, caution:'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.', defaultRoute:'IV' },
     { name:'Paracetamol (Oral)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:24, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, defaultRoute:'Oral' },
 
+    // *** KETOROLAC ENTRY ***
+    { 
+        name:'Ketorolac', 
+        category:'analgesic', 
+        categoryLabel:'NSAID Analgesic', 
+        defaultDose:0.5, // Placeholder for IV/IM up to 16 yo
+        oralDose:1.0,  // Placeholder for Oral up to 16 yo
+        unit:'mg/kg', 
+        concentration:30, // 30 mg/mL commonly
+        concentrationUnit:'mg/mL', 
+        useParam:'weight', 
+        range:'Dose varies significantly by Age/Weight/Route (See Info)', 
+        defaultRoute:'IV' 
+    },
+    // *** END KETOROLAC ENTRY ***
+
     // Adjuncts/Sedatives
     { name:'Midazolam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, oralDose:0.5, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg IV, 0.5-1 mg/kg Oral', caution:'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.', defaultRoute:'IV' },
     { name:'Diazepam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.2, oralDose:0.3, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.3 mg/kg IV, 0.2-0.5 mg/kg Oral', caution:'Max 10mg. Slow IV. Not recommended for neonates.', defaultRoute:'IV' },
@@ -453,6 +481,15 @@
 
   // Initialize currentRoute for each drug on load
   drugs.forEach(drug => {
+    // For Ketorolac, we define its possible routes here
+    if (drug.name === 'Ketorolac') {
+        drug.routes = ['IV', 'IM', 'Oral'];
+        drug.defaultRoute = 'IV';
+    } else {
+        drug.routes = drug.defaultRoute ? [drug.defaultRoute] : ['IV']; // Keep original logic for others
+        if (drug.imDose !== undefined) drug.routes.push('IM');
+        if (drug.oralDose !== undefined) drug.routes.push('Oral');
+    }
     drug.currentRoute = drug.defaultRoute;
   });
 
@@ -484,6 +521,8 @@
     const totalAge = years + (months/12);
     return {
       age: totalAge,
+      ageYears: years,
+      ageMonths: months,
       weight: parseFloat(document.getElementById('weight').value) || 0,
       currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
       targetHb: parseFloat(document.getElementById('targetHb').value) || 0
@@ -522,7 +561,7 @@
   }
 
   /* -------------------------
-     Helper to get the correct dose based on route
+     Helper to get the correct dose based on route (Only used for non-ketorolac drugs now)
      ------------------------- */
   function getDoseByRoute(drug){
     let dose;
@@ -541,6 +580,15 @@
     return dose;
   }
 
+  // Store a copy of initial drug data to reset doses when switching back to IV
+  const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
+      name: d.name, 
+      defaultDose: d.defaultDose,
+      imDose: d.imDose,
+      oralDose: d.oralDose
+  }))));
+
+
   /* -------------------------
      Route selector logic
      - updates drug.currentRoute and forces recalculation
@@ -549,32 +597,196 @@
     const drug = drugs[index];
     if (drug) {
       drug.currentRoute = route;
-      // When route is changed, reset dosePerKg to the default for that route
-      if (route === 'IM' && drug.imDose !== undefined) {
-          drug.defaultDose = drug.imDose;
-          drug.isCustomDoseHigh = false;
-      } else if (route === 'Oral' && drug.oralDose !== undefined) {
-          drug.defaultDose = drug.oralDose;
-          drug.isCustomDoseHigh = false;
-      } else { // IV
-          const initialDrugData = initialDrugs.find(d => d.name === drug.name);
-          if (initialDrugData) {
-              drug.defaultDose = initialDrugData.defaultDose;
+      
+      // Reset custom dose for non-Ketorolac when route changes
+      if (drug.name !== 'Ketorolac') {
+          if (route === 'IM' && drug.imDose !== undefined) {
+              drug.defaultDose = drug.imDose;
               drug.isCustomDoseHigh = false;
+          } else if (route === 'Oral' && drug.oralDose !== undefined) {
+              drug.defaultDose = drug.oralDose;
+              drug.isCustomDoseHigh = false;
+          } else { // IV
+              const initialDrugData = initialDrugs.find(d => d.name === drug.name);
+              if (initialDrugData) {
+                  drug.defaultDose = initialDrugData.defaultDose;
+                  drug.isCustomDoseHigh = false;
+              }
           }
+      } else {
+        // For Ketorolac, we always use the calculated dose (0.5/1.0 mg/kg etc.) 
+        // to pre-populate the edit box, but the main calculation logic is in calculateKetorolacDoseAndInfo
+        const patient = getPatientData();
+        const { dosePerKg } = calculateKetorolacDoseAndInfo(patient, drug);
+        if (dosePerKg) {
+            drug.defaultDose = dosePerKg;
+        }
       }
+
       activeEditIndex = index; // Keep the card open
       calculateDrugs();
     }
   }
 
-  // Store a copy of initial drug data to reset doses when switching back to IV
-  const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
-      name: d.name, 
-      defaultDose: d.defaultDose,
-      imDose: d.imDose,
-      oralDose: d.oralDose
-  }))));
+  /* -------------------------
+     Ketorolac Specific Calculation Logic
+     - Handles all age/weight/route tiers
+     ------------------------- */
+  function calculateKetorolacDoseAndInfo(patient, drug) {
+    const age = patient.age;
+    const weight = patient.weight;
+    const route = drug.currentRoute;
+    let dosePerKg = 0;
+    let totalDose = 0; // Single dose in mg, used for volume calculation for injectables
+    let maxDosePerDose = 0;
+    let maxDailyDose = 0;
+    let duration = '';
+    let doseInfo = '';
+    let specialNote = '';
+    let doseUnit = 'mg';
+    let displayDoseString = ''; // The final string for the red box
+
+    if (route === 'IV' || route === 'IM') {
+      doseUnit = 'mg/dose';
+    } else if (route === 'Oral') {
+      doseUnit = 'mg/dose';
+    }
+
+
+    if (age < 2.0) { // Infants and Children <2 years
+      // IV/IM (IM has been described >=6 months)
+      if (route === 'IV' || route === 'IM') {
+        dosePerKg = 0.5; // Use 0.5 mg/kg for calculation as default
+        totalDose = weight * dosePerKg;
+        maxDosePerDose = 15;
+        totalDose = Math.min(totalDose, maxDosePerDose);
+        
+        displayDoseString = `${totalDose.toFixed(2)} mg Q6-8H`;
+
+        doseInfo = `Recommended: 0.5 mg/kg/dose Q6-8H (Range: 0.25-0.5 mg/kg/dose). Max ${maxDosePerDose} mg/dose.`;
+        duration = 'Limited to 48-72 hours.';
+        if (route === 'IM' && age < 0.5) { // <6 months
+            doseInfo = `IM use described in patients ≥6 months of age. Recommended IV: 0.5 mg/kg/dose Q6-8H. Max ${maxDosePerDose} mg/dose.`;
+        }
+
+      } else if (route === 'Oral') {
+        doseInfo = 'Oral use is not recommended in this age group (<2 years).';
+        totalDose = 'Not Recommended';
+        displayDoseString = 'Not Recommended';
+      }
+
+    } else if (age >= 2.0 && age < 17.0) { // Children >=2 years and Adolescents <=16 years
+      // IM, IV
+      if (route === 'IM' || route === 'IV') {
+        dosePerKg = 0.5;
+        totalDose = weight * dosePerKg;
+        maxDosePerDose = 30;
+        totalDose = Math.min(totalDose, maxDosePerDose);
+        
+        displayDoseString = `${totalDose.toFixed(2)} mg Q6-8H`;
+        
+        doseInfo = `0.5 mg/kg/dose Q6-8H. Max ${maxDosePerDose} mg/dose. Max duration: 5 days.`;
+        duration = 'Max duration: 5 days.';
+      } 
+      // Oral
+      else if (route === 'Oral') {
+        dosePerKg = 1.0;
+        totalDose = weight * dosePerKg;
+        maxDosePerDose = 10;
+        maxDailyDose = 40;
+        totalDose = Math.min(totalDose, maxDosePerDose); // Total dose is 10mg (single dose)
+        
+        // **FIX:** Display regimen/Max Daily Dose as requested by user
+        const minDosesPerDay = Math.ceil(maxDailyDose / maxDosePerDose); // 40/10 = 4 doses
+        displayDoseString = `${maxDosePerDose} mg Q4-6H (Max ${maxDailyDose} mg/day)`;
+
+        doseInfo = `1 mg/kg/dose Q4-6H. Max ${maxDosePerDose} mg/dose. Max daily: ${maxDailyDose} mg/day.`;
+        specialNote = 'Oral must **only** be used as a continuation of IV or IM therapy; do not use as initial therapy.';
+        duration = 'Max combined duration: 5 days.';
+      }
+      
+    } else if (age >= 17.0) { // Adolescents >=17 years
+      const isUnder50kg = weight < 50;
+      
+      if (route === 'IM') {
+        if (isUnder50kg) {
+          dosePerKg = 15 / weight; // Use 15mg Q6h dose to calculate equivalent mg/kg
+          totalDose = 15; // Use 15mg Q6H dose
+          maxDosePerDose = 30; // Maximum single dose is 30mg
+          maxDailyDose = 60;
+          displayDoseString = '15 mg Q6H (Max 30 mg single dose; Max daily: 60 mg)';
+          doseInfo = '15 mg every 6 hours (OR 30 mg as a single dose). Max daily: 60 mg/day.';
+        } else { // >=50 kg
+          dosePerKg = 30 / weight; // Use 30mg Q6h dose
+          totalDose = 30; // Use 30mg Q6H dose
+          maxDosePerDose = 60; // Maximum single dose is 60mg
+          maxDailyDose = 120;
+          displayDoseString = '30 mg Q6H (Max 60 mg single dose; Max daily: 120 mg)';
+          doseInfo = '30 mg every 6 hours (OR 60 mg as a single dose). Max daily: 120 mg/day.';
+        }
+        duration = 'Max combined duration (parenteral + oral): 5 days.';
+
+      } else if (route === 'IV') {
+        if (isUnder50kg) {
+          dosePerKg = 15 / weight; // Use 15mg Q6h dose
+          totalDose = 15; // Use 15mg Q6H dose
+          maxDosePerDose = 15; // Maximum single dose is 15mg
+          maxDailyDose = 60;
+          displayDoseString = '15 mg Q6H (Max 15 mg single dose; Max daily: 60 mg)';
+          doseInfo = '15 mg every 6 hours (OR 15 mg as a single dose). Max daily: 60 mg/day.';
+        } else { // >=50 kg
+          dosePerKg = 30 / weight; // Use 30mg Q6h dose
+          totalDose = 30; // Use 30mg Q6H dose
+          maxDosePerDose = 30; // Maximum single dose is 30mg
+          maxDailyDose = 120;
+          displayDoseString = '30 mg Q6H (Max 30 mg single dose; Max daily: 120 mg)';
+          doseInfo = '30 mg every 6 hours (OR 30 mg as a single dose). Max daily: 120 mg/day.';
+        }
+        duration = 'Max combined duration (parenteral + oral): 5 days.';
+
+      } else if (route === 'Oral') {
+        totalDose = 10; // Maintenance dose used for volume calc, irrelevant for oral but for consistency
+        maxDosePerDose = 10;
+        maxDailyDose = 40;
+        
+        // **FIX:** Display regimen/Max Daily Dose
+        if (isUnder50kg) {
+            dosePerKg = 10 / weight;
+            displayDoseString = 'Initial 10 mg, then 10 mg Q4-6H (Max 40 mg/day)';
+            doseInfo = 'Initial: 10 mg, then 10 mg every 4 to 6 hours. Max daily: 40 mg/day.';
+        } else { // >=50 kg
+            dosePerKg = 10 / weight;
+            displayDoseString = 'Initial 20 mg, then 10 mg Q4-6H (Max 40 mg/day)';
+            doseInfo = 'Initial: 20 mg, then 10 mg every 4 to 6 hours. Max daily: 40 mg/day.';
+        }
+
+        specialNote = 'The maximum combined duration of treatment (parenteral and oral) is 5 days. Oral is generally continuation therapy.';
+        duration = 'Max combined duration: 5 days.';
+      }
+      
+    } else {
+      // Fallback for missing age/weight
+      doseInfo = 'Enter Age and Weight for Ketorolac Dose.';
+      displayDoseString = 'N/A';
+    }
+
+    // Default editable dose for the edit box
+    let editableDosePerKg = drug.defaultDose; 
+    if (dosePerKg > 0) editableDosePerKg = dosePerKg;
+
+    return {
+      dosePerKg: editableDosePerKg,
+      totalDose: totalDose, // Single dose number (for volume calc) or 'Not Recommended'
+      displayDoseString: displayDoseString, // The formatted regimen string for the red box
+      doseUnit: 'mg',
+      doseInfo: doseInfo,
+      specialNote: specialNote,
+      maxDosePerDose: maxDosePerDose,
+      maxDailyDose: maxDailyDose,
+      duration: duration
+    };
+  }
+
 
   /* -------------------------
      Enhanced Equipment calculations
@@ -912,68 +1124,109 @@
     drugs.forEach((drug, index) => {
       const paramValue = patient[drug.useParam]; // usually weight
 
-      // Determine the correct default dose based on the current route
-      const initialDosePerKgForRoute = getDoseByRoute(drug);
-      
-      // Use the potentially custom/edited dose (stored in defaultDose) as the calculation base
-      let dosePerKg = drug.defaultDose;
-      let doseAdjusted = false;
+      let dosePerKg = drug.defaultDose; // Default dose per kg to use for calculation/display
+      let totalDose = 0; // The single dose (number) used for volume calculation
       let limitApplied = false;
-      
-      // Check if `defaultDose` property still holds the dose for the `currentRoute`
-      if (dosePerKg !== initialDosePerKgForRoute && drug.currentRoute !== 'IV') {
-          dosePerKg = initialDosePerKgForRoute;
-          drug.defaultDose = dosePerKg;
-      }
-      
-      // Paracetamol special-case for <10 kg
-      if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10){
-        if (initialDosePerKgForRoute === 15){ 
-          dosePerKg = 7.5;
-          doseAdjusted = true;
+      let doseAdjusted = false;
+      let concentrationDisplay = '';
+      let volumeDisplay = 'N/A';
+      let totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
+      let isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
+      let ketorolacInfoBox = ''; // Specific info box for Ketorolac
+      let doseDisplay; // The final value for the red box
+
+      if (drug.name === 'Ketorolac') {
+        // --- KETOROLAC SPECIAL LOGIC ---
+        const ketorolacCalc = calculateKetorolacDoseAndInfo(patient, drug);
+        totalDose = ketorolacCalc.totalDose; // This is a number (single dose) or 'Not Recommended'
+        dosePerKg = ketorolacCalc.dosePerKg;
+        totalDoseUnit = ketorolacCalc.doseUnit;
+        
+        // Use the new displayDoseString for the final result
+        doseDisplay = ketorolacCalc.displayDoseString;
+
+        // Recalculate volume and concentration for injectable
+        if (isInjectable && typeof totalDose === 'number' && totalDose > 0) {
+            const finalConcentration = drug.concentration; // Use default 30 mg/mL
+            const volume = totalDose / finalConcentration;
+            volumeDisplay = volume.toFixed(2);
+            concentrationDisplay = `${finalConcentration} ${drug.concentrationUnit}`;
         }
-      }
+        
+        // Create the special info box
+        ketorolacInfoBox = `
+            <div class="info-box ketorolac-specific">
+                <strong>Ketorolac Dosing for ${patient.weight.toFixed(1)} kg (${patient.ageYears} Y, ${patient.ageMonths} M):</strong>
+                <div>${ketorolacCalc.doseInfo}</div>
+                <div>${ketorolacCalc.duration}</div>
+                ${ketorolacCalc.specialNote ? `<div>**Note:** ${ketorolacCalc.specialNote}</div>` : ''}
+            </div>
+        `;
+        // --- END KETOROLAC SPECIAL LOGIC ---
 
-      // total dose (mg or mcg)
-      let dose = paramValue * dosePerKg;
-
-      // enforce max/min total dose limits if present
-      if (drug.maxDose && dose > drug.maxDose){
-        dose = drug.maxDose; limitApplied = true;
-      }
-      if (drug.minDose && dose < drug.minDose){
-        dose = drug.minDose; limitApplied = true;
-      }
-
-      // Concentration logic: only apply if IV/IM (Oral does not use concentration/volume logic)
-      const isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
-      let finalConcentration = drug.concentration;
-      let dilutionApplied = false;
-      
-      if (isInjectable) {
-          const initialConcentration = drug.concentration;
-          const tiers = dilutionTiers[drug.name];
-
-          if (tiers){
-            for (const conc of tiers){
-              const calculatedVolume = dose / conc;
-              if (calculatedVolume >= 1.0){
-                finalConcentration = conc;
-                dilutionApplied = conc !== initialConcentration;
-                break;
-              }
-              finalConcentration = conc;
-              dilutionApplied = true;
-            }
+      } else {
+        // --- STANDARD DRUG LOGIC ---
+        const initialDosePerKgForRoute = getDoseByRoute(drug);
+        dosePerKg = drug.defaultDose;
+        
+        // Check if `defaultDose` property still holds the dose for the `currentRoute`
+        if (dosePerKg !== initialDosePerKgForRoute && drug.currentRoute !== 'IV') {
+            dosePerKg = initialDosePerKgForRoute;
+            drug.defaultDose = dosePerKg;
+        }
+        
+        // Paracetamol special-case for <10 kg
+        if (drug.name.includes('Paracetamol') && patient.weight > 0 && patient.weight < 10){
+          if (initialDosePerKgForRoute === 15){ 
+            dosePerKg = 7.5;
+            doseAdjusted = true;
           }
-      }
+        }
 
-      // final metrics
-      const volume = isInjectable ? dose / finalConcentration : 0;
-      const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
-      const volumeDisplay = isInjectable ? volume.toFixed(2) : 'N/A';
-      const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
-      let concentrationDisplay = isInjectable ? `${finalConcentration} ${drug.concentrationUnit}` : 'N/A';
+        // total dose (mg or mcg)
+        totalDose = paramValue * dosePerKg;
+
+        // enforce max/min total dose limits if present
+        if (drug.maxDose && totalDose > drug.maxDose){
+          totalDose = drug.maxDose; limitApplied = true;
+        }
+        if (drug.minDose && totalDose < drug.minDose){
+          totalDose = drug.minDose; limitApplied = true;
+        }
+
+        // Concentration logic: only apply if IV/IM (Oral does not use concentration/volume logic)
+        let finalConcentration = drug.concentration;
+        let dilutionApplied = false;
+        
+        if (isInjectable) {
+            const initialConcentration = drug.concentration;
+            const tiers = dilutionTiers[drug.name];
+
+            if (tiers){
+              for (const conc of tiers){
+                const calculatedVolume = totalDose / conc;
+                if (calculatedVolume >= 1.0){
+                  finalConcentration = conc;
+                  dilutionApplied = conc !== initialConcentration;
+                  break;
+                }
+                finalConcentration = conc;
+                dilutionApplied = true;
+              }
+            }
+        }
+
+        // final metrics
+        const volume = isInjectable ? totalDose / finalConcentration : 0;
+        volumeDisplay = isInjectable ? volume.toFixed(2) : 'N/A';
+        concentrationDisplay = isInjectable ? `${finalConcentration} ${drug.concentrationUnit}` : 'N/A';
+        
+        // Final Display formatting for standard drugs
+        doseDisplay = (typeof totalDose === 'number') ? 
+            (totalDoseUnit === 'mcg' ? totalDose.toFixed(0) : totalDose.toFixed(2)) :
+            totalDose;
+        // --- END STANDARD DRUG LOGIC ---
+      }
 
       // caution logic
       let isCautionNeeded = false;
@@ -1001,7 +1254,7 @@
       }
       let limitInfoHtml = '';
       if (limitApplied) {
-        limitInfoHtml = `<span class="dose-limit-applied">${dose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
+        limitInfoHtml = `<span class="dose-limit-applied">${totalDose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
       }
 
       // custom dose warning
@@ -1020,10 +1273,9 @@
 
       // Route Selector HTML
       let routeSelectorHTML = '';
-      const routes = [];
-      if (drug.defaultDose !== undefined) routes.push('IV');
-      if (drug.imDose !== undefined) routes.push('IM');
-      if (drug.oralDose !== undefined) routes.push('Oral');
+      const routes = drug.routes || (drug.defaultRoute ? [drug.defaultRoute] : ['IV']);
+      if (drug.imDose !== undefined && !routes.includes('IM')) routes.push('IM');
+      if (drug.oralDose !== undefined && !routes.includes('Oral')) routes.push('Oral');
 
       if (routes.length > 1) {
         routeSelectorHTML = '<div class="route-selector">';
@@ -1040,9 +1292,9 @@
       }
 
       // Calculation/Volume Display (adjusted for Oral route)
-      const volumeDetail = isInjectable ? 
+      const volumeDetail = isInjectable && totalDose !== 'Not Recommended' ? 
           `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
-          `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for Oral Dose</div>`;
+          `<div class="volume-result" style="font-style:normal;">${totalDose !== 'Not Recommended' ? 'Concentration/Volume Not Applicable for Oral Dose' : ''}</div>`;
           
       // Edit Inputs (adjusted for Oral route)
       const concentrationEdit = isInjectable ?
@@ -1051,7 +1303,7 @@
 
       // assemble card HTML
       html += `
-        <div class="drug-card ${drug.category} ${isExpandedClass}" id="drug-card-${index}">
+        <div class="drug-card ${drug.category} ${isExpandedClass} ${totalDose === 'Not Recommended' ? 'caution-active' : ''}" id="drug-card-${index}">
           ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleDrugCard(${index})">
             <div class="drug-name">
@@ -1066,17 +1318,18 @@
           <div class="drug-details" id="drug-details-${index}">
             <div class="drug-info">
               ${routeSelectorHTML}
+              ${ketorolacInfoBox}
               ${customDoseWarning}
               ${doseInfoHtml}
               <div class="calculation">
-                <div class="calculation-result">${doseDisplay} ${totalDoseUnit} ${limitInfoHtml}</div>
+                <div class="calculation-result">${doseDisplay} ${drug.name !== 'Ketorolac' ? totalDoseUnit : ''} ${limitInfoHtml}</div>
                 ${volumeDetail}
-                <div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>
+                ${(typeof totalDose === 'number' && totalDose > 0) ? `<div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>` : ''}
               </div>
 
               <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
               <div class="edit-inputs ${isActiveEditClass}" id="edit-${index}">
-                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit} - ${drug.currentRoute})" id="dose-${index}" value="${dosePerKg}" onchange="updateDrug(${index})">
+                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit} - ${drug.currentRoute})" id="dose-${index}" value="${dosePerKg.toFixed(2)}" onchange="updateDrug(${index})">
                 ${concentrationEdit}
               </div>
 

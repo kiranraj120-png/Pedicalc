@@ -267,6 +267,42 @@
 
     .expand-all-btn{margin-top:5px;margin-bottom:12px;display:block;width:100%;max-width:350px;text-align:center}
 
+    /* Local Anesthetic Result Row styles - New for conciseness */
+    .la-results-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .la-result-row {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--border-color);
+    }
+    .la-result-row:last-child {
+      border-bottom: none;
+    }
+    .la-name {
+      font-weight: 600;
+      font-size: 0.95em;
+      color: var(--text-primary);
+    }
+    .la-max-dose {
+      font-weight: 800;
+      font-size: 1.1em;
+      color: var(--reversal);
+      text-align: right;
+    }
+    .la-detail {
+      display: block;
+      font-weight: 500;
+      font-size: 0.7em;
+      color: var(--text-secondary);
+      line-height: 1.3;
+    }
+
     /* Responsive */
     @media(min-width:768px){
       .container{padding:20px 15px}
@@ -408,11 +444,11 @@
 
   // Local anesthetics data
   const localAnesthetics = [
-    { name: 'Lignocaine (Plain)', maxDose: 3, unit: 'mg/kg', useParam: 'weight', caution: 'Without epinephrine' },
-    { name: 'Lignocaine (With Epinephrine)', maxDose: 7, unit: 'mg/kg', useParam: 'weight', caution: 'With epinephrine 1:200,000' },
-    { name: 'Bupivacaine (Plain)', maxDose: 2, unit: 'mg/kg', useParam: 'weight', caution: 'Without epinephrine' },
-    { name: 'Bupivacaine (With Epinephrine)', maxDose: 3, unit: 'mg/kg', useParam: 'weight', caution: 'With epinephrine 1:200,000' },
-    { name: 'Ropivacaine', maxDose: 3, unit: 'mg/kg', useParam: 'weight', caution: 'Maximum recommended dose' }
+    { name: 'Lignocaine (Plain)', maxDose: 3, unit: 'mg/kg', caution: 'Without epinephrine' },
+    { name: 'Lignocaine (With Epinephrine)', maxDose: 7, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },
+    { name: 'Bupivacaine (Plain)', maxDose: 2, unit: 'mg/kg', caution: 'Without epinephrine' },
+    { name: 'Bupivacaine (With Epinephrine)', maxDose: 3, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },
+    { name: 'Ropivacaine', maxDose: 3, unit: 'mg/kg', caution: 'Maximum recommended dose' }
   ];
 
   // Initialize currentRoute for each drug on load
@@ -544,18 +580,23 @@
      Enhanced Equipment calculations
      ------------------------- */
   function calculateETTSize(age, weight){
-    if (age < 1){
+    if (age === 0) return 'Enter Age (Years/Months)';
+    
+    if (age < 1){ // Age < 1 year
       if (weight === 0) return 'Enter Weight (kg)';
+      // Weight-based logic for age < 1
       if (weight < 1.0) return '2.5';
       if (weight >= 1.0 && weight <= 2.0) return '3.0';
-      return '3.5';
+      return '3.5'; // weight > 2.0
     }
+    
+    // Age-based logic for age >= 1 year
     if (age >= 1 && age <= 18){
       const calculatedSize = (age/4)+4;
-      // Round to nearest multiple of 0.5 as requested
+      // Round to nearest multiple of 0.5
       return (Math.round(calculatedSize * 2) / 2).toFixed(1);
     }
-    return '7.5'; // fallback (unreachable due to clamp)
+    return '7.5'; // fallback
   }
 
   function calculateETTDepth(age, weight){
@@ -604,15 +645,18 @@
   }
 
   /* -------------------------
-     Central Line Catheter Size calculation
+     Central Line Catheter Size calculation (Algorithm derived from uploaded table)
      ------------------------- */
   function calculateCentralLineSize(weight){
     if (weight === 0) return 'N/A';
-    if (weight < 3) return '3-4 Fr (Single)';
-    if (weight < 10) return '4-5 Fr (Single/Double)';
-    if (weight < 20) return '5-6 Fr (Double)';
-    if (weight < 30) return '7 Fr (Double)';
-    return '7-8 Fr (Double/Triple)';
+    // Neonates (2.5 to 5 kg) -> 3.0 Fr
+    if (weight <= 5) return '3.0 Fr'; 
+    // Infants (5 to 10 kg) -> 4.0 Fr
+    if (weight <= 10) return '4.0 Fr'; 
+    // >1 to 12 years (10 to 40 kg) -> 5.0 Fr
+    if (weight <= 40) return '5.0 Fr'; 
+    // ≥13 years (≥50 kg) -> 7.0 Fr (This covers all weights > 40kg)
+    return '7.0 Fr'; 
   }
 
   /* -------------------------
@@ -662,7 +706,7 @@
       <div class="equipment-card">
         <div class="equipment-title">Central Line Catheter</div>
         <div class="equipment-value">${centralLineSize}</div>
-        <div class="equipment-detail">Based on weight</div>
+        <div class="equipment-detail">French size based on weight</div>
       </div>
     `;
     document.getElementById('equipment-results').innerHTML = equipmentHTML;
@@ -787,7 +831,7 @@
   }
 
   /* -------------------------
-     Local Anesthetics calculations
+     Local Anesthetics calculations (Updated for single concise card)
      ------------------------- */
   function calculateLocalAnesthetics() {
     const patient = getPatientData();
@@ -798,44 +842,41 @@
       return;
     }
     
-    let html = '';
+    let resultsListHtml = '';
     
-    localAnesthetics.forEach((la, index) => {
-      const paramValue = patient[la.useParam];
-      const maxDose = paramValue * la.maxDose;
+    localAnesthetics.forEach((la) => {
+      // la.useParam is implicitly 'weight' from the original data structure, but for this simpler list we only use weight
+      const maxDose = patient.weight * la.maxDose;
       const maxDoseDisplay = maxDose.toFixed(1);
       
-      let cautionIconHtml = '';
-      let cautionPopupHtml = '';
-      if (la.caution) {
-        cautionIconHtml = `<span class="caution-icon" id="la-caution-icon-${index}" onclick="event.stopPropagation(); toggleLaCautionPopup(${index})">i</span>`;
-        cautionPopupHtml = `<div id="la-caution-popup-${index}" class="caution-popup"><strong>NOTE:</strong> ${la.caution}</div>`;
-      }
-      
-      html += `
-        <div class="drug-card local-anesthetic">
-          ${cautionPopupHtml}
-          <div class="drug-header">
-            <div class="drug-name">
-              ${la.name}
-              ${cautionIconHtml}
-            </div>
-            <div class="drug-category local-anesthetic">Local Anesthetic</div>
-          </div>
-          <div class="drug-details" style="max-height: none; opacity: 1; padding-top: 10px; transform: none;">
-            <div class="drug-info">
-              <div class="dose-info">Maximum Recommended Dose: ${la.maxDose} ${la.unit}</div>
-              <div class="calculation">
-                <div class="calculation-result">${maxDoseDisplay} ${la.unit.split('/')[0]}</div>
-                <div class="dose-info">Based on patient weight: ${patient.weight.toFixed(1)} kg</div>
-              </div>
-            </div>
+      // Create a row for the concise list
+      resultsListHtml += `
+        <div class="la-result-row">
+          <div class="la-name">${la.name}</div>
+          <div class="la-max-dose">
+            ${maxDoseDisplay} ${la.unit.split('/')[0]}
+            <span class="la-detail">${la.maxDose} ${la.unit} | ${la.caution}</span>
           </div>
         </div>
       `;
     });
+
+    const singleCardHtml = `
+      <div class="drug-card local-anesthetic expanded">
+        <div class="drug-header" style="cursor: default; padding-bottom: 0;">
+          <div class="drug-name">Maximum Safe Doses</div>
+          <div class="drug-category local-anesthetic">Local Anesthetics</div>
+        </div>
+        <div class="la-results-container">
+          ${resultsListHtml}
+        </div>
+        <div class="dose-info" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); font-style:normal;">
+            Doses are based on patient weight of ${patient.weight.toFixed(1)} kg.
+        </div>
+      </div>
+    `;
     
-    localAnestheticsDiv.innerHTML = html;
+    localAnestheticsDiv.innerHTML = singleCardHtml;
   }
 
   /* -------------------------
@@ -1143,28 +1184,6 @@
     } else {
       popup.style.display = 'block';
       if (card) card.classList.add('caution-active');
-    }
-  }
-
-  /* -------------------------
-     Local Anesthetics Caution popup logic
-     ------------------------- */
-  function toggleLaCautionPopup(index){
-    const card = document.getElementById(`local-anesthetics-results`).children[index];
-    const popup = document.getElementById(`la-caution-popup-${index}`);
-
-    // close other popups
-    document.querySelectorAll('.caution-popup').forEach(p=>{
-      if (p.id !== (popup && popup.id)){
-        p.style.display = 'none';
-      }
-    });
-
-    if (!popup) return;
-    if (popup.style.display === 'block'){
-      popup.style.display = 'none';
-    } else {
-      popup.style.display = 'block';
     }
   }
 

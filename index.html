@@ -5,14 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pediatric Anesthesia Calculator</title>
 
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- =========================
-       STYLES (cleaned & grouped)
-       - Visuals remain identical to original.
-       - Removed unused/undefined animations and obsolete tags.
-       ========================= -->
   <style>
   	/* Category pill styles with colored background */
 .drug-category {
@@ -234,18 +228,15 @@
 
 <body>
   <div class="container">
-    <!-- Header -->
     <header>
       <h1>Pediatric Anesthesia Calculator</h1>
       <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙 Dark Mode</button>
     </header>
 
-    <!-- Warning -->
     <div class="warning">
       ⚠️ This calculator is for reference only. Always verify calculations and use clinical judgment. Dosages may need adjustment based on patient condition and local protocols.
     </div>
 
-    <!-- Patient Info -->
     <section class="patient-info">
       <h2>Patient Information</h2>
       <div class="input-group">
@@ -274,19 +265,16 @@
       </div>
     </section>
 
-    <!-- Equipment -->
     <section class="section">
       <h2>Airway Equipment Sizing</h2>
       <div id="equipment-results" class="equipment-grid"></div>
     </section>
 
-    <!-- Fluids -->
     <section class="section">
       <h2>Fluid & Blood Loss Requirements</h2>
       <div id="fluid-results" class="equipment-grid"></div>
     </section>
 
-    <!-- Drugs -->
     <section class="section">
       <h2>Drug Calculations</h2>
       <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
@@ -298,11 +286,6 @@
     <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
   </p>
 
-  <!-- =========================
-       SCRIPT (cleaned, commented, functionally identical)
-       - All behavior preserved.
-       - Some helper refactors to remove duplication (kept semantics same).
-       ========================= -->
   <script>
   /* -------------------------
      Data definitions (same as original)
@@ -408,7 +391,9 @@
       return '3.5';
     }
     if (age >= 1 && age <= 18){
-      return ((age/4)+4).toFixed(1);
+      const calculatedSize = (age/4)+4;
+      // Round to nearest multiple of 0.5 as requested
+      return (Math.round(calculatedSize * 2) / 2).toFixed(1);
     }
     return '7.5'; // fallback (unreachable due to clamp)
   }

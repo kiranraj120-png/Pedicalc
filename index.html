@@ -604,6 +604,18 @@
   }
 
   /* -------------------------
+     Central Line Catheter Size calculation
+     ------------------------- */
+  function calculateCentralLineSize(weight){
+    if (weight === 0) return 'N/A';
+    if (weight < 3) return '3-4 Fr (Single)';
+    if (weight < 10) return '4-5 Fr (Single/Double)';
+    if (weight < 20) return '5-6 Fr (Double)';
+    if (weight < 30) return '7 Fr (Double)';
+    return '7-8 Fr (Double/Triple)';
+  }
+
+  /* -------------------------
      Enhanced Equipment rendering with additional parameters
      ------------------------- */
   function calculateEquipment(){
@@ -614,6 +626,7 @@
     const blade = calculateLaryngoscopeBlade(patient.age);
     const lmaSize = patient.weight === 0 ? 'N/A' : calculateLMASize(patient.weight);
     const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
+    const centralLineSize = calculateCentralLineSize(patient.weight);
 
     let uncuffedValueClass = 'equipment-value';
     if (uncuffedSize.includes('Enter')){
@@ -646,6 +659,11 @@
         <div class="equipment-value">${igelSize}</div>
         <div class="equipment-detail">Based on weight</div>
       </div>
+      <div class="equipment-card">
+        <div class="equipment-title">Central Line Catheter</div>
+        <div class="equipment-value">${centralLineSize}</div>
+        <div class="equipment-detail">Based on weight</div>
+      </div>
     `;
     document.getElementById('equipment-results').innerHTML = equipmentHTML;
   }
@@ -675,6 +693,29 @@
     return Math.max(0, MABL);
   }
 
+  /* -------------------------
+     Perioperative fluid calculations (new)
+     ------------------------- */
+  function calculatePerioperativeBolus(weight) {
+    if (weight === 0) return 'N/A';
+    const lowRange = weight * 20;
+    const highRange = weight * 40;
+    return `${lowRange.toFixed(0)}-${highRange.toFixed(0)} mL`;
+  }
+
+  function calculatePostopMaintenance(weight) {
+    if (weight === 0) return 'N/A';
+    let maintenance = 0;
+    if (weight <= 10) {
+      maintenance = weight * 2; // 2 mL/kg/hr for first 10 kg
+    } else if (weight <= 20) {
+      maintenance = 20 + (weight - 10) * 1; // 2 mL/kg/hr for first 10 kg, then 1 mL/kg/hr for next 10 kg
+    } else {
+      maintenance = 30 + (weight - 20) * 0.5; // 2 mL/kg/hr for first 10 kg, 1 mL/kg/hr for next 10 kg, then 0.5 mL/kg/hr for remaining
+    }
+    return `${maintenance.toFixed(0)} mL/hr`;
+  }
+
   function calculateFluids(){
     const patient = getPatientData();
     const fluidResultsEl = document.getElementById('fluid-results');
@@ -687,6 +728,8 @@
     const maintenance = calculateMaintenanceFluid(patient.weight);
     const bolus = patient.weight * 10;
     const EBV = calculateEBV(patient.weight, patient.age);
+    const perioperativeBolus = calculatePerioperativeBolus(patient.weight);
+    const postopMaintenance = calculatePostopMaintenance(patient.weight);
 
     let MABL_Result = "N/A";
     let MABL_Detail = "Requires Current & Target Hb";
@@ -721,8 +764,26 @@
         <div class="equipment-value">${MABL_Result}</div>
         <div class="equipment-detail">${MABL_Detail}</div>
       </div>
+      <div class="equipment-card">
+        <div class="equipment-title">Perioperative Bolus</div>
+        <div class="equipment-value">${perioperativeBolus}</div>
+        <div class="equipment-detail">20-40 mL/kg (Alternative)</div>
+      </div>
+      <div class="equipment-card">
+        <div class="equipment-title">Postop Maintenance</div>
+        <div class="equipment-value">${postopMaintenance}</div>
+        <div class="equipment-detail">2-1-0.5 rule (12 hrs)</div>
+      </div>
     `;
-    fluidResultsEl.innerHTML = fluidHTML;
+    
+    // Add info box for perioperative fluid source
+    fluidResultsEl.innerHTML = `
+      ${fluidHTML}
+      <div class="info-box" style="grid-column: 1/-1; margin-top: 10px;">
+        <strong>Perioperative Fluid Note:</strong> For children with marginal to moderate hypovolemia (e.g., fasting for surgery), administer 20-40 mL/kg of isotonic fluids during surgery and in PACU. Postoperatively, use the 2-1-0.5 rule for the first 12 hours or until patient starts drinking. 
+        <a href="https://www.openanesthesia.org/keywords/perioperative-fluid-administration-in-children/" target="_blank" style="color: var(--primary-accent);">Source</a>
+      </div>
+    `;
   }
 
   /* -------------------------

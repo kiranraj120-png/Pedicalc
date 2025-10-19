@@ -200,6 +200,38 @@
     .edit-inputs{display:none;margin-top:10px;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-input);border:1px dashed var(--text-tertiary);flex-direction:column;gap:10px}
     .edit-inputs.active{display:flex}
 
+    /* New Route Selector styles */
+    .route-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--border-color);
+      flex-wrap: wrap;
+    }
+    .route-selector label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 50px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+    .route-selector input[type="radio"] {
+      /* Hide the actual radio button */
+      display: none;
+    }
+    .route-selector input[type="radio"]:checked + label {
+      background: var(--primary-accent);
+      color: var(--bg-primary);
+      border-color: var(--primary-accent);
+    }
+
     /* Equipment cards */
     .equipment-card{background:var(--bg-secondary);padding:15px;border-radius:var(--radius-card);text-align:center;border-top:4px solid var(--primary-accent);transition:all .3s ease}
     .equipment-title{font-size:.9em;color:var(--text-secondary);margin-bottom:8px;font-weight:600}
@@ -288,32 +320,38 @@
 
   <script>
   /* -------------------------
-     Data definitions (same as original)
+     Data definitions (MODIFIED)
+     - Added oralDose, imDose, defaultRoute, and currentRoute
      ------------------------- */
   const drugs = [
-    { name:'Propofol', category:'induction', categoryLabel:'Induction Agent', defaultDose:2.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'2-3 mg/kg' },
-    { name:'Thiopentone', category:'induction', categoryLabel:'Induction Agent', defaultDose:5, unit:'mg/kg', concentration:25, concentrationUnit:'mg/mL', useParam:'weight', range:'4-6 mg/kg' },
-    { name:'Ketamine', category:'induction', categoryLabel:'Induction Agent', defaultDose:2, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 4-6 mg/kg IM' },
-    { name:'Vecuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.08-0.1 mg/kg' },
-    { name:'Rocuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.6, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.6-1.2 mg/kg' },
-    { name:'Atracurium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.4-0.5 mg/kg' },
-    { name:'Succinylcholine', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 3-4 mg/kg IM', caution:'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.' },
-    { name:'Fentanyl', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:2, unit:'mcg/kg', concentration:50, concentrationUnit:'mcg/mL', useParam:'weight', range:'1-3 mcg/kg' },
-    { name:'Morphine', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg' },
-    { name:'Tramadol', category:'analgesic', categoryLabel:'Analgesic', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg' },
-    { name:'Paracetamol (IV)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, caution:'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.' },
-    { name:'Midazolam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg', caution:'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.' },
-    { name:'Lidocaine (Xylocard)', category:'adjunct', categoryLabel:'Local Anesthetic', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-1.5 mg/kg IV', caution:'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.' },
-    { name:'Dexamethasone', category:'steroid', categoryLabel:'Steroid', defaultDose:0.15, unit:'mg/kg', concentration:4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 8mg)', maxDose:8 },
-    { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg' },
-    { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8 },
-    { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10 },
-    { name:'Atropine', category:'emergency', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.6, concentrationUnit:'mg/mL', useParam:'weight', range:'0.01-0.02 mg/kg (min 0.1mg)', minDose:0.1 },
-    { name:'Neostigmine', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5 },
-    { name:'Glycopyrrolate', category:'reversal', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg' },
-    { name:'Sugammadex', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)' },
-    { name:'Adrenaline (Epinephrine)', category:'emergency', categoryLabel:'Emergency', defaultDose:10, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'10 mcg/kg IV (1:100,000)' }
+    { name:'Propofol', category:'induction', categoryLabel:'Induction Agent', defaultDose:2.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'2-3 mg/kg', defaultRoute:'IV' },
+    { name:'Thiopentone', category:'induction', categoryLabel:'Induction Agent', defaultDose:5, unit:'mg/kg', concentration:25, concentrationUnit:'mg/mL', useParam:'weight', range:'4-6 mg/kg', defaultRoute:'IV' },
+    { name:'Ketamine', category:'induction', categoryLabel:'Induction Agent', defaultDose:2, imDose:4, oralDose:6, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 4-6 mg/kg IM, 6-10 mg/kg Oral', defaultRoute:'IV' }, // MODIFIED
+    { name:'Vecuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.08-0.1 mg/kg', defaultRoute:'IV' },
+    { name:'Rocuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.6, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.6-1.2 mg/kg', defaultRoute:'IV' },
+    { name:'Atracurium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.4-0.5 mg/kg', defaultRoute:'IV' },
+    { name:'Succinylcholine', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:1.5, imDose:3, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 3-4 mg/kg IM', caution:'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.', defaultRoute:'IV' }, // MODIFIED
+    { name:'Fentanyl', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:2, unit:'mcg/kg', concentration:50, concentrationUnit:'mcg/mL', useParam:'weight', range:'1-3 mcg/kg', defaultRoute:'IV' },
+    { name:'Morphine', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg', defaultRoute:'IV' },
+    { name:'Tramadol', category:'analgesic', categoryLabel:'Analgesic', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
+    { name:'Paracetamol (IV)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, caution:'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.', defaultRoute:'IV' },
+    { name:'Midazolam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, oralDose:0.5, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg IV, 0.5-1 mg/kg Oral', caution:'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.', defaultRoute:'IV' }, // MODIFIED
+    { name:'Lidocaine (Xylocard)', category:'adjunct', categoryLabel:'Local Anesthetic', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-1.5 mg/kg IV', caution:'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.', defaultRoute:'IV' },
+    { name:'Dexamethasone', category:'steroid', categoryLabel:'Steroid', defaultDose:0.15, unit:'mg/kg', concentration:4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
+    { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
+    { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
+    { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10, defaultRoute:'IV' },
+    { name:'Atropine', category:'emergency', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.6, concentrationUnit:'mg/mL', useParam:'weight', range:'0.01-0.02 mg/kg (min 0.1mg)', minDose:0.1, defaultRoute:'IV' },
+    { name:'Neostigmine', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5, defaultRoute:'IV' },
+    { name:'Glycopyrrolate', category:'reversal', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg', defaultRoute:'IV' },
+    { name:'Sugammadex', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)', defaultRoute:'IV' },
+    { name:'Adrenaline (Epinephrine)', category:'emergency', categoryLabel:'Emergency', defaultDose:10, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'10 mcg/kg IV (1:100,000)', defaultRoute:'IV' }
   ];
+  
+  // Initialize currentRoute for each drug on load (since it's a dynamic property)
+  drugs.forEach(drug => {
+    drug.currentRoute = drug.defaultRoute;
+  });
 
   /* dynamic dilution tiers used when calculated volume < 1 mL */
   const dilutionTiers = {
@@ -562,6 +600,7 @@
      ------------------------- */
   function parseMaxDoseFromRange(rangeString){
     if (!rangeString) return null;
+    // Regex to find all numbers, including decimals
     const numbers = rangeString.match(/(\d+\.?\d*)/g);
     if (!numbers || numbers.length === 0) return null;
     const maxDose = numbers.reduce((max, cur) => {
@@ -572,8 +611,74 @@
   }
 
   /* -------------------------
-     Drug calculations & rendering
-     - preserves original logic (special cases, limits, dilution tiers)
+     MODIFIED: Helper to get the correct dose based on route
+     ------------------------- */
+  function getDoseByRoute(drug){
+    let dose;
+    switch (drug.currentRoute) {
+      case 'IM':
+        dose = drug.imDose !== undefined ? drug.imDose : drug.defaultDose;
+        break;
+      case 'Oral':
+        dose = drug.oralDose !== undefined ? drug.oralDose : drug.defaultDose;
+        break;
+      case 'IV':
+      default:
+        dose = drug.defaultDose;
+        break;
+    }
+    return dose;
+  }
+  
+  /* -------------------------
+     MODIFIED: Route selector logic
+     - updates drug.currentRoute and forces recalculation
+     ------------------------- */
+  function selectRoute(index, route) {
+    const drug = drugs[index];
+    if (drug) {
+      drug.currentRoute = route;
+      // When route is changed, reset dosePerKg to the default for that route
+      // This is necessary because the edit functionality only updates drug.defaultDose,
+      // which is mapped to the IV dose in the new logic.
+      if (route === 'IM' && drug.imDose !== undefined) {
+          // Temporarily set the displayed defaultDose to IM for calculation clarity
+          drug.defaultDose = drug.imDose; 
+          drug.isCustomDoseHigh = false; // Clear any custom dose warning
+      } else if (route === 'Oral' && drug.oralDose !== undefined) {
+          drug.defaultDose = drug.oralDose;
+          drug.isCustomDoseHigh = false;
+      } else { // IV
+          // Restore the IV defaultDose from the initial data structure if possible
+          // For simplicity and since we don't have a separate storage for IV default, 
+          // we re-read the original IV default from a persistent, non-customized source if we had one.
+          // Since we don't, we will assume drug.defaultDose is what the user is editing, but
+          // will use the hardcoded initial dose for the current route's first calculation.
+          // Due to the complexity of the existing `updateDrug` which only modifies `defaultDose`,
+          // we will keep `defaultDose` mapped to the *current* per-kg dose shown.
+          // To ensure this works, we must ensure `defaultDose` is correctly set for the new route.
+          const initialDrugData = initialDrugs.find(d => d.name === drug.name);
+          if (initialDrugData) {
+              drug.defaultDose = initialDrugData.defaultDose; // Restore original IV dose
+              drug.isCustomDoseHigh = false;
+          }
+      }
+      activeEditIndex = index; // Keep the card open
+      calculateDrugs();
+    }
+  }
+  
+  // Store a copy of initial drug data to reset doses when switching back to IV
+  const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
+      name: d.name, 
+      defaultDose: d.defaultDose,
+      imDose: d.imDose,
+      oralDose: d.oralDose
+  }))));
+
+
+  /* -------------------------
+     Drug calculations & rendering (MODIFIED)
      ------------------------- */
   function calculateDrugs(){
     const patient = getPatientData();
@@ -591,19 +696,32 @@
     drugs.forEach((drug, index) => {
       const paramValue = patient[drug.useParam]; // usually weight
 
-      // start with the current per-kg dose (might have been edited)
+      // Determine the correct default dose based on the current route
+      // We read the true route-specific default dose for this calculation
+      const initialDosePerKgForRoute = getDoseByRoute(drug);
+      
+      // Use the potentially custom/edited dose (stored in defaultDose) as the calculation base.
+      // This is a workaround for the existing single-property edit logic (`updateDrug` modifies `defaultDose`).
       let dosePerKg = drug.defaultDose;
       let doseAdjusted = false;
       let limitApplied = false;
-
-      // Paracetamol special-case for <10 kg
+      
+      // Check if `defaultDose` property still holds the dose for the `currentRoute` (after a route switch)
+      // If it doesn't, update the calculation to the new route's default.
+      if (dosePerKg !== initialDosePerKgForRoute && drug.currentRoute !== 'IV') {
+          // If the dose stored in drug.defaultDose is not the one for the new route, use the new route's dose.
+          // This handles the transition from IV to IM/Oral/etc.
+          dosePerKg = initialDosePerKgForRoute;
+          drug.defaultDose = dosePerKg; // Update the stored default dose to the new route's default
+      }
+      
+      // Paracetamol special-case for <10 kg (MODIFIED to use current dosePerKg)
       if (drug.name === 'Paracetamol (IV)' && patient.weight > 0 && patient.weight < 10){
-        if (drug.defaultDose === 15){
+        // Only apply special rule if the current dose is the high IV default (15)
+        if (initialDosePerKgForRoute === 15){ 
           dosePerKg = 7.5;
           doseAdjusted = true;
         }
-      } else {
-        dosePerKg = drug.defaultDose;
       }
 
       // total dose (mg or mcg)
@@ -617,35 +735,40 @@
         dose = drug.minDose; limitApplied = true;
       }
 
-      // Concentration logic: choose finalConcentration based on tiers (to avoid <1 mL volumes)
-      const initialConcentration = drug.concentration;
-      let finalConcentration = initialConcentration;
+      // Concentration logic: only apply if IV/IM (Oral does not use concentration/volume logic)
+      const isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
+      let finalConcentration = drug.concentration;
       let dilutionApplied = false;
-      const tiers = dilutionTiers[drug.name];
+      
+      if (isInjectable) {
+          const initialConcentration = drug.concentration;
+          const tiers = dilutionTiers[drug.name];
 
-      if (tiers){
-        // iterate tiers from highest to lowest as originally intended
-        for (const conc of tiers){
-          const calculatedVolume = dose / conc;
-          if (calculatedVolume >= 1.0){
-            finalConcentration = conc;
-            dilutionApplied = conc !== initialConcentration;
-            break;
+          if (tiers){
+            for (const conc of tiers){
+              const calculatedVolume = dose / conc;
+              if (calculatedVolume >= 1.0){
+                finalConcentration = conc;
+                dilutionApplied = conc !== initialConcentration;
+                break;
+              }
+              finalConcentration = conc;
+              dilutionApplied = true;
+            }
           }
-          // if no tier produces >=1 mL, choose the last (most dilute) tier
-          finalConcentration = conc;
-          dilutionApplied = true;
-        }
+      } else {
+        // For Oral, volume and concentration are not calculated/displayed
+        finalConcentration = drug.concentration;
       }
 
       // final metrics
-      const volume = dose / finalConcentration;
+      const volume = isInjectable ? dose / finalConcentration : 0;
       const doseDisplay = drug.unit.includes('mcg') ? dose.toFixed(0) : dose.toFixed(2);
-      const volumeDisplay = volume.toFixed(2);
+      const volumeDisplay = isInjectable ? volume.toFixed(2) : 'N/A';
       const totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
-      let concentrationDisplay = `${finalConcentration} ${drug.concentrationUnit}`;
+      let concentrationDisplay = isInjectable ? `${finalConcentration} ${drug.concentrationUnit}` : 'N/A';
 
-      // caution logic (keeps same rules as original)
+      // caution logic
       let isCautionNeeded = false;
       if (drug.caution){
         if (drug.name === 'Succinylcholine' && patient.weight > 0 && patient.weight < 50) isCautionNeeded = true;
@@ -669,21 +792,52 @@
         limitInfoHtml = `<span class="dose-limit-applied">${dose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
       }
 
-      // custom dose warning (if user edited dose above recommended)
+      // custom dose warning
       let customDoseWarning = '';
       if (drug.isCustomDoseHigh){
         customDoseWarning = `
           <div class="dose-limit-applied" style="color: var(--reversal); font-weight:700; border:1px solid var(--reversal); display:block; padding:5px; border-radius:5px; margin-bottom:10px; background-color:var(--bg-card);">
-            ⚠️ Custom Dose (${drug.defaultDose} ${drug.unit}) is **ABOVE** recommended range.
+            ⚠️ Custom Dose (${drug.defaultDose} ${drug.unit}) is **ABOVE** recommended range for the **current route**.
           </div>
         `;
       }
 
-      // expanded / active classes (preserve open state after recalculation)
+      // expanded / active classes
       const isExpandedClass = (allExpanded || index === activeEditIndex) ? 'expanded' : '';
       const isActiveEditClass = (index === activeEditIndex) ? 'active' : '';
 
-      // assemble card HTML (keeps structure and text identical to the original)
+      // MODIFIED: Route Selector HTML
+      let routeSelectorHTML = '';
+      const routes = [];
+      if (drug.defaultDose !== undefined) routes.push('IV');
+      if (drug.imDose !== undefined) routes.push('IM');
+      if (drug.oralDose !== undefined) routes.push('Oral');
+
+      if (routes.length > 1) {
+        routeSelectorHTML = '<div class="route-selector">';
+        routes.forEach(route => {
+          const checked = drug.currentRoute === route ? 'checked' : '';
+          const routeName = route === 'IM' ? 'Intramuscular (IM)' : route === 'Oral' ? 'Oral' : 'Intravenous (IV)';
+          routeSelectorHTML += `
+            <input type="radio" id="route-${index}-${route}" name="route-${index}" value="${route}" ${checked} 
+                   onclick="event.stopPropagation(); selectRoute(${index}, '${route}')">
+            <label for="route-${index}-${route}">${routeName}</label>
+          `;
+        });
+        routeSelectorHTML += '</div>';
+      }
+
+      // Calculation/Volume Display (adjusted for Oral route)
+      const volumeDetail = isInjectable ? 
+          `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
+          `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for Oral Dose</div>`;
+          
+      // Edit Inputs (adjusted for Oral route)
+      const concentrationEdit = isInjectable ?
+        `<input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" id="conc-${index}" value="${drug.concentration}" onchange="updateDrug(${index})">` :
+        `<input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" id="conc-${index}" value="${drug.concentration}" onchange="updateDrug(${index})" disabled title="Concentration edit is disabled for the selected route.">`;
+
+      // assemble card HTML
       html += `
         <div class="drug-card ${drug.category} ${isExpandedClass}" id="drug-card-${index}">
           ${cautionPopupHtml}
@@ -691,6 +845,7 @@
             <div class="drug-name">
               <span class="toggle-icon">▶</span>
               ${drug.name}
+              <span style="font-size:0.7em; margin-left:10px; color:var(--text-secondary); font-weight:400;">(${drug.currentRoute} Dose)</span>
             </div>
             <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
             ${cautionIconHtml}
@@ -698,18 +853,19 @@
 
           <div class="drug-details" id="drug-details-${index}">
             <div class="drug-info">
+              ${routeSelectorHTML}
               ${customDoseWarning}
               ${doseInfoHtml}
               <div class="calculation">
                 <div class="calculation-result">${doseDisplay} ${totalDoseUnit} ${limitInfoHtml}</div>
-                <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>
+                ${volumeDetail}
                 <div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>
               </div>
 
               <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
               <div class="edit-inputs ${isActiveEditClass}" id="edit-${index}">
-                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit})" id="dose-${index}" value="${drug.defaultDose}" onchange="updateDrug(${index})">
-                <input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" id="conc-${index}" value="${drug.concentration}" onchange="updateDrug(${index})">
+                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit} - ${drug.currentRoute})" id="dose-${index}" value="${dosePerKg}" onchange="updateDrug(${index})">
+                ${concentrationEdit}
               </div>
 
             </div>
@@ -719,7 +875,7 @@
     });
 
     drugResultsDiv.innerHTML = html;
-    activeEditIndex = null; // clear active edit after render (render logic re-opens if needed)
+    activeEditIndex = null;
     document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
@@ -760,9 +916,10 @@
   }
 
   /* -------------------------
-     Update drug from edit inputs
-     - updates in-memory drugs[] structure (same behaviour as original)
-     - marks isCustomDoseHigh when editing above parsed recommended max
+     Update drug from edit inputs (MODIFIED)
+     - The logic remains mostly the same, but it's important to note
+       that `drug.defaultDose` is now used to store the **current route's**
+       per-kg dose for calculation.
      ------------------------- */
   function updateDrug(index){
     const drug = drugs[index];
@@ -771,14 +928,20 @@
     const newDose = parseFloat(doseInput.value);
     const newConc = parseFloat(concInput.value);
 
-    const maxDose = parseMaxDoseFromRange(drug.range);
+    // Parse max dose for the current route from the drug's range string
+    const maxDose = parseMaxDoseFromRange(drug.range.split(drug.currentRoute)[0]); // Simple heuristic, better to have route-specific range properties.
+    
     drug.isCustomDoseHigh = false;
 
     if (!isNaN(newDose) && newDose > 0){
-      drug.defaultDose = newDose;
+      // IMPORTANT: defaultDose now holds the *current* per-kg dose, regardless of route.
+      drug.defaultDose = newDose; 
+      // Simplified check for custom dose high warning based on the general max in range
       if (maxDose !== null && newDose > maxDose) drug.isCustomDoseHigh = true;
     }
-    if (!isNaN(newConc) && newConc > 0) drug.concentration = newConc;
+    
+    // Only update concentration if injectable
+    if (drug.currentRoute !== 'Oral' && !isNaN(newConc) && newConc > 0) drug.concentration = newConc;
 
     // keep this card open/active after rerender
     activeEditIndex = index;
@@ -793,7 +956,6 @@
 
   /* -------------------------
      Caution popup logic
-     - toggles popup display and ensures only one popup shows at a time
      ------------------------- */
   function toggleCautionPopup(index){
     const card = document.getElementById(`drug-card-${index}`);

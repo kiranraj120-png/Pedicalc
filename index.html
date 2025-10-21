@@ -30,6 +30,7 @@
     .drug-category.steroid { background-color: var(--steroid); color: #fff; }
     .drug-category.antiemetic { background-color: var(--antiemetic); color: #000; }
     .drug-category.local-anesthetic { background-color: var(--local-anesthetic); color: #fff; }
+    .drug-category.infusion { background-color: var(--infusion); color: #fff; }
     
     :root{
       --bg-primary:#ffffff;
@@ -51,6 +52,7 @@
       --steroid:#3f51b5;
       --antiemetic:#8bc34a;
       --local-anesthetic:#9c27b0;
+      --infusion:#009688;
       --primary-accent:#0089f0;
       --caution-color:#ffeb3b;
 
@@ -185,6 +187,7 @@
     .drug-card.steroid{border-left-color:var(--steroid)}
     .drug-card.antiemetic{border-left-color:var(--antiemetic)}
     .drug-card.local-anesthetic{border-left-color:var(--local-anesthetic)}
+    .drug-card.infusion{border-left-color:var(--infusion)}
 
     .drug-header{
       display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;
@@ -315,6 +318,50 @@
       line-height: 1.3;
     }
 
+    /* Infusion-specific styles */
+    .infusion-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .infusion-detail-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--border-color);
+    }
+    .infusion-detail-row:last-child {
+      border-bottom: none;
+    }
+    .infusion-label {
+      font-weight: 600;
+      font-size: 0.85em;
+      color: var(--text-primary);
+    }
+    .infusion-value {
+      font-weight: 600;
+      font-size: 0.85em;
+      color: var(--primary-accent);
+      text-align: right;
+    }
+    .infusion-note {
+      font-size: 0.75em;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 3px;
+    }
+    .infusion-caution {
+      font-size: 0.75em;
+      color: var(--reversal);
+      font-weight: 600;
+      margin-top: 5px;
+      padding: 5px;
+      border-radius: 5px;
+      background-color: rgba(255, 23, 68, 0.1);
+    }
+
     /* Responsive */
     @media(min-width:768px){
       .container{padding:20px 15px}
@@ -393,6 +440,16 @@
       <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
       <div id="drug-results" class="drugs-grid"></div>
     </section>
+
+    <!-- NEW INFUSION SECTION -->
+    <section class="section">
+      <h2>Infusion Calculations(!Experimental)</h2>
+      <div class="info-box">
+        <strong>Important:</strong> These are high-alert medications. Always verify calculations with a second clinician. Use central lines when possible for vasoactive drugs.
+      </div>
+      <button class="expand-all-btn edit-btn" id="toggleAllInfusionsBtn" onclick="toggleAllInfusions()">Expand All / Collapse All</button>
+      <div id="infusion-results" class="drugs-grid"></div>
+    </section>
   </div>
 
   <p style="text-align:center;margin-top:20px;font-size:0.8em;color:grey;">
@@ -470,6 +527,80 @@
     { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10, defaultRoute:'IV' }
   ];
 
+  /* -------------------------
+     Infusion Drugs Data with STANDARD CONCENTRATIONS
+     ------------------------- */
+  const infusionDrugs = [
+    {
+      name: 'Adrenaline (Epinephrine) Infusion',
+      category: 'infusion',
+      categoryLabel: 'Vasopressor Infusion',
+      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose for infusions' },
+      infusionDose: { min: 0.1, max: 1, unit: 'mcg/kg/min' },
+      commonDilution: '4 mg in 50 mL (80 mcg/mL)',
+      preparation: 'Take 4 mL of Adrenaline (1 mg/mL) and add to 46 mL of compatible fluid to make 50 mL.',
+      concentration: 80, // mcg/mL
+      concentrationUnit: 'mcg/mL',
+      rateCalculation: function(dose, weight) { 
+          // dose in mcg/kg/min, weight in kg
+          // rate (mL/h) = (dose * weight * 60) / concentration (mcg/mL)
+          return (dose * weight * 60) / 80;
+      },
+      caution: 'VESICANT - High risk of tissue necrosis if extravasation occurs. Use central line if possible. Have phentolamine ready for infiltration management.',
+      notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient'
+    },
+    {
+      name: 'Noradrenaline (Norepinephrine) Infusion',
+      category: 'infusion',
+      categoryLabel: 'Vasopressor Infusion',
+      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose' },
+      infusionDose: { min: 0.05, max: 2, unit: 'mcg/kg/min' },
+      commonDilution: '4 mg in 50 mL (80 mcg/mL)',
+      preparation: 'Take 2 mL of Noradrenaline (2 mg/mL) and add to 48 mL of compatible fluid to make 50 mL.',
+      concentration: 80, // mcg/mL
+      concentrationUnit: 'mcg/mL',
+      rateCalculation: function(dose, weight) { 
+          return (dose * weight * 60) / 80;
+      },
+      caution: 'POTENT VESICANT - Must be administered through a central line if possible. If peripheral, use large proximal vein with frequent monitoring.',
+      notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient'
+    },
+    {
+      name: 'Dexmedetomidine (Precedex) Infusion',
+      category: 'infusion',
+      categoryLabel: 'Sedative Infusion',
+      loadingDose: { dose: 0.5, unit: 'mcg/kg', note: 'Optional: 0.5-1 mcg/kg over 10-20 minutes' },
+      infusionDose: { min: 0.2, max: 1, unit: 'mcg/kg/hr' },
+      commonDilution: '200 mcg in 50 mL (4 mcg/mL)',
+      preparation: 'Take 2 mL of Dexmedetomidine (100 mcg/mL) and add to 48 mL of NS or D5W to make 50 mL.',
+      concentration: 4, // mcg/mL
+      concentrationUnit: 'mcg/mL',
+      rateCalculation: function(dose, weight) { 
+          // dose in mcg/kg/hr, weight in kg
+          // rate (mL/h) = (dose * weight) / concentration (mcg/mL)
+          return (dose * weight) / 4;
+      },
+      caution: 'Causes bradycardia. Monitor hemodynamics closely. Withdrawal symptoms possible after prolonged use (>24 hours).',
+      notes: 'Does not cause significant respiratory depression. Useful for procedural sedation and weaning from other sedatives.'
+    },
+    {
+      name: 'Fentanyl Infusion',
+      category: 'infusion',
+      categoryLabel: 'Opioid Analgesic Infusion',
+      loadingDose: { dose: 1, unit: 'mcg/kg', note: '1-2 mcg/kg bolus before starting infusion' },
+      infusionDose: { min: 1, max: 5, unit: 'mcg/kg/hr' },
+      commonDilution: '500 mcg in 50 mL (10 mcg/mL)',
+      preparation: 'Take 10 mL of Fentanyl (50 mcg/mL) and add to 40 mL of compatible fluid to make 50 mL.',
+      concentration: 10, // mcg/mL
+      concentrationUnit: 'mcg/mL',
+      rateCalculation: function(dose, weight) { 
+          return (dose * weight) / 10;
+      },
+      caution: 'Respiratory depression risk. Monitor respiratory status continuously. Have naloxone available. Chest wall rigidity possible with rapid bolus.',
+      notes: 'For non-intubated patients, use lowest effective dose and monitor closely.'
+    }
+  ];
+
   // Local anesthetics data
   const localAnesthetics = [
     { name: 'Lignocaine (Plain)', maxDose: 3, unit: 'mg/kg', caution: 'Without epinephrine' },
@@ -509,6 +640,7 @@
      UI state variables
      ------------------------- */
   let allExpanded = false;
+  let allInfusionsExpanded = false;
   let activeEditIndex = null; // keep an edited card open after recalculation
 
   /* -------------------------
@@ -1345,6 +1477,105 @@
   }
 
   /* -------------------------
+     Infusion Calculations
+     ------------------------- */
+  function calculateInfusions() {
+    const patient = getPatientData();
+    const infusionResultsDiv = document.getElementById('infusion-results');
+
+    if (!patient.weight) {
+      infusionResultsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate infusion rates</p>';
+      document.getElementById('toggleAllInfusionsBtn').style.display = 'none';
+      return;
+    }
+    document.getElementById('toggleAllInfusionsBtn').style.display = 'block';
+
+    let html = '';
+
+    infusionDrugs.forEach((drug, index) => {
+      // Calculate loading dose if applicable
+      let loadingDoseHtml = '';
+      if (drug.loadingDose && drug.loadingDose.dose > 0) {
+        const loadingDoseAmount = patient.weight * drug.loadingDose.dose;
+        loadingDoseHtml = `
+          <div class="infusion-detail-row">
+            <div class="infusion-label">Loading Dose:</div>
+            <div class="infusion-value">
+              ${loadingDoseAmount.toFixed(2)} ${drug.loadingDose.unit.replace('kg', '')}
+              <div class="infusion-note">${drug.loadingDose.note}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Calculate infusion rates for min and max doses
+      const minRate = drug.rateCalculation(drug.infusionDose.min, patient.weight);
+      const maxRate = drug.rateCalculation(drug.infusionDose.max, patient.weight);
+
+      // Check if caution is needed
+      let cautionHtml = '';
+      if (drug.caution) {
+        cautionHtml = `<div class="infusion-caution">${drug.caution}</div>`;
+      }
+
+      // expanded class
+      const isExpandedClass = allInfusionsExpanded ? 'expanded' : '';
+
+      // assemble infusion card HTML
+      html += `
+        <div class="drug-card infusion ${isExpandedClass}" id="infusion-card-${index}">
+          <div class="drug-header" onclick="toggleInfusionCard(${index})">
+            <div class="drug-name">
+              <span class="toggle-icon">▶</span>
+              ${drug.name}
+            </div>
+            <div class="drug-category infusion">${drug.categoryLabel}</div>
+          </div>
+
+          <div class="drug-details" id="infusion-details-${index}">
+            <div class="infusion-details">
+              ${loadingDoseHtml}
+              
+              <div class="infusion-detail-row">
+                <div class="infusion-label">Infusion Range:</div>
+                <div class="infusion-value">
+                  ${drug.infusionDose.min} - ${drug.infusionDose.max} ${drug.infusionDose.unit}
+                </div>
+              </div>
+
+              <div class="infusion-detail-row">
+                <div class="infusion-label">Common Dilution:</div>
+                <div class="infusion-value">${drug.commonDilution}</div>
+              </div>
+
+              <div class="infusion-detail-row">
+                <div class="infusion-label">Preparation:</div>
+                <div class="infusion-value" style="text-align: left;">
+                  ${drug.preparation}
+                  <div class="infusion-note">Concentration: ${drug.concentration} ${drug.concentrationUnit}</div>
+                </div>
+              </div>
+
+              <div class="infusion-detail-row">
+                <div class="infusion-label">Infusion Rate:</div>
+                <div class="infusion-value">
+                  ${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr
+                  <div class="infusion-note">${drug.notes}</div>
+                </div>
+              </div>
+
+              ${cautionHtml}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    infusionResultsDiv.innerHTML = html;
+    document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+  }
+
+  /* -------------------------
      Toggle handlers for cards, all-expand, edit panel
      ------------------------- */
   function toggleDrugCard(index){
@@ -1353,9 +1584,15 @@
     card.classList.toggle('expanded');
   }
 
+  function toggleInfusionCard(index){
+    const card = document.getElementById(`infusion-card-${index}`);
+    if (!card) return;
+    card.classList.toggle('expanded');
+  }
+
   function toggleAllDrugs(){
     allExpanded = !allExpanded;
-    const cards = document.querySelectorAll('.drug-card');
+    const cards = document.querySelectorAll('#drug-results .drug-card');
     const button = document.getElementById('toggleAllBtn');
     cards.forEach(card=>{
       if (allExpanded) {
@@ -1364,11 +1601,25 @@
         if (editInputs && editInputs.classList.contains('active')) editInputs.classList.add('active');
       } else {
         card.classList.remove('expanded');
-        const editInputs = card.querySelector('.edit-inputs');
+        const editInputs = card.querySelector('.editInputs');
         if (editInputs) editInputs.classList.remove('active');
       }
     });
     button.textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+  }
+
+  function toggleAllInfusions(){
+    allInfusionsExpanded = !allInfusionsExpanded;
+    const cards = document.querySelectorAll('#infusion-results .drug-card');
+    const button = document.getElementById('toggleAllInfusionsBtn');
+    cards.forEach(card=>{
+      if (allInfusionsExpanded) {
+        card.classList.add('expanded');
+      } else {
+        card.classList.remove('expanded');
+      }
+    });
+    button.textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
   function toggleEdit(index){
@@ -1465,6 +1716,7 @@
     calculateFluids();
     calculateLocalAnesthetics();
     calculateDrugs();
+    calculateInfusions(); // NEW: Calculate infusions
   }
 
   /* -------------------------

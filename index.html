@@ -507,7 +507,7 @@
     { name:'Neostigmine', category:'reversal', categoryLabel:'Muscle Relaxant Reversal', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5, defaultRoute:'IV' },
     { name:'Glycopyrrolate', category:'reversal', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg', defaultRoute:'IV' },
     { name:'Sugammadex', category:'reversal', categoryLabel:'Rocuronium Reversal', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)', defaultRoute:'IV' },
-    { name:'Naloxone', category:'reversal', categoryLabel:'Opioid Reversal', defaultDose:0.004, unit:'mg/kg', concentration:0.4, concentrationUnit:'mg/mL', useParam:'weight', range:'4 mcg/kg (titrate)', defaultRoute:'IV' },
+    { name:'Naloxone', category:'reversal', categoryLabel:'Opioid Reversal', defaultDose:0.004, unit:'mg/kg', concentration:0.4, concentrationUnit:'mcg/mL', useParam:'weight', range:'4 mcg/kg (titrate)', defaultRoute:'IV' },
     { name:'Flumazenil', category:'reversal', categoryLabel:'Benzodiazepine Reversal', defaultDose:0.01, unit:'mg/kg', concentration:0.1, concentrationUnit:'mg/mL', useParam:'weight', range:'10 mcg/kg (titrate, max 200mcg)', maxDose:0.2, defaultRoute:'IV' },
 
     // Emergency Drugs
@@ -969,13 +969,19 @@
     return '3 (Mac)';
   }
 
-  function calculateLMASize(weight){
-    if (weight < 5) return '1';
-    if (weight < 10) return '1.5';
-    if (weight < 20) return '2';
-    if (weight < 30) return '2.5';
-    if (weight < 50) return '3';
-    return '4';
+  /* -------------------------
+     UPDATED: ProSeal LMA Size and Cuff Volume calculation
+     ------------------------- */
+  function calculateProSealLMASize(weight){
+    if (weight === 0) return { size: 'N/A', cuffVolume: 'N/A' };
+    
+    if (weight < 5) return { size: '1', cuffVolume: 'Up to 4 mL' };
+    if (weight < 10) return { size: '1.5', cuffVolume: 'Up to 7 mL' };
+    if (weight < 20) return { size: '2', cuffVolume: 'Up to 10 mL' };
+    if (weight < 30) return { size: '2.5', cuffVolume: 'Up to 14 mL' };
+    if (weight < 50) return { size: '3', cuffVolume: 'Up to 20 mL' };
+    if (weight < 70) return { size: '4', cuffVolume: 'Up to 30 mL' };
+    return { size: '5', cuffVolume: 'Up to 40 mL' };
   }
 
   function calculateIGelSize(weight){
@@ -1012,7 +1018,12 @@
     const cuffedSize = calculateCuffedETTSize(patient.age, patient.weight);
     const depth = calculateETTDepth(patient.age, patient.weight);
     const blade = calculateLaryngoscopeBlade(patient.age);
-    const lmaSize = patient.weight === 0 ? 'N/A' : calculateLMASize(patient.weight);
+    
+    // UPDATED: Get ProSeal LMA size AND cuff volume
+    const proSealLMA = calculateProSealLMASize(patient.weight);
+    const lmaSize = proSealLMA.size;
+    const lmaCuffVolume = proSealLMA.cuffVolume;
+    
     const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
     const centralLineSize = calculateCentralLineSize(patient.weight);
 
@@ -1038,9 +1049,9 @@
         <div class="equipment-detail">Based on age</div>
       </div>
       <div class="equipment-card">
-        <div class="equipment-title">LMA Size</div>
+        <div class="equipment-title">ProSeal LMA Size</div>
         <div class="equipment-value">${lmaSize}</div>
-        <div class="equipment-detail">Based on weight</div>
+        <div class="equipment-detail">Cuff: ${lmaCuffVolume}</div>
       </div>
       <div class="equipment-card">
         <div class="equipment-title">i-gel Size</div>

@@ -440,6 +440,30 @@
       background-color: rgba(255, 23, 68, 0.1);
     }
 
+    /* Infusion Rate Calculator Button */
+    .infusion-rate-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: var(--primary-accent);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: var(--radius-card);
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+      text-align: center;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+    .infusion-rate-btn:hover {
+      background: #0070c0;
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
     /* Responsive */
     @media(min-width:768px){
       .container{padding:20px 15px}
@@ -527,6 +551,17 @@
       </div>
       <button class="expand-all-btn edit-btn" id="toggleAllInfusionsBtn" onclick="toggleAllInfusions()">Expand All / Collapse All</button>
       <div id="infusion-results" class="drugs-grid"></div>
+    </section>
+
+    <!-- INFUSION RATE CALCULATOR SECTION -->
+    <section class="section">
+      <h2>Infusion Rate Calculator</h2>
+      <div class="info-box">
+        <strong>Advanced Infusion Calculations:</strong> For more complex infusion scenarios including custom concentrations, multiple drugs, and detailed rate calculations.
+      </div>
+      <a href="https://pedicalc-inf.pages.dev/" class="infusion-rate-btn" target="_blank">
+        Open Infusion Rate Calculator
+      </a>
     </section>
 
     <!-- NEW ANTIBIOTICS SECTION -->

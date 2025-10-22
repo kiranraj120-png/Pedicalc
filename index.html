@@ -31,6 +31,7 @@
     .drug-category.antiemetic { background-color: var(--antiemetic); color: #000; }
     .drug-category.local-anesthetic { background-color: var(--local-anesthetic); color: #fff; }
     .drug-category.infusion { background-color: var(--infusion); color: #fff; }
+    .drug-category.antibiotic { background-color: var(--antibiotic); color: #fff; }
     
     :root{
       --bg-primary:#ffffff;
@@ -53,6 +54,7 @@
       --antiemetic:#8bc34a;
       --local-anesthetic:#9c27b0;
       --infusion:#009688;
+      --antibiotic:#795548;
       --primary-accent:#0089f0;
       --caution-color:#ffeb3b;
 
@@ -188,6 +190,7 @@
     .drug-card.antiemetic{border-left-color:var(--antiemetic)}
     .drug-card.local-anesthetic{border-left-color:var(--local-anesthetic)}
     .drug-card.infusion{border-left-color:var(--infusion)}
+    .drug-card.antibiotic{border-left-color:var(--antibiotic)}
 
     .drug-header{
       display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;
@@ -267,6 +270,37 @@
       background: var(--primary-accent);
       color: var(--bg-primary);
       border-color: var(--primary-accent);
+    }
+
+    /* Indication Selector styles */
+    .indication-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+    .indication-selector label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.75em;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+    .indication-selector input[type="radio"] {
+      display: none;
+    }
+    .indication-selector input[type="radio"]:checked + label {
+      background: var(--antibiotic);
+      color: var(--bg-primary);
+      border-color: var(--antibiotic);
     }
 
     /* Equipment cards */
@@ -362,6 +396,50 @@
       background-color: rgba(255, 23, 68, 0.1);
     }
 
+    /* Antibiotic-specific styles */
+    .antibiotic-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .antibiotic-detail-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--border-color);
+    }
+    .antibiotic-detail-row:last-child {
+      border-bottom: none;
+    }
+    .antibiotic-label {
+      font-weight: 600;
+      font-size: 0.85em;
+      color: var(--text-primary);
+    }
+    .antibiotic-value {
+      font-weight: 600;
+      font-size: 0.85em;
+      color: var(--primary-accent);
+      text-align: right;
+    }
+    .antibiotic-note {
+      font-size: 0.75em;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 3px;
+    }
+    .antibiotic-caution {
+      font-size: 0.75em;
+      color: var(--reversal);
+      font-weight: 600;
+      margin-top: 5px;
+      padding: 5px;
+      border-radius: 5px;
+      background-color: rgba(255, 23, 68, 0.1);
+    }
+
     /* Responsive */
     @media(min-width:768px){
       .container{padding:20px 15px}
@@ -383,7 +461,7 @@
     </header>
 
     <div class="warning">
-      ⚠️ This calculator is for reference only. Always verify calculations and use clinical judgment. Dosages may need adjustment based on patient condition and local protocols.
+      ⚠️ Disclaimer: The information provided by this calculator is strictly for estimation and reference purposes. You are required to exercise independent professional judgment and verify all calculations against approved institutional and regulatory standards. No warranties, express or implied, are made regarding the accuracy or completeness of the data. The developers and distributors disclaim all liability for damages arising from the use or inability to use this information.
     </div>
 
     <section class="patient-info">
@@ -441,7 +519,7 @@
       <div id="drug-results" class="drugs-grid"></div>
     </section>
 
-    <!-- NEW INFUSION SECTION -->
+    <!-- INFUSION SECTION -->
     <section class="section">
       <h2>Infusion Calculations(!Experimental)</h2>
       <div class="info-box">
@@ -449,6 +527,16 @@
       </div>
       <button class="expand-all-btn edit-btn" id="toggleAllInfusionsBtn" onclick="toggleAllInfusions()">Expand All / Collapse All</button>
       <div id="infusion-results" class="drugs-grid"></div>
+    </section>
+
+    <!-- NEW ANTIBIOTICS SECTION -->
+    <section class="section">
+      <h2>Antibiotics</h2>
+      <div class="info-box">
+        <strong>Note:</strong> Antibiotic dosing varies by indication, severity, and patient factors. Always verify with local guidelines and consider renal function.
+      </div>
+      <button class="expand-all-btn edit-btn" id="toggleAllAntibioticsBtn" onclick="toggleAllAntibiotics()">Expand All / Collapse All</button>
+      <div id="antibiotics-results" class="drugs-grid"></div>
     </section>
   </div>
 
@@ -525,6 +613,238 @@
     { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
     { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
     { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10, defaultRoute:'IV' }
+  ];
+
+  /* -------------------------
+     Antibiotics Data Array - UPDATED: Remove IM routes, add surgical prophylaxis
+     ------------------------- */
+  const antibiotics = [
+    {
+      name: 'Ampicillin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 50,
+      unit: 'mg/kg',
+      concentration: 100,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '50-100 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q6H' },
+        { name: 'Severe Infection/Meningitis', dose: 100, frequency: 'Q6H' },
+        { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' }
+      ],
+      caution: 'High rate of rash. Not effective against beta-lactamase producing bacteria.',
+      info: 'Common indications: Meningitis, severe sepsis, UTIs, intra-abdominal infections. Often used for Listeria in neonates.'
+    },
+    {
+      name: 'Amoxicillin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 25,
+      unit: 'mg/kg',
+      concentration: 50,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '25-90 mg/kg',
+      defaultRoute: 'Oral',
+      routes: ['Oral'],
+      indications: [
+        { name: 'Mild/Moderate Infection', dose: 25, frequency: 'Q8H' },
+        { name: 'Otitis Media/Sinusitis', dose: 45, frequency: 'Q12H' },
+        { name: 'Severe Infection', dose: 90, frequency: 'Q12H' }
+      ],
+      maxDose: 1000,
+      caution: 'High incidence of rash, especially with concurrent viral infections.',
+      info: 'Common indications: Otitis media, sinusitis, community-acquired pneumonia, streptococcal pharyngitis.'
+    },
+    {
+      name: 'Amoxicillin/Clavulanate',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 25,
+      unit: 'mg/kg',
+      concentration: 50,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '25-90 mg/kg',
+      defaultRoute: 'Oral',
+      routes: ['Oral'],
+      indications: [
+        { name: 'Standard Dose', dose: 25, frequency: 'Q8H' },
+        { name: 'Higher Dose (Recurrent Otitis)', dose: 45, frequency: 'Q12H' }
+      ],
+      maxDose: 875,
+      caution: 'Diarrhea and GI upset are more common due to clavulanate.',
+      info: 'Common indications: Recurrent or persistent otitis media, sinusitis, bite wounds. Used when beta-lactamase producing bacteria are suspected.'
+    },
+    {
+      name: 'Cefazolin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 25,
+      unit: 'mg/kg',
+      concentration: 100,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '25-50 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Surgical Prophylaxis', dose: 25, frequency: 'Single dose' },
+        { name: 'Treatment', dose: 50, frequency: 'Q8H' }
+      ],
+      maxDose: 2000,
+      caution: 'Cross-hypersensitivity with penicillins (approx. 5-10% risk).',
+      info: 'Common indications: Surgical prophylaxis, skin and soft tissue infections caused by MSSA.'
+    },
+    {
+      name: 'Cefotaxime',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 50,
+      unit: 'mg/kg',
+      concentration: 100,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '50-75 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q8H' },
+        { name: 'Severe Infection/Meningitis', dose: 75, frequency: 'Q6H' },
+        { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' }
+      ],
+      maxDose: 2000,
+      caution: 'Excellent CNS penetration.',
+      info: 'Common indications: Meningitis, serious Gram-negative infections, gonorrhea, sepsis in neonates.'
+    },
+    {
+      name: 'Cefoxitin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 40,
+      unit: 'mg/kg',
+      concentration: 100,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '40-80 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Mild/Moderate Infection', dose: 40, frequency: 'Q6H' },
+        { name: 'Severe Infection', dose: 80, frequency: 'Q4H' },
+        { name: 'Surgical Prophylaxis', dose: 40, frequency: 'Single dose' }
+      ],
+      maxDose: 2000,
+      caution: 'Good anaerobic coverage. Considered a "cephamycin".',
+      info: 'Common indications: Intra-abdominal infections, pelvic inflammatory disease (PID), surgical prophylaxis for colorectal procedures.'
+    },
+    {
+      name: 'Clindamycin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 10,
+      unit: 'mg/kg',
+      concentration: 150,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '10-40 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV', 'Oral'],
+      indications: [
+        { name: 'Mild/Moderate Infection', dose: 10, frequency: 'Q8H' },
+        { name: 'Severe Infection/MRSA', dose: 40, frequency: 'Q6H' },
+        { name: 'Surgical Prophylaxis', dose: 10, frequency: 'Single dose' }
+      ],
+      maxDose: 900,
+      caution: 'High risk of causing C. difficile colitis. Not reliable for CNS infections.',
+      info: 'Common indications: Anaerobic infections, MRSA skin/soft tissue infections, bone/joint infections.'
+    },
+    {
+      name: 'Gentamicin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 7.5,
+      unit: 'mg/kg',
+      concentration: 10,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '5-7.5 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Standard Dose', dose: 7.5, frequency: 'Q24H' },
+        { name: 'Meningitis', dose: 5, frequency: 'Q8H' }
+      ],
+      maxDose: 300,
+      caution: 'NEPHROTOXIC and OTOTOXIC. Therapeutic drug monitoring required.',
+      info: 'Common indications: Severe Gram-negative infections, sepsis, synergistic therapy for endocarditis.'
+    },
+    {
+      name: 'Metronidazole',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 7.5,
+      unit: 'mg/kg',
+      concentration: 5,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '7.5-10 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV', 'Oral'],
+      indications: [
+        { name: 'Anaerobic Infections', dose: 7.5, frequency: 'Q8H' },
+        { name: 'C. difficile Colitis', dose: 10, frequency: 'Q8H (Oral)' },
+        { name: 'Surgical Prophylaxis', dose: 7.5, frequency: 'Single dose' }
+      ],
+      maxDose: 500,
+      caution: 'Causes disulfiram-like reaction with alcohol. Metallic taste common.',
+      info: 'Common indications: Anaerobic infections (intra-abdominal, brain abscess), C. difficile colitis.'
+    },
+    {
+      name: 'Vancomycin',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 15,
+      unit: 'mg/kg',
+      concentration: 5,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '15-20 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Standard Dose', dose: 15, frequency: 'Q6-8H' },
+        { name: 'Severe Infection/Meningitis', dose: 20, frequency: 'Q6-8H' }
+      ],
+      maxDose: 1000,
+      caution: 'NEPHROTOXIC and OTOTOXIC. Requires therapeutic drug monitoring.',
+      info: 'Common indications: MRSA infections, serious infections in penicillin-allergic patients.'
+    },
+    {
+      name: 'Piperacillin/Tazobactam (Zosyn)',
+      category: 'antibiotic',
+      categoryLabel: 'Antibiotic',
+      defaultDose: 100,
+      unit: 'mg/kg',
+      concentration: 40,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '80-100 mg/kg',
+      defaultRoute: 'IV',
+      routes: ['IV'],
+      indications: [
+        { name: 'Standard Dose', dose: 80, frequency: 'Q8H' },
+        { name: 'Severe Infection', dose: 100, frequency: 'Q6H' },
+        { name: 'Surgical Prophylaxis', dose: 80, frequency: 'Single dose' }
+      ],
+      maxDose: 4000,
+      caution: 'Broad-spectrum use can lead to C. diff and fungal superinfections. Contains significant sodium load.',
+      info: 'Common indications: Broad-spectrum coverage for hospital-acquired pneumonia, intra-abdominal infections, febrile neutropenia.'
+    }
   ];
 
   /* -------------------------
@@ -624,6 +944,18 @@
     drug.currentRoute = drug.defaultRoute;
   });
 
+  // Initialize antibiotics with route and indication selection
+  antibiotics.forEach(antibiotic => {
+    // Remove IM routes - keep only IV and Oral
+    antibiotic.routes = antibiotic.routes.filter(route => route !== 'IM');
+    // If defaultRoute was IM, change to IV
+    if (antibiotic.defaultRoute === 'IM') {
+      antibiotic.defaultRoute = antibiotic.routes.includes('IV') ? 'IV' : antibiotic.routes[0];
+    }
+    antibiotic.currentRoute = antibiotic.defaultRoute;
+    antibiotic.currentIndication = antibiotic.indications ? antibiotic.indications[0].name : 'Standard';
+  });
+
   /* dynamic dilution tiers used when calculated volume < 1 mL */
   const dilutionTiers = {
     'Fentanyl': [50,10,5],      // mcg/mL
@@ -641,7 +973,9 @@
      ------------------------- */
   let allExpanded = false;
   let allInfusionsExpanded = false;
+  let allAntibioticsExpanded = false;
   let activeEditIndex = null; // keep an edited card open after recalculation
+  let antibioticExpanded = []; // Track expanded state for each antibiotic card
 
   /* -------------------------
      Helper: read & cache patient data
@@ -757,6 +1091,29 @@
 
       activeEditIndex = index; // Keep the card open
       calculateDrugs();
+    }
+  }
+
+  /* -------------------------
+     Antibiotic Route and Indication Selection
+     ------------------------- */
+  function selectAntibioticRoute(index, route) {
+    const antibiotic = antibiotics[index];
+    if (antibiotic) {
+      antibiotic.currentRoute = route;
+      // Reset to first indication when route changes
+      if (antibiotic.indications && antibiotic.indications.length > 0) {
+        antibiotic.currentIndication = antibiotic.indications[0].name;
+      }
+      calculateAntibiotics();
+    }
+  }
+
+  function selectAntibioticIndication(index, indication) {
+    const antibiotic = antibiotics[index];
+    if (antibiotic) {
+      antibiotic.currentIndication = indication;
+      calculateAntibiotics();
     }
   }
 
@@ -919,6 +1276,157 @@
     };
   }
 
+  /* -------------------------
+     Antibiotics Calculation
+     ------------------------- */
+  function calculateAntibiotics() {
+    const patient = getPatientData();
+    const antibioticsDiv = document.getElementById('antibiotics-results');
+
+    if (!patient.weight) {
+      antibioticsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate antibiotic doses</p>';
+      document.getElementById('toggleAllAntibioticsBtn').style.display = 'none';
+      return;
+    }
+    document.getElementById('toggleAllAntibioticsBtn').style.display = 'block';
+
+    let html = '';
+
+    antibiotics.forEach((antibiotic, index) => {
+      const weight = patient.weight;
+      
+      // Get the current indication
+      const currentIndication = antibiotic.indications ? 
+        antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) : 
+        { dose: antibiotic.defaultDose, frequency: 'Q6H' };
+      
+      const dosePerKg = currentIndication ? currentIndication.dose : antibiotic.defaultDose;
+      const frequency = currentIndication ? currentIndication.frequency : 'Q6H';
+      
+      // Calculate total dose
+      let totalDose = weight * dosePerKg;
+      
+      // Apply max dose if specified
+      let limitApplied = false;
+      if (antibiotic.maxDose && totalDose > antibiotic.maxDose) {
+        totalDose = antibiotic.maxDose;
+        limitApplied = true;
+      }
+      
+      // Calculate volume for injectable routes
+      let volumeDisplay = 'N/A';
+      let concentrationDisplay = '';
+      if (antibiotic.currentRoute === 'IV' || antibiotic.currentRoute === 'IM') {
+        const volume = totalDose / antibiotic.concentration;
+        volumeDisplay = volume.toFixed(2);
+        concentrationDisplay = `${antibiotic.concentration} ${antibiotic.concentrationUnit}`;
+      }
+      
+      // Check if caution is needed
+      let isCautionNeeded = antibiotic.caution ? true : false;
+      
+      let cautionIconHtml = '';
+      let cautionPopupHtml = '';
+      if (isCautionNeeded){
+        cautionIconHtml = `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>`;
+        cautionPopupHtml = `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>`;
+      }
+      
+      // Info box
+      let infoBoxHtml = '';
+      if (antibiotic.info) {
+        infoBoxHtml = `<div class="info-box ketorolac-specific">${antibiotic.info}</div>`;
+      }
+      
+      // Route Selector
+      let routeSelectorHTML = '';
+      if (antibiotic.routes && antibiotic.routes.length > 1) {
+        routeSelectorHTML = '<div class="route-selector">';
+        antibiotic.routes.forEach(route => {
+          const checked = antibiotic.currentRoute === route ? 'checked' : '';
+          const routeName = route === 'Oral' ? 'Oral' : 'Intravenous (IV)';
+          routeSelectorHTML += `
+            <input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${checked} 
+                   onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')">
+            <label for="antibiotic-route-${index}-${route}">${routeName}</label>
+          `;
+        });
+        routeSelectorHTML += '</div>';
+      }
+      
+      // Indication Selector
+      let indicationSelectorHTML = '';
+      if (antibiotic.indications && antibiotic.indications.length > 1) {
+        indicationSelectorHTML = '<div class="indication-selector">';
+        antibiotic.indications.forEach(indication => {
+          const checked = antibiotic.currentIndication === indication.name ? 'checked' : '';
+          indicationSelectorHTML += `
+            <input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" 
+                   name="antibiotic-indication-${index}" value="${indication.name}" ${checked} 
+                   onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')">
+            <label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>
+          `;
+        });
+        indicationSelectorHTML += '</div>';
+      }
+      
+      // Limit info
+      let limitInfoHtml = '';
+      if (limitApplied) {
+        limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`;
+      }
+      
+      // Volume detail
+      const volumeDetail = (antibiotic.currentRoute === 'IV' || antibiotic.currentRoute === 'IM') ? 
+        `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
+        `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for Oral Dose</div>`;
+      
+      // Expanded class - FIX: Use the antibioticExpanded array to track individual card state
+      const isExpandedClass = (allAntibioticsExpanded || antibioticExpanded[index]) ? 'expanded' : '';
+      
+      // Assemble card HTML
+      html += `
+        <div class="drug-card antibiotic ${isExpandedClass}" id="antibiotic-card-${index}">
+          ${cautionPopupHtml}
+          <div class="drug-header" onclick="toggleAntibioticCard(${index})">
+            <div class="drug-name">
+              <span class="toggle-icon">▶</span>
+              ${antibiotic.name}
+            </div>
+            <div class="drug-category antibiotic">${antibiotic.categoryLabel}</div>
+            ${cautionIconHtml}
+          </div>
+
+          <div class="drug-details" id="antibiotic-details-${index}">
+            <div class="antibiotic-details">
+              ${routeSelectorHTML}
+              ${indicationSelectorHTML}
+              ${infoBoxHtml}
+              
+              <div class="antibiotic-detail-row">
+                <div class="antibiotic-label">Dose Range:</div>
+                <div class="antibiotic-value">${antibiotic.range}</div>
+              </div>
+              
+              <div class="antibiotic-detail-row">
+                <div class="antibiotic-label">Frequency:</div>
+                <div class="antibiotic-value">${frequency}</div>
+              </div>
+
+              <div class="calculation">
+                <div class="calculation-result">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
+                ${volumeDetail}
+                <div class="dose-info">Calculated: ${dosePerKg} ${antibiotic.unit}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    antibioticsDiv.innerHTML = html;
+    document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+  }
 
   /* -------------------------
      Enhanced Equipment calculations
@@ -1601,6 +2109,14 @@
     card.classList.toggle('expanded');
   }
 
+  function toggleAntibioticCard(index){
+    const card = document.getElementById(`antibiotic-card-${index}`);
+    if (!card) return;
+    card.classList.toggle('expanded');
+    // FIX: Track individual card expanded state
+    antibioticExpanded[index] = card.classList.contains('expanded');
+  }
+
   function toggleAllDrugs(){
     allExpanded = !allExpanded;
     const cards = document.querySelectorAll('#drug-results .drug-card');
@@ -1631,6 +2147,13 @@
       }
     });
     button.textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+  }
+
+  function toggleAllAntibiotics(){
+    allAntibioticsExpanded = !allAntibioticsExpanded;
+    // FIX: Update the expanded state for all antibiotic cards
+    antibioticExpanded = antibioticExpanded.map(() => allAntibioticsExpanded);
+    calculateAntibiotics();
   }
 
   function toggleEdit(index){
@@ -1702,6 +2225,29 @@
     }
   }
 
+  function toggleAntibioticCautionPopup(index){
+    const card = document.getElementById(`antibiotic-card-${index}`);
+    const popup = document.getElementById(`antibiotic-caution-popup-${index}`);
+
+    // close other popups and remove their caution-active class
+    document.querySelectorAll('.caution-popup').forEach(p=>{
+      if (p.id !== (popup && popup.id)){
+        p.style.display = 'none';
+        const parentCard = p.closest('.drug-card');
+        if (parentCard) parentCard.classList.remove('caution-active');
+      }
+    });
+
+    if (!popup) return;
+    if (popup.style.display === 'block'){
+      popup.style.display = 'none';
+      if (card) card.classList.remove('caution-active');
+    } else {
+      popup.style.display = 'block';
+      if (card) card.classList.add('caution-active');
+    }
+  }
+
   // hide popups when clicking outside
   document.addEventListener('click', (e)=>{
     let clickedInsidePopup = false;
@@ -1727,7 +2273,8 @@
     calculateFluids();
     calculateLocalAnesthetics();
     calculateDrugs();
-    calculateInfusions(); // NEW: Calculate infusions
+    calculateInfusions();
+    calculateAntibiotics(); // NEW: Calculate antibiotics
   }
 
   /* -------------------------
@@ -1749,6 +2296,8 @@
       document.body.classList.add('dark-mode');
       document.querySelector('.dark-mode-toggle').textContent = '☀️ Light Mode';
     }
+    // Initialize antibioticExpanded array
+    antibioticExpanded = new Array(antibiotics.length).fill(false);
     calculateAll();
   };
   </script>

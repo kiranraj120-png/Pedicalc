@@ -6,8 +6,10 @@
   <title>Pediatric Anesthesia Calculator</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* All your CSS styles remain the same - they look fine */
     /* Category pill styles with colored background */
     .drug-category {
       font-size: 0.7em;
@@ -43,6 +45,8 @@
       --border-color:#e1f5fe;
       --shadow:0 8px 20px rgba(0,0,0,0.1);
       --shadow-hover:0 10px 25px rgba(0,0,0,0.15);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.2);
 
       --induction:#34ebb4;
       --muscle-relaxant:#ff6d00;
@@ -60,6 +64,7 @@
 
       --radius-card:16px;
       --radius-input:10px;
+      --radius-tab: 12px;
     }
 
     body.dark-mode{
@@ -71,6 +76,8 @@
       --border-color:#4a4a4a;
       --shadow:0 8px 20px rgba(0,0,0,0.6);
       --shadow-hover:0 10px 25px rgba(0,0,0,0.8);
+      --glass-bg: rgba(34, 34, 34, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
       --emergency:#ffeb3b;
       --caution-color:#fbc02d;
     }
@@ -86,6 +93,7 @@
       transition:background-color .4s,color .4s;
       user-select:none; /* make app text unselectable except inputs */
       -webkit-font-smoothing:antialiased;
+      overflow-x: hidden;
     }
     input,textarea{user-select:text!important}
 
@@ -93,7 +101,7 @@
 
     /* Header */
     header{
-      background:var(--primary-accent);
+      background: linear-gradient(135deg, var(--primary-accent), #0056b3);
       color:var(--bg-primary);
       padding:15px;
       border-radius:var(--radius-card);
@@ -104,8 +112,22 @@
       align-items:center;
       flex-wrap: wrap;
       gap: 10px;
+      position: relative;
+      overflow: hidden;
     }
-    h1{font-size:1.6em;font-weight:700}
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+      transform: rotate(30deg);
+    }
+
+    h1{font-size:1.6em;font-weight:700; z-index: 1;}
     .dark-mode-toggle{
       background:var(--bg-primary);
       color:var(--primary-accent);
@@ -114,19 +136,101 @@
       box-shadow:0 2px 5px rgba(0,0,0,.2);transition:all .18s ease;
       -webkit-tap-highlight-color:transparent;
       outline:none;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     .dark-mode-toggle:active{transform:translateY(1px)}
     .dark-mode-toggle::-moz-focus-inner{border:0}
+
+    /* Tab Navigation */
+    .tab-navigation {
+      display: flex;
+      overflow-x: auto;
+      gap: 5px;
+      margin-bottom: 15px;
+      padding: 5px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .tab-navigation::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-button {
+      flex: 1;
+      min-width: 120px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      padding: 12px 15px;
+      border-radius: var(--radius-tab);
+      cursor: pointer;
+      font-size: 0.8em;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      box-shadow: var(--shadow);
+    }
+
+    .tab-button i {
+      font-size: 1.2em;
+    }
+
+    .tab-button.active {
+      background: var(--primary-accent);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 137, 240, 0.4);
+    }
+
+    .tab-button:not(.active):hover {
+      background: var(--bg-card);
+      transform: translateY(-1px);
+    }
+
+    /* Tab Content */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-content.active {
+      display: block;
+    }
 
     /* Sections */
     .section,.patient-info{
       background:var(--bg-card);
       padding:15px;border-radius:var(--radius-card);
-      box-shadow:var(--shadow);margin-bottom:15px;transition:box-shadow .3s ease;
+      box-shadow:var(--shadow);margin-bottom:15px;transition:box-shadow .3s ease, transform 0.3s ease;
+    }
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
     }
     .section h2{
       font-size:1.3em;font-weight:600;margin-bottom:12px;color:var(--text-primary);
       border-bottom:2px solid var(--border-color);padding-bottom:6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section h2 i {
+      color: var(--primary-accent);
     }
 
     /* Info boxes */
@@ -138,7 +242,14 @@
       border-radius: 8px;
       font-size: 0.85em;
       color: var(--text-secondary);
+      animation: slideIn 0.5s ease;
     }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
     .info-box strong {
       color: var(--primary-accent);
     }
@@ -160,7 +271,7 @@
     .age-input-group{display:flex;gap:8px}
     .input-field label{font-size:.8em;color:var(--text-secondary);margin-bottom:5px;font-weight:600;display:block}
     .input-field input{
-      width:100%;padding:8px 10px;border:1px solid var(--border-color);
+      width:100%;padding:10px 12px;border:1px solid var(--border-color);
       border-radius:var(--radius-input);font-size:.9em;background:var(--bg-primary);
       color:var(--text-primary);transition:border-color .3s,box-shadow .3s;
     }
@@ -175,9 +286,16 @@
       border-radius:var(--radius-card);padding:12px;border-left:6px solid;background:var(--bg-secondary);
       transition:all .35s cubic-bezier(.25,.8,.25,1);position:relative;z-index:1;
       will-change:transform,box-shadow,background-color;
+      animation: cardAppear 0.5s ease;
     }
+
+    @keyframes cardAppear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .drug-card.caution-active{z-index:20;border-left-color:var(--caution-color)!important;box-shadow:0 0 10px var(--caution-color);}
-    .drug-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px);background:var(--bg-card)}
+    .drug-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px);background:var(--bg-card)}
 
     /* left border category colors */
     .drug-card.induction{border-left-color:var(--induction)}
@@ -223,7 +341,14 @@
     .caution-popup{
       display:none;position:absolute;z-index:30;padding:8px;background:var(--bg-primary);color:var(--text-primary);
       border:1px solid var(--caution-color);border-radius:5px;box-shadow:var(--shadow-hover);width:220px;font-size:.7em;top:12px;right:12px;white-space:normal;
+      animation: popIn 0.3s ease;
     }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     .dose-limit-applied{font-size:.7em;color:var(--reversal);font-weight:600;display:block;margin-top:2px}
 
     /* Calculations & edit UI */
@@ -238,7 +363,12 @@
     .edit-btn:hover{background:var(--primary-accent);color:var(--bg-primary);box-shadow:0 4px 10px rgba(0,137,240,.3)}
 
     .edit-inputs{display:none;margin-top:8px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-input);border:1px dashed var(--text-tertiary);flex-direction:column;gap:8px}
-    .edit-inputs.active{display:flex}
+    .edit-inputs.active{display:flex; animation: slideDown 0.3s ease;}
+
+    @keyframes slideDown {
+      from { opacity: 0; max-height: 0; }
+      to { opacity: 1; max-height: 100px; }
+    }
 
     /* Route Selector styles */
     .route-selector {
@@ -304,7 +434,14 @@
     }
 
     /* Equipment cards */
-    .equipment-card{background:var(--bg-secondary);padding:12px;border-radius:var(--radius-card);text-align:center;border-top:4px solid var(--primary-accent);transition:all .3s ease}
+    .equipment-card{
+      background:var(--bg-secondary);padding:12px;border-radius:var(--radius-card);text-align:center;border-top:4px solid var(--primary-accent);transition:all .3s ease;
+      animation: cardAppear 0.5s ease;
+    }
+    .equipment-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
     .equipment-title{font-size:.85em;color:var(--text-secondary);margin-bottom:6px;font-weight:600}
     .equipment-value{font-size:1.4em;font-weight:800;color:var(--primary-accent);line-height:1.1}
     .equipment-value.error{color:var(--reversal);font-size:.85em;font-weight:600;line-height:1.3}
@@ -464,6 +601,212 @@
       transform: translateY(-2px);
     }
 
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: grey;
+      padding: 10px;
+    }
+
+    footer a {
+      color: var(--primary-accent);
+      text-decoration: none;
+    }
+
+    /* Memory Function Styles */
+    .memory-section {
+      background: var(--bg-card);
+      padding: 15px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      margin-bottom: 15px;
+      transition: box-shadow .3s ease, transform 0.3s ease;
+    }
+    
+    .memory-section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .memory-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .memory-input {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-input);
+      font-size: .9em;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color .3s, box-shadow .3s;
+    }
+    
+    .memory-input:focus {
+      outline: none;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px rgba(0,137,240,.2);
+    }
+    
+    .memory-btn {
+      background: var(--primary-accent);
+      color: var(--bg-primary);
+      border: none;
+      padding: 10px 15px;
+      border-radius: var(--radius-input);
+      font-size: .8em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s ease;
+      white-space: nowrap;
+    }
+    
+    .memory-btn:hover {
+      background: #0070c0;
+      transform: translateY(-1px);
+    }
+    
+    .memory-btn.secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+    
+    .memory-btn.secondary:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    
+    .memory-btn.warning {
+      background: var(--reversal);
+    }
+    
+    .memory-btn.warning:hover {
+      background: #d50000;
+    }
+    
+    .saved-items-container {
+      margin-top: 15px;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-input);
+      padding: 10px;
+    }
+    
+    .saved-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      margin-bottom: 5px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-input);
+      transition: background .3s ease;
+    }
+    
+    .saved-item:hover {
+      background: var(--bg-card);
+    }
+    
+    .saved-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .saved-item-name {
+      font-weight: 600;
+      font-size: .85em;
+      color: var(--text-primary);
+    }
+    
+    .saved-item-details {
+      font-size: .7em;
+      color: var(--text-secondary);
+    }
+    
+    .saved-item-actions {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .saved-item-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: .8em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all .2s ease;
+    }
+    
+    .saved-item-btn:hover {
+      background: var(--primary-accent);
+      color: var(--bg-primary);
+    }
+    
+    .saved-item-btn.delete:hover {
+      background: var(--reversal);
+      color: var(--bg-primary);
+    }
+    
+    .custom-values-indicator {
+      background: var(--analgesic);
+      color: white;
+      padding: 8px 12px;
+      border-radius: var(--radius-input);
+      margin-bottom: 15px;
+      font-size: .85em;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideIn 0.5s ease;
+    }
+    
+    .no-saved-items {
+      text-align: center;
+      color: var(--text-secondary);
+      font-style: italic;
+      padding: 20px;
+      font-size: .85em;
+    }
+    
+    /* Custom value indicator styles */
+    .custom-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary-accent);
+      margin-left: 6px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+    
+    .drug-name.has-custom::after {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--primary-accent);
+      margin-left: 6px;
+      animation: pulse 2s infinite;
+    }
+
     /* Responsive */
     @media(min-width:768px){
       .container{padding:20px 15px}
@@ -473,6 +816,36 @@
       .section h2{font-size:1.5em}
       .drug-name{font-size:1.2em}
       .drug-header{flex-direction:row;align-items:center}
+      .tab-button {
+        min-width: 150px;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .tab-button i {
+        font-size: 1em;
+        margin-right: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tab-button {
+        min-width: 100px;
+        padding: 10px 8px;
+        font-size: 0.7em;
+      }
+      .tab-button i {
+        font-size: 1em;
+      }
+      .input-group {
+        grid-template-columns: 1fr;
+      }
+      .memory-controls {
+        flex-direction: column;
+      }
+      
+      .memory-input {
+        min-width: 100%;
+      }
     }
   </style>
 </head>
@@ -480,106 +853,282 @@
 <body>
   <div class="container">
     <header>
-      <h1>Pediatric Anesthesia Calculator</h1>
-      <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+      <h1><i class="fas fa-calculator"></i> Pediatric Anesthesia Calculator</h1>
+      <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i> <span>Dark Mode</span>
+      </button>
     </header>
 
     <div class="warning">
-      ⚠️ Disclaimer: The information provided by this calculator is strictly for estimation and reference purposes. You are required to exercise independent professional judgment and verify all calculations against approved institutional and regulatory standards. No warranties, express or implied, are made regarding the accuracy or completeness of the data. The developers and distributors disclaim all liability for damages arising from the use or inability to use this information.
+      <i class="fas fa-exclamation-triangle"></i> Disclaimer: The information provided by this calculator is strictly for estimation and reference purposes. You are required to exercise independent professional judgment and verify all calculations against approved institutional and regulatory standards. No warranties, express or implied, are made regarding the accuracy or completeness of the data. The developers and distributors disclaim all liability for damages arising from the use or inability to use this information.
     </div>
 
-    <section class="patient-info">
-      <h2>Patient Information</h2>
-      <div class="input-group">
-        <div class="input-field">
-          <label for="age-years">Age</label>
-          <div class="age-input-group">
-            <input type="number" id="age-years" placeholder="Years (max 18)" step="1" min="0" max="18" oninput="clampAgeAndCalculate()">
-            <input type="number" id="age-months" placeholder="Months (0-11)" step="1" min="0" max="11" oninput="clampAgeAndCalculate()">
+    <div class="tab-navigation">
+      <div class="tab-button active" data-tab="patient-info">
+        <i class="fas fa-user-injured"></i>
+        <span>Patient Info</span>
+      </div>
+      <div class="tab-button" data-tab="airway-fluids">
+        <i class="fas fa-lungs"></i>
+        <span>Airway & Fluids</span>
+      </div>
+      <div class="tab-button" data-tab="local-anesthetics">
+        <i class="fas fa-syringe"></i>
+        <span>Local Anesthetics</span>
+      </div>
+      <div class="tab-button" data-tab="drug-calculations">
+        <i class="fas fa-pills"></i>
+        <span>Drugs</span>
+      </div>
+      <div class="tab-button" data-tab="infusions">
+        <i class="fas fa-tint"></i>
+        <span>Infusions</span>
+      </div>
+      <div class="tab-button" data-tab="antibiotics">
+        <i class="fas fa-bacteria"></i>
+        <span>Antibiotics</span>
+      </div>
+    </div>
+
+    <!-- Patient Info Tab -->
+    <div class="tab-content active" id="patient-info">
+      <section class="patient-info">
+        <h2><i class="fas fa-user-circle"></i> Patient Information</h2>
+        <div class="input-group">
+          <div class="input-field">
+            <label for="age-years">Age</label>
+            <div class="age-input-group">
+              <input type="number" id="age-years" placeholder="Years (max 18)" step="1" min="0" max="18" oninput="clampAgeAndCalculate()">
+              <input type="number" id="age-months" placeholder="Months (0-11)" step="1" min="0" max="11" oninput="clampAgeAndCalculate()">
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label for="weight">Weight (kg)</label>
+            <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
+          </div>
+
+          <div class="input-field">
+            <label for="currentHb">Current Hb (g/dL)</label>
+            <input type="number" id="currentHb" placeholder="e.g., 12.0" step="0.1" min="0" oninput="calculateAll()">
+          </div>
+
+          <div class="input-field">
+            <label for="targetHb">Target Hb (g/dL)</label>
+            <input type="number" id="targetHb" placeholder="e.g., 8.0" step="0.1" min="0" oninput="calculateAll()">
           </div>
         </div>
+      </section>
 
-        <div class="input-field">
-          <label for="weight">Weight (kg)</label>
-          <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="calculateAll()">
+      <!-- Patient Memory Section -->
+      <section class="memory-section">
+        <h2><i class="fas fa-save"></i> Patient Memory</h2>
+        <div class="info-box">
+          <strong>Save Patient Profiles:</strong> Store patient details for quick recall. Data is saved locally in your browser.
         </div>
-
+        
         <div class="input-field">
-          <label for="currentHb">Current Hb (g/dL)</label>
-          <input type="number" id="currentHb" placeholder="e.g., 12.0" step="0.1" min="0" oninput="calculateAll()">
+          <label for="patient-profile-name">Profile Name</label>
+          <input type="text" id="patient-profile-name" placeholder="e.g., Oliver Twist" class="memory-input">
         </div>
+        
+        <div class="memory-controls">
+          <button class="memory-btn" onclick="savePatientProfile()">
+            <i class="fas fa-save"></i> Save Current Patient
+          </button>
+          <button class="memory-btn secondary" onclick="loadPatientProfiles()">
+            <i class="fas fa-folder-open"></i> Load Saved
+          </button>
+          <button class="memory-btn warning" onclick="clearAllPatientProfiles()">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+        
+        <div id="patient-profiles-list" class="saved-items-container">
+          <!-- Patient profiles will be listed here -->
+        </div>
+      </section>
+    </div>
 
+    <!-- Airway & Fluids Tab -->
+    <div class="tab-content" id="airway-fluids">
+      <section class="section">
+        <h2><i class="fas fa-wind"></i> Airway Equipment Sizing</h2>
+        <div id="equipment-results" class="equipment-grid"></div>
+      </section>
+
+      <section class="section">
+        <h2><i class="fas fa-tint"></i> Fluid & Blood Loss Requirements</h2>
+        <div id="fluid-results" class="equipment-grid"></div>
+      </section>
+    </div>
+
+    <!-- Local Anesthetics Tab -->
+    <div class="tab-content" id="local-anesthetics">
+      <section class="section">
+        <h2><i class="fas fa-syringe"></i> Local Anesthetics - Maximum Doses</h2>
+        <div class="info-box">
+          <strong>Note:</strong> These are maximum recommended doses. Always use the lowest effective dose and consider patient factors.
+        </div>
+        <div id="local-anesthetics-results" class="drugs-grid"></div>
+      </section>
+    </div>
+
+    <!-- Drug Calculations Tab -->
+    <div class="tab-content" id="drug-calculations">
+      <!-- Custom Drug Values Indicator -->
+      <div id="custom-drugs-indicator" class="custom-values-indicator" style="display: none;">
+        <span><i class="fas fa-info-circle"></i> Using Custom Drug Values: <span id="current-drug-set-name">Unknown</span></span>
+        <button class="memory-btn secondary" onclick="resetAllDrugsToDefault()" style="padding: 4px 8px; font-size: 0.7em;">
+          <i class="fas fa-undo"></i> Reset to Default
+        </button>
+      </div>
+
+      <section class="section">
+        <h2><i class="fas fa-pills"></i> Drug Calculations</h2>
+        <div class="info-box">
+          <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
+        </div>
+        <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
+        <div id="drug-results" class="drugs-grid"></div>
+      </section>
+
+      <!-- Drug Settings Memory Section -->
+      <section class="memory-section">
+        <h2><i class="fas fa-pills"></i> Drug Settings Memory</h2>
+        <div class="info-box">
+          <strong>Save Custom Drug Settings:</strong> Store your modified drug doses and concentrations as named sets for quick recall.
+        </div>
+        
         <div class="input-field">
-          <label for="targetHb">Target Hb (g/dL)</label>
-          <input type="number" id="targetHb" placeholder="e.g., 8.0" step="0.1" min="0" oninput="calculateAll()">
+          <label for="drug-set-name">Settings Name</label>
+          <input type="text" id="drug-set-name" placeholder="e.g., My Custom Doses" class="memory-input">
         </div>
-      </div>
-    </section>
+        
+        <div class="memory-controls">
+          <button class="memory-btn" onclick="saveDrugSet()">
+            <i class="fas fa-save"></i> Save Current Settings
+          </button>
+          <button class="memory-btn secondary" onclick="loadDrugSets()">
+            <i class="fas fa-folder-open"></i> Load Saved
+          </button>
+          <button class="memory-btn warning" onclick="clearAllDrugSets()">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+        
+        <div id="drug-sets-list" class="saved-items-container">
+          <!-- Drug sets will be listed here -->
+        </div>
+      </section>
+    </div>
 
-    <section class="section">
-      <h2>Airway Equipment Sizing</h2>
-      <div id="equipment-results" class="equipment-grid"></div>
-    </section>
+    <!-- Infusions Tab -->
+    <div class="tab-content" id="infusions">
+      <section class="section">
+        <h2><i class="fas fa-tint"></i> Infusion Calculations(!Experimental)</h2>
+        <div class="info-box">
+          <strong>Important:</strong> These are high-alert medications. Always verify calculations with a second clinician. Use central lines when possible for vasoactive drugs.
+        </div>
+        <button class="expand-all-btn edit-btn" id="toggleAllInfusionsBtn" onclick="toggleAllInfusions()">Expand All / Collapse All</button>
+        <div id="infusion-results" class="drugs-grid"></div>
+      </section>
 
-    <section class="section">
-      <h2>Fluid & Blood Loss Requirements</h2>
-      <div id="fluid-results" class="equipment-grid"></div>
-    </section>
+      <section class="section">
+        <h2><i class="fas fa-calculator"></i> Infusion Rate Calculator</h2>
+        <div class="info-box">
+          <strong>Advanced Infusion Calculations:</strong> For more complex infusion scenarios including custom concentrations, multiple drugs, and detailed rate calculations.
+        </div>
+        <a href="https://pedicalc-inf.pages.dev/" class="infusion-rate-btn" target="_self">
+          <i class="fas fa-external-link-alt"></i> Open Infusion Rate Calculator
+        </a>
+      </section>
+    </div>
 
-    <section class="section">
-      <h2>Local Anesthetics - Maximum Doses</h2>
-      <div class="info-box">
-        <strong>Note:</strong> These are maximum recommended doses. Always use the lowest effective dose and consider patient factors.
-      </div>
-      <div id="local-anesthetics-results" class="drugs-grid"></div>
-    </section>
+    <!-- Antibiotics Tab -->
+    <div class="tab-content" id="antibiotics">
+      <section class="section">
+        <h2><i class="fas fa-bacteria"></i> Antibiotics</h2>
+        <div class="info-box">
+          <strong>Note:</strong> Antibiotic dosing varies by indication, severity, and patient factors. Always verify with local guidelines and consider renal function.
+        </div>
+        <button class="expand-all-btn edit-btn" id="toggleAllAntibioticsBtn" onclick="toggleAllAntibiotics()">Expand All / Collapse All</button>
+        <div id="antibiotics-results" class="drugs-grid"></div>
+      </section>
+    </div>
 
-    <section class="section">
-      <h2>Drug Calculations</h2>
-      <div class="info-box">
-        <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
-      </div>
-      <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
-      <div id="drug-results" class="drugs-grid"></div>
-    </section>
-
-    <!-- INFUSION SECTION -->
-    <section class="section">
-      <h2>Infusion Calculations(!Experimental)</h2>
-      <div class="info-box">
-        <strong>Important:</strong> These are high-alert medications. Always verify calculations with a second clinician. Use central lines when possible for vasoactive drugs.
-      </div>
-      <button class="expand-all-btn edit-btn" id="toggleAllInfusionsBtn" onclick="toggleAllInfusions()">Expand All / Collapse All</button>
-      <div id="infusion-results" class="drugs-grid"></div>
-    </section>
-
-    <!-- INFUSION RATE CALCULATOR SECTION -->
-    <section class="section">
-      <h2>Infusion Rate Calculator</h2>
-      <div class="info-box">
-        <strong>Advanced Infusion Calculations:</strong> For more complex infusion scenarios including custom concentrations, multiple drugs, and detailed rate calculations.
-      </div>
-      <a href="https://pedicalc-inf.pages.dev/" class="infusion-rate-btn" target="_self">
-        Open Infusion Rate Calculator
-      </a>
-    </section>
-
-    <!-- NEW ANTIBIOTICS SECTION -->
-    <section class="section">
-      <h2>Antibiotics</h2>
-      <div class="info-box">
-        <strong>Note:</strong> Antibiotic dosing varies by indication, severity, and patient factors. Always verify with local guidelines and consider renal function.
-      </div>
-      <button class="expand-all-btn edit-btn" id="toggleAllAntibioticsBtn" onclick="toggleAllAntibiotics()">Expand All / Collapse All</button>
-      <div id="antibiotics-results" class="drugs-grid"></div>
-    </section>
+    <footer>
+      <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
+    </footer>
   </div>
 
-  <p style="text-align:center;margin-top:20px;font-size:0.8em;color:grey;">
-    <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
-  </p>
-
   <script>
+  // Tab switching functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons and contents
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        // Show corresponding tab content
+        const tabId = button.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Initialize dark mode
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+      document.body.classList.add('dark-mode');
+      updateDarkModeButton();
+    }
+    
+    // Load last used drug values
+    loadLastUsedDrugValues();
+    
+    // Initialize calculations
+    calculateAll();
+    
+    // Load saved items
+    loadPatientProfiles();
+    loadDrugSets();
+    
+    // Check if we're using custom drug values on page load
+    checkForCustomDrugValues();
+    
+    // Initialize antibiotic expanded state array
+    antibioticExpanded = new Array(antibiotics.length).fill(false);
+  });
+
+  // Dark mode functionality
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    updateDarkModeButton();
+  }
+  
+  function updateDarkModeButton() {
+    const isDark = document.body.classList.contains('dark-mode');
+    const icon = document.querySelector('.dark-mode-toggle i');
+    const text = document.querySelector('.dark-mode-toggle span');
+    
+    if (isDark) {
+      icon.className = 'fas fa-sun';
+      text.textContent = 'Light Mode';
+    } else {
+      icon.className = 'fas fa-moon';
+      text.textContent = 'Dark Mode';
+    }
+  }
+
   /* -------------------------
      Enhanced Drug Data Array with route options
      ------------------------- */
@@ -1085,10 +1634,19 @@
   const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
       name: d.name, 
       defaultDose: d.defaultDose,
+      concentration: d.concentration,
       imDose: d.imDose,
       oralDose: d.oralDose
   }))));
 
+  // Function to check if a drug has custom values
+  function hasCustomValues(drug) {
+    const initialDrug = initialDrugs.find(d => d.name === drug.name);
+    if (!initialDrug) return false;
+    
+    return drug.defaultDose !== initialDrug.defaultDose || 
+           drug.concentration !== initialDrug.concentration;
+  }
 
   /* -------------------------
      Route selector logic
@@ -1880,94 +2438,73 @@
           totalDose = drug.minDose; limitApplied = true;
         }
 
-        // Concentration logic: only apply if IV/IM (Oral does not use concentration/volume logic)
-        let finalConcentration = drug.concentration;
-        let dilutionApplied = false;
-        
-        if (isInjectable) {
-            const initialConcentration = drug.concentration;
-            const tiers = dilutionTiers[drug.name];
-
-            if (tiers){
-              for (const conc of tiers){
-                const calculatedVolume = totalDose / conc;
-                if (calculatedVolume >= 1.0){
-                  finalConcentration = conc;
-                  dilutionApplied = conc !== initialConcentration;
-                  break;
-                }
-                finalConcentration = conc;
-                dilutionApplied = true;
-              }
-            }
+        // volume & concentration for injectable routes
+        if (isInjectable && totalDose > 0){
+          const volume = totalDose / drug.concentration;
+          volumeDisplay = volume.toFixed(2);
+          concentrationDisplay = `${drug.concentration} ${drug.concentrationUnit}`;
         }
 
-        // final metrics
-        const volume = isInjectable ? totalDose / finalConcentration : 0;
-        volumeDisplay = isInjectable ? volume.toFixed(2) : 'N/A';
-        concentrationDisplay = isInjectable ? `${finalConcentration} ${drug.concentrationUnit}` : 'N/A';
-        
-        // Final Display formatting for standard drugs
-        doseDisplay = (typeof totalDose === 'number') ? 
-            (totalDoseUnit === 'mcg' ? totalDose.toFixed(0) : totalDose.toFixed(2)) :
-            totalDose;
-        // --- END STANDARD DRUG LOGIC ---
+        // Handle dilution tiers for small volumes
+        if (isInjectable && volumeDisplay !== 'N/A' && parseFloat(volumeDisplay) < 1){
+          const tier = dilutionTiers[drug.name];
+          if (tier){
+            // Find the highest concentration that gives volume >= 1 mL
+            const newConc = tier.find(conc => (totalDose / conc) >= 1);
+            if (newConc){
+              const newVolume = totalDose / newConc;
+              volumeDisplay = newVolume.toFixed(2);
+              concentrationDisplay = `${newConc} ${drug.concentrationUnit} (Diluted)`;
+            }
+          }
+        }
+
+        // Format totalDose for display
+        if (drug.unit.includes('mcg') && totalDose < 1) {
+          doseDisplay = `${(totalDose * 1000).toFixed(0)} mcg`;
+        } else {
+          doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`;
+        }
       }
 
-      // caution logic
-      let isCautionNeeded = false;
-      if (drug.caution){
-        if (drug.name === 'Succinylcholine' && patient.weight > 0 && patient.weight < 50) isCautionNeeded = true;
-        else if (drug.name === 'Etomidate' && patient.weight > 0) isCautionNeeded = true;
-        else if ((drug.name === 'Paracetamol (IV)' || drug.name === 'Midazolam' || drug.name === 'Lidocaine (Xylocard)') && patient.weight > 0 && patient.weight < 10) isCautionNeeded = true;
-        else if ((drug.name === 'Diazepam' || drug.name === 'Lorazepam') && patient.weight > 0) isCautionNeeded = true;
-        else if (drug.name === 'Magnesium Sulphate' && patient.weight > 0) isCautionNeeded = true;
-        else if (drug.name === 'Phenylephrine' && patient.weight > 0) isCautionNeeded = true;
-        else isCautionNeeded = true; // For any other drug with caution text
+      // Check for custom dose exceeding recommended range
+      let isCustomDoseHigh = drug.isCustomDoseHigh || false;
+      if (drug.defaultDose !== getDoseByRoute(drug)) {
+        const rangeMax = parseMaxDoseFromRange(drug.range);
+        if (rangeMax && drug.defaultDose > rangeMax) {
+          isCustomDoseHigh = true;
+        }
       }
 
+      // Check if drug has custom values
+      const hasCustom = hasCustomValues(drug);
+      
+      // Custom indicator
+      const customIndicator = hasCustom ? ' has-custom' : '';
+
+      // Caution icon & popup
       let cautionIconHtml = '';
       let cautionPopupHtml = '';
-      if (isCautionNeeded){
+      let cautionActive = false;
+      if (isCustomDoseHigh || drug.caution){
+        cautionActive = true;
         cautionIconHtml = `<span class="caution-icon" id="caution-icon-${index}" onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>`;
-        cautionPopupHtml = `<div id="caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${drug.caution}</div>`;
+        cautionPopupHtml = `<div id="caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${isCustomDoseHigh ? `Custom dose (${drug.defaultDose} ${drug.unit}) exceeds recommended range (${drug.range}).` : drug.caution}</div>`;
       }
 
-      // dose info & limit warning
-      let doseInfoHtml = `<div class="dose-info">Dose Range: ${drug.range}</div>`;
-      if (doseAdjusted){
-        doseInfoHtml = `<div class="dose-info dose-limit-applied">Dose reduced to ${dosePerKg} ${drug.unit} for <10 kg weight.</div>`;
-      }
-      let limitInfoHtml = '';
-      if (limitApplied) {
-        limitInfoHtml = `<span class="dose-limit-applied">${totalDose === drug.maxDose ? '(MAX Limit Applied)' : '(MIN Limit Applied)'}</span>`;
-      }
-
-      // custom dose warning
-      let customDoseWarning = '';
-      if (drug.isCustomDoseHigh){
-        customDoseWarning = `
-          <div class="dose-limit-applied" style="color: var(--reversal); font-weight:700; border:1px solid var(--reversal); display:block; padding:5px; border-radius:5px; margin-bottom:10px; background-color:var(--bg-card);">
-            ⚠️ Custom Dose (${drug.defaultDose} ${drug.unit}) is **ABOVE** recommended range for the **current route**.
-          </div>
-        `;
-      }
-
-      // expanded / active classes
-      const isExpandedClass = (allExpanded || index === activeEditIndex) ? 'expanded' : '';
-      const isActiveEditClass = (index === activeEditIndex) ? 'active' : '';
-
-      // Route Selector HTML
+      // Route selector (only show if multiple routes available)
       let routeSelectorHTML = '';
-      const routes = drug.routes || (drug.defaultRoute ? [drug.defaultRoute] : ['IV']);
-      if (drug.imDose !== undefined && !routes.includes('IM')) routes.push('IM');
-      if (drug.oralDose !== undefined && !routes.includes('Oral')) routes.push('Oral');
-
-      if (routes.length > 1) {
+      if (drug.routes && drug.routes.length > 1) {
         routeSelectorHTML = '<div class="route-selector">';
-        routes.forEach(route => {
+        drug.routes.forEach(route => {
           const checked = drug.currentRoute === route ? 'checked' : '';
-          const routeName = route === 'IM' ? 'Intramuscular (IM)' : route === 'Oral' ? 'Oral' : 'Intravenous (IV)';
+          let routeName = '';
+          switch (route) {
+            case 'IV': routeName = 'Intravenous (IV)'; break;
+            case 'IM': routeName = 'Intramuscular (IM)'; break;
+            case 'Oral': routeName = 'Oral'; break;
+            default: routeName = route;
+          }
           routeSelectorHTML += `
             <input type="radio" id="route-${index}-${route}" name="route-${index}" value="${route}" ${checked} 
                    onclick="event.stopPropagation(); selectRoute(${index}, '${route}')">
@@ -1977,61 +2514,78 @@
         routeSelectorHTML += '</div>';
       }
 
-      // Calculation/Volume Display (adjusted for Oral route)
-      const volumeDetail = isInjectable && totalDose !== 'Not Recommended' ? 
-          `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
-          `<div class="volume-result" style="font-style:normal;">${totalDose !== 'Not Recommended' ? 'Concentration/Volume Not Applicable for Oral Dose' : ''}</div>`;
-          
-      // Edit Inputs (adjusted for Oral route)
-      const concentrationEdit = isInjectable ?
-        `<input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" id="conc-${index}" value="${drug.concentration}" onchange="updateDrug(${index})">` :
-        `<input type="number" step="0.1" placeholder="Concentration (${drug.concentrationUnit})" id="conc-${index}" value="${drug.concentration}" onchange="updateDrug(${index})" disabled title="Concentration edit is disabled for the selected route.">`;
+      // Limit info
+      let limitInfoHtml = '';
+      if (limitApplied) {
+        limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`;
+      }
 
-      // assemble card HTML
+      // Adjusted dose info
+      let adjustedInfoHtml = '';
+      if (doseAdjusted) {
+        adjustedInfoHtml = `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>`;
+      }
+
+      // Edit inputs - FIX: Ensure concentration field is properly populated
+      const isEditing = activeEditIndex === index;
+      const editInputsHtml = `
+        <div class="edit-inputs ${isEditing ? 'active' : ''}" id="edit-inputs-${index}">
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="flex: 1;">
+              <label style="font-size: 0.7em; color: var(--text-secondary); display: block; margin-bottom: 4px;">Dose (${drug.unit})</label>
+              <input type="number" id="dose-${index}" value="${dosePerKg}" step="0.01" min="0" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.8em; background: var(--bg-primary); color: var(--text-primary);">
+            </div>
+            ${isInjectable ? `
+            <div style="flex: 1;">
+              <label style="font-size: 0.7em; color: var(--text-secondary); display: block; margin-bottom: 4px;">Concentration (${drug.concentrationUnit})</label>
+              <input type="number" id="conc-${index}" value="${drug.concentration}" step="0.01" min="0" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.8em; background: var(--bg-primary); color: var(--text-primary);">
+            </div>
+            ` : ''}
+          </div>
+          <button class="edit-btn" style="max-width: fit-content; margin-top: 5px;" onclick="updateDrug(${index})">Update</button>
+        </div>
+      `;
+
+      // Expanded class
+      const isExpandedClass = allExpanded || isEditing ? 'expanded' : '';
+
+      // Assemble card HTML
       html += `
-        <div class="drug-card ${drug.category} ${isExpandedClass} ${totalDose === 'Not Recommended' ? 'caution-active' : ''}" id="drug-card-${index}">
+        <div class="drug-card ${drug.category} ${isExpandedClass} ${cautionActive ? 'caution-active' : ''}" id="drug-card-${index}">
           ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleDrugCard(${index})">
-            <div class="drug-name">
+            <div class="drug-name${customIndicator}">
               <span class="toggle-icon">▶</span>
               ${drug.name}
-              <span style="font-size:0.65em; margin-left:8px; color:var(--text-secondary); font-weight:400;">(${drug.currentRoute} Dose)</span>
             </div>
             <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
             ${cautionIconHtml}
           </div>
 
           <div class="drug-details" id="drug-details-${index}">
-            <div class="drug-info">
-              ${routeSelectorHTML}
-              ${ketorolacInfoBox}
-              ${customDoseWarning}
-              ${doseInfoHtml}
-              <div class="calculation">
-                <div class="calculation-result">${doseDisplay} ${drug.name !== 'Ketorolac' ? totalDoseUnit : ''} ${limitInfoHtml}</div>
-                ${volumeDetail}
-                ${(typeof totalDose === 'number' && totalDose > 0) ? `<div class="dose-info">Calculated: ${dosePerKg.toFixed(2)} ${drug.unit}</div>` : ''}
-              </div>
-
-              <button class="edit-btn" onclick="event.stopPropagation(); toggleEdit(${index})">Edit Dose/Dilution</button>
-              <div class="edit-inputs ${isActiveEditClass}" id="edit-${index}">
-                <input type="number" step="0.01" placeholder="Dose per kg (${drug.unit} - ${drug.currentRoute})" id="dose-${index}" value="${dosePerKg.toFixed(2)}" onchange="updateDrug(${index})">
-                ${concentrationEdit}
-              </div>
-
+            ${ketorolacInfoBox}
+            ${routeSelectorHTML}
+            <div class="dose-info">Recommended: ${drug.range}</div>
+            
+            <div class="calculation">
+              <div class="calculation-result">${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
+              ${isInjectable ? `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` : ''}
+              ${drug.name !== 'Ketorolac' ? `<div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>` : ''}
             </div>
+            
+            <button class="edit-btn" onclick="toggleEdit(${index})">Edit Dose/Concentration</button>
+            ${editInputsHtml}
           </div>
         </div>
       `;
     });
 
     drugResultsDiv.innerHTML = html;
-    activeEditIndex = null;
     document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
   /* -------------------------
-     Infusion Calculations
+     Infusions calculations
      ------------------------- */
   function calculateInfusions() {
     const patient = getPatientData();
@@ -2046,79 +2600,72 @@
 
     let html = '';
 
-    infusionDrugs.forEach((drug, index) => {
-      // Calculate loading dose if applicable
+    infusionDrugs.forEach((infusion, index) => {
+      const weight = patient.weight;
+      const minRate = infusion.rateCalculation(infusion.infusionDose.min, weight);
+      const maxRate = infusion.rateCalculation(infusion.infusionDose.max, weight);
+      
+      // Check if caution is needed
+      let isCautionNeeded = infusion.caution ? true : false;
+      
+      let cautionIconHtml = '';
+      let cautionPopupHtml = '';
+      if (isCautionNeeded){
+        cautionIconHtml = `<span class="caution-icon" id="infusion-caution-icon-${index}" onclick="event.stopPropagation(); toggleInfusionCautionPopup(${index})">i</span>`;
+        cautionPopupHtml = `<div id="infusion-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${infusion.caution}</div>`;
+      }
+      
+      // Loading dose info
       let loadingDoseHtml = '';
-      if (drug.loadingDose && drug.loadingDose.dose > 0) {
-        const loadingDoseAmount = patient.weight * drug.loadingDose.dose;
+      if (infusion.loadingDose && infusion.loadingDose.dose > 0) {
         loadingDoseHtml = `
           <div class="infusion-detail-row">
             <div class="infusion-label">Loading Dose:</div>
-            <div class="infusion-value">
-              ${loadingDoseAmount.toFixed(2)} ${drug.loadingDose.unit.replace('kg', '')}
-              <div class="infusion-note">${drug.loadingDose.note}</div>
-            </div>
+            <div class="infusion-value">${infusion.loadingDose.dose} ${infusion.loadingDose.unit}</div>
           </div>
+          <div class="infusion-note">${infusion.loadingDose.note}</div>
         `;
       }
-
-      // Calculate infusion rates for min and max doses
-      const minRate = drug.rateCalculation(drug.infusionDose.min, patient.weight);
-      const maxRate = drug.rateCalculation(drug.infusionDose.max, patient.weight);
-
-      // Check if caution is needed
-      let cautionHtml = '';
-      if (drug.caution) {
-        cautionHtml = `<div class="infusion-caution">${drug.caution}</div>`;
-      }
-
-      // expanded class
+      
+      // Expanded class
       const isExpandedClass = allInfusionsExpanded ? 'expanded' : '';
-
-      // assemble infusion card HTML
+      
+      // Assemble card HTML
       html += `
         <div class="drug-card infusion ${isExpandedClass}" id="infusion-card-${index}">
+          ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleInfusionCard(${index})">
             <div class="drug-name">
               <span class="toggle-icon">▶</span>
-              ${drug.name}
+              ${infusion.name}
             </div>
-            <div class="drug-category infusion">${drug.categoryLabel}</div>
+            <div class="drug-category infusion">${infusion.categoryLabel}</div>
+            ${cautionIconHtml}
           </div>
 
           <div class="drug-details" id="infusion-details-${index}">
             <div class="infusion-details">
+              <div class="infusion-detail-row">
+                <div class="infusion-label">Infusion Range:</div>
+                <div class="infusion-value">${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div>
+              </div>
+              
               ${loadingDoseHtml}
               
               <div class="infusion-detail-row">
-                <div class="infusion-label">Infusion Range:</div>
-                <div class="infusion-value">
-                  ${drug.infusionDose.min} - ${drug.infusionDose.max} ${drug.infusionDose.unit}
-                </div>
-              </div>
-
-              <div class="infusion-detail-row">
                 <div class="infusion-label">Common Dilution:</div>
-                <div class="infusion-value">${drug.commonDilution}</div>
+                <div class="infusion-value">${infusion.commonDilution}</div>
               </div>
-
-              <div class="infusion-detail-row">
-                <div class="infusion-label">Preparation:</div>
-                <div class="infusion-value" style="text-align: left;">
-                  ${drug.preparation}
-                  <div class="infusion-note">Concentration: ${drug.concentration} ${drug.concentrationUnit}</div>
-                </div>
+              
+              <div class="infusion-note">${infusion.preparation}</div>
+              
+              <div class="calculation">
+                <div class="calculation-result">${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr</div>
+                <div class="volume-result">For ${weight.toFixed(1)} kg patient</div>
+                <div class="dose-info">Rate for ${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div>
               </div>
-
-              <div class="infusion-detail-row">
-                <div class="infusion-label">Infusion Rate:</div>
-                <div class="infusion-value">
-                  ${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr
-                  <div class="infusion-note">${drug.notes}</div>
-                </div>
-              </div>
-
-              ${cautionHtml}
+              
+              ${infusion.notes ? `<div class="infusion-note">${infusion.notes}</div>` : ''}
             </div>
           </div>
         </div>
@@ -2130,211 +2677,507 @@
   }
 
   /* -------------------------
-     Toggle handlers for cards, all-expand, edit panel
+     Toggle functions for expand/collapse - IMPROVED ANIMATIONS
      ------------------------- */
-  function toggleDrugCard(index){
+  function toggleDrugCard(index) {
     const card = document.getElementById(`drug-card-${index}`);
     if (!card) return;
-    card.classList.toggle('expanded');
+    
+    // Use requestAnimationFrame for smoother animation
+    requestAnimationFrame(() => {
+      card.classList.toggle('expanded');
+    });
   }
 
-  function toggleInfusionCard(index){
+  function toggleInfusionCard(index) {
     const card = document.getElementById(`infusion-card-${index}`);
     if (!card) return;
-    card.classList.toggle('expanded');
+    
+    requestAnimationFrame(() => {
+      card.classList.toggle('expanded');
+    });
   }
 
-  function toggleAntibioticCard(index){
+  function toggleAntibioticCard(index) {
     const card = document.getElementById(`antibiotic-card-${index}`);
     if (!card) return;
-    card.classList.toggle('expanded');
-    // FIX: Track individual card expanded state
-    antibioticExpanded[index] = card.classList.contains('expanded');
+    
+    requestAnimationFrame(() => {
+      card.classList.toggle('expanded');
+      // Update the expanded state array
+      antibioticExpanded[index] = card.classList.contains('expanded');
+    });
   }
 
-  function toggleAllDrugs(){
+  function toggleAllDrugs() {
     allExpanded = !allExpanded;
-    const cards = document.querySelectorAll('#drug-results .drug-card');
-    const button = document.getElementById('toggleAllBtn');
-    cards.forEach(card=>{
-      if (allExpanded) {
-        card.classList.add('expanded');
-        const editInputs = card.querySelector('.edit-inputs');
-        if (editInputs && editInputs.classList.contains('active')) editInputs.classList.add('active');
-      } else {
-        card.classList.remove('expanded');
-        const editInputs = card.querySelector('.editInputs');
-        if (editInputs) editInputs.classList.remove('active');
-      }
+    
+    // Use requestAnimationFrame for smoother batch animation
+    requestAnimationFrame(() => {
+      drugs.forEach((_, index) => {
+        const card = document.getElementById(`drug-card-${index}`);
+        if (card) {
+          if (allExpanded) {
+            card.classList.add('expanded');
+          } else {
+            card.classList.remove('expanded');
+          }
+        }
+      });
+      
+      // Update button text after animation
+      setTimeout(() => {
+        document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+      }, 300);
     });
-    button.textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
-  function toggleAllInfusions(){
+  function toggleAllInfusions() {
     allInfusionsExpanded = !allInfusionsExpanded;
-    const cards = document.querySelectorAll('#infusion-results .drug-card');
-    const button = document.getElementById('toggleAllInfusionsBtn');
-    cards.forEach(card=>{
-      if (allInfusionsExpanded) {
-        card.classList.add('expanded');
-      } else {
-        card.classList.remove('expanded');
-      }
+    
+    requestAnimationFrame(() => {
+      infusionDrugs.forEach((_, index) => {
+        const card = document.getElementById(`infusion-card-${index}`);
+        if (card) {
+          if (allInfusionsExpanded) {
+            card.classList.add('expanded');
+          } else {
+            card.classList.remove('expanded');
+          }
+        }
+      });
+      
+      setTimeout(() => {
+        document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+      }, 300);
     });
-    button.textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
-  function toggleAllAntibiotics(){
+  function toggleAllAntibiotics() {
     allAntibioticsExpanded = !allAntibioticsExpanded;
-    // FIX: Update the expanded state for all antibiotic cards
-    antibioticExpanded = antibioticExpanded.map(() => allAntibioticsExpanded);
-    calculateAntibiotics();
-  }
-
-  function toggleEdit(index){
-    const editDiv = document.getElementById(`edit-${index}`);
-    if (!editDiv) return;
-    editDiv.classList.toggle('active');
-    if (editDiv.classList.contains('active')){
-      document.getElementById(`drug-card-${index}`).classList.add('expanded');
-    }
+    
+    requestAnimationFrame(() => {
+      // Update the expanded state for all antibiotic cards
+      antibioticExpanded.fill(allAntibioticsExpanded);
+      calculateAntibiotics();
+      
+      setTimeout(() => {
+        document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
+      }, 300);
+    });
   }
 
   /* -------------------------
-     Update drug from edit inputs
+     Edit dose/concentration functions
      ------------------------- */
-  function updateDrug(index){
-    const drug = drugs[index];
-    const doseInput = document.getElementById(`dose-${index}`);
-    const concInput = document.getElementById(`conc-${index}`);
-    const newDose = parseFloat(doseInput.value);
-    const newConc = parseFloat(concInput.value);
-
-    // Parse max dose for the current route from the drug's range string
-    const maxDose = parseMaxDoseFromRange(drug.range.split(drug.currentRoute)[0]);
-    
-    drug.isCustomDoseHigh = false;
-
-    if (!isNaN(newDose) && newDose > 0){
-      drug.defaultDose = newDose;
-      if (maxDose !== null && newDose > maxDose) drug.isCustomDoseHigh = true;
-    }
-    
-    // Only update concentration if injectable
-    if (drug.currentRoute !== 'Oral' && !isNaN(newConc) && newConc > 0) drug.concentration = newConc;
-
-    // keep this card open/active after rerender
-    activeEditIndex = index;
+  function toggleEdit(index) {
+    activeEditIndex = activeEditIndex === index ? null : index;
     calculateDrugs();
+  }
 
-    // Restore focus with a slight delay
-    setTimeout(()=>{
-      const updatedDoseInput = document.getElementById(`dose-${index}`);
-      if (updatedDoseInput) updatedDoseInput.focus();
-    },50);
+  function updateDrug(index) {
+    const newDose = parseFloat(document.getElementById(`dose-${index}`).value);
+    const drug = drugs[index];
+    
+    if (!isNaN(newDose) && newDose > 0) {
+      drug.defaultDose = newDose;
+      
+      // Only update concentration if injectable
+      if (drug.currentRoute === 'IV' || drug.currentRoute === 'IM') {
+        const newConc = parseFloat(document.getElementById(`conc-${index}`).value);
+        if (!isNaN(newConc) && newConc > 0) {
+          drug.concentration = newConc;
+        }
+      }
+      
+      // Mark as custom
+      drug.isCustomDoseHigh = false;
+      const rangeMax = parseMaxDoseFromRange(drug.range);
+      if (rangeMax && newDose > rangeMax) {
+        drug.isCustomDoseHigh = true;
+      }
+      
+      // Save to localStorage
+      saveLastUsedDrugValues();
+      
+      // Recalculate and update UI
+      calculateDrugs();
+      
+      // Check for custom values to update indicator
+      checkForCustomDrugValues();
+    }
   }
 
   /* -------------------------
-     Caution popup logic
+     Caution popup functions
      ------------------------- */
-  function toggleCautionPopup(index){
-    const card = document.getElementById(`drug-card-${index}`);
+  function toggleCautionPopup(index) {
     const popup = document.getElementById(`caution-popup-${index}`);
-
-    // close other popups and remove their caution-active class
-    document.querySelectorAll('.caution-popup').forEach(p=>{
-      if (p.id !== (popup && popup.id)){
-        p.style.display = 'none';
-        const parentCard = p.closest('.drug-card');
-        if (parentCard) parentCard.classList.remove('caution-active');
-      }
-    });
-
-    if (!popup) return;
-    if (popup.style.display === 'block'){
-      popup.style.display = 'none';
-      if (card) card.classList.remove('caution-active');
-    } else {
-      popup.style.display = 'block';
-      if (card) card.classList.add('caution-active');
+    if (popup) {
+      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
     }
   }
 
-  function toggleAntibioticCautionPopup(index){
-    const card = document.getElementById(`antibiotic-card-${index}`);
+  function toggleInfusionCautionPopup(index) {
+    const popup = document.getElementById(`infusion-caution-popup-${index}`);
+    if (popup) {
+      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+    }
+  }
+
+  function toggleAntibioticCautionPopup(index) {
     const popup = document.getElementById(`antibiotic-caution-popup-${index}`);
-
-    // close other popups and remove their caution-active class
-    document.querySelectorAll('.caution-popup').forEach(p=>{
-      if (p.id !== (popup && popup.id)){
-        p.style.display = 'none';
-        const parentCard = p.closest('.drug-card');
-        if (parentCard) parentCard.classList.remove('caution-active');
-      }
-    });
-
-    if (!popup) return;
-    if (popup.style.display === 'block'){
-      popup.style.display = 'none';
-      if (card) card.classList.remove('caution-active');
-    } else {
-      popup.style.display = 'block';
-      if (card) card.classList.add('caution-active');
+    if (popup) {
+      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
     }
   }
 
-  // hide popups when clicking outside
-  document.addEventListener('click', (e)=>{
-    let clickedInsidePopup = false;
-    let current = e.target;
-    while(current){
-      if (current.classList && (current.classList.contains('caution-popup') || current.classList.contains('caution-icon'))){
-        clickedInsidePopup = true; break;
-      }
-      current = current.parentElement;
-    }
-
-    if (!clickedInsidePopup){
-      document.querySelectorAll('.caution-popup').forEach(p=>p.style.display='none');
-      document.querySelectorAll('.drug-card.caution-active').forEach(card=>card.classList.remove('caution-active'));
+  // Close popups when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('caution-icon')) {
+      document.querySelectorAll('.caution-popup').forEach(popup => {
+        popup.style.display = 'none';
+      });
     }
   });
 
   /* -------------------------
-     Top-level recalculation entrypoint
+     Main calculation orchestrator
      ------------------------- */
-  function calculateAll(){
+  function calculateAll() {
     calculateEquipment();
     calculateFluids();
-    calculateLocalAnesthetics();
     calculateDrugs();
+    calculateLocalAnesthetics();
     calculateInfusions();
-    calculateAntibiotics(); // NEW: Calculate antibiotics
+    calculateAntibiotics();
   }
 
   /* -------------------------
-     Dark mode toggle (persists in localStorage)
+     Reset all drugs to default values
      ------------------------- */
-  function toggleDarkMode(){
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-    document.querySelector('.dark-mode-toggle').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+  function resetAllDrugsToDefault() {
+    drugs.forEach(drug => {
+      const initialDrugData = initialDrugs.find(d => d.name === drug.name);
+      if (initialDrugData) {
+        drug.defaultDose = initialDrugData.defaultDose;
+        drug.concentration = initialDrugData.concentration;
+        drug.isCustomDoseHigh = false;
+        
+        // Reset to IV route for all drugs
+        drug.currentRoute = 'IV';
+      }
+    });
+    
+    // Clear localStorage for last used drug values
+    localStorage.removeItem('pediatricAnesthesiaLastUsedDrugValues');
+    
+    // Recalculate and update UI
+    calculateDrugs();
+    
+    // Hide custom drug indicator
+    document.getElementById('custom-drugs-indicator').style.display = 'none';
   }
 
   /* -------------------------
-     Initial load: restore dark mode and render
+     Memory Functions for Patient Profiles and Drug Sets
      ------------------------- */
-  window.onload = function(){
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (savedDarkMode){
-      document.body.classList.add('dark-mode');
-      document.querySelector('.dark-mode-toggle').textContent = '☀️ Light Mode';
+
+  // Patient Profiles
+  function savePatientProfile() {
+    const profileName = document.getElementById('patient-profile-name').value.trim();
+    if (!profileName) {
+      alert('Please enter a profile name');
+      return;
     }
-    // Initialize antibioticExpanded array
-    antibioticExpanded = new Array(antibiotics.length).fill(false);
-    calculateAll();
-  };
+    
+    const patientData = {
+      name: profileName,
+      ageYears: document.getElementById('age-years').value,
+      ageMonths: document.getElementById('age-months').value,
+      weight: document.getElementById('weight').value,
+      currentHb: document.getElementById('currentHb').value,
+      targetHb: document.getElementById('targetHb').value,
+      timestamp: new Date().toISOString()
+    };
+    
+    let savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
+    
+    // Check if profile with same name exists
+    const existingIndex = savedProfiles.findIndex(p => p.name === profileName);
+    if (existingIndex !== -1) {
+      if (!confirm(`Profile "${profileName}" already exists. Overwrite?`)) {
+        return;
+      }
+      savedProfiles[existingIndex] = patientData;
+    } else {
+      savedProfiles.push(patientData);
+    }
+    
+    localStorage.setItem('pediatricAnesthesiaPatientProfiles', JSON.stringify(savedProfiles));
+    document.getElementById('patient-profile-name').value = '';
+    loadPatientProfiles();
+  }
+
+  function loadPatientProfiles() {
+    const savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
+    const container = document.getElementById('patient-profiles-list');
+    
+    if (savedProfiles.length === 0) {
+      container.innerHTML = '<div class="no-saved-items">No saved patient profiles</div>';
+      return;
+    }
+    
+    // Sort by most recent first
+    savedProfiles.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    container.innerHTML = savedProfiles.map(profile => `
+      <div class="saved-item">
+        <div>
+          <div class="saved-item-name">${profile.name}</div>
+          <div class="saved-item-details">
+            ${profile.ageYears || 0}Y ${profile.ageMonths || 0}M | ${profile.weight || 0} kg | 
+            Hb: ${profile.currentHb || 'N/A'} → ${profile.targetHb || 'N/A'}
+          </div>
+        </div>
+        <div class="saved-item-actions">
+          <button class="saved-item-btn" onclick="applyPatientProfile('${profile.name}')" title="Apply">
+            <i class="fas fa-play"></i>
+          </button>
+          <button class="saved-item-btn delete" onclick="deletePatientProfile('${profile.name}')" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function applyPatientProfile(profileName) {
+    const savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
+    const profile = savedProfiles.find(p => p.name === profileName);
+    
+    if (profile) {
+      document.getElementById('age-years').value = profile.ageYears || '';
+      document.getElementById('age-months').value = profile.ageMonths || '';
+      document.getElementById('weight').value = profile.weight || '';
+      document.getElementById('currentHb').value = profile.currentHb || '';
+      document.getElementById('targetHb').value = profile.targetHb || '';
+      
+      calculateAll();
+    }
+  }
+
+  function deletePatientProfile(profileName) {
+    if (!confirm(`Delete profile "${profileName}"?`)) return;
+    
+    let savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
+    savedProfiles = savedProfiles.filter(p => p.name !== profileName);
+    localStorage.setItem('pediatricAnesthesiaPatientProfiles', JSON.stringify(savedProfiles));
+    loadPatientProfiles();
+  }
+
+  function clearAllPatientProfiles() {
+    if (!confirm('Delete ALL saved patient profiles?')) return;
+    
+    localStorage.removeItem('pediatricAnesthesiaPatientProfiles');
+    loadPatientProfiles();
+  }
+
+  // Drug Sets
+  function saveDrugSet() {
+    const setName = document.getElementById('drug-set-name').value.trim();
+    if (!setName) {
+      alert('Please enter a drug set name');
+      return;
+    }
+    
+    const drugSet = {
+      name: setName,
+      drugs: drugs.map(drug => ({
+        name: drug.name,
+        defaultDose: drug.defaultDose,
+        concentration: drug.concentration,
+        currentRoute: drug.currentRoute,
+        isCustomDoseHigh: drug.isCustomDoseHigh
+      })),
+      timestamp: new Date().toISOString()
+    };
+    
+    let savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
+    
+    // Check if set with same name exists
+    const existingIndex = savedSets.findIndex(s => s.name === setName);
+    if (existingIndex !== -1) {
+      if (!confirm(`Drug set "${setName}" already exists. Overwrite?`)) {
+        return;
+      }
+      savedSets[existingIndex] = drugSet;
+    } else {
+      savedSets.push(drugSet);
+    }
+    
+    localStorage.setItem('pediatricAnesthesiaDrugSets', JSON.stringify(savedSets));
+    document.getElementById('drug-set-name').value = '';
+    loadDrugSets();
+  }
+
+  function loadDrugSets() {
+    const savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
+    const container = document.getElementById('drug-sets-list');
+    
+    if (savedSets.length === 0) {
+      container.innerHTML = '<div class="no-saved-items">No saved drug sets</div>';
+      return;
+    }
+    
+    // Sort by most recent first
+    savedSets.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    container.innerHTML = savedSets.map(set => `
+      <div class="saved-item">
+        <div>
+          <div class="saved-item-name">${set.name}</div>
+          <div class="saved-item-details">
+            ${set.drugs.length} drugs | ${new Date(set.timestamp).toLocaleDateString()}
+          </div>
+        </div>
+        <div class="saved-item-actions">
+          <button class="saved-item-btn" onclick="applyDrugSet('${set.name}')" title="Apply">
+            <i class="fas fa-play"></i>
+          </button>
+          <button class="saved-item-btn delete" onclick="deleteDrugSet('${set.name}')" title="Delete">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function applyDrugSet(setName) {
+    const savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
+    const set = savedSets.find(s => s.name === setName);
+    
+    if (set) {
+      // Apply the saved drug values
+      set.drugs.forEach(savedDrug => {
+        const drug = drugs.find(d => d.name === savedDrug.name);
+        if (drug) {
+          drug.defaultDose = savedDrug.defaultDose;
+          drug.concentration = savedDrug.concentration;
+          drug.currentRoute = savedDrug.currentRoute;
+          drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
+        }
+      });
+      
+      // Save as last used
+      saveLastUsedDrugValues();
+      
+      // Update the UI
+      calculateDrugs();
+      
+      // Show custom drug indicator
+      document.getElementById('custom-drugs-indicator').style.display = 'flex';
+      document.getElementById('current-drug-set-name').textContent = setName;
+      
+      // Show custom indicators on drug cards
+      checkForCustomDrugValues();
+    }
+  }
+
+  function deleteDrugSet(setName) {
+    if (!confirm(`Delete drug set "${setName}"?`)) return;
+    
+    let savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
+    savedSets = savedSets.filter(s => s.name !== setName);
+    localStorage.setItem('pediatricAnesthesiaDrugSets', JSON.stringify(savedSets));
+    loadDrugSets();
+  }
+
+  function clearAllDrugSets() {
+    if (!confirm('Delete ALL saved drug sets?')) return;
+    
+    localStorage.removeItem('pediatricAnesthesiaDrugSets');
+    loadDrugSets();
+  }
+
+  /* -------------------------
+     Last Used Drug Values Functionality
+     ------------------------- */
+  function saveLastUsedDrugValues() {
+    const drugValues = drugs.map(drug => ({
+      name: drug.name,
+      defaultDose: drug.defaultDose,
+      concentration: drug.concentration,
+      currentRoute: drug.currentRoute,
+      isCustomDoseHigh: drug.isCustomDoseHigh
+    }));
+    
+    localStorage.setItem('pediatricAnesthesiaLastUsedDrugValues', JSON.stringify({
+      drugs: drugValues,
+      timestamp: new Date().toISOString()
+    }));
+  }
+
+  function loadLastUsedDrugValues() {
+    const savedData = localStorage.getItem('pediatricAnesthesiaLastUsedDrugValues');
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData);
+        
+        if (data.drugs && Array.isArray(data.drugs)) {
+          data.drugs.forEach(savedDrug => {
+            const drug = drugs.find(d => d.name === savedDrug.name);
+            if (drug) {
+              drug.defaultDose = savedDrug.defaultDose;
+              drug.concentration = savedDrug.concentration;
+              drug.currentRoute = savedDrug.currentRoute;
+              drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
+            }
+          });
+          
+          // Show custom drug indicator
+          document.getElementById('custom-drugs-indicator').style.display = 'flex';
+          document.getElementById('current-drug-set-name').textContent = 'Last Used Values';
+        }
+      } catch (e) {
+        console.error('Error loading last used drug values:', e);
+      }
+    }
+  }
+
+  /* -------------------------
+     Check for Custom Drug Values
+     ------------------------- */
+  function checkForCustomDrugValues() {
+    const hasCustomValues = drugs.some(drug => hasCustomValues(drug));
+    
+    if (hasCustomValues) {
+      document.getElementById('custom-drugs-indicator').style.display = 'flex';
+    } else {
+      document.getElementById('custom-drugs-indicator').style.display = 'none';
+    }
+  }
+
+  /* -------------------------
+     Initialize the app
+     ------------------------- */
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize the app as before
+    // ... existing initialization code ...
+    
+    // Add CSS to fix the transparent square issue with category selection
+    const style = document.createElement('style');
+    style.textContent = `
+      .route-selector input[type="radio"]:focus + label {
+        outline: none;
+      }
+      .route-selector label {
+        -webkit-tap-highlight-color: transparent;
+        tap-highlight-color: transparent;
+      }
+    `;
+    document.head.appendChild(style);
+  });
   </script>
 </body>
 </html>

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pediatric Anesthesia Calculator</title>
 
-  <!-- Google Font: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -342,9 +341,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      /* REVERTED: Back to original transition */
       transition: all 0.3s var(--anim-bezier);
       box-shadow: var(--shadow-md);
     }
+
     
     .disclaimer-toggle i:last-child {
         transition: transform 0.3s var(--anim-bezier);
@@ -358,21 +359,31 @@
     .disclaimer-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s var(--anim-bezier), padding 0.4s var(--anim-bezier);
+      /* MODIFIED: Added opacity and margin-top to the transition */
+      transition: max-height 0.4s var(--anim-bezier), padding 0.4s var(--anim-bezier), opacity 0.4s var(--anim-bezier), margin-top 0.4s var(--anim-bezier);
       background: var(--bg-secondary);
-      border-radius: 0 0 var(--radius-card) var(--radius-card);
-      margin-top: -5px;
+      /* MODIFIED: Full border-radius */
+      border-radius: var(--radius-card);
+      /* MODIFIED: Start with 0 margin-top */
+      margin-top: 0;
+      /* MODIFIED: Full border (not border-top: none) */
       border: 1px solid var(--border-color);
-      border-top: none;
-      visibility: hidden;
+      /* MODIFIED: Start with 0 padding */
       padding-left: 15px;
       padding-right: 15px;
+      padding-top: 0;
+      padding-bottom: 0;
+      /* MODIFIED: Start transparent for fade-in */
+      opacity: 0;
     }
 
     .disclaimer-content.expanded {
       max-height: 200px;
       padding: 15px;
-      visibility: visible;
+      /* MODIFIED: Add margin-top to create the gap */
+      margin-top: 8px;
+      /* MODIFIED: Fade in */
+      opacity: 1;
     }
     
     .disclaimer-content.expanded + .disclaimer-toggle i:last-child {
@@ -552,7 +563,8 @@
       font-size: 1em;
       margin-right: 8px; /* Increased margin */
       transform: rotate(0deg);
-      transition: transform 350ms cubic-bezier(.175, .885, .32, 1.275);
+      /* MODIFIED: Changed to a smoother, standard ease-out */
+      transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       will-change: transform;
       color: var(--primary-accent);
     }
@@ -567,12 +579,17 @@
       opacity: 0;
       padding-top: 0;
       transform: translateY(-6px);
-      transition: max-height 420ms cubic-bezier(.22, 1, .36, 1), opacity 260ms ease-in-out, transform 420ms cubic-bezier(.22, 1, .36, 1), padding-top 420ms cubic-bezier(.22, 1, .36, 1);
+      /* MODIFIED: Synchronized all animations to the same duration and easing function */
+      transition: max-height 0.35s var(--anim-bezier), 
+                  opacity 0.3s var(--anim-bezier), 
+                  transform 0.35s var(--anim-bezier), 
+                  padding-top 0.35s var(--anim-bezier);
       will-change: max-height, opacity, transform, padding-top;
     }
 
     .drug-card.expanded .drug-details {
-      max-height: 520px;
+      /* MODIFIED: Increased max-height to accommodate new infusion edit pane */
+      max-height: 650px; 
       opacity: 1;
       padding-top: 12px;
       transform: translateY(0);
@@ -863,6 +880,68 @@
         display: flex;
         gap: 10px;
         margin-top: 5px;
+    }
+
+    .infusion-edit-pane {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
+        padding: 10px;
+        background: var(--bg-primary);
+        border-radius: var(--radius-input);
+        border: 1px dashed var(--border-color);
+    }
+    
+    .infusion-dilution-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap; /* Allow wrapping on small screens */
+    }
+    
+    .infusion-dilution-input label {
+        font-size: 0.7em;
+        color: var(--text-secondary);
+        font-weight: 600;
+        margin-bottom: 4px;
+        display: block;
+        width: 100%; /* Full width label */
+    }
+
+    .infusion-dilution-input .input-wrapper {
+        flex: 1;
+        min-width: 60px;
+    }
+    
+    .infusion-dilution-input .input-wrapper input {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 0.8em;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+    
+    .infusion-dilution-input select {
+        padding: 6px 4px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 0.8em;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-family: 'Poppins', sans-serif;
+        height: 30px; /* Match input height */
+        margin-top: auto; /* Align with bottom of inputs */
+    }
+    
+    .infusion-dilution-input .separator {
+        font-size: 0.8em;
+        color: var(--text-secondary);
+        font-weight: 600;
+        align-self: flex-end; /* Align with bottom of inputs */
+        padding-bottom: 6px; /* Adjust alignment */
     }
 
     .route-selector, .indication-selector {
@@ -1297,21 +1376,22 @@
         font-size: 0.7em;
       }
 
-      .tab-button i {
-        font-size: 1em;
-      }
-
-      .input-group {
-        grid-template-columns: 1fr;
-      }
-
-      .memory-controls {
-        flex-direction: column;
-      }
+/* ... other mobile styles ... */
 
       .memory-input {
         min-width: 100%;
       }
+
+      /* --- REPLACE OR ADD THIS RULE --- */
+      header::before {
+        /* MODIFIED: Make the shine even brighter (0.3 opacity) and sharper (60%) */
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
+        
+        /* Speed up the animation */
+        animation: shimmer 3.5s infinite;
+      }
+      /* --- END OF RULE --- */
+
     }
   </style>
 </head>
@@ -1337,7 +1417,6 @@
       </div>
     </div>
 
-    <!-- Tab Navigation -->
     <div class="tab-navigation">
       <div class="tab-button active" data-tab="patient-info">
         <i class="fas fa-user-injured"></i>
@@ -1365,7 +1444,6 @@
       </div>
     </div>
 
-    <!-- Patient Info Tab -->
     <div class="tab-content active" id="patient-info">
       <section class="patient-info">
         <h2><i class="fas fa-user-circle"></i> Patient Information</h2>
@@ -1395,7 +1473,6 @@
         </div>
       </section>
 
-      <!-- Patient Memory Section -->
       <section class="memory-section">
         <h2><i class="fas fa-save"></i> Patient Memory</h2>
         <div class="info-box">
@@ -1417,12 +1494,10 @@
         </div>
         
         <div id="patient-profiles-list" class="saved-items-container">
-          <!-- Patient profiles will be listed here -->
-        </div>
+          </div>
       </section>
     </div>
 
-    <!-- Airway & Fluids Tab -->
     <div class="tab-content" id="airway-fluids">
       <section class="section">
         <h2><i class="fas fa-wind"></i> Airway Equipment Sizing</h2>
@@ -1435,7 +1510,6 @@
       </section>
     </div>
 
-    <!-- Local Anesthetics Tab -->
     <div class="tab-content" id="local-anesthetics">
       <section class="section">
         <h2><i class="fas fa-syringe"></i> Local Anesthetics - Maximum Doses</h2>
@@ -1446,9 +1520,7 @@
       </section>
     </div>
 
-    <!-- Drug Calculations Tab -->
     <div class="tab-content" id="drug-calculations">
-      <!-- Custom Drug Values Indicator -->
       <div id="custom-drugs-indicator" class="custom-values-indicator" style="display: none;">
         <span><i class="fas fa-info-circle"></i> Using Custom Drug Values: <span id="current-drug-set-name">Unknown</span> (<span id="modified-drugs-count">0</span> drugs modified)</span>
         <button class="memory-btn secondary" onclick="resetAllDrugsToDefault()" style="padding: 4px 8px; font-size: 0.7em;">
@@ -1465,7 +1537,6 @@
         <div id="drug-results" class="drugs-grid"></div>
       </section>
 
-      <!-- Drug Settings Memory Section -->
       <section class="memory-section">
         <h2><i class="fas fa-cogs"></i> Drug Settings Memory</h2>
         <div class="info-box">
@@ -1487,17 +1558,15 @@
         </div>
         
         <div id="drug-sets-list" class="saved-items-container">
-          <!-- Drug sets will be listed here -->
-        </div>
+          </div>
       </section>
     </div>
 
-    <!-- Infusions Tab -->
     <div class="tab-content" id="infusions">
       <section class="section">
-        <h2><i class="fas fa-tint"></i> Infusion Calculations (!Experimental)</h2>
+        <h2><i class="fas fa-tint"></i> Infusion Calculations</h2>
         <div class="info-box">
-          <strong>Important:</strong> These are high-alert medications. Always verify calculations with a second clinician. Use central lines when possible for vasoactive drugs.
+          <strong>Important:</strong> These are high-alert medications. <b>Always</b> verify calculations by self and with a second clinician. Use central lines when possible for vasoactive drugs.
         </div>
         <button class="expand-all-btn edit-btn" id="toggleAllInfusionsBtn" onclick="toggleAllInfusions()">Expand All / Collapse All</button>
         <div id="infusion-results" class="drugs-grid"></div>
@@ -1514,7 +1583,6 @@
       </section>
     </div>
 
-    <!-- Antibiotics Tab -->
     <div class="tab-content" id="antibiotics">
       <section class="section">
         <h2><i class="fas fa-bacteria"></i> Antibiotics</h2>
@@ -1526,7 +1594,6 @@
       </section>
     </div>
 
-    <!-- Footer -->
     <footer>
       <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
     </footer>
@@ -1585,6 +1652,7 @@
     drug.customDoseIM = null;
     drug.customDoseOral = null;
     drug.customConcentration = null;
+    drug.isExpanded = false; // <-- ADD THIS
   });
 
   const antibiotics = [
@@ -1602,55 +1670,78 @@
   ];
 
   const infusionDrugs = [
-    { name: 'Adrenaline (Epinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose for infusions' }, infusionDose: { min: 0.1, max: 1, unit: 'mcg/kg/min' }, commonDilution: '4 mg in 50 mL (80 mcg/mL)', preparation: 'Take 4 mL of Adrenaline (1 mg/mL) and add to 46 mL of compatible fluid to make 50 mL.', concentration: 80, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight * 60) / 80; }, caution: 'VESICANT - High risk of tissue necrosis if extravasation occurs. Use central line if possible. Have phentolamine ready for infiltration management.', notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient' },
-    { name: 'Noradrenaline (Norepinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose' }, infusionDose: { min: 0.05, max: 2, unit: 'mcg/kg/min' }, commonDilution: '4 mg in 50 mL (80 mcg/mL)', preparation: 'Take 2 mL of Noradrenaline (2 mg/mL) and add to 48 mL of compatible fluid to make 50 mL.', concentration: 80, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight * 60) / 80; }, caution: 'POTENT VESICANT - Must be administered through a central line if possible. If peripheral, use large proximal vein with frequent monitoring.', notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient' },
-    { name: 'Dexmedetomidine (Precedex) Infusion', category: 'infusion', categoryLabel: 'Sedative Infusion', loadingDose: { dose: 0.5, unit: 'mcg/kg', note: 'Optional: 0.5-1 mcg/kg over 10-20 minutes' }, infusionDose: { min: 0.2, max: 1, unit: 'mcg/kg/hr' }, commonDilution: '200 mcg in 50 mL (4 mcg/mL)', preparation: 'Take 2 mL of Dexmedetomidine (100 mcg/mL) and add to 48 mL of NS or D5W to make 50 mL.', concentration: 4, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight) / 4; }, caution: 'Causes bradycardia. Monitor hemodynamics closely. Withdrawal symptoms possible after prolonged use (>24 hours).', notes: 'Does not cause significant respiratory depression. Useful for procedural sedation and weaning from other sedatives.' },
-    { name: 'Fentanyl Infusion', category: 'infusion', categoryLabel: 'Opioid Analgesic Infusion', loadingDose: { dose: 1, unit: 'mcg/kg', note: '1-2 mcg/kg bolus before starting infusion' }, infusionDose: { min: 1, max: 5, unit: 'mcg/kg/hr' }, commonDilution: '500 mcg in 50 mL (10 mcg/mL)', preparation: 'Take 10 mL of Fentanyl (50 mcg/mL) and add to 40 mL of compatible fluid to make 50 mL.', concentration: 10, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight) / 10; }, caution: 'Respiratory depression risk. Monitor respiratory status continuously. Have naloxone available. Chest wall rigidity possible with rapid bolus.', notes: 'For non-intubated patients, use lowest effective dose and monitor closely.' },
-  {
-      name: 'Dopamine Infusion',
-      category: 'infusion',
-      categoryLabel: 'Inotrope/Vasopressor',
+    { 
+      name: 'Adrenaline (Epinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', isExpanded: false,
+      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose for infusions' },
+      infusionDoseRange: { min: 0.1, max: 1, unit: 'mcg/kg/min' },
+      defaultDose: 0.1, currentDose: 0.1,
+      defaultDilutionAmount: 4, defaultDilutionUnit: 'mg', defaultDilutionVol: 50,
+      currentDilutionAmount: 4, currentDilutionUnit: 'mg', currentDilutionVol: 50,
+      caution: 'VESICANT - High risk of tissue necrosis if extravasation occurs. Use central line if possible. Have phentolamine ready for infiltration management.',
+      notes: 'Standard prep: 4 mg in 50 mL (80 mcg/mL). 1 mL/h = 1.33 mcg/kg/min for 1 kg pt.'
+    },
+    { 
+      name: 'Noradrenaline (Norepinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', isExpanded: false,
+      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose' },
+      infusionDoseRange: { min: 0.05, max: 2, unit: 'mcg/kg/min' },
+      defaultDose: 0.05, currentDose: 0.05,
+      defaultDilutionAmount: 4, defaultDilutionUnit: 'mg', defaultDilutionVol: 50,
+      currentDilutionAmount: 4, currentDilutionUnit: 'mg', currentDilutionVol: 50,
+      caution: 'POTENT VESICANT - Must be administered through a central line if possible. If peripheral, use large proximal vein with frequent monitoring.',
+      notes: 'Standard prep: 4 mg in 50 mL (80 mcg/mL). 1 mL/h = 1.33 mcg/kg/min for 1 kg pt.'
+    },
+    { 
+      name: 'Dexmedetomidine (Precedex) Infusion', category: 'infusion', categoryLabel: 'Sedative Infusion', isExpanded: false,
+      loadingDose: { dose: 0.5, unit: 'mcg/kg', note: 'Optional: 0.5-1 mcg/kg over 10-20 minutes' },
+      infusionDoseRange: { min: 0.2, max: 1, unit: 'mcg/kg/hr' },
+      defaultDose: 0.2, currentDose: 0.2,
+      defaultDilutionAmount: 200, defaultDilutionUnit: 'mcg', defaultDilutionVol: 50,
+      currentDilutionAmount: 200, currentDilutionUnit: 'mcg', currentDilutionVol: 50,
+      caution: 'Causes bradycardia. Monitor hemodynamics closely. Withdrawal symptoms possible after prolonged use (>24 hours).',
+      notes: 'Standard prep: 200 mcg in 50 mL (4 mcg/mL). Does not cause significant respiratory depression.'
+    },
+    { 
+      name: 'Fentanyl Infusion', category: 'infusion', categoryLabel: 'Opioid Analgesic Infusion', isExpanded: false,
+      loadingDose: { dose: 1, unit: 'mcg/kg', note: '1-2 mcg/kg bolus before starting infusion' },
+      infusionDoseRange: { min: 1, max: 5, unit: 'mcg/kg/hr' },
+      defaultDose: 1, currentDose: 1,
+      defaultDilutionAmount: 500, defaultDilutionUnit: 'mcg', defaultDilutionVol: 50,
+      currentDilutionAmount: 500, currentDilutionUnit: 'mcg', currentDilutionVol: 50,
+      caution: 'Respiratory depression risk. Monitor respiratory status continuously. Have naloxone available. Chest wall rigidity possible with rapid bolus.',
+      notes: 'Standard prep: 500 mcg in 50 mL (10 mcg/mL). For non-intubated patients, use lowest effective dose and monitor closely.'
+    },
+    {
+      name: 'Dopamine Infusion', category: 'infusion', categoryLabel: 'Inotrope/Vasopressor', isExpanded: false,
       loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Loading dose not typically used.' },
-      infusionDose: { min: 2, max: 20, unit: 'mcg/kg/min' },
-      commonDilution: '200 mg in 50 mL (4000 mcg/mL)',
-      preparation: 'Take 5 mL of Dopamine (40 mg/mL) and add to 45 mL of compatible fluid to make 50 mL.',
-      concentration: 4000,
-      concentrationUnit: 'mcg/mL',
-      rateCalculation: function(dose, weight) { return (dose * weight * 60) / 4000; },
+      infusionDoseRange: { min: 2, max: 20, unit: 'mcg/kg/min' },
+      defaultDose: 5, currentDose: 5,
+      defaultDilutionAmount: 200, defaultDilutionUnit: 'mg', defaultDilutionVol: 50,
+      currentDilutionAmount: 200, currentDilutionUnit: 'mg', currentDilutionVol: 50,
       caution: 'POTENT VESICANT - Must be administered through a central line. Can cause tachycardia and arrhythmias.',
-      notes: 'Dose-dependent effects: 2-5 mcg/kg/min (dopaminergic/renal), 5-10 mcg/kg/min (inotropic/beta), >10 mcg/kg/min (vasopressor/alpha).'
+      notes: 'Standard prep: 200 mg in 50 mL (4000 mcg/mL). Dose-dependent effects: 2-5 (renal), 5-10 (inotropic), >10 (vasopressor).'
     },
     {
-      name: 'Dobutamine Infusion',
-      category: 'infusion',
-      categoryLabel: 'Inotrope Infusion',
+      name: 'Dobutamine Infusion', category: 'infusion', categoryLabel: 'Inotrope Infusion', isExpanded: false,
       loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Loading dose not typically used.' },
-      infusionDose: { min: 2, max: 20, unit: 'mcg/kg/min' },
-      commonDilution: '250 mg in 50 mL (5000 mcg/mL)',
-      preparation: 'Take 20 mL of Dobutamine (12.5 mg/mL) and add to 30 mL of compatible fluid to make 50 mL.',
-      concentration: 5000,
-      concentrationUnit: 'mcg/mL',
-      rateCalculation: function(dose, weight) { return (dose * weight * 60) / 5000; },
+      infusionDoseRange: { min: 2, max: 20, unit: 'mcg/kg/min' },
+      defaultDose: 5, currentDose: 5,
+      defaultDilutionAmount: 250, defaultDilutionUnit: 'mg', defaultDilutionVol: 50,
+      currentDilutionAmount: 250, currentDilutionUnit: 'mg', currentDilutionVol: 50,
       caution: 'Can cause tachycardia, arrhythmias, and hypotension. Monitor HR and BP closely.',
-      notes: 'Primarily a beta-1 agonist, increasing inotropy and chronotropy with less effect on SVR.'
+      notes: 'Standard prep: 250 mg in 50 mL (5000 mcg/mL). Primarily a beta-1 agonist.'
     },
     {
-      name: 'Vasopressin Infusion',
-      category: 'infusion',
-      categoryLabel: 'Vasopressor Infusion',
+      name: 'Vasopressin Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', isExpanded: false,
       loadingDose: { dose: 0, unit: 'units/kg', note: 'Loading dose not typically used for shock.' },
-      infusionDose: { min: 0.01, max: 0.48, unit: 'units/kg/hr' },
-      commonDilution: '5 units in 50 mL (0.1 units/mL)',
-      preparation: 'Take 0.25 mL of Vasopressin (20 units/mL) and add to 49.75 mL of compatible fluid to make 50 mL.',
-      concentration: 0.1,
-      concentrationUnit: 'units/mL',
-      rateCalculation: function(dose, weight) { return (dose * weight) / 0.1; },
+      infusionDoseRange: { min: 0.01, max: 0.48, unit: 'units/kg/hr' }, // This is 0.2 - 8 mU/kg/min
+      defaultDose: 0.01, currentDose: 0.01,
+      defaultDilutionAmount: 5, defaultDilutionUnit: 'units', defaultDilutionVol: 50,
+      currentDilutionAmount: 5, currentDilutionUnit: 'units', currentDilutionVol: 50,
       caution: 'POTENT VESICANT - Must use central line. Risk of peripheral and splanchnic ischemia. Monitor for limb perfusion and urine output.',
-      notes: 'Dose range corresponds to 0.2 - 2 milliunits/kg/min. Used for catecholamine-resistant shock.'
+      notes: 'Standard prep: 5 units in 50 mL (0.1 units/mL). Dose range corresponds to 0.2 - 8 milliunits/kg/min. Not standard to use "mg" or "mcg" for dilution unit.'
     }
 ];
-
-  const localAnesthetics = [
+const localAnesthetics = [
     { name: 'Lignocaine (Plain)', maxDose: 3, unit: 'mg/kg', caution: 'Without epinephrine' },
     { name: 'Lignocaine (With Epinephrine)', maxDose: 7, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },
     { name: 'Bupivacaine (Plain)', maxDose: 2, unit: 'mg/kg', caution: 'Without epinephrine' },
@@ -2293,7 +2384,7 @@
           </div>
         </div>`;
 
-      const isExpandedClass = allExpanded || isEditing ? 'expanded' : '';
+      const isExpandedClass = (allExpanded || drug.isExpanded) ? 'expanded' : '';
       
       // Assign dynamic text color to calculation result based on category
       let resultColorStyle = '';
@@ -2332,6 +2423,66 @@
     document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
+  /**
+   * Checks if a custom infusion differs from its default.
+   */
+  function isInfusionModified(infusion) {
+    return infusion.currentDose !== infusion.defaultDose ||
+           infusion.currentDilutionAmount !== infusion.defaultDilutionAmount ||
+           infusion.currentDilutionUnit !== infusion.defaultDilutionUnit ||
+           infusion.currentDilutionVol !== infusion.defaultDilutionVol;
+  }
+
+  /**
+   * Resets a single infusion's custom values to default.
+   */
+  function resetInfusion(index) {
+    const infusion = infusionDrugs[index];
+    if (!infusion) return;
+  
+    infusion.currentDose = infusion.defaultDose;
+    infusion.currentDilutionAmount = infusion.defaultDilutionAmount;
+    infusion.currentDilutionUnit = infusion.defaultDilutionUnit;
+    infusion.currentDilutionVol = infusion.defaultDilutionVol;
+  
+    calculateInfusions();
+  }
+
+  /**
+   * Updates an infusion's custom values based on input fields.
+   */
+  function updateInfusion(index) {
+    const infusion = infusionDrugs[index];
+    if (!infusion) return;
+
+    // Use requestAnimationFrame to batch updates and avoid layout thrashing
+    requestAnimationFrame(() => {
+        const doseInput = document.getElementById(`infusion-dose-${index}`);
+        const amountInput = document.getElementById(`infusion-dilution-amount-${index}`);
+        const unitInput = document.getElementById(`infusion-dilution-unit-${index}`);
+        const volInput = document.getElementById(`infusion-dilution-vol-${index}`);
+
+        if (doseInput) {
+            const dose = parseFloat(doseInput.value);
+            if (!isNaN(dose)) infusion.currentDose = dose;
+        }
+        if (amountInput) {
+            const amount = parseFloat(amountInput.value);
+            if (!isNaN(amount)) infusion.currentDilutionAmount = amount;
+        }
+        if (unitInput) {
+            infusion.currentDilutionUnit = unitInput.value;
+        }
+        if (volInput) {
+            const vol = parseFloat(volInput.value);
+            if (!isNaN(vol)) infusion.currentDilutionVol = vol;
+        }
+    
+        // After updating state, re-render the infusions
+        calculateInfusions();
+    });
+  }
+
   function calculateInfusions() {
     const patient = getPatientData();
     const infusionResultsDiv = document.getElementById('infusion-results');
@@ -2347,9 +2498,33 @@
 
     infusionDrugs.forEach((infusion, index) => {
       const weight = patient.weight;
-      const minRate = infusion.rateCalculation(infusion.infusionDose.min, weight);
-      const maxRate = infusion.rateCalculation(infusion.infusionDose.max, weight);
       
+      // --- Calculation Logic ---
+      let concentrationInMcgOrUnits;
+      if (infusion.currentDilutionUnit === 'mg') {
+        concentrationInMcgOrUnits = (infusion.currentDilutionAmount * 1000) / infusion.currentDilutionVol;
+      } else {
+        // This handles 'mcg' and 'units' directly
+        concentrationInMcgOrUnits = infusion.currentDilutionAmount / infusion.currentDilutionVol;
+      }
+
+      let totalDosePerHr;
+      if (infusion.infusionDoseRange.unit.includes('/min')) {
+        totalDosePerHr = infusion.currentDose * weight * 60; // (mcg/kg/min) * (kg) * (60 min/hr) = mcg/hr
+      } else {
+        totalDosePerHr = infusion.currentDose * weight; // (mcg/kg/hr) * (kg) = mcg/hr
+      }
+
+      let rate = totalDosePerHr / concentrationInMcgOrUnits; // (mcg/hr) / (mcg/mL) = mL/hr
+      if (isNaN(rate) || !isFinite(rate) || rate < 0) {
+        rate = 0;
+      }
+      
+      const concUnit = (infusion.currentDilutionUnit === 'units') ? 'units/mL' : 'mcg/mL';
+      const concDisplay = `${concentrationInMcgOrUnits.toFixed(2)} ${concUnit}`;
+      // --- End Calculation Logic ---
+      
+      const isModified = isInfusionModified(infusion);
       let isCautionNeeded = infusion.caution ? true : false;
       let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="infusion-caution-icon-${index}" onclick="event.stopPropagation(); toggleInfusionCautionPopup(${index})">i</span>` : '';
       let cautionPopupHtml = isCautionNeeded ? `<div id="infusion-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${infusion.caution}</div>` : '';
@@ -2359,7 +2534,17 @@
         loadingDoseHtml = `<div class="infusion-detail-row"><div class="infusion-label">Loading Dose:</div><div class="infusion-value">${infusion.loadingDose.dose} ${infusion.loadingDose.unit}</div></div><div class="infusion-note">${infusion.loadingDose.note}</div>`;
       }
       
-      const isExpandedClass = allInfusionsExpanded ? 'expanded' : '';
+      const isExpandedClass = (allInfusionsExpanded || infusion.isExpanded) ? 'expanded' : '';
+
+      // Define unit options for the select dropdown
+      let unitOptions = `
+        <option value="mcg" ${infusion.currentDilutionUnit === 'mcg' ? 'selected' : ''}>mcg</option>
+        <option value="mg" ${infusion.currentDilutionUnit === 'mg' ? 'selected' : ''}>mg</option>
+      `;
+      // Only show 'units' for drugs that use it by default (Vasopressin)
+      if (infusion.defaultDilutionUnit === 'units') {
+        unitOptions = `<option value="units" ${infusion.currentDilutionUnit === 'units' ? 'selected' : ''}>units</option>`;
+      }
       
       html += `<div class="drug-card infusion ${isExpandedClass}" id="infusion-card-${index}">
           ${cautionPopupHtml}
@@ -2370,14 +2555,41 @@
           </div>
           <div class="drug-details" id="infusion-details-${index}">
             <div class="infusion-details">
-              <div class="infusion-detail-row"><div class="infusion-label">Infusion Range:</div><div class="infusion-value">${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div></div>
+              <div class="infusion-detail-row">
+                <div class="infusion-label">Dose Range:</div>
+                <div class="infusion-value">${infusion.infusionDoseRange.min}-${infusion.infusionDoseRange.max} ${infusion.infusionDoseRange.unit}</div>
+              </div>
               ${loadingDoseHtml}
-              <div class="infusion-detail-row"><div class="infusion-label">Common Dilution:</div><div class="infusion-value">${infusion.commonDilution}</div></div>
-              <div class="infusion-note">${infusion.preparation}</div>
+
+              <div class="infusion-edit-pane">
+                <div class="edit-input-field">
+                  <label for="infusion-dose-${index}">Dose (${infusion.infusionDoseRange.unit})</label>
+                  <input type="number" id="infusion-dose-${index}" value="${infusion.currentDose}" step="0.01" min="0">
+                </div>
+                <div class="infusion-dilution-input">
+                  <label>Dilution</label>
+                  <div class="input-wrapper">
+                    <input type="number" id="infusion-dilution-amount-${index}" value="${infusion.currentDilutionAmount}">
+                  </div>
+                  <select id="infusion-dilution-unit-${index}">
+                    ${unitOptions}
+                  </select>
+                  <span class="separator">in</span>
+                  <div class="input-wrapper">
+                    <input type="number" id="infusion-dilution-vol-${index}" value="${infusion.currentDilutionVol}">
+                  </div>
+                  <span class="separator">mL</span>
+                </div>
+                <div class="edit-actions">
+                  <button class="edit-btn" onclick="updateInfusion(${index})">Update</button>
+                  ${isModified ? `<button class="edit-btn reset-btn" onclick="resetInfusion(${index})">Reset</button>` : ''}
+                </div>
+              </div>
+
               <div class="calculation">
-                <div class="calculation-result" style="color: var(--infusion);">${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr</div>
-                <div class="volume-result">For ${weight.toFixed(1)} kg patient</div>
-                <div class="dose-info">Rate for ${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div>
+                <div class="calculation-result" style="color: var(--infusion);">${rate.toFixed(2)} mL/hr</div>
+                <div class="volume-result">For ${weight.toFixed(1)} kg @ ${infusion.currentDose.toFixed(2)} ${infusion.infusionDoseRange.unit}</div>
+                <div class="dose-info">Dilution: ${infusion.currentDilutionAmount} ${infusion.currentDilutionUnit} in ${infusion.currentDilutionVol} mL (${concDisplay})</div>
               </div>
               ${infusion.notes ? `<div class="infusion-note" style="font-style: normal; border-top: 1px dashed var(--border-color); padding-top: 8px;">${infusion.notes}</div>` : ''}
             </div>
@@ -2389,8 +2601,36 @@
     document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
-  function toggleDrugCard(index) { requestAnimationFrame(() => { document.getElementById(`drug-card-${index}`).classList.toggle('expanded'); }); }
-  function toggleInfusionCard(index) { requestAnimationFrame(() => { document.getElementById(`infusion-card-${index}`).classList.toggle('expanded'); }); }
+  function toggleDrugCard(index) { 
+    const drug = drugs[index];
+    if (!drug) return;
+  
+    drug.isExpanded = !drug.isExpanded;
+    
+    // If we are CLOSING the card and its edit pane is open...
+    if (!drug.isExpanded && activeEditIndex === index) {
+        activeEditIndex = null;
+        // We must call calculateDrugs() to re-render the card with
+        // the correct "Edit..." button text and no 'expanded' class.
+        calculateDrugs();
+    } else {
+        // Otherwise, just toggle the class.
+        requestAnimationFrame(() => { 
+            document.getElementById(`drug-card-${index}`).classList.toggle('expanded', drug.isExpanded); 
+        });
+    }
+  }
+  
+  function toggleInfusionCard(index) { 
+    requestAnimationFrame(() => { 
+        const card = document.getElementById(`infusion-card-${index}`);
+        if(card) {
+            card.classList.toggle('expanded');
+            infusionDrugs[index].isExpanded = card.classList.contains('expanded');
+        }
+    }); 
+  }
+
   function toggleAntibioticCard(index) { 
     const card = document.getElementById(`antibiotic-card-${index}`);
     if (!card) return;
@@ -2399,6 +2639,9 @@
 
   function toggleAllDrugs() {
     allExpanded = !allExpanded;
+    // Update the persistent state for all drugs
+    drugs.forEach(drug => { drug.isExpanded = allExpanded; });
+    
     requestAnimationFrame(() => {
       drugs.forEach((_, index) => {
         const card = document.getElementById(`drug-card-${index}`);
@@ -2411,10 +2654,13 @@
   function toggleAllInfusions() {
     allInfusionsExpanded = !allInfusionsExpanded;
     requestAnimationFrame(() => {
-      infusionDrugs.forEach((_, index) => {
+      infusionDrugs.forEach((infusion, index) => {
+        infusion.isExpanded = allInfusionsExpanded;
         const card = document.getElementById(`infusion-card-${index}`);
         if (card) { card.classList.toggle('expanded', allInfusionsExpanded); }
       });
+      // We must call calculateInfusions to render the cards with the correct class
+      calculateInfusions(); 
       setTimeout(() => { document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
     });
   }
@@ -2429,7 +2675,20 @@
   }
 
   function toggleEdit(index) {
-    activeEditIndex = activeEditIndex === index ? null : index;
+    const drug = drugs[index];
+    if (!drug) return;
+  
+    if (activeEditIndex === index) {
+      // We are CLOSING the pane
+      activeEditIndex = null;
+      // drug.isExpanded remains true (we don't collapse the card)
+    } else {
+      // We are OPENING the pane
+      activeEditIndex = index;
+      drug.isExpanded = true; // Force the card to be expanded
+    }
+    
+    // Re-render the drug list to show the open/closed pane
     calculateDrugs();
   }
 

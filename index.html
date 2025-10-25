@@ -5,115 +5,104 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pediatric Anesthesia Calculator</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* All your CSS styles remain the same - they look fine */
-    /* Category pill styles with colored background */
-    .drug-category {
-      font-size: 0.7em;
-      padding: 4px 10px;
-      border-radius: 20px;
-      color: #000;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      background-color: var(--border-color);
-    }
-
-    /* Each category color background */
-    .drug-category.induction { background-color: var(--induction); }
-    .drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); color: #fff; }
-    .drug-category.analgesic { background-color: var(--analgesic); color: #fff; }
-    .drug-category.adjunct { background-color: var(--adjunct); color: #fff; }
-    .drug-category.reversal { background-color: var(--reversal); color: #fff; }
-    .drug-category.emergency { background-color: var(--emergency); color: #000; }
-    .drug-category.steroid { background-color: var(--steroid); color: #fff; }
-    .drug-category.antiemetic { background-color: var(--antiemetic); color: #000; }
-    .drug-category.local-anesthetic { background-color: var(--local-anesthetic); color: #fff; }
-    .drug-category.infusion { background-color: var(--infusion); color: #fff; }
-    .drug-category.antibiotic { background-color: var(--antibiotic); color: #fff; }
-    
-    :root{
-      --bg-primary:#ffffff;
-      --bg-secondary:#fff8e1;
-      --bg-card:#ffffff;
-      --text-primary:#121212;
-      --text-secondary:#546e7a;
-      --text-tertiary:#b0bec5;
-      --border-color:#e1f5fe;
-      --shadow:0 8px 20px rgba(0,0,0,0.1);
-      --shadow-hover:0 10px 25px rgba(0,0,0,0.15);
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-tertiary: #94a3b8;
+      --border-color: #94a3b8;
+      --shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       --glass-bg: rgba(255, 255, 255, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.3);
 
-      --induction:#34ebb4;
-      --muscle-relaxant:#ff6d00;
-      --analgesic:#00c853;
-      --adjunct:#d500f9;
-      --reversal:#ff1744;
-      --emergency:#ffc400;
-      --steroid:#3f51b5;
-      --antiemetic:#8bc34a;
-      --local-anesthetic:#9c27b0;
-      --infusion:#009688;
-      --antibiotic:#795548;
-      --primary-accent:#0089f0;
-      --caution-color:#ffeb3b;
+      --induction: #10b981;
+      --muscle-relaxant: #f59e0b;
+      --analgesic: #3b82f6;
+      --adjunct: #8b5cf6;
+      --reversal: #ef4444;
+      --emergency: #f97316;
+      --steroid: #6366f1;
+      --antiemetic: #84cc16;
+      --local-anesthetic: #d946ef;
+      --infusion: #06b6d4;
+      --antibiotic: #78716c;
+      --primary-accent: #0ea5e9;
+      --caution-color: #fbbf24;
+      --reset-color: #ef4444;
 
-      --radius-card:16px;
-      --radius-input:10px;
-      --radius-tab: 12px;
+      --radius-card: 12px;
+      --radius-input: 8px;
+      --radius-tab: 8px;
     }
 
-    body.dark-mode{
-      --bg-primary:#000000;
-      --bg-secondary:#111111;
-      --bg-card:#222222;
-      --text-primary:#f5f5f5;
-      --text-secondary:#bbbbbb;
-      --border-color:#4a4a4a;
-      --shadow:0 8px 20px rgba(0,0,0,0.6);
-      --shadow-hover:0 10px 25px rgba(0,0,0,0.8);
-      --glass-bg: rgba(34, 34, 34, 0.7);
+    body.dark-mode {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-tertiary: #f1f5f9;
+      --border-color: #334155;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      --glass-bg: rgba(30, 41, 59, 0.7);
       --glass-border: rgba(255, 255, 255, 0.1);
-      --emergency:#ffeb3b;
-      --caution-color:#fbc02d;
+      --emergency: #fbbf24;
+      --caution-color: #f59e0b;
+      --reset-color: #f87171;
     }
 
-    /* Reset & base */
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{
-      font-family:'Montserrat',sans-serif;
-      background:var(--bg-secondary);
-      color:var(--text-primary);
-      line-height:1.5;
-      font-size:0.9rem; /* Slightly reduced for mobile */
-      transition:background-color .4s,color .4s;
-      user-select:none; /* make app text unselectable except inputs */
-      -webkit-font-smoothing:antialiased;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 0.9rem;
+      transition: background-color .4s, color .4s;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-    input,textarea{user-select:text!important}
 
-    .container{max-width:1200px;margin:0 auto;padding:15px 10px}
+    input, textarea {
+      user-select: text !important;
+    }
 
-    /* Header */
-    header{
-      background: linear-gradient(135deg, var(--primary-accent), #0056b3);
-      color:var(--bg-primary);
-      padding:15px;
-      border-radius:var(--radius-card);
-      box-shadow:var(--shadow);
-      margin-bottom:15px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px 10px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-accent), #0369a1);
+      color: white;
+      padding: 15px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
       gap: 10px;
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     header::before {
@@ -127,24 +116,37 @@
       transform: rotate(30deg);
     }
 
-    h1{font-size:1.6em;font-weight:700; z-index: 1;}
-    .dark-mode-toggle{
-      background:var(--bg-primary);
-      color:var(--primary-accent);
-      border:none;border-radius:50px;padding:8px 16px;
-      cursor:pointer;font-size:.75em;font-weight:600;
-      box-shadow:0 2px 5px rgba(0,0,0,.2);transition:all .18s ease;
-      -webkit-tap-highlight-color:transparent;
-      outline:none;
+    h1 {
+      font-size: 1.6em;
+      font-weight: 700;
+      z-index: 1;
+    }
+
+    .dark-mode-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: .75em;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+      transition: all .18s ease;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
       z-index: 1;
       display: flex;
       align-items: center;
       gap: 5px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
-    .dark-mode-toggle:active{transform:translateY(1px)}
-    .dark-mode-toggle::-moz-focus-inner{border:0}
 
-    /* Tab Navigation */
+    .dark-mode-toggle:active {
+      transform: translateY(1px);
+    }
+
     .tab-navigation {
       display: flex;
       overflow-x: auto;
@@ -153,6 +155,15 @@
       padding: 5px;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
     }
 
     .tab-navigation::-webkit-scrollbar {
@@ -163,7 +174,7 @@
       flex: 1;
       min-width: 120px;
       background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--border-color);
       padding: 12px 15px;
       border-radius: var(--radius-tab);
       cursor: pointer;
@@ -188,7 +199,7 @@
       background: var(--primary-accent);
       color: white;
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 137, 240, 0.4);
+      box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
     }
 
     .tab-button:not(.active):hover {
@@ -196,34 +207,53 @@
       transform: translateY(-1px);
     }
 
-    /* Tab Content */
     .tab-content {
       display: none;
       animation: fadeIn 0.5s ease;
+      /* Fix for dark mode white area */
+      background: var(--bg-primary); 
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .tab-content.active {
       display: block;
     }
 
-    /* Sections */
-    .section,.patient-info{
-      background:var(--bg-card);
-      padding:15px;border-radius:var(--radius-card);
-      box-shadow:var(--shadow);margin-bottom:15px;transition:box-shadow .3s ease, transform 0.3s ease;
+    .section, .patient-info {
+      background: var(--bg-card);
+      padding: 15px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      margin-bottom: 15px;
+      transition: box-shadow .3s ease, transform 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
     }
+
     .section:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
     }
-    .section h2{
-      font-size:1.3em;font-weight:600;margin-bottom:12px;color:var(--text-primary);
-      border-bottom:2px solid var(--border-color);padding-bottom:6px;
+
+    .section h2 {
+      font-size: 1.3em;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 6px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -233,7 +263,100 @@
       color: var(--primary-accent);
     }
 
-    /* Info boxes */
+    .disclaimer-container {
+      margin-bottom: 15px;
+    }
+
+    .disclaimer-toggle {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 10px 15px;
+      border-radius: var(--radius-card);
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .disclaimer-toggle:hover {
+      background: var(--bg-secondary);
+    }
+
+    .disclaimer-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: var(--bg-secondary);
+      border-radius: 0 0 var(--radius-card) var(--radius-card);
+      margin-top: -5px;
+      border: 1px solid var(--border-color);
+      border-top: none;
+	visibility: hidden;
+    }
+
+    .disclaimer-content.expanded {
+      max-height: 200px;
+      padding: 15px;
+visibility: visible;
+    }
+
+    .warning {
+      background: #fef3c7;
+      border-left: 5px solid #f59e0b;
+      padding: 12px;
+      border-radius: 0 0 8px 8px;
+      font-size: 0.8em;
+      color: #92400e;
+      font-weight: 500;
+    }
+
+    body.dark-mode .warning {
+      background: #451a03;
+      color: #fbbf24;
+      border-left: 5px solid #d97706;
+    }
+
+    .input-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .age-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-field label {
+      font-size: .8em;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      font-weight: 600;
+      display: block;
+    }
+
+    .input-field input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-input);
+      font-size: .9em;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color .3s, box-shadow .3s;
+    }
+
+    .input-field input:focus {
+      outline: none;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, .2);
+    }
+
     .info-box {
       background: var(--bg-secondary);
       border-left: 4px solid var(--primary-accent);
@@ -246,14 +369,21 @@
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .info-box strong {
       color: var(--primary-accent);
     }
-    /* Specific styling for the generated Ketorolac info box */
+
     .info-box.ketorolac-specific {
       border-left-color: var(--analgesic);
       margin-top: 5px;
@@ -265,112 +395,310 @@
       padding: 8px 10px;
     }
 
-
-    /* Inputs */
-    .input-group{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:10px}
-    .age-input-group{display:flex;gap:8px}
-    .input-field label{font-size:.8em;color:var(--text-secondary);margin-bottom:5px;font-weight:600;display:block}
-    .input-field input{
-      width:100%;padding:10px 12px;border:1px solid var(--border-color);
-      border-radius:var(--radius-input);font-size:.9em;background:var(--bg-primary);
-      color:var(--text-primary);transition:border-color .3s,box-shadow .3s;
-    }
-    .input-field input:focus{outline:none;border-color:var(--primary-accent);box-shadow:0 0 0 3px rgba(0,137,240,.2)}
-
-    /* Grid containers */
-    .drugs-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
-    .equipment-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:10px}
-
-    /* Drug card */
-    .drug-card{
-      border-radius:var(--radius-card);padding:12px;border-left:6px solid;background:var(--bg-secondary);
-      transition:all .35s cubic-bezier(.25,.8,.25,1);position:relative;z-index:1;
-      will-change:transform,box-shadow,background-color;
+    .drug-card {
+      border-radius: var(--radius-card);
+      padding: 12px;
+      border-left: 6px solid;
+      background: var(--bg-secondary);
+      transition: all .35s cubic-bezier(.25, .8, .25, 1);
+      position: relative;
+      z-index: 1;
+      will-change: transform, box-shadow, background-color;
       animation: cardAppear 0.5s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
     }
 
     @keyframes cardAppear {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .drug-card.caution-active{z-index:20;border-left-color:var(--caution-color)!important;box-shadow:0 0 10px var(--caution-color);}
-    .drug-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-3px);background:var(--bg-card)}
-
-    /* left border category colors */
-    .drug-card.induction{border-left-color:var(--induction)}
-    .drug-card.muscle-relaxant{border-left-color:var(--muscle-relaxant)}
-    .drug-card.analgesic{border-left-color:var(--analgesic)}
-    .drug-card.adjunct{border-left-color:var(--adjunct)}
-    .drug-card.reversal{border-left-color:var(--reversal)}
-    .drug-card.emergency{border-left-color:var(--emergency)}
-    .drug-card.steroid{border-left-color:var(--steroid)}
-    .drug-card.antiemetic{border-left-color:var(--antiemetic)}
-    .drug-card.local-anesthetic{border-left-color:var(--local-anesthetic)}
-    .drug-card.infusion{border-left-color:var(--infusion)}
-    .drug-card.antibiotic{border-left-color:var(--antibiotic)}
-
-    .drug-header{
-      display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer;
-      -webkit-tap-highlight-color:transparent;user-select:none;flex-direction:column;gap:5px;
+    .drug-card.caution-active {
+      z-index: 20;
+      border-left-color: var(--caution-color) !important;
+      box-shadow: 0 0 10px var(--caution-color);
     }
-    .drug-card.expanded .drug-header{padding-bottom:8px}
-    .drug-name{font-weight:700;font-size:1.1em;color:var(--text-primary);display:flex;align-items:center}
-    .toggle-icon{font-size:1em;margin-right:6px;transform:rotate(0deg);
-      transition:transform 350ms cubic-bezier(.175,.885,.32,1.275);will-change:transform}
-    .drug-card.expanded .toggle-icon{transform:rotate(90deg)}
 
-    .drug-details{
-      max-height:0;overflow:hidden;opacity:0;padding-top:0;transform:translateY(-6px);
-      transition:max-height 420ms cubic-bezier(.22,1,.36,1),opacity 260ms ease-in-out,transform 420ms cubic-bezier(.22,1,.36,1),padding-top 420ms cubic-bezier(.22,1,.36,1);
-      will-change:max-height,opacity,transform,padding-top;
+    .drug-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+      background: var(--bg-card);
     }
-    .drug-card.expanded .drug-details{max-height:520px;opacity:1;padding-top:12px;transform:translateY(0)}
 
-    .drug-category{font-size:.65em;padding:4px 8px;border-radius:20px;color:var(--bg-primary);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-    .drug-category.induction,.drug-category.emergency{color:#000}
+    .drug-card.induction { border-left-color: var(--induction) }
+    .drug-card.muscle-relaxant { border-left-color: var(--muscle-relaxant) }
+    .drug-card.analgesic { border-left-color: var(--analgesic) }
+    .drug-card.adjunct { border-left-color: var(--adjunct) }
+    .drug-card.reversal { border-left-color: var(--reversal) }
+    .drug-card.emergency { border-left-color: var(--emergency) }
+    .drug-card.steroid { border-left-color: var(--steroid) }
+    .drug-card.antiemetic { border-left-color: var(--antiemetic) }
+    .drug-card.local-anesthetic { border-left-color: var(--local-anesthetic) }
+    .drug-card.infusion { border-left-color: var(--infusion) }
+    .drug-card.antibiotic { border-left-color: var(--antibiotic) }
 
-    .dose-info{font-size:.75em;color:var(--text-secondary);font-style:italic;margin-top:4px}
-
-    /* Caution icon & popup */
-    .caution-icon{
-      display:inline-block;width:16px;height:16px;line-height:16px;text-align:center;border-radius:50%;
-      background-color:var(--caution-color);color:#000;font-weight:bold;font-size:.65em;cursor:pointer;margin-left:8px;flex-shrink:0;align-self:flex-start;
-      -webkit-tap-highlight-color:transparent;
+    .drug-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      flex-direction: column;
+      gap: 5px;
     }
-    .caution-popup{
-      display:none;position:absolute;z-index:30;padding:8px;background:var(--bg-primary);color:var(--text-primary);
-      border:1px solid var(--caution-color);border-radius:5px;box-shadow:var(--shadow-hover);width:220px;font-size:.7em;top:12px;right:12px;white-space:normal;
+
+    .drug-card.expanded .drug-header {
+      padding-bottom: 8px;
+    }
+
+    .drug-name {
+      font-weight: 700;
+      font-size: 1.1em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-icon {
+      font-size: 1em;
+      margin-right: 6px;
+      transform: rotate(0deg);
+      transition: transform 350ms cubic-bezier(.175, .885, .32, 1.275);
+      will-change: transform;
+    }
+
+    .drug-card.expanded .toggle-icon {
+      transform: rotate(90deg);
+    }
+
+    .drug-details {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      padding-top: 0;
+      transform: translateY(-6px);
+      transition: max-height 420ms cubic-bezier(.22, 1, .36, 1), opacity 260ms ease-in-out, transform 420ms cubic-bezier(.22, 1, .36, 1), padding-top 420ms cubic-bezier(.22, 1, .36, 1);
+      will-change: max-height, opacity, transform, padding-top;
+    }
+
+    .drug-card.expanded .drug-details {
+      max-height: 520px;
+      opacity: 1;
+      padding-top: 12px;
+      transform: translateY(0);
+    }
+
+    .drug-category {
+      font-size: 0.65em;
+      padding: 4px 8px;
+      border-radius: 20px;
+      color: var(--bg-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      background-color: var(--border-color);
+    }
+
+    .drug-category.induction { background-color: var(--induction); color: #000; }
+    .drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); color: #fff; }
+    .drug-category.analgesic { background-color: var(--analgesic); color: #fff; }
+    .drug-category.adjunct { background-color: var(--adjunct); color: #fff; }
+    .drug-category.reversal { background-color: var(--reversal); color: #fff; }
+    .drug-category.emergency { background-color: var(--emergency); color: #000; }
+    .drug-category.steroid { background-color: var(--steroid); color: #fff; }
+    .drug-category.antiemetic { background-color: var(--antiemetic); color: #000; }
+    .drug-category.local-anesthetic { background-color: var(--local-anesthetic); color: #fff; }
+    .drug-category.infusion { background-color: var(--infusion); color: #fff; }
+    .drug-category.antibiotic { background-color: var(--antibiotic); color: #fff; }
+
+    .dose-info {
+      font-size: .75em;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .caution-icon {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;
+      text-align: center;
+      border-radius: 50%;
+      background-color: var(--caution-color);
+      color: #000;
+      font-weight: bold;
+      font-size: .65em;
+      cursor: pointer;
+      margin-left: 8px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .caution-popup {
+      display: none;
+      position: absolute;
+      z-index: 30;
+      padding: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--caution-color);
+      border-radius: 5px;
+      box-shadow: var(--shadow-hover);
+      width: 220px;
+      font-size: .7em;
+      top: 12px;
+      right: 12px;
+      white-space: normal;
       animation: popIn 0.3s ease;
     }
 
     @keyframes popIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
-    .dose-limit-applied{font-size:.7em;color:var(--reversal);font-weight:600;display:block;margin-top:2px}
-
-    /* Calculations & edit UI */
-    .calculation{background:var(--bg-card);padding:10px;border-radius:var(--radius-input);margin-top:8px;border:1px solid var(--border-color)}
-    .calculation-result{font-weight:800;font-size:1.2em;color:var(--reversal)}
-    .volume-result{font-size:.8em;color:var(--text-secondary);margin-top:3px;font-weight:500}
-
-    .edit-btn{
-      background:transparent;border:1px solid var(--primary-accent);padding:5px 12px;border-radius:50px;font-size:.75em;cursor:pointer;color:var(--primary-accent);
-      margin-top:8px;transition:all .3s ease;font-weight:600;max-width:fit-content;
+    .dose-limit-applied {
+      font-size: .7em;
+      color: var(--reversal);
+      font-weight: 600;
+      display: block;
+      margin-top: 2px;
     }
-    .edit-btn:hover{background:var(--primary-accent);color:var(--bg-primary);box-shadow:0 4px 10px rgba(0,137,240,.3)}
 
-    .edit-inputs{display:none;margin-top:8px;padding:8px;background:var(--bg-secondary);border-radius:var(--radius-input);border:1px dashed var(--text-tertiary);flex-direction:column;gap:8px}
-    .edit-inputs.active{display:flex; animation: slideDown 0.3s ease;}
+    .calculation {
+      background: var(--bg-card);
+      padding: 10px;
+      border-radius: var(--radius-input);
+      margin-top: 8px;
+      border: 1px solid var(--border-color);
+    }
+
+    .calculation-result {
+      font-weight: 800;
+      font-size: 1.2em;
+      color: var(--reversal);
+    }
+
+    .volume-result {
+      font-size: .8em;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .edit-btn {
+      background: transparent;
+      border: 1px solid var(--primary-accent);
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: .75em;
+      cursor: pointer;
+      color: var(--primary-accent);
+      margin-top: 8px;
+      transition: all .3s ease;
+      font-weight: 600;
+      max-width: fit-content;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .edit-btn:hover {
+      background: var(--primary-accent);
+      color: var(--bg-primary);
+      box-shadow: 0 4px 10px rgba(14, 165, 233, .3);
+    }
+    
+    .edit-btn.reset-btn {
+        color: var(--reset-color);
+        border-color: var(--reset-color);
+    }
+    
+    .edit-btn.reset-btn:hover {
+        background: var(--reset-color);
+        color: var(--bg-primary);
+        box-shadow: 0 4px 10px rgba(239, 68, 68, .3);
+    }
+
+
+    .edit-inputs {
+      display: none;
+      margin-top: 8px;
+      padding: 8px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-input);
+      border: 1px dashed var(--text-tertiary);
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .edit-inputs.active {
+      display: flex;
+      animation: slideDown 0.3s ease;
+    }
 
     @keyframes slideDown {
-      from { opacity: 0; max-height: 0; }
-      to { opacity: 1; max-height: 100px; }
+      from {
+        opacity: 0;
+        max-height: 0;
+      }
+
+      to {
+        opacity: 1;
+        max-height: 150px; /* Increased max-height */
+      }
+    }
+    
+    .edit-input-grid {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .edit-input-field {
+        flex: 1;
     }
 
-    /* Route Selector styles */
+    .edit-input-field label {
+        font-size: 0.7em;
+        color: var(--text-secondary);
+        display: block;
+        margin-bottom: 4px;
+    }
+    
+    .edit-input-field input {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 0.8em;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+    
+    .edit-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 5px;
+    }
+
     .route-selector {
       display: flex;
       gap: 8px;
@@ -379,6 +707,11 @@
       border-bottom: 1px dashed var(--border-color);
       flex-wrap: wrap;
     }
+    
+    .route-selector input[type="radio"]:focus + label {
+        outline: none;
+    }
+
     .route-selector label {
       display: flex;
       align-items: center;
@@ -391,18 +724,19 @@
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .route-selector input[type="radio"] {
-      /* Hide the actual radio button */
       display: none;
     }
-    .route-selector input[type="radio"]:checked + label {
+
+    .route-selector input[type="radio"]:checked+label {
       background: var(--primary-accent);
       color: var(--bg-primary);
       border-color: var(--primary-accent);
     }
 
-    /* Indication Selector styles */
     .indication-selector {
       display: flex;
       flex-direction: column;
@@ -411,6 +745,7 @@
       padding-bottom: 8px;
       border-bottom: 1px dashed var(--border-color);
     }
+
     .indication-selector label {
       display: flex;
       align-items: center;
@@ -423,43 +758,94 @@
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .indication-selector input[type="radio"] {
       display: none;
     }
-    .indication-selector input[type="radio"]:checked + label {
+
+    .indication-selector input[type="radio"]:checked+label {
       background: var(--antibiotic);
       color: var(--bg-primary);
       border-color: var(--antibiotic);
     }
 
-    /* Equipment cards */
-    .equipment-card{
-      background:var(--bg-secondary);padding:12px;border-radius:var(--radius-card);text-align:center;border-top:4px solid var(--primary-accent);transition:all .3s ease;
-      animation: cardAppear 0.5s ease;
+    .drugs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
     }
+
+    .equipment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .equipment-card {
+      background: var(--bg-secondary);
+      padding: 12px;
+      border-radius: var(--radius-card);
+      text-align: center;
+      border-top: 4px solid var(--primary-accent);
+      transition: all .3s ease;
+      animation: cardAppear 0.5s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+    }
+
     .equipment-card:hover {
       transform: translateY(-3px);
       box-shadow: var(--shadow-hover);
     }
-    .equipment-title{font-size:.85em;color:var(--text-secondary);margin-bottom:6px;font-weight:600}
-    .equipment-value{font-size:1.4em;font-weight:800;color:var(--primary-accent);line-height:1.1}
-    .equipment-value.error{color:var(--reversal);font-size:.85em;font-weight:600;line-height:1.3}
-    .equipment-detail{font-size:.7em;color:var(--text-secondary);margin-top:4px}
 
-    /* Warning box */
-    .warning{background:#fff3cd;border-left:5px solid #ffc107;padding:12px;margin:15px 0;border-radius:8px;font-size:.85em;color:#856404;font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-    body.dark-mode .warning{background:#4a3f00;color:#ffeb3b;border-left:5px solid #ff9800}
+    .equipment-title {
+      font-size: .85em;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
 
-    .expand-all-btn{margin-top:5px;margin-bottom:12px;display:block;width:100%;max-width:350px;text-align:center}
+    .equipment-value {
+      font-size: 1.4em;
+      font-weight: 800;
+      color: var(--primary-accent);
+      line-height: 1.1;
+    }
 
-    /* Local Anesthetic Result Row styles - New for conciseness */
+    .equipment-value.error {
+      color: var(--reversal);
+      font-size: .85em;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .equipment-detail {
+      font-size: .7em;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .expand-all-btn {
+      margin-top: 5px;
+      margin-bottom: 12px;
+      display: block;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+    }
+
     .la-results-container {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-top: 10px;
     }
+
     .la-result-row {
       display: grid;
       grid-template-columns: 2fr 1.5fr;
@@ -467,20 +853,24 @@
       padding: 8px 0;
       border-bottom: 1px dotted var(--border-color);
     }
+
     .la-result-row:last-child {
       border-bottom: none;
     }
+
     .la-name {
       font-weight: 600;
       font-size: 0.95em;
       color: var(--text-primary);
     }
+
     .la-max-dose {
       font-weight: 800;
       font-size: 1.1em;
       color: var(--reversal);
       text-align: right;
     }
+
     .la-detail {
       display: block;
       font-weight: 500;
@@ -489,13 +879,13 @@
       line-height: 1.3;
     }
 
-    /* Infusion-specific styles */
     .infusion-details {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 10px;
     }
+
     .infusion-detail-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -503,43 +893,38 @@
       padding: 8px 0;
       border-bottom: 1px dotted var(--border-color);
     }
+
     .infusion-detail-row:last-child {
       border-bottom: none;
     }
+
     .infusion-label {
       font-weight: 600;
       font-size: 0.85em;
       color: var(--text-primary);
     }
+
     .infusion-value {
       font-weight: 600;
       font-size: 0.85em;
       color: var(--primary-accent);
       text-align: right;
     }
+
     .infusion-note {
       font-size: 0.75em;
       color: var(--text-secondary);
       font-style: italic;
       margin-top: 3px;
     }
-    .infusion-caution {
-      font-size: 0.75em;
-      color: var(--reversal);
-      font-weight: 600;
-      margin-top: 5px;
-      padding: 5px;
-      border-radius: 5px;
-      background-color: rgba(255, 23, 68, 0.1);
-    }
 
-    /* Antibiotic-specific styles */
     .antibiotic-details {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 10px;
     }
+
     .antibiotic-detail-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -547,37 +932,31 @@
       padding: 8px 0;
       border-bottom: 1px dotted var(--border-color);
     }
+
     .antibiotic-detail-row:last-child {
       border-bottom: none;
     }
+
     .antibiotic-label {
       font-weight: 600;
       font-size: 0.85em;
       color: var(--text-primary);
     }
+
     .antibiotic-value {
       font-weight: 600;
       font-size: 0.85em;
       color: var(--primary-accent);
       text-align: right;
     }
+
     .antibiotic-note {
       font-size: 0.75em;
       color: var(--text-secondary);
       font-style: italic;
       margin-top: 3px;
     }
-    .antibiotic-caution {
-      font-size: 0.75em;
-      color: var(--reversal);
-      font-weight: 600;
-      margin-top: 5px;
-      padding: 5px;
-      border-radius: 5px;
-      background-color: rgba(255, 23, 68, 0.1);
-    }
 
-    /* Infusion Rate Calculator Button */
     .infusion-rate-btn {
       display: block;
       width: 100%;
@@ -594,19 +973,20 @@
       text-align: center;
       text-decoration: none;
       margin-top: 10px;
+      -webkit-tap-highlight-color: transparent;
     }
+
     .infusion-rate-btn:hover {
-      background: #0070c0;
+      background: #0284c7;
       box-shadow: var(--shadow-hover);
       transform: translateY(-2px);
     }
 
-    /* Footer */
     footer {
       text-align: center;
       margin-top: 20px;
       font-size: 0.8em;
-      color: grey;
+      color: var(--text-secondary);
       padding: 10px;
     }
 
@@ -615,7 +995,6 @@
       text-decoration: none;
     }
 
-    /* Memory Function Styles */
     .memory-section {
       background: var(--bg-card);
       padding: 15px;
@@ -623,20 +1002,23 @@
       box-shadow: var(--shadow);
       margin-bottom: 15px;
       transition: box-shadow .3s ease, transform 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
     }
-    
+
     .memory-section:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
     }
-    
+
     .memory-controls {
       display: flex;
       gap: 10px;
       margin-top: 10px;
       flex-wrap: wrap;
     }
-    
+
     .memory-input {
       flex: 1;
       min-width: 150px;
@@ -648,13 +1030,13 @@
       color: var(--text-primary);
       transition: border-color .3s, box-shadow .3s;
     }
-    
+
     .memory-input:focus {
       outline: none;
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 3px rgba(0,137,240,.2);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, .2);
     }
-    
+
     .memory-btn {
       background: var(--primary-accent);
       color: var(--bg-primary);
@@ -666,32 +1048,33 @@
       cursor: pointer;
       transition: all .3s ease;
       white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
     }
-    
+
     .memory-btn:hover {
-      background: #0070c0;
+      background: #0284c7;
       transform: translateY(-1px);
     }
-    
+
     .memory-btn.secondary {
       background: transparent;
       color: var(--text-secondary);
       border: 1px solid var(--border-color);
     }
-    
+
     .memory-btn.secondary:hover {
       background: var(--bg-secondary);
       color: var(--text-primary);
     }
-    
+
     .memory-btn.warning {
       background: var(--reversal);
     }
-    
+
     .memory-btn.warning:hover {
-      background: #d50000;
+      background: #dc2626;
     }
-    
+
     .saved-items-container {
       margin-top: 15px;
       max-height: 200px;
@@ -700,7 +1083,7 @@
       border-radius: var(--radius-input);
       padding: 10px;
     }
-    
+
     .saved-item {
       display: flex;
       justify-content: space-between;
@@ -711,31 +1094,31 @@
       border-radius: var(--radius-input);
       transition: background .3s ease;
     }
-    
+
     .saved-item:hover {
       background: var(--bg-card);
     }
-    
+
     .saved-item:last-child {
       margin-bottom: 0;
     }
-    
+
     .saved-item-name {
       font-weight: 600;
       font-size: .85em;
       color: var(--text-primary);
     }
-    
+
     .saved-item-details {
       font-size: .7em;
       color: var(--text-secondary);
     }
-    
+
     .saved-item-actions {
       display: flex;
       gap: 5px;
     }
-    
+
     .saved-item-btn {
       background: transparent;
       border: none;
@@ -745,23 +1128,24 @@
       padding: 4px 8px;
       border-radius: 4px;
       transition: all .2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
-    
+
     .saved-item-btn:hover {
       background: var(--primary-accent);
       color: var(--bg-primary);
     }
-    
+
     .saved-item-btn.delete:hover {
       background: var(--reversal);
       color: var(--bg-primary);
     }
-    
+
     .custom-values-indicator {
       background: var(--analgesic);
       color: white;
-      padding: 8px 12px;
-      border-radius: var(--radius-input);
+      padding: 12px 15px;
+      border-radius: var(--radius-card);
       margin-bottom: 15px;
       font-size: .85em;
       font-weight: 600;
@@ -769,8 +1153,9 @@
       justify-content: space-between;
       align-items: center;
       animation: slideIn 0.5s ease;
+      box-shadow: var(--shadow);
     }
-    
+
     .no-saved-items {
       text-align: center;
       color: var(--text-secondary);
@@ -778,8 +1163,7 @@
       padding: 20px;
       font-size: .85em;
     }
-    
-    /* Custom value indicator styles */
+
     .custom-indicator {
       display: inline-block;
       width: 8px;
@@ -789,13 +1173,24 @@
       margin-left: 6px;
       animation: pulse 2s infinite;
     }
-    
+
     @keyframes pulse {
-      0% { transform: scale(0.95); opacity: 0.7; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.7; }
+      0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(0.95);
+        opacity: 0.7;
+      }
     }
-    
+
     .drug-name.has-custom::after {
       content: "";
       display: inline-block;
@@ -807,20 +1202,43 @@
       animation: pulse 2s infinite;
     }
 
-    /* Responsive */
-    @media(min-width:768px){
-      .container{padding:20px 15px}
-      .drugs-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:15px}
-      .equipment-grid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-      h1{font-size:2em}
-      .section h2{font-size:1.5em}
-      .drug-name{font-size:1.2em}
-      .drug-header{flex-direction:row;align-items:center}
+    @media(min-width:768px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      .drugs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+      }
+
+      .equipment-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .section h2 {
+        font-size: 1.5em;
+      }
+
+      .drug-name {
+        font-size: 1.2em;
+      }
+
+      .drug-header {
+        flex-direction: row;
+        align-items: center;
+      }
+
       .tab-button {
         min-width: 150px;
         flex-direction: row;
         justify-content: center;
       }
+
       .tab-button i {
         font-size: 1em;
         margin-right: 8px;
@@ -833,16 +1251,19 @@
         padding: 10px 8px;
         font-size: 0.7em;
       }
+
       .tab-button i {
         font-size: 1em;
       }
+
       .input-group {
         grid-template-columns: 1fr;
       }
+
       .memory-controls {
         flex-direction: column;
       }
-      
+
       .memory-input {
         min-width: 100%;
       }
@@ -859,8 +1280,16 @@
       </button>
     </header>
 
-    <div class="warning">
-      <i class="fas fa-exclamation-triangle"></i> Disclaimer: The information provided by this calculator is strictly for estimation and reference purposes. You are required to exercise independent professional judgment and verify all calculations against approved institutional and regulatory standards. No warranties, express or implied, are made regarding the accuracy or completeness of the data. The developers and distributors disclaim all liability for damages arising from the use or inability to use this information.
+    <div class="disclaimer-container">
+      <div class="disclaimer-toggle" onclick="toggleDisclaimer()">
+        <span><i class="fas fa-exclamation-triangle"></i> Disclaimer(Read this first)</span>
+        <i class="fas fa-chevron-down" id="disclaimer-arrow"></i>
+      </div>
+      <div class="disclaimer-content" id="disclaimer-content">
+        <div class="warning">
+          The information provided by this calculator is strictly for estimation and reference purposes. You are required to exercise independent professional judgment and verify all calculations against approved institutional and regulatory standards. No warranties, express or implied, are made regarding the accuracy or completeness of the data. The developers and distributors disclaim all liability for damages arising from the use or inability to use this information.
+        </div>
+      </div>
     </div>
 
     <div class="tab-navigation">
@@ -929,15 +1358,12 @@
         
         <div class="input-field">
           <label for="patient-profile-name">Profile Name</label>
-          <input type="text" id="patient-profile-name" placeholder="e.g., Oliver Twist" class="memory-input">
+          <input type="text" id="patient-profile-name" placeholder="e.g., John Honai" class="memory-input">
         </div>
         
         <div class="memory-controls">
           <button class="memory-btn" onclick="savePatientProfile()">
             <i class="fas fa-save"></i> Save Current Patient
-          </button>
-          <button class="memory-btn secondary" onclick="loadPatientProfiles()">
-            <i class="fas fa-folder-open"></i> Load Saved
           </button>
           <button class="memory-btn warning" onclick="clearAllPatientProfiles()">
             <i class="fas fa-trash"></i> Clear All
@@ -978,7 +1404,7 @@
     <div class="tab-content" id="drug-calculations">
       <!-- Custom Drug Values Indicator -->
       <div id="custom-drugs-indicator" class="custom-values-indicator" style="display: none;">
-        <span><i class="fas fa-info-circle"></i> Using Custom Drug Values: <span id="current-drug-set-name">Unknown</span></span>
+        <span><i class="fas fa-info-circle"></i> Using Custom Drug Values: <span id="current-drug-set-name">Unknown</span> (<span id="modified-drugs-count">0</span> drugs modified)</span>
         <button class="memory-btn secondary" onclick="resetAllDrugsToDefault()" style="padding: 4px 8px; font-size: 0.7em;">
           <i class="fas fa-undo"></i> Reset to Default
         </button>
@@ -1008,9 +1434,6 @@
         <div class="memory-controls">
           <button class="memory-btn" onclick="saveDrugSet()">
             <i class="fas fa-save"></i> Save Current Settings
-          </button>
-          <button class="memory-btn secondary" onclick="loadDrugSets()">
-            <i class="fas fa-folder-open"></i> Load Saved
           </button>
           <button class="memory-btn warning" onclick="clearAllDrugSets()">
             <i class="fas fa-trash"></i> Clear All
@@ -1063,126 +1486,38 @@
   </div>
 
   <script>
-  // Tab switching functionality
-  document.addEventListener('DOMContentLoaded', function() {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Remove active class from all buttons and contents
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-        
-        // Add active class to clicked button
-        button.classList.add('active');
-        
-        // Show corresponding tab content
-        const tabId = button.getAttribute('data-tab');
-        document.getElementById(tabId).classList.add('active');
-      });
-    });
-    
-    // Initialize dark mode
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (savedDarkMode) {
-      document.body.classList.add('dark-mode');
-      updateDarkModeButton();
-    }
-    
-    // Load last used drug values
-    loadLastUsedDrugValues();
-    
-    // Initialize calculations
-    calculateAll();
-    
-    // Load saved items
-    loadPatientProfiles();
-    loadDrugSets();
-    
-    // Check if we're using custom drug values on page load
-    checkForCustomDrugValues();
-    
-    // Initialize antibiotic expanded state array
-    antibioticExpanded = new Array(antibiotics.length).fill(false);
-  });
+  // Global state variables
+  let allExpanded = false;
+  let allInfusionsExpanded = false;
+  let allAntibioticsExpanded = false;
+  let activeEditIndex = null;
+  let antibioticExpanded = [];
 
-  // Dark mode functionality
-  function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDark);
-    updateDarkModeButton();
-  }
-  
-  function updateDarkModeButton() {
-    const isDark = document.body.classList.contains('dark-mode');
-    const icon = document.querySelector('.dark-mode-toggle i');
-    const text = document.querySelector('.dark-mode-toggle span');
-    
-    if (isDark) {
-      icon.className = 'fas fa-sun';
-      text.textContent = 'Light Mode';
-    } else {
-      icon.className = 'fas fa-moon';
-      text.textContent = 'Dark Mode';
-    }
-  }
-
-  /* -------------------------
-     Enhanced Drug Data Array with route options
-     ------------------------- */
   const drugs = [
-    // Induction Agents
     { name:'Propofol', category:'induction', categoryLabel:'Induction Agent', defaultDose:2.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'2-3 mg/kg', defaultRoute:'IV' },
     { name:'Thiopentone', category:'induction', categoryLabel:'Induction Agent', defaultDose:5, unit:'mg/kg', concentration:25, concentrationUnit:'mg/mL', useParam:'weight', range:'4-6 mg/kg', defaultRoute:'IV' },
     { name:'Ketamine', category:'induction', categoryLabel:'Induction Agent', defaultDose:2, imDose:4, oralDose:6, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 4-6 mg/kg IM, 6-10 mg/kg Oral', defaultRoute:'IV' },
     { name:'Etomidate', category:'induction', categoryLabel:'Induction Agent', defaultDose:0.3, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.2-0.3 mg/kg', caution:'Avoid in sepsis or adrenal suppression risk.', defaultRoute:'IV' },
-
-    // Muscle Relaxants
     { name:'Vecuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.08-0.1 mg/kg', defaultRoute:'IV' },
     { name:'Rocuronium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.6, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.6-1.2 mg/kg', defaultRoute:'IV' },
     { name:'Atracurium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.4-0.5 mg/kg', defaultRoute:'IV' },
     { name:'Cisatracurium', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg', defaultRoute:'IV' },
     { name:'Succinylcholine', category:'muscle-relaxant', categoryLabel:'Muscle Relaxant', defaultDose:1.5, imDose:3, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg IV, 3-4 mg/kg IM', caution:'FDA Black Box Warning: Reserved for emergent use in children (<50kg) due to risk of hyperkalemia/cardiac arrest in undiagnosed myopathies.', defaultRoute:'IV' },
-
-    // Analgesics
     { name:'Fentanyl', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:2, unit:'mcg/kg', concentration:50, concentrationUnit:'mcg/mL', useParam:'weight', range:'1-3 mcg/kg', defaultRoute:'IV' },
     { name:'Morphine', category:'analgesic', categoryLabel:'Opioid Analgesic', defaultDose:0.1, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg', defaultRoute:'IV' },
     { name:'Tramadol', category:'analgesic', categoryLabel:'Analgesic', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
     { name:'Paracetamol (IV)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, caution:'Dose must be reduced to 7.5 mg/kg for patients <10 kg. Risk of hepatotoxicity in small infants/neonates.', defaultRoute:'IV' },
     { name:'Paracetamol (Oral)', category:'analgesic', categoryLabel:'Analgesic', defaultDose:15, unit:'mg/kg', concentration:24, concentrationUnit:'mg/mL', useParam:'weight', range:'10-15 mg/kg (max 1g)', maxDose:1000, defaultRoute:'Oral' },
-
-    // *** KETOROLAC ENTRY ***
-    { 
-        name:'Ketorolac', 
-        category:'analgesic', 
-        categoryLabel:'NSAID Analgesic', 
-        defaultDose:0.5, // Placeholder for IV/IM up to 16 yo
-        oralDose:1.0,  // Placeholder for Oral up to 16 yo
-        unit:'mg/kg', 
-        concentration:30, // 30 mg/mL commonly
-        concentrationUnit:'mg/mL', 
-        useParam:'weight', 
-        range:'Dose varies significantly by Age/Weight/Route (See Info)', 
-        defaultRoute:'IV' 
-    },
-    // *** END KETOROLAC ENTRY ***
-
-    // Adjuncts/Sedatives
+    { name:'Ketorolac', category:'analgesic', categoryLabel:'NSAID Analgesic', defaultDose:0.5, oralDose:1.0, unit:'mg/kg', concentration:30, concentrationUnit:'mg/mL', useParam:'weight', range:'Dose varies significantly by Age/Weight/Route (See Info)', defaultRoute:'IV' },
     { name:'Midazolam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, oralDose:0.5, unit:'mg/kg', concentration:1, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.2 mg/kg IV, 0.5-1 mg/kg Oral', caution:'Reduced dose or slow titration recommended for infants <10 kg due to prolonged effect/lower clearance.', defaultRoute:'IV' },
     { name:'Diazepam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.2, oralDose:0.3, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.3 mg/kg IV, 0.2-0.5 mg/kg Oral', caution:'Max 10mg. Slow IV. Not recommended for neonates.', defaultRoute:'IV' },
     { name:'Lorazepam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, oralDose:0.05, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.1 mg/kg IV, 0.05 mg/kg Oral', caution:'Max 4mg/dose. Slow IV.', defaultRoute:'IV' },
     { name:'Lidocaine (Xylocard)', category:'adjunct', categoryLabel:'Local Anesthetic', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-1.5 mg/kg IV', caution:'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.', defaultRoute:'IV' },
-
-    // Reversal Agents
     { name:'Neostigmine', category:'reversal', categoryLabel:'Muscle Relaxant Reversal', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5, defaultRoute:'IV' },
     { name:'Glycopyrrolate', category:'reversal', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg', defaultRoute:'IV' },
     { name:'Sugammadex', category:'reversal', categoryLabel:'Rocuronium Reversal', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)', defaultRoute:'IV' },
-    { name:'Naloxone', category:'reversal', categoryLabel:'Opioid Reversal', defaultDose:0.004, unit:'mg/kg', concentration:0.4, concentrationUnit:'mcg/mL', useParam:'weight', range:'4 mcg/kg (titrate)', defaultRoute:'IV' },
+    { name:'Naloxone', category:'reversal', categoryLabel:'Opioid Reversal', defaultDose:0.1, unit:'mg/kg', concentration:0.4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1mg/kg (titrate)',maxDose:2, defaultRoute:'IV' },
     { name:'Flumazenil', category:'reversal', categoryLabel:'Benzodiazepine Reversal', defaultDose:0.01, unit:'mg/kg', concentration:0.1, concentrationUnit:'mg/mL', useParam:'weight', range:'10 mcg/kg (titrate, max 200mcg)', maxDose:0.2, defaultRoute:'IV' },
-
-    // Emergency Drugs
     { name:'Adrenaline (Epinephrine) Arrest', category:'emergency', categoryLabel:'Cardiac Arrest', defaultDose:10, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'10 mcg/kg IV (1:10,000)', defaultRoute:'IV' },
     { name:'Adrenaline (Epinephrine) Anaphylaxis', category:'emergency', categoryLabel:'Anaphylaxis (IV)', defaultDose:1, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'1 mcg/kg (1:10,000)', defaultRoute:'IV' },
     { name:'Atropine', category:'emergency', categoryLabel:'Bradycardia', defaultDose:0.02, unit:'mg/kg', concentration:0.6, concentrationUnit:'mg/mL', useParam:'weight', range:'20 mcg/kg (min 100mcg, max 600mcg)', minDose:0.1, maxDose:0.6, defaultRoute:'IV' },
@@ -1191,321 +1526,83 @@
     { name:'Adenosine 1st Dose', category:'emergency', categoryLabel:'SVT', defaultDose:0.1, unit:'mg/kg', concentration:3, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1 mg/kg (max 6mg)', maxDose:6, defaultRoute:'IV' },
     { name:'Adenosine 2nd Dose', category:'emergency', categoryLabel:'SVT', defaultDose:0.2, unit:'mg/kg', concentration:3, concentrationUnit:'mg/mL', useParam:'weight', range:'0.2 mg/kg (max 12mg)', maxDose:12, defaultRoute:'IV' },
     { name:'Phenylephrine', category:'emergency', categoryLabel:'Vasopressor', defaultDose:10, unit:'mcg/kg', concentration:100, concentrationUnit:'mcg/mL', useParam:'weight', range:'5-20 mcg/kg', caution:'Total dose: 50-100 mcg. Use for acute hypotension.', defaultRoute:'IV' },
-
-    // Steroids & Antiemetics
     { name:'Dexamethasone', category:'steroid', categoryLabel:'Steroid', defaultDose:0.15, unit:'mg/kg', concentration:4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
     { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
     { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
     { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10, defaultRoute:'IV' }
   ];
+  
+  // Add custom value fields to all drugs
+  drugs.forEach(drug => {
+    drug.customDoseIV = null;
+    drug.customDoseIM = null;
+    drug.customDoseOral = null;
+    drug.customConcentration = null;
+  });
 
-  /* -------------------------
-     Antibiotics Data Array - UPDATED: Remove IM routes, add surgical prophylaxis
-     ------------------------- */
   const antibiotics = [
-    {
-      name: 'Ampicillin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 50,
-      unit: 'mg/kg',
-      concentration: 100,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '50-100 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q6H' },
-        { name: 'Severe Infection/Meningitis', dose: 100, frequency: 'Q6H' },
-        { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' }
-      ],
-      caution: 'High rate of rash. Not effective against beta-lactamase producing bacteria.',
-      info: 'Common indications: Meningitis, severe sepsis, UTIs, intra-abdominal infections. Often used for Listeria in neonates.'
-    },
-    {
-      name: 'Amoxicillin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 25,
-      unit: 'mg/kg',
-      concentration: 50,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '25-90 mg/kg',
-      defaultRoute: 'Oral',
-      routes: ['Oral'],
-      indications: [
-        { name: 'Mild/Moderate Infection', dose: 25, frequency: 'Q8H' },
-        { name: 'Otitis Media/Sinusitis', dose: 45, frequency: 'Q12H' },
-        { name: 'Severe Infection', dose: 90, frequency: 'Q12H' }
-      ],
-      maxDose: 1000,
-      caution: 'High incidence of rash, especially with concurrent viral infections.',
-      info: 'Common indications: Otitis media, sinusitis, community-acquired pneumonia, streptococcal pharyngitis.'
-    },
-    {
-      name: 'Amoxicillin/Clavulanate',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 25,
-      unit: 'mg/kg',
-      concentration: 50,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '25-90 mg/kg',
-      defaultRoute: 'Oral',
-      routes: ['Oral'],
-      indications: [
-        { name: 'Standard Dose', dose: 25, frequency: 'Q8H' },
-        { name: 'Higher Dose (Recurrent Otitis)', dose: 45, frequency: 'Q12H' }
-      ],
-      maxDose: 875,
-      caution: 'Diarrhea and GI upset are more common due to clavulanate.',
-      info: 'Common indications: Recurrent or persistent otitis media, sinusitis, bite wounds. Used when beta-lactamase producing bacteria are suspected.'
-    },
-    {
-      name: 'Cefazolin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 25,
-      unit: 'mg/kg',
-      concentration: 100,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '25-50 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Surgical Prophylaxis', dose: 25, frequency: 'Single dose' },
-        { name: 'Treatment', dose: 50, frequency: 'Q8H' }
-      ],
-      maxDose: 2000,
-      caution: 'Cross-hypersensitivity with penicillins (approx. 5-10% risk).',
-      info: 'Common indications: Surgical prophylaxis, skin and soft tissue infections caused by MSSA.'
-    },
-    {
-      name: 'Cefotaxime',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 50,
-      unit: 'mg/kg',
-      concentration: 100,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '50-75 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q8H' },
-        { name: 'Severe Infection/Meningitis', dose: 75, frequency: 'Q6H' },
-        { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' }
-      ],
-      maxDose: 2000,
-      caution: 'Excellent CNS penetration.',
-      info: 'Common indications: Meningitis, serious Gram-negative infections, gonorrhea, sepsis in neonates.'
-    },
-    {
-      name: 'Cefoxitin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 40,
-      unit: 'mg/kg',
-      concentration: 100,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '40-80 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Mild/Moderate Infection', dose: 40, frequency: 'Q6H' },
-        { name: 'Severe Infection', dose: 80, frequency: 'Q4H' },
-        { name: 'Surgical Prophylaxis', dose: 40, frequency: 'Single dose' }
-      ],
-      maxDose: 2000,
-      caution: 'Good anaerobic coverage. Considered a "cephamycin".',
-      info: 'Common indications: Intra-abdominal infections, pelvic inflammatory disease (PID), surgical prophylaxis for colorectal procedures.'
-    },
-    {
-      name: 'Clindamycin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 10,
-      unit: 'mg/kg',
-      concentration: 150,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '10-40 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV', 'Oral'],
-      indications: [
-        { name: 'Mild/Moderate Infection', dose: 10, frequency: 'Q8H' },
-        { name: 'Severe Infection/MRSA', dose: 40, frequency: 'Q6H' },
-        { name: 'Surgical Prophylaxis', dose: 10, frequency: 'Single dose' }
-      ],
-      maxDose: 900,
-      caution: 'High risk of causing C. difficile colitis. Not reliable for CNS infections.',
-      info: 'Common indications: Anaerobic infections, MRSA skin/soft tissue infections, bone/joint infections.'
-    },
-    {
-      name: 'Gentamicin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 7.5,
-      unit: 'mg/kg',
-      concentration: 10,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '5-7.5 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Standard Dose', dose: 7.5, frequency: 'Q24H' },
-        { name: 'Meningitis', dose: 5, frequency: 'Q8H' }
-      ],
-      maxDose: 300,
-      caution: 'NEPHROTOXIC and OTOTOXIC. Therapeutic drug monitoring required.',
-      info: 'Common indications: Severe Gram-negative infections, sepsis, synergistic therapy for endocarditis.'
-    },
-    {
-      name: 'Metronidazole',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 7.5,
-      unit: 'mg/kg',
-      concentration: 5,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '7.5-10 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV', 'Oral'],
-      indications: [
-        { name: 'Anaerobic Infections', dose: 7.5, frequency: 'Q8H' },
-        { name: 'C. difficile Colitis', dose: 10, frequency: 'Q8H (Oral)' },
-        { name: 'Surgical Prophylaxis', dose: 7.5, frequency: 'Single dose' }
-      ],
-      maxDose: 500,
-      caution: 'Causes disulfiram-like reaction with alcohol. Metallic taste common.',
-      info: 'Common indications: Anaerobic infections (intra-abdominal, brain abscess), C. difficile colitis.'
-    },
-    {
-      name: 'Vancomycin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 15,
-      unit: 'mg/kg',
-      concentration: 5,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '15-20 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Standard Dose', dose: 15, frequency: 'Q6-8H' },
-        { name: 'Severe Infection/Meningitis', dose: 20, frequency: 'Q6-8H' }
-      ],
-      maxDose: 1000,
-      caution: 'NEPHROTOXIC and OTOTOXIC. Requires therapeutic drug monitoring.',
-      info: 'Common indications: MRSA infections, serious infections in penicillin-allergic patients.'
-    },
-    {
-      name: 'Piperacillin/Tazobactam (Zosyn)',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 100,
-      unit: 'mg/kg',
-      concentration: 40,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '80-100 mg/kg',
-      defaultRoute: 'IV',
-      routes: ['IV'],
-      indications: [
-        { name: 'Standard Dose', dose: 80, frequency: 'Q8H' },
-        { name: 'Severe Infection', dose: 100, frequency: 'Q6H' },
-        { name: 'Surgical Prophylaxis', dose: 80, frequency: 'Single dose' }
-      ],
-      maxDose: 4000,
-      caution: 'Broad-spectrum use can lead to C. diff and fungal superinfections. Contains significant sodium load.',
-      info: 'Common indications: Broad-spectrum coverage for hospital-acquired pneumonia, intra-abdominal infections, febrile neutropenia.'
-    }
+    { name: 'Ampicillin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 50, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '50-100 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q6H' }, { name: 'Severe Infection/Meningitis', dose: 100, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' } ], caution: 'High rate of rash. Not effective against beta-lactamase producing bacteria.', info: 'Common indications: Meningitis, severe sepsis, UTIs, intra-abdominal infections. Often used for Listeria in neonates.' },
+    { name: 'Amoxicillin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 50, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-90 mg/kg', defaultRoute: 'Oral', routes: ['Oral'], indications: [ { name: 'Mild/Moderate Infection', dose: 25, frequency: 'Q8H' }, { name: 'Otitis Media/Sinusitis', dose: 45, frequency: 'Q12H' }, { name: 'Severe Infection', dose: 90, frequency: 'Q12H' } ], maxDose: 1000, caution: 'High incidence of rash, especially with concurrent viral infections.', info: 'Common indications: Otitis media, sinusitis, community-acquired pneumonia, streptococcal pharyngitis.' },
+    { name: 'Amoxicillin/Clavulanate', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 50, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-90 mg/kg', defaultRoute: 'Oral', routes: ['Oral'], indications: [ { name: 'Standard Dose', dose: 25, frequency: 'Q8H' }, { name: 'Higher Dose (Recurrent Otitis)', dose: 45, frequency: 'Q12H' } ], maxDose: 875, caution: 'Diarrhea and GI upset are more common due to clavulanate.', info: 'Common indications: Recurrent or persistent otitis media, sinusitis, bite wounds. Used when beta-lactamase producing bacteria are suspected.' },
+    { name: 'Cefazolin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-50 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Surgical Prophylaxis', dose: 25, frequency: 'Single dose' }, { name: 'Treatment', dose: 50, frequency: 'Q8H' } ], maxDose: 2000, caution: 'Cross-hypersensitivity with penicillins (approx. 5-10% risk).', info: 'Common indications: Surgical prophylaxis, skin and soft tissue infections caused by MSSA.' },
+    { name: 'Cefotaxime', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 50, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '50-75 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q8H' }, { name: 'Severe Infection/Meningitis', dose: 75, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' } ], maxDose: 2000, caution: 'Excellent CNS penetration.', info: 'Common indications: Meningitis, serious Gram-negative infections, gonorrhea, sepsis in neonates.' },
+    { name: 'Cefoxitin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 40, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '40-80 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 40, frequency: 'Q6H' }, { name: 'Severe Infection', dose: 80, frequency: 'Q4H' }, { name: 'Surgical Prophylaxis', dose: 40, frequency: 'Single dose' } ], maxDose: 2000, caution: 'Good anaerobic coverage. Considered a "cephamycin".', info: 'Common indications: Intra-abdominal infections, pelvic inflammatory disease (PID), surgical prophylaxis for colorectal procedures.' },
+    { name: 'Clindamycin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 10, unit: 'mg/kg', concentration: 150, concentrationUnit: 'mg/mL', useParam: 'weight', range: '10-40 mg/kg', defaultRoute: 'IV', routes: ['IV', 'Oral'], indications: [ { name: 'Mild/Moderate Infection', dose: 10, frequency: 'Q8H' }, { name: 'Severe Infection/MRSA', dose: 40, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 10, frequency: 'Single dose' } ], maxDose: 900, caution: 'High risk of causing C. difficile colitis. Not reliable for CNS infections.', info: 'Common indications: Anaerobic infections, MRSA skin/soft tissue infections, bone/joint infections.' },
+    { name: 'Gentamicin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 7.5, unit: 'mg/kg', concentration: 10, concentrationUnit: 'mg/mL', useParam: 'weight', range: '5-7.5 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Standard Dose', dose: 7.5, frequency: 'Q24H' }, { name: 'Meningitis', dose: 5, frequency: 'Q8H' } ], maxDose: 300, caution: 'NEPHROTOXIC and OTOTOXIC. Therapeutic drug monitoring required.', info: 'Common indications: Severe Gram-negative infections, sepsis, synergistic therapy for endocarditis.' },
+    { name: 'Metronidazole', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 7.5, unit: 'mg/kg', concentration: 5, concentrationUnit: 'mg/mL', useParam: 'weight', range: '7.5-10 mg/kg', defaultRoute: 'IV', routes: ['IV', 'Oral'], indications: [ { name: 'Anaerobic Infections', dose: 7.5, frequency: 'Q8H' }, { name: 'C. difficile Colitis', dose: 10, frequency: 'Q8H (Oral)' }, { name: 'Surgical Prophylaxis', dose: 7.5, frequency: 'Single dose' } ], maxDose: 500, caution: 'Causes disulfiram-like reaction with alcohol. Metallic taste common.', info: 'Common indications: Anaerobic infections (intra-abdominal, brain abscess), C. difficile colitis.' },
+    { name: 'Vancomycin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 15, unit: 'mg/kg', concentration: 5, concentrationUnit: 'mg/mL', useParam: 'weight', range: '15-20 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Standard Dose', dose: 15, frequency: 'Q6-8H' }, { name: 'Severe Infection/Meningitis', dose: 20, frequency: 'Q6-8H' } ], maxDose: 1000, caution: 'NEPHROTOXIC and OTOTOXIC. Requires therapeutic drug monitoring.', info: 'Common indications: MRSA infections, serious infections in penicillin-allergic patients.' },
+    { name: 'Piperacillin/Tazobactam (Zosyn)', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 100, unit: 'mg/kg', concentration: 40, concentrationUnit: 'mg/mL', useParam: 'weight', range: '80-100 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Standard Dose', dose: 80, frequency: 'Q8H' }, { name: 'Severe Infection', dose: 100, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 80, frequency: 'Single dose' } ], maxDose: 4000, caution: 'Broad-spectrum use can lead to C. diff and fungal superinfections. Contains significant sodium load.', info: 'Common indications: Broad-spectrum coverage for hospital-acquired pneumonia, intra-abdominal infections, febrile neutropenia.' }
   ];
 
-  /* -------------------------
-     Infusion Drugs Data with STANDARD CONCENTRATIONS
-     ------------------------- */
   const infusionDrugs = [
+    { name: 'Adrenaline (Epinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose for infusions' }, infusionDose: { min: 0.1, max: 1, unit: 'mcg/kg/min' }, commonDilution: '4 mg in 50 mL (80 mcg/mL)', preparation: 'Take 4 mL of Adrenaline (1 mg/mL) and add to 46 mL of compatible fluid to make 50 mL.', concentration: 80, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight * 60) / 80; }, caution: 'VESICANT - High risk of tissue necrosis if extravasation occurs. Use central line if possible. Have phentolamine ready for infiltration management.', notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient' },
+    { name: 'Noradrenaline (Norepinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose' }, infusionDose: { min: 0.05, max: 2, unit: 'mcg/kg/min' }, commonDilution: '4 mg in 50 mL (80 mcg/mL)', preparation: 'Take 2 mL of Noradrenaline (2 mg/mL) and add to 48 mL of compatible fluid to make 50 mL.', concentration: 80, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight * 60) / 80; }, caution: 'POTENT VESICANT - Must be administered through a central line if possible. If peripheral, use large proximal vein with frequent monitoring.', notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient' },
+    { name: 'Dexmedetomidine (Precedex) Infusion', category: 'infusion', categoryLabel: 'Sedative Infusion', loadingDose: { dose: 0.5, unit: 'mcg/kg', note: 'Optional: 0.5-1 mcg/kg over 10-20 minutes' }, infusionDose: { min: 0.2, max: 1, unit: 'mcg/kg/hr' }, commonDilution: '200 mcg in 50 mL (4 mcg/mL)', preparation: 'Take 2 mL of Dexmedetomidine (100 mcg/mL) and add to 48 mL of NS or D5W to make 50 mL.', concentration: 4, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight) / 4; }, caution: 'Causes bradycardia. Monitor hemodynamics closely. Withdrawal symptoms possible after prolonged use (>24 hours).', notes: 'Does not cause significant respiratory depression. Useful for procedural sedation and weaning from other sedatives.' },
+    { name: 'Fentanyl Infusion', category: 'infusion', categoryLabel: 'Opioid Analgesic Infusion', loadingDose: { dose: 1, unit: 'mcg/kg', note: '1-2 mcg/kg bolus before starting infusion' }, infusionDose: { min: 1, max: 5, unit: 'mcg/kg/hr' }, commonDilution: '500 mcg in 50 mL (10 mcg/mL)', preparation: 'Take 10 mL of Fentanyl (50 mcg/mL) and add to 40 mL of compatible fluid to make 50 mL.', concentration: 10, concentrationUnit: 'mcg/mL', rateCalculation: function(dose, weight) { return (dose * weight) / 10; }, caution: 'Respiratory depression risk. Monitor respiratory status continuously. Have naloxone available. Chest wall rigidity possible with rapid bolus.', notes: 'For non-intubated patients, use lowest effective dose and monitor closely.' },
+  {
+      name: 'Dopamine Infusion',
+      category: 'infusion',
+      categoryLabel: 'Inotrope/Vasopressor',
+      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Loading dose not typically used.' },
+      infusionDose: { min: 2, max: 20, unit: 'mcg/kg/min' },
+      commonDilution: '200 mg in 50 mL (4000 mcg/mL)',
+      preparation: 'Take 5 mL of Dopamine (40 mg/mL) and add to 45 mL of compatible fluid to make 50 mL.',
+      concentration: 4000,
+      concentrationUnit: 'mcg/mL',
+      rateCalculation: function(dose, weight) { return (dose * weight * 60) / 4000; },
+      caution: 'POTENT VESICANT - Must be administered through a central line. Can cause tachycardia and arrhythmias.',
+      notes: 'Dose-dependent effects: 2-5 mcg/kg/min (dopaminergic/renal), 5-10 mcg/kg/min (inotropic/beta), >10 mcg/kg/min (vasopressor/alpha).'
+    },
     {
-      name: 'Adrenaline (Epinephrine) Infusion',
+      name: 'Dobutamine Infusion',
+      category: 'infusion',
+      categoryLabel: 'Inotrope Infusion',
+      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Loading dose not typically used.' },
+      infusionDose: { min: 2, max: 20, unit: 'mcg/kg/min' },
+      commonDilution: '250 mg in 50 mL (5000 mcg/mL)',
+      preparation: 'Take 20 mL of Dobutamine (12.5 mg/mL) and add to 30 mL of compatible fluid to make 50 mL.',
+      concentration: 5000,
+      concentrationUnit: 'mcg/mL',
+      rateCalculation: function(dose, weight) { return (dose * weight * 60) / 5000; },
+      caution: 'Can cause tachycardia, arrhythmias, and hypotension. Monitor HR and BP closely.',
+      notes: 'Primarily a beta-1 agonist, increasing inotropy and chronotropy with less effect on SVR.'
+    },
+    {
+      name: 'Vasopressin Infusion',
       category: 'infusion',
       categoryLabel: 'Vasopressor Infusion',
-      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose for infusions' },
-      infusionDose: { min: 0.1, max: 1, unit: 'mcg/kg/min' },
-      commonDilution: '4 mg in 50 mL (80 mcg/mL)',
-      preparation: 'Take 4 mL of Adrenaline (1 mg/mL) and add to 46 mL of compatible fluid to make 50 mL.',
-      concentration: 80, // mcg/mL
-      concentrationUnit: 'mcg/mL',
-      rateCalculation: function(dose, weight) { 
-          // dose in mcg/kg/min, weight in kg
-          // rate (mL/h) = (dose * weight * 60) / concentration (mcg/mL)
-          return (dose * weight * 60) / 80;
-      },
-      caution: 'VESICANT - High risk of tissue necrosis if extravasation occurs. Use central line if possible. Have phentolamine ready for infiltration management.',
-      notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient'
-    },
-    {
-      name: 'Noradrenaline (Norepinephrine) Infusion',
-      category: 'infusion',
-      categoryLabel: 'Vasopressor Infusion',
-      loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Not typically used as a loading dose' },
-      infusionDose: { min: 0.05, max: 2, unit: 'mcg/kg/min' },
-      commonDilution: '4 mg in 50 mL (80 mcg/mL)',
-      preparation: 'Take 2 mL of Noradrenaline (2 mg/mL) and add to 48 mL of compatible fluid to make 50 mL.',
-      concentration: 80, // mcg/mL
-      concentrationUnit: 'mcg/mL',
-      rateCalculation: function(dose, weight) { 
-          return (dose * weight * 60) / 80;
-      },
-      caution: 'POTENT VESICANT - Must be administered through a central line if possible. If peripheral, use large proximal vein with frequent monitoring.',
-      notes: 'Standard preparation: 4 mg in 50 mL → 1 mL/h = (80 mcg/mL ÷ 60 min) ÷ weight = 1.33 mcg/kg/min for 1 kg patient'
-    },
-    {
-      name: 'Dexmedetomidine (Precedex) Infusion',
-      category: 'infusion',
-      categoryLabel: 'Sedative Infusion',
-      loadingDose: { dose: 0.5, unit: 'mcg/kg', note: 'Optional: 0.5-1 mcg/kg over 10-20 minutes' },
-      infusionDose: { min: 0.2, max: 1, unit: 'mcg/kg/hr' },
-      commonDilution: '200 mcg in 50 mL (4 mcg/mL)',
-      preparation: 'Take 2 mL of Dexmedetomidine (100 mcg/mL) and add to 48 mL of NS or D5W to make 50 mL.',
-      concentration: 4, // mcg/mL
-      concentrationUnit: 'mcg/mL',
-      rateCalculation: function(dose, weight) { 
-          // dose in mcg/kg/hr, weight in kg
-          // rate (mL/h) = (dose * weight) / concentration (mcg/mL)
-          return (dose * weight) / 4;
-      },
-      caution: 'Causes bradycardia. Monitor hemodynamics closely. Withdrawal symptoms possible after prolonged use (>24 hours).',
-      notes: 'Does not cause significant respiratory depression. Useful for procedural sedation and weaning from other sedatives.'
-    },
-    {
-      name: 'Fentanyl Infusion',
-      category: 'infusion',
-      categoryLabel: 'Opioid Analgesic Infusion',
-      loadingDose: { dose: 1, unit: 'mcg/kg', note: '1-2 mcg/kg bolus before starting infusion' },
-      infusionDose: { min: 1, max: 5, unit: 'mcg/kg/hr' },
-      commonDilution: '500 mcg in 50 mL (10 mcg/mL)',
-      preparation: 'Take 10 mL of Fentanyl (50 mcg/mL) and add to 40 mL of compatible fluid to make 50 mL.',
-      concentration: 10, // mcg/mL
-      concentrationUnit: 'mcg/mL',
-      rateCalculation: function(dose, weight) { 
-          return (dose * weight) / 10;
-      },
-      caution: 'Respiratory depression risk. Monitor respiratory status continuously. Have naloxone available. Chest wall rigidity possible with rapid bolus.',
-      notes: 'For non-intubated patients, use lowest effective dose and monitor closely.'
+      loadingDose: { dose: 0, unit: 'units/kg', note: 'Loading dose not typically used for shock.' },
+      infusionDose: { min: 0.01, max: 0.48, unit: 'units/kg/hr' },
+      commonDilution: '5 units in 50 mL (0.1 units/mL)',
+      preparation: 'Take 0.25 mL of Vasopressin (20 units/mL) and add to 49.75 mL of compatible fluid to make 50 mL.',
+      concentration: 0.1,
+      concentrationUnit: 'units/mL',
+      rateCalculation: function(dose, weight) { return (dose * weight) / 0.1; },
+      caution: 'POTENT VESICANT - Must use central line. Risk of peripheral and splanchnic ischemia. Monitor for limb perfusion and urine output.',
+      notes: 'Dose range corresponds to 0.2 - 2 milliunits/kg/min. Used for catecholamine-resistant shock.'
     }
-  ];
+];
 
-  // Local anesthetics data
   const localAnesthetics = [
     { name: 'Lignocaine (Plain)', maxDose: 3, unit: 'mg/kg', caution: 'Without epinephrine' },
     { name: 'Lignocaine (With Epinephrine)', maxDose: 7, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },
@@ -1514,364 +1611,209 @@
     { name: 'Ropivacaine', maxDose: 3, unit: 'mg/kg', caution: 'Maximum recommended dose' }
   ];
 
-  // Initialize currentRoute for each drug on load
+  const dilutionTiers = {
+    'Fentanyl': [50,10,5], 'Atropine': [0.6,0.1], 'Glycopyrrolate': [0.2,0.04],
+    'Ondansetron': [2,1], 'Vecuronium': [1,0.5], 'Atracurium': [10,5,2.5],
+    'Cisatracurium': [2,1,0.5], 'Adrenaline (Epinephrine) Anaphylaxis': [10,5]
+  };
+
+  // Initialization/Route assignment
   drugs.forEach(drug => {
-    // For Ketorolac, we define its possible routes here
-    if (drug.name === 'Ketorolac') {
-        drug.routes = ['IV', 'IM', 'Oral'];
-        drug.defaultRoute = 'IV';
-    } else {
-        drug.routes = drug.defaultRoute ? [drug.defaultRoute] : ['IV']; // Keep original logic for others
-        if (drug.imDose !== undefined) drug.routes.push('IM');
-        if (drug.oralDose !== undefined) drug.routes.push('Oral');
-    }
+    if (drug.name === 'Ketorolac') { drug.routes = ['IV', 'IM', 'Oral']; drug.defaultRoute = 'IV'; } 
+    else { drug.routes = drug.defaultRoute ? [drug.defaultRoute] : ['IV']; if (drug.imDose !== undefined) drug.routes.push('IM'); if (drug.oralDose !== undefined) drug.routes.push('Oral'); }
     drug.currentRoute = drug.defaultRoute;
   });
 
-  // Initialize antibiotics with route and indication selection
   antibiotics.forEach(antibiotic => {
-    // Remove IM routes - keep only IV and Oral
     antibiotic.routes = antibiotic.routes.filter(route => route !== 'IM');
-    // If defaultRoute was IM, change to IV
-    if (antibiotic.defaultRoute === 'IM') {
-      antibiotic.defaultRoute = antibiotic.routes.includes('IV') ? 'IV' : antibiotic.routes[0];
-    }
+    if (antibiotic.defaultRoute === 'IM') { antibiotic.defaultRoute = antibiotic.routes.includes('IV') ? 'IV' : antibiotic.routes[0]; }
     antibiotic.currentRoute = antibiotic.defaultRoute;
     antibiotic.currentIndication = antibiotic.indications ? antibiotic.indications[0].name : 'Standard';
   });
+  
+  // Store a copy of initial drug data
+  const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
+      name: d.name, 
+      defaultDose: d.defaultDose, // This is IV default
+      imDose: d.imDose, 
+      oralDose: d.oralDose,
+      concentration: d.concentration
+  }))));
 
-  /* dynamic dilution tiers used when calculated volume < 1 mL */
-  const dilutionTiers = {
-    'Fentanyl': [50,10,5],      // mcg/mL
-    'Atropine': [0.6,0.1],      // mg/mL
-    'Glycopyrrolate': [0.2,0.04],
-    'Ondansetron': [2,1],
-    'Vecuronium': [1,0.5],
-    'Atracurium': [10,5,2.5],
-    'Cisatracurium': [2,1,0.5],
-    'Adrenaline (Epinephrine) Anaphylaxis': [10,5]
-  };
-
-  /* -------------------------
-     UI state variables
-     ------------------------- */
-  let allExpanded = false;
-  let allInfusionsExpanded = false;
-  let allAntibioticsExpanded = false;
-  let activeEditIndex = null; // keep an edited card open after recalculation
-  let antibioticExpanded = []; // Track expanded state for each antibiotic card
-
-  /* -------------------------
-     Helper: read & cache patient data
-     ------------------------- */
   function getPatientData(){
-    // Read clamped inputs (clamping happens elsewhere)
     const years = parseFloat(document.getElementById('age-years').value) || 0;
     const months = parseFloat(document.getElementById('age-months').value) || 0;
     const totalAge = years + (months/12);
     return {
-      age: totalAge,
-      ageYears: years,
-      ageMonths: months,
+      age: totalAge, ageYears: years, ageMonths: months,
       weight: parseFloat(document.getElementById('weight').value) || 0,
       currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
       targetHb: parseFloat(document.getElementById('targetHb').value) || 0
     };
   }
 
-  /* -------------------------
-     Age clamping (Years: 0-18, Months: 0-11)
-     and trigger recalculation
-     ------------------------- */
   function clampAgeAndCalculate(){
     const ageYearsInput = document.getElementById('age-years');
     const ageMonthsInput = document.getElementById('age-months');
-
     let years = parseFloat(ageYearsInput.value);
     let months = parseFloat(ageMonthsInput.value);
 
     if (!isNaN(years)){
-      if (years < 0) years = 0;
-      if (years > 18) years = 18;
+      years = Math.min(18, Math.max(0, years));
       ageYearsInput.value = years;
-    } else if (ageYearsInput.value) {
-      ageYearsInput.value = '';
-    }
+    } else if (ageYearsInput.value) { ageYearsInput.value = ''; }
 
     if (!isNaN(months)){
-      if (months < 0) months = 0;
-      if (months > 11) months = 11;
-      if (years === 18) months = 0; // if 18 years then months must be zero
+      months = Math.min(11, Math.max(0, months));
+      if (years === 18) months = 0;
       ageMonthsInput.value = months;
-    } else if (ageMonthsInput.value) {
-      ageMonthsInput.value = '';
-    }
+    } else if (ageMonthsInput.value) { ageMonthsInput.value = ''; }
 
     calculateAll();
   }
 
-  /* -------------------------
-     Helper to get the correct dose based on route (Only used for non-ketorolac drugs now)
-     ------------------------- */
-  function getDoseByRoute(drug){
-    let dose;
-    switch (drug.currentRoute) {
-      case 'IM':
-        dose = drug.imDose !== undefined ? drug.imDose : drug.defaultDose;
-        break;
-      case 'Oral':
-        dose = drug.oralDose !== undefined ? drug.oralDose : drug.defaultDose;
-        break;
-      case 'IV':
-      default:
-        dose = drug.defaultDose;
-        break;
+  /**
+   * Gets the current effective dose for a given route, prioritizing custom values.
+   */
+  function getDoseByRoute(drug, route) {
+    const initialDrug = initialDrugs.find(d => d.name === drug.name);
+    if (!initialDrug) return 0;
+
+    switch (route) {
+        case 'IV':
+            return drug.customDoseIV !== null ? drug.customDoseIV : initialDrug.defaultDose;
+        case 'IM':
+            // Use IM default if available, otherwise fall back to IV default
+            const defaultIM = initialDrug.imDose !== undefined ? initialDrug.imDose : initialDrug.defaultDose;
+            return drug.customDoseIM !== null ? drug.customDoseIM : defaultIM;
+        case 'Oral':
+            // Use Oral default if available, otherwise fall back to IV default
+            const defaultOral = initialDrug.oralDose !== undefined ? initialDrug.oralDose : initialDrug.defaultDose;
+            return drug.customDoseOral !== null ? drug.customDoseOral : defaultOral;
+        default:
+            return drug.customDoseIV !== null ? drug.customDoseIV : initialDrug.defaultDose;
     }
-    return dose;
   }
 
-  // Store a copy of initial drug data to reset doses when switching back to IV
-  const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
-      name: d.name, 
-      defaultDose: d.defaultDose,
-      concentration: d.concentration,
-      imDose: d.imDose,
-      oralDose: d.oralDose
-  }))));
+  /**
+   * Gets the current effective concentration, prioritizing custom values.
+   */
+  function getConcentration(drug) {
+      const initialDrug = initialDrugs.find(d => d.name === drug.name);
+      if (!initialDrug) return 0;
+      return drug.customConcentration !== null ? drug.customConcentration : initialDrug.concentration;
+  }
 
-  // Function to check if a drug has custom values
+  /**
+   * Checks if a drug has any custom values set that differ from the default.
+   */
   function hasCustomValues(drug) {
     const initialDrug = initialDrugs.find(d => d.name === drug.name);
     if (!initialDrug) return false;
-    
-    return drug.defaultDose !== initialDrug.defaultDose || 
-           drug.concentration !== initialDrug.concentration;
+
+    // Check if custom values are set (not null)
+    // The reset button will set them back to null, clearing the marker.
+    const isIvDoseMod = drug.customDoseIV !== null;
+    const isImDoseMod = drug.customDoseIM !== null;
+    const isOralDoseMod = drug.customDoseOral !== null;
+    const isConcMod = drug.customConcentration !== null;
+
+    return isIvDoseMod || isImDoseMod || isOralDoseMod || isConcMod;
   }
 
-  /* -------------------------
-     Route selector logic
-     - updates drug.currentRoute and forces recalculation
-     ------------------------- */
+
+  function countModifiedDrugs() {
+    return drugs.filter(hasCustomValues).length;
+  }
+
+  /**
+   * Selects a route for a drug and recalculates.
+   */
   function selectRoute(index, route) {
     const drug = drugs[index];
     if (drug) {
       drug.currentRoute = route;
-      
-      // Reset custom dose for non-Ketorolac when route changes
-      if (drug.name !== 'Ketorolac') {
-          if (route === 'IM' && drug.imDose !== undefined) {
-              drug.defaultDose = drug.imDose;
-              drug.isCustomDoseHigh = false;
-          } else if (route === 'Oral' && drug.oralDose !== undefined) {
-              drug.defaultDose = drug.oralDose;
-              drug.isCustomDoseHigh = false;
-          } else { // IV
-              const initialDrugData = initialDrugs.find(d => d.name === drug.name);
-              if (initialDrugData) {
-                  drug.defaultDose = initialDrugData.defaultDose;
-                  drug.isCustomDoseHigh = false;
-              }
-          }
-      } else {
-        // For Ketorolac, we always use the calculated dose (0.5/1.0 mg/kg etc.) 
-        // to pre-populate the edit box, but the main calculation logic is in calculateKetorolacDoseAndInfo
-        const patient = getPatientData();
-        const { dosePerKg } = calculateKetorolacDoseAndInfo(patient, drug);
-        if (dosePerKg) {
-            drug.defaultDose = dosePerKg;
-        }
-      }
-
-      activeEditIndex = index; // Keep the card open
-      calculateDrugs();
+      activeEditIndex = index; // Keep edit pane open when switching routes
+      calculateDrugs(); // Recalculate to show new route's values
     }
   }
 
-  /* -------------------------
-     Antibiotic Route and Indication Selection
-     ------------------------- */
+
   function selectAntibioticRoute(index, route) {
     const antibiotic = antibiotics[index];
     if (antibiotic) {
       antibiotic.currentRoute = route;
-      // Reset to first indication when route changes
-      if (antibiotic.indications && antibiotic.indications.length > 0) {
-        antibiotic.currentIndication = antibiotic.indications[0].name;
-      }
+      if (antibiotic.indications && antibiotic.indications.length > 0) { antibiotic.currentIndication = antibiotic.indications[0].name; }
       calculateAntibiotics();
     }
   }
 
   function selectAntibioticIndication(index, indication) {
     const antibiotic = antibiotics[index];
-    if (antibiotic) {
-      antibiotic.currentIndication = indication;
-      calculateAntibiotics();
-    }
+    if (antibiotic) { antibiotic.currentIndication = indication; calculateAntibiotics(); }
   }
 
-  /* -------------------------
-     Ketorolac Specific Calculation Logic
-     - Handles all age/weight/route tiers
-     ------------------------- */
   function calculateKetorolacDoseAndInfo(patient, drug) {
     const age = patient.age;
     const weight = patient.weight;
     const route = drug.currentRoute;
-    let dosePerKg = 0;
-    let totalDose = 0; // Single dose in mg, used for volume calculation for injectables
-    let maxDosePerDose = 0;
-    let maxDailyDose = 0;
-    let duration = '';
-    let doseInfo = '';
-    let specialNote = '';
-    let doseUnit = 'mg';
-    let displayDoseString = ''; // The final string for the red box
+    let dosePerKg = 0.5; let totalDose = 0; let maxDosePerDose = 0; let maxDailyDose = 0;
+    let duration = ''; let doseInfo = ''; let specialNote = ''; let displayDoseString = 'N/A';
 
-    if (route === 'IV' || route === 'IM') {
-      doseUnit = 'mg/dose';
-    } else if (route === 'Oral') {
-      doseUnit = 'mg/dose';
-    }
-
-
-    if (age < 2.0) { // Infants and Children <2 years
-      // IV/IM (IM has been described >=6 months)
+    if (age < 2.0) {
       if (route === 'IV' || route === 'IM') {
-        dosePerKg = 0.5; // Use 0.5 mg/kg for calculation as default
-        totalDose = weight * dosePerKg;
-        maxDosePerDose = 15;
+        dosePerKg = 0.5; totalDose = weight * dosePerKg; maxDosePerDose = 15;
         totalDose = Math.min(totalDose, maxDosePerDose);
-        
         displayDoseString = `${totalDose.toFixed(2)} mg Q6-8H`;
-
         doseInfo = `Recommended: 0.5 mg/kg/dose Q6-8H (Range: 0.25-0.5 mg/kg/dose). Max ${maxDosePerDose} mg/dose.`;
         duration = 'Limited to 48-72 hours.';
-        if (route === 'IM' && age < 0.5) { // <6 months
-            doseInfo = `IM use described in patients ≥6 months of age. Recommended IV: 0.5 mg/kg/dose Q6-8H. Max ${maxDosePerDose} mg/dose.`;
-        }
-
-      } else if (route === 'Oral') {
-        doseInfo = 'Oral use is not recommended in this age group (<2 years).';
-        totalDose = 'Not Recommended';
-        displayDoseString = 'Not Recommended';
+        if (route === 'IM' && age < 0.5) { doseInfo = `IM use described in patients ≥6 months of age. Recommended IV: 0.5 mg/kg/dose Q6-8H. Max ${maxDosePerDose} mg/dose.`; }
+      } else {
+        doseInfo = 'Oral use is not recommended in this age group (<2 years).'; displayDoseString = 'Not Recommended'; totalDose = 'Not Recommended';
       }
-
-    } else if (age >= 2.0 && age < 17.0) { // Children >=2 years and Adolescents <=16 years
-      // IM, IV
+    } else if (age >= 2.0 && age < 17.0) {
       if (route === 'IM' || route === 'IV') {
-        dosePerKg = 0.5;
-        totalDose = weight * dosePerKg;
-        maxDosePerDose = 30;
+        dosePerKg = 0.5; totalDose = weight * dosePerKg; maxDosePerDose = 30;
         totalDose = Math.min(totalDose, maxDosePerDose);
-        
         displayDoseString = `${totalDose.toFixed(2)} mg Q6-8H`;
-        
-        doseInfo = `0.5 mg/kg/dose Q6-8H. Max ${maxDosePerDose} mg/dose. Max duration: 5 days.`;
-        duration = 'Max duration: 5 days.';
-      } 
-      // Oral
-      else if (route === 'Oral') {
-        dosePerKg = 1.0;
-        totalDose = weight * dosePerKg;
-        maxDosePerDose = 10;
-        maxDailyDose = 40;
-        totalDose = Math.min(totalDose, maxDosePerDose); // Total dose is 10mg (single dose)
-        
-        // **FIX:** Display regimen/Max Daily Dose as requested by user
-        const minDosesPerDay = Math.ceil(maxDailyDose / maxDosePerDose); // 40/10 = 4 doses
+        doseInfo = `0.5 mg/kg/dose Q6-8H. Max ${maxDosePerDose} mg/dose. Max duration: 5 days.`; duration = 'Max duration: 5 days.';
+      } else if (route === 'Oral') {
+        dosePerKg = 1.0; totalDose = weight * dosePerKg; maxDosePerDose = 10; maxDailyDose = 40;
+        totalDose = Math.min(totalDose, maxDosePerDose);
         displayDoseString = `${maxDosePerDose} mg Q4-6H (Max ${maxDailyDose} mg/day)`;
-
         doseInfo = `1 mg/kg/dose Q4-6H. Max ${maxDosePerDose} mg/dose. Max daily: ${maxDailyDose} mg/day.`;
         specialNote = 'Oral must **only** be used as a continuation of IV or IM therapy; do not use as initial therapy.';
         duration = 'Max combined duration: 5 days.';
       }
-      
-    } else if (age >= 17.0) { // Adolescents >=17 years
+    } else if (age >= 17.0) {
       const isUnder50kg = weight < 50;
-      
       if (route === 'IM') {
-        if (isUnder50kg) {
-          dosePerKg = 15 / weight; // Use 15mg Q6h dose to calculate equivalent mg/kg
-          totalDose = 15; // Use 15mg Q6H dose
-          maxDosePerDose = 30; // Maximum single dose is 30mg
-          maxDailyDose = 60;
-          displayDoseString = '15 mg Q6H (Max 30 mg single dose; Max daily: 60 mg)';
-          doseInfo = '15 mg every 6 hours (OR 30 mg as a single dose). Max daily: 60 mg/day.';
-        } else { // >=50 kg
-          dosePerKg = 30 / weight; // Use 30mg Q6h dose
-          totalDose = 30; // Use 30mg Q6H dose
-          maxDosePerDose = 60; // Maximum single dose is 60mg
-          maxDailyDose = 120;
-          displayDoseString = '30 mg Q6H (Max 60 mg single dose; Max daily: 120 mg)';
-          doseInfo = '30 mg every 6 hours (OR 60 mg as a single dose). Max daily: 120 mg/day.';
-        }
+        totalDose = isUnder50kg ? 15 : 30; maxDosePerDose = isUnder50kg ? 30 : 60; maxDailyDose = isUnder50kg ? 60 : 120;
+        dosePerKg = totalDose / weight;
+        displayDoseString = isUnder50kg ? '15 mg Q6H (Max 30 mg single dose; Max daily: 60 mg)' : '30 mg Q6H (Max 60 mg single dose; Max daily: 120 mg)';
+        doseInfo = `${totalDose} mg every 6 hours (OR ${maxDosePerDose} mg as a single dose). Max daily: ${maxDailyDose} mg/day.`;
         duration = 'Max combined duration (parenteral + oral): 5 days.';
-
       } else if (route === 'IV') {
-        if (isUnder50kg) {
-          dosePerKg = 15 / weight; // Use 15mg Q6h dose
-          totalDose = 15; // Use 15mg Q6H dose
-          maxDosePerDose = 15; // Maximum single dose is 15mg
-          maxDailyDose = 60;
-          displayDoseString = '15 mg Q6H (Max 15 mg single dose; Max daily: 60 mg)';
-          doseInfo = '15 mg every 6 hours (OR 15 mg as a single dose). Max daily: 60 mg/day.';
-        } else { // >=50 kg
-          dosePerKg = 30 / weight; // Use 30mg Q6h dose
-          totalDose = 30; // Use 30mg Q6H dose
-          maxDosePerDose = 30; // Maximum single dose is 30mg
-          maxDailyDose = 120;
-          displayDoseString = '30 mg Q6H (Max 30 mg single dose; Max daily: 120 mg)';
-          doseInfo = '30 mg every 6 hours (OR 30 mg as a single dose). Max daily: 120 mg/day.';
-        }
+        totalDose = isUnder50kg ? 15 : 30; maxDosePerDose = isUnder50kg ? 15 : 30; maxDailyDose = isUnder50kg ? 60 : 120;
+        dosePerKg = totalDose / weight;
+        displayDoseString = isUnder50kg ? '15 mg Q6H (Max 15 mg single dose; Max daily: 60 mg)' : '30 mg Q6H (Max 30 mg single dose; Max daily: 120 mg)';
+        doseInfo = `${totalDose} mg every 6 hours (OR ${maxDosePerDose} mg as a single dose). Max daily: ${maxDailyDose} mg/day.`;
         duration = 'Max combined duration (parenteral + oral): 5 days.';
-
       } else if (route === 'Oral') {
-        totalDose = 10; // Maintenance dose used for volume calc, irrelevant for oral but for consistency
-        maxDosePerDose = 10;
-        maxDailyDose = 40;
-        
-        // **FIX:** Display regimen/Max Daily Dose
-        if (isUnder50kg) {
-            dosePerKg = 10 / weight;
-            displayDoseString = 'Initial 10 mg, then 10 mg Q4-6H (Max 40 mg/day)';
-            doseInfo = 'Initial: 10 mg, then 10 mg every 4 to 6 hours. Max daily: 40 mg/day.';
-        } else { // >=50 kg
-            dosePerKg = 10 / weight;
-            displayDoseString = 'Initial 20 mg, then 10 mg Q4-6H (Max 40 mg/day)';
-            doseInfo = 'Initial: 20 mg, then 10 mg every 4 to 6 hours. Max daily: 40 mg/day.';
-        }
-
+        totalDose = 10; maxDosePerDose = 10; maxDailyDose = 40; dosePerKg = 10 / weight;
+        displayDoseString = isUnder50kg ? 'Initial 10 mg, then 10 mg Q4-6H (Max 40 mg/day)' : 'Initial 20 mg, then 10 mg Q4-6H (Max 40 mg/day)';
+        doseInfo = `Initial: ${isUnder50kg ? 10 : 20} mg, then 10 mg every 4 to 6 hours. Max daily: 40 mg/day.`;
         specialNote = 'The maximum combined duration of treatment (parenteral and oral) is 5 days. Oral is generally continuation therapy.';
         duration = 'Max combined duration: 5 days.';
       }
-      
-    } else {
-      // Fallback for missing age/weight
-      doseInfo = 'Enter Age and Weight for Ketorolac Dose.';
-      displayDoseString = 'N/A';
-    }
+    } else { doseInfo = 'Enter Age and Weight for Ketorolac Dose.'; }
+    
+    // This is the *calculated* default dose for this route/age/weight
+    let editableDosePerKg = (dosePerKg > 0) ? dosePerKg : 0;
 
-    // Default editable dose for the edit box
-    let editableDosePerKg = drug.defaultDose; 
-    if (dosePerKg > 0) editableDosePerKg = dosePerKg;
-
-    return {
-      dosePerKg: editableDosePerKg,
-      totalDose: totalDose, // Single dose number (for volume calc) or 'Not Recommended'
-      displayDoseString: displayDoseString, // The formatted regimen string for the red box
-      doseUnit: 'mg',
-      doseInfo: doseInfo,
-      specialNote: specialNote,
-      maxDosePerDose: maxDosePerDose,
-      maxDailyDose: maxDailyDose,
-      duration: duration
-    };
+    return { dosePerKg: editableDosePerKg, totalDose, displayDoseString, doseUnit: 'mg', doseInfo, specialNote, maxDosePerDose, maxDailyDose, duration };
   }
 
-  /* -------------------------
-     Antibiotics Calculation
-     ------------------------- */
   function calculateAntibiotics() {
     const patient = getPatientData();
     const antibioticsDiv = document.getElementById('antibiotics-results');
@@ -1887,125 +1829,50 @@
 
     antibiotics.forEach((antibiotic, index) => {
       const weight = patient.weight;
-      
-      // Get the current indication
-      const currentIndication = antibiotic.indications ? 
-        antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) : 
-        { dose: antibiotic.defaultDose, frequency: 'Q6H' };
-      
-      const dosePerKg = currentIndication ? currentIndication.dose : antibiotic.defaultDose;
-      const frequency = currentIndication ? currentIndication.frequency : 'Q6H';
-      
-      // Calculate total dose
+      const currentIndication = antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) || { dose: antibiotic.defaultDose, frequency: 'Q6H' };
+      const dosePerKg = currentIndication.dose;
+      const frequency = currentIndication.frequency;
       let totalDose = weight * dosePerKg;
-      
-      // Apply max dose if specified
       let limitApplied = false;
-      if (antibiotic.maxDose && totalDose > antibiotic.maxDose) {
-        totalDose = antibiotic.maxDose;
-        limitApplied = true;
-      }
+      if (antibiotic.maxDose && totalDose > antibiotic.maxDose) { totalDose = antibiotic.maxDose; limitApplied = true; }
       
-      // Calculate volume for injectable routes
       let volumeDisplay = 'N/A';
       let concentrationDisplay = '';
-      if (antibiotic.currentRoute === 'IV' || antibiotic.currentRoute === 'IM') {
+      if (antibiotic.currentRoute === 'IV') {
         const volume = totalDose / antibiotic.concentration;
         volumeDisplay = volume.toFixed(2);
         concentrationDisplay = `${antibiotic.concentration} ${antibiotic.concentrationUnit}`;
       }
       
-      // Check if caution is needed
       let isCautionNeeded = antibiotic.caution ? true : false;
+      let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>` : '';
+      let cautionPopupHtml = isCautionNeeded ? `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>` : '';
+      let infoBoxHtml = antibiotic.info ? `<div class="info-box ketorolac-specific">${antibiotic.info}</div>` : '';
       
-      let cautionIconHtml = '';
-      let cautionPopupHtml = '';
-      if (isCautionNeeded){
-        cautionIconHtml = `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>`;
-        cautionPopupHtml = `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>`;
-      }
+      let routeSelectorHTML = antibiotic.routes.length > 1 ? '<div class="route-selector">' + antibiotic.routes.map(route => `<input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${antibiotic.currentRoute === route ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')"><label for="antibiotic-route-${index}-${route}">${route === 'Oral' ? 'Oral' : 'Intravenous (IV)'}</label>`).join('') + '</div>' : '';
       
-      // Info box
-      let infoBoxHtml = '';
-      if (antibiotic.info) {
-        infoBoxHtml = `<div class="info-box ketorolac-specific">${antibiotic.info}</div>`;
-      }
+      let indicationSelectorHTML = antibiotic.indications.length > 1 ? '<div class="indication-selector">' + antibiotic.indications.map(indication => `<input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" name="antibiotic-indication-${index}" value="${indication.name}" ${antibiotic.currentIndication === indication.name ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')"><label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>`).join('') + '</div>' : '';
       
-      // Route Selector
-      let routeSelectorHTML = '';
-      if (antibiotic.routes && antibiotic.routes.length > 1) {
-        routeSelectorHTML = '<div class="route-selector">';
-        antibiotic.routes.forEach(route => {
-          const checked = antibiotic.currentRoute === route ? 'checked' : '';
-          const routeName = route === 'Oral' ? 'Oral' : 'Intravenous (IV)';
-          routeSelectorHTML += `
-            <input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${checked} 
-                   onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')">
-            <label for="antibiotic-route-${index}-${route}">${routeName}</label>
-          `;
-        });
-        routeSelectorHTML += '</div>';
-      }
+      let limitInfoHtml = limitApplied ? `<span class="dose-limit-applied">(MAX Limit Applied)</span>` : '';
       
-      // Indication Selector
-      let indicationSelectorHTML = '';
-      if (antibiotic.indications && antibiotic.indications.length > 1) {
-        indicationSelectorHTML = '<div class="indication-selector">';
-        antibiotic.indications.forEach(indication => {
-          const checked = antibiotic.currentIndication === indication.name ? 'checked' : '';
-          indicationSelectorHTML += `
-            <input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" 
-                   name="antibiotic-indication-${index}" value="${indication.name}" ${checked} 
-                   onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')">
-            <label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>
-          `;
-        });
-        indicationSelectorHTML += '</div>';
-      }
-      
-      // Limit info
-      let limitInfoHtml = '';
-      if (limitApplied) {
-        limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`;
-      }
-      
-      // Volume detail
-      const volumeDetail = (antibiotic.currentRoute === 'IV' || antibiotic.currentRoute === 'IM') ? 
+      const volumeDetail = (antibiotic.currentRoute === 'IV') ? 
         `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
         `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for Oral Dose</div>`;
       
-      // Expanded class - FIX: Use the antibioticExpanded array to track individual card state
       const isExpandedClass = (allAntibioticsExpanded || antibioticExpanded[index]) ? 'expanded' : '';
       
-      // Assemble card HTML
-      html += `
-        <div class="drug-card antibiotic ${isExpandedClass}" id="antibiotic-card-${index}">
+      html += `<div class="drug-card antibiotic ${isExpandedClass}" id="antibiotic-card-${index}">
           ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleAntibioticCard(${index})">
-            <div class="drug-name">
-              <span class="toggle-icon">▶</span>
-              ${antibiotic.name}
-            </div>
+            <div class="drug-name"><span class="toggle-icon">▶</span>${antibiotic.name}</div>
             <div class="drug-category antibiotic">${antibiotic.categoryLabel}</div>
             ${cautionIconHtml}
           </div>
-
           <div class="drug-details" id="antibiotic-details-${index}">
             <div class="antibiotic-details">
-              ${routeSelectorHTML}
-              ${indicationSelectorHTML}
-              ${infoBoxHtml}
-              
-              <div class="antibiotic-detail-row">
-                <div class="antibiotic-label">Dose Range:</div>
-                <div class="antibiotic-value">${antibiotic.range}</div>
-              </div>
-              
-              <div class="antibiotic-detail-row">
-                <div class="antibiotic-label">Frequency:</div>
-                <div class="antibiotic-value">${frequency}</div>
-              </div>
-
+              ${routeSelectorHTML}${indicationSelectorHTML}${infoBoxHtml}
+              <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range}</div></div>
+              <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency}</div></div>
               <div class="calculation">
                 <div class="calculation-result">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
                 ${volumeDetail}
@@ -2013,54 +1880,32 @@
               </div>
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     });
 
     antibioticsDiv.innerHTML = html;
     document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
-  /* -------------------------
-     Enhanced Equipment calculations
-     ------------------------- */
   function calculateETTSize(age, weight){
     if (age === 0) return 'Enter Age (Years/Months)';
-    
-    if (age < 1){ // Age < 1 year
-      if (weight === 0) return 'Enter Weight (kg)';
-      // Weight-based logic for age < 1
-      if (weight < 1.0) return '2.5';
-      if (weight >= 1.0 && weight <= 2.0) return '3.0';
-      return '3.5'; // weight > 2.0
-    }
-    
-    // Age-based logic for age >= 1 year
-    if (age >= 1 && age <= 18){
-      const calculatedSize = (age/4)+4;
-      // Round to nearest multiple of 0.5
-      return (Math.round(calculatedSize * 2) / 2).toFixed(1);
-    }
-    return '7.5'; // fallback
+    if (age < 1){ if (weight === 0) return 'Enter Weight (kg)'; if (weight < 1.0) return '2.5'; if (weight <= 2.0) return '3.0'; return '3.5'; }
+    if (age <= 18){ const calculatedSize = (age/4)+4; return (Math.round(calculatedSize * 2) / 2).toFixed(1); }
+    return '7.5';
   }
 
   function calculateETTDepth(age, weight){
     const sizeStr = calculateETTSize(age, weight);
     if (sizeStr.includes('Enter') || sizeStr === 'N/A') return 'N/A';
     const size = parseFloat(sizeStr);
-    if (age < 0.1 && weight > 0){ // neonate (<1 month)
-      // depth formula for neonates: weight + 6
-      return (weight + 6).toFixed(1);
-    }
-    // general formula: ID x 3
+    if (age < 0.1 && weight > 0){ return (weight + 6).toFixed(1); }
     return (size * 3).toFixed(1);
   }
 
   function calculateCuffedETTSize(age, weight){
     const uncuffedSize = calculateETTSize(age, weight);
     if (uncuffedSize.includes('Enter') || uncuffedSize === 'N/A') return 'N/A';
-    const id = parseFloat(uncuffedSize);
-    return (id - 0.5).toFixed(1);
+    return (parseFloat(uncuffedSize) - 0.5).toFixed(1);
   }
 
   function calculateLaryngoscopeBlade(age){
@@ -2070,12 +1915,8 @@
     return '3 (Mac)';
   }
 
-  /* -------------------------
-     UPDATED: ProSeal LMA Size and Cuff Volume calculation
-     ------------------------- */
   function calculateProSealLMASize(weight){
     if (weight === 0) return { size: 'N/A', cuffVolume: 'N/A' };
-    
     if (weight < 5) return { size: '1', cuffVolume: 'Up to 4 mL' };
     if (weight < 10) return { size: '1.5', cuffVolume: 'Up to 7 mL' };
     if (weight < 20) return { size: '2', cuffVolume: 'Up to 10 mL' };
@@ -2095,43 +1936,26 @@
     return '5';
   }
 
-  /* -------------------------
-     Central Line Catheter Size calculation (Algorithm derived from uploaded table)
-     ------------------------- */
   function calculateCentralLineSize(weight){
     if (weight === 0) return 'N/A';
-    // Neonates (2.5 to 5 kg) -> 3.0 Fr
-    if (weight <= 5) return '3.0 Fr'; 
-    // Infants (5 to 10 kg) -> 4.0 Fr
-    if (weight <= 10) return '4.0 Fr'; 
-    // >1 to 12 years (10 to 40 kg) -> 5.0 Fr
-    if (weight <= 40) return '5.0 Fr'; 
-    // ≥13 years (≥50 kg) -> 7.0 Fr (This covers all weights > 40kg)
-    return '7.0 Fr'; 
+    if (weight <= 5) return '3.0 Fr';
+    if (weight <= 10) return '4.0 Fr';
+    if (weight <= 40) return '5.0 Fr';
+    return '7.0 Fr';
   }
 
-  /* -------------------------
-     Enhanced Equipment rendering with additional parameters
-     ------------------------- */
   function calculateEquipment(){
     const patient = getPatientData();
     const uncuffedSize = calculateETTSize(patient.age, patient.weight);
     const cuffedSize = calculateCuffedETTSize(patient.age, patient.weight);
     const depth = calculateETTDepth(patient.age, patient.weight);
     const blade = calculateLaryngoscopeBlade(patient.age);
-    
-    // UPDATED: Get ProSeal LMA size AND cuff volume
     const proSealLMA = calculateProSealLMASize(patient.weight);
-    const lmaSize = proSealLMA.size;
-    const lmaCuffVolume = proSealLMA.cuffVolume;
-    
     const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
     const centralLineSize = calculateCentralLineSize(patient.weight);
 
     let uncuffedValueClass = 'equipment-value';
-    if (uncuffedSize.includes('Enter')){
-      uncuffedValueClass += ' error';
-    }
+    if (uncuffedSize.includes('Enter')){ uncuffedValueClass += ' error'; }
 
     const equipmentHTML = `
       <div class="equipment-card">
@@ -2151,8 +1975,8 @@
       </div>
       <div class="equipment-card">
         <div class="equipment-title">ProSeal LMA Size</div>
-        <div class="equipment-value">${lmaSize}</div>
-        <div class="equipment-detail">Cuff: ${lmaCuffVolume}</div>
+        <div class="equipment-value">${proSealLMA.size}</div>
+        <div class="equipment-detail">Cuff: ${proSealLMA.cuffVolume}</div>
       </div>
       <div class="equipment-card">
         <div class="equipment-title">i-gel Size</div>
@@ -2168,9 +1992,6 @@
     document.getElementById('equipment-results').innerHTML = equipmentHTML;
   }
 
-  /* -------------------------
-     Fluid calculations
-     ------------------------- */
   function calculateMaintenanceFluid(weight){
     if (weight <= 10) return weight * 4;
     if (weight <= 20) return 40 + (weight - 10) * 2;
@@ -2179,12 +2000,12 @@
 
   function calculateEBV(weight, age){
     if (weight === 0) return 0;
-    if (age < 0.1) return weight * 90; // neonate <1 month
-    if (age < 1) return weight * 85;   // 1 month - 1 year
-    if (age < 3) return weight * 80;   // toddler
-    if (age < 6) return weight * 75;   // preschooler
-    if (age < 12) return weight * 70;  // school age
-    return weight * 65;                // adolescent
+    if (age < 0.1) return weight * 90;
+    if (age < 1) return weight * 85;
+    if (age < 3) return weight * 80;
+    if (age < 6) return weight * 75;
+    if (age < 12) return weight * 70;
+    return weight * 65;
   }
 
   function calculateMABL(EBV, initialHb, targetHb){
@@ -2193,9 +2014,6 @@
     return Math.max(0, MABL);
   }
 
-  /* -------------------------
-     Perioperative fluid calculations (new)
-     ------------------------- */
   function calculatePerioperativeBolus(weight) {
     if (weight === 0) return 'N/A';
     const lowRange = weight * 20;
@@ -2206,13 +2024,9 @@
   function calculatePostopMaintenance(weight) {
     if (weight === 0) return 'N/A';
     let maintenance = 0;
-    if (weight <= 10) {
-      maintenance = weight * 2; // 2 mL/kg/hr for first 10 kg
-    } else if (weight <= 20) {
-      maintenance = 20 + (weight - 10) * 1; // 2 mL/kg/hr for first 10 kg, then 1 mL/kg/hr for next 10 kg
-    } else {
-      maintenance = 30 + (weight - 20) * 0.5; // 2 mL/kg/hr for first 10 kg, 1 mL/kg/hr for next 10 kg, then 0.5 mL/kg/hr for remaining
-    }
+    if (weight <= 10) { maintenance = weight * 2; } 
+    else if (weight <= 20) { maintenance = 20 + (weight - 10) * 1; } 
+    else { maintenance = 30 + (weight - 20) * 0.5; }
     return `${maintenance.toFixed(0)} mL/hr`;
   }
 
@@ -2244,51 +2058,20 @@
     }
 
     const fluidHTML = `
-      <div class="equipment-card">
-        <div class="equipment-title">Maintenance Fluid</div>
-        <div class="equipment-value">${maintenance.toFixed(0)} mL/hr</div>
-        <div class="equipment-detail">4-2-1 rule</div>
-      </div>
-      <div class="equipment-card">
-        <div class="equipment-title">Fluid Bolus</div>
-        <div class="equipment-value">${bolus.toFixed(0)} mL</div>
-        <div class="equipment-detail">10 mL/kg</div>
-      </div>
-      <div class="equipment-card">
-        <div class="equipment-title">Est. Blood Volume (EBV)</div>
-        <div class="equipment-value">${EBV.toFixed(0)} mL</div>
-        <div class="equipment-detail">Age-based mL/kg used</div>
-      </div>
-      <div class="equipment-card">
-        <div class="equipment-title">Max Allowable Blood Loss (MABL)</div>
-        <div class="equipment-value">${MABL_Result}</div>
-        <div class="equipment-detail">${MABL_Detail}</div>
-      </div>
-      <div class="equipment-card">
-        <div class="equipment-title">Perioperative Bolus</div>
-        <div class="equipment-value">${perioperativeBolus}</div>
-        <div class="equipment-detail">20-40 mL/kg (Alternative)</div>
-      </div>
-      <div class="equipment-card">
-        <div class="equipment-title">Postop Maintenance</div>
-        <div class="equipment-value">${postopMaintenance}</div>
-        <div class="equipment-detail">2-1-0.5 rule (12 hrs)</div>
-      </div>
+      <div class="equipment-card"><div class="equipment-title">Maintenance Fluid</div><div class="equipment-value">${maintenance.toFixed(0)} mL/hr</div><div class="equipment-detail">4-2-1 rule</div></div>
+      <div class="equipment-card"><div class="equipment-title">Fluid Bolus</div><div class="equipment-value">${bolus.toFixed(0)} mL</div><div class="equipment-detail">10 mL/kg</div></div>
+      <div class="equipment-card"><div class="equipment-title">Est. Blood Volume (EBV)</div><div class="equipment-value">${EBV.toFixed(0)} mL</div><div class="equipment-detail">Age-based mL/kg used</div></div>
+      <div class="equipment-card"><div class="equipment-title">Max Allowable Blood Loss (MABL)</div><div class="equipment-value">${MABL_Result}</div><div class="equipment-detail">${MABL_Detail}</div></div>
+      <div class="equipment-card"><div class="equipment-title">Perioperative Bolus</div><div class="equipment-value">${perioperativeBolus}</div><div class="equipment-detail">20-40 mL/kg (Alternative)</div></div>
+      <div class="equipment-card"><div class="equipment-title">Postop Maintenance</div><div class="equipment-value">${postopMaintenance}</div><div class="equipment-detail">2-1-0.5 rule (12 hrs)</div></div>
     `;
     
-    // Add info box for perioperative fluid source
-    fluidResultsEl.innerHTML = `
-      ${fluidHTML}
-      <div class="info-box" style="grid-column: 1/-1; margin-top: 10px;">
+    fluidResultsEl.innerHTML = `${fluidHTML}<div class="info-box" style="grid-column: 1/-1; margin-top: 10px;">
         <strong>Perioperative Fluid Note:</strong> For children with marginal to moderate hypovolemia (e.g., fasting for surgery), administer 20-40 mL/kg of isotonic fluids during surgery and in PACU. Postoperatively, use the 2-1-0.5 rule for the first 12 hours or until patient starts drinking. 
         <a href="https://www.openanesthesia.org/keywords/perioperative-fluid-administration-in-children/" target="_blank" style="color: var(--primary-accent);">Source</a>
-      </div>
-    `;
+      </div>`;
   }
 
-  /* -------------------------
-     Local Anesthetics calculations (Updated for single concise card)
-     ------------------------- */
   function calculateLocalAnesthetics() {
     const patient = getPatientData();
     const localAnestheticsDiv = document.getElementById('local-anesthetics-results');
@@ -2301,20 +2084,15 @@
     let resultsListHtml = '';
     
     localAnesthetics.forEach((la) => {
-      // la.useParam is implicitly 'weight' from the original data structure, but for this simpler list we only use weight
       const maxDose = patient.weight * la.maxDose;
       const maxDoseDisplay = maxDose.toFixed(1);
-      
-      // Create a row for the concise list
-      resultsListHtml += `
-        <div class="la-result-row">
+      resultsListHtml += `<div class="la-result-row">
           <div class="la-name">${la.name}</div>
           <div class="la-max-dose">
             ${maxDoseDisplay} ${la.unit.split('/')[0]}
             <span class="la-detail">${la.maxDose} ${la.unit} | ${la.caution}</span>
           </div>
-        </div>
-      `;
+        </div>`;
     });
 
     const singleCardHtml = `
@@ -2323,9 +2101,7 @@
           <div class="drug-name">Maximum Safe Doses</div>
           <div class="drug-category local-anesthetic">Local Anesthetics</div>
         </div>
-        <div class="la-results-container">
-          ${resultsListHtml}
-        </div>
+        <div class="la-results-container">${resultsListHtml}</div>
         <div class="dose-info" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); font-style:normal;">
             Doses are based on patient weight of ${patient.weight.toFixed(1)} kg.
         </div>
@@ -2335,9 +2111,6 @@
     localAnestheticsDiv.innerHTML = singleCardHtml;
   }
 
-  /* -------------------------
-     Utility: parse upper numeric value from dose range strings
-     ------------------------- */
   function parseMaxDoseFromRange(rangeString){
     if (!rangeString) return null;
     const numbers = rangeString.match(/(\d+\.?\d*)/g);
@@ -2349,9 +2122,6 @@
     return maxDose > 0 ? maxDose : null;
   }
 
-  /* -------------------------
-     Enhanced Drug calculations & rendering with route selection
-     ------------------------- */
   function calculateDrugs(){
     const patient = getPatientData();
     const drugResultsDiv = document.getElementById('drug-results');
@@ -2366,227 +2136,143 @@
     let html = '';
 
     drugs.forEach((drug, index) => {
-      const paramValue = patient[drug.useParam]; // usually weight
-
-      let dosePerKg = drug.defaultDose; // Default dose per kg to use for calculation/display
-      let totalDose = 0; // The single dose (number) used for volume calculation
+      const paramValue = patient[drug.useParam];
+      let dosePerKg;
+      let concentration;
+      let totalDose = 0;
       let limitApplied = false;
       let doseAdjusted = false;
       let concentrationDisplay = '';
       let volumeDisplay = 'N/A';
       let totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
       let isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
-      let ketorolacInfoBox = ''; // Specific info box for Ketorolac
-      let doseDisplay; // The final value for the red box
+      let ketorolacInfoBox = '';
+      let doseDisplay;
 
       if (drug.name === 'Ketorolac') {
-        // --- KETOROLAC SPECIAL LOGIC ---
         const ketorolacCalc = calculateKetorolacDoseAndInfo(patient, drug);
-        totalDose = ketorolacCalc.totalDose; // This is a number (single dose) or 'Not Recommended'
-        dosePerKg = ketorolacCalc.dosePerKg;
+        let customDose = null;
+        if(drug.currentRoute === 'IV') customDose = drug.customDoseIV;
+        else if(drug.currentRoute === 'IM') customDose = drug.customDoseIM;
+        else if(drug.currentRoute === 'Oral') customDose = drug.customDoseOral;
+
+        // Use custom dose if set, otherwise use the calculated default
+        dosePerKg = (customDose !== null) ? customDose : ketorolacCalc.dosePerKg;
+        // Recalculate total dose if custom, otherwise use calculated display
+        totalDose = (customDose !== null) ? (paramValue * customDose) : ketorolacCalc.totalDose;
+        
         totalDoseUnit = ketorolacCalc.doseUnit;
+        doseDisplay = (customDose !== null) ? `${totalDose.toFixed(2)} ${totalDoseUnit}` : ketorolacCalc.displayDoseString;
         
-        // Use the new displayDoseString for the final result
-        doseDisplay = ketorolacCalc.displayDoseString;
-
-        // Recalculate volume and concentration for injectable
-        if (isInjectable && typeof totalDose === 'number' && totalDose > 0) {
-            const finalConcentration = drug.concentration; // Use default 30 mg/mL
-            const volume = totalDose / finalConcentration;
-            volumeDisplay = volume.toFixed(2);
-            concentrationDisplay = `${finalConcentration} ${drug.concentrationUnit}`;
-        }
-        
-        // Create the special info box
-        ketorolacInfoBox = `
-            <div class="info-box ketorolac-specific">
-                <strong>Ketorolac Dosing for ${patient.weight.toFixed(1)} kg (${patient.ageYears} Y, ${patient.ageMonths} M):</strong>
-                <div>${ketorolacCalc.doseInfo}</div>
-                <div>${ketorolacCalc.duration}</div>
-                ${ketorolacCalc.specialNote ? `<div>**Note:** ${ketorolacCalc.specialNote}</div>` : ''}
-            </div>
-        `;
-        // --- END KETOROLAC SPECIAL LOGIC ---
-
+        ketorolacInfoBox = `<div class="info-box ketorolac-specific"><strong>Ketorolac Dosing for ${patient.weight.toFixed(1)} kg (${patient.ageYears} Y, ${patient.ageMonths} M):</strong><div>${ketorolacCalc.doseInfo}</div><div>${ketorolacCalc.duration}</div>${ketorolacCalc.specialNote ? `<div>**Note:** ${ketorolacCalc.specialNote}</div>` : ''}</div>`;
+      
       } else {
-        // --- STANDARD DRUG LOGIC ---
-        const initialDosePerKgForRoute = getDoseByRoute(drug);
-        dosePerKg = drug.defaultDose;
+        dosePerKg = getDoseByRoute(drug, drug.currentRoute);
         
-        // Check if `defaultDose` property still holds the dose for the `currentRoute`
-        if (dosePerKg !== initialDosePerKgForRoute && drug.currentRoute !== 'IV') {
-            dosePerKg = initialDosePerKgForRoute;
-            drug.defaultDose = dosePerKg;
-        }
-        
-        // Paracetamol special-case for <10 kg
         if (drug.name.includes('Paracetamol') && patient.weight > 0 && patient.weight < 10){
-          if (initialDosePerKgForRoute === 15){ 
-            dosePerKg = 7.5;
-            doseAdjusted = true;
+          const initialDrug = initialDrugs.find(d => d.name === drug.name);
+          if (initialDrug && dosePerKg === initialDrug.defaultDose && initialDrug.defaultDose === 15){ 
+            dosePerKg = 7.5; 
+            doseAdjusted = true; 
           }
         }
 
-        // total dose (mg or mcg)
         totalDose = paramValue * dosePerKg;
 
-        // enforce max/min total dose limits if present
-        if (drug.maxDose && totalDose > drug.maxDose){
-          totalDose = drug.maxDose; limitApplied = true;
-        }
-        if (drug.minDose && totalDose < drug.minDose){
-          totalDose = drug.minDose; limitApplied = true;
-        }
+        if (drug.maxDose && totalDose > drug.maxDose){ totalDose = drug.maxDose; limitApplied = true; }
+        if (drug.minDose && totalDose < drug.minDose){ totalDose = drug.minDose; limitApplied = true; }
 
-        // volume & concentration for injectable routes
-        if (isInjectable && totalDose > 0){
-          const volume = totalDose / drug.concentration;
-          volumeDisplay = volume.toFixed(2);
-          concentrationDisplay = `${drug.concentration} ${drug.concentrationUnit}`;
-        }
-
-        // Handle dilution tiers for small volumes
-        if (isInjectable && volumeDisplay !== 'N/A' && parseFloat(volumeDisplay) < 1){
-          const tier = dilutionTiers[drug.name];
-          if (tier){
-            // Find the highest concentration that gives volume >= 1 mL
-            const newConc = tier.find(conc => (totalDose / conc) >= 1);
-            if (newConc){
-              const newVolume = totalDose / newConc;
-              volumeDisplay = newVolume.toFixed(2);
-              concentrationDisplay = `${newConc} ${drug.concentrationUnit} (Diluted)`;
-            }
-          }
-        }
-
-        // Format totalDose for display
-        if (drug.unit.includes('mcg') && totalDose < 1) {
-          doseDisplay = `${(totalDose * 1000).toFixed(0)} mcg`;
-        } else {
-          doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`;
-        }
+        if (drug.unit.includes('mcg') && totalDose < 1) { doseDisplay = `${(totalDose * 1000).toFixed(0)} mcg`; } 
+        else { doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; }
       }
 
-      // Check for custom dose exceeding recommended range
+      // Get current concentration (custom or default)
+      concentration = getConcentration(drug);
+
+      if (isInjectable && typeof totalDose === 'number' && totalDose > 0){
+        let volume = totalDose / concentration;
+        let currentConc = concentration;
+
+        if (volume < 1 && dilutionTiers[drug.name]){
+          const newConc = dilutionTiers[drug.name].find(conc => (totalDose / conc) >= 1);
+          if (newConc){ volume = totalDose / newConc; currentConc = newConc; }
+        }
+        volumeDisplay = volume.toFixed(2);
+        // Use 'concentration' (which is the effective one) for the display
+        concentrationDisplay = `${currentConc} ${drug.concentrationUnit}${currentConc !== concentration ? ' (Diluted)' : ''}`;
+      }
+
       let isCustomDoseHigh = drug.isCustomDoseHigh || false;
-      if (drug.defaultDose !== getDoseByRoute(drug)) {
-        const rangeMax = parseMaxDoseFromRange(drug.range);
-        if (rangeMax && drug.defaultDose > rangeMax) {
-          isCustomDoseHigh = true;
-        }
-      }
+      const currentDoseForRangeCheck = getDoseByRoute(drug, drug.currentRoute);
+      const rangeMax = parseMaxDoseFromRange(drug.range);
+      if (rangeMax && currentDoseForRangeCheck > rangeMax) { isCustomDoseHigh = true; }
 
-      // Check if drug has custom values
       const hasCustom = hasCustomValues(drug);
-      
-      // Custom indicator
       const customIndicator = hasCustom ? ' has-custom' : '';
+      let cautionActive = isCustomDoseHigh || drug.caution;
+      let cautionIconHtml = cautionActive ? `<span class="caution-icon" id="caution-icon-${index}" onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>` : '';
+      let cautionPopupHtml = cautionActive ? `<div id="caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${isCustomDoseHigh ? `Custom dose (${currentDoseForRangeCheck} ${drug.unit}) exceeds recommended range (${drug.range}).` : drug.caution}</div>` : '';
 
-      // Caution icon & popup
-      let cautionIconHtml = '';
-      let cautionPopupHtml = '';
-      let cautionActive = false;
-      if (isCustomDoseHigh || drug.caution){
-        cautionActive = true;
-        cautionIconHtml = `<span class="caution-icon" id="caution-icon-${index}" onclick="event.stopPropagation(); toggleCautionPopup(${index})">i</span>`;
-        cautionPopupHtml = `<div id="caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${isCustomDoseHigh ? `Custom dose (${drug.defaultDose} ${drug.unit}) exceeds recommended range (${drug.range}).` : drug.caution}</div>`;
-      }
-
-      // Route selector (only show if multiple routes available)
       let routeSelectorHTML = '';
       if (drug.routes && drug.routes.length > 1) {
-        routeSelectorHTML = '<div class="route-selector">';
-        drug.routes.forEach(route => {
+        routeSelectorHTML = '<div class="route-selector">' + drug.routes.map(route => {
           const checked = drug.currentRoute === route ? 'checked' : '';
-          let routeName = '';
-          switch (route) {
-            case 'IV': routeName = 'Intravenous (IV)'; break;
-            case 'IM': routeName = 'Intramuscular (IM)'; break;
-            case 'Oral': routeName = 'Oral'; break;
-            default: routeName = route;
-          }
-          routeSelectorHTML += `
-            <input type="radio" id="route-${index}-${route}" name="route-${index}" value="${route}" ${checked} 
-                   onclick="event.stopPropagation(); selectRoute(${index}, '${route}')">
-            <label for="route-${index}-${route}">${routeName}</label>
-          `;
-        });
-        routeSelectorHTML += '</div>';
+          const routeName = (route === 'IV' ? 'Intravenous (IV)' : (route === 'IM' ? 'Intramuscular (IM)' : 'Oral'));
+          return `<input type="radio" id="route-${index}-${route}" name="route-${index}" value="${route}" ${checked} onclick="event.stopPropagation(); selectRoute(${index}, '${route}')"><label for="route-${index}-${route}">${routeName}</label>`;
+        }).join('') + '</div>';
       }
 
-      // Limit info
-      let limitInfoHtml = '';
-      if (limitApplied) {
-        limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`;
-      }
+      let limitInfoHtml = limitApplied ? `<span class="dose-limit-applied">(MAX Limit Applied)</span>` : '';
+      let adjustedInfoHtml = doseAdjusted ? `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>` : '';
 
-      // Adjusted dose info
-      let adjustedInfoHtml = '';
-      if (doseAdjusted) {
-        adjustedInfoHtml = `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>`;
-      }
-
-      // Edit inputs - FIX: Ensure concentration field is properly populated
       const isEditing = activeEditIndex === index;
+      const isModified = hasCustomValues(drug); // Check if modified for reset button
+      
       const editInputsHtml = `
         <div class="edit-inputs ${isEditing ? 'active' : ''}" id="edit-inputs-${index}">
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <div style="flex: 1;">
-              <label style="font-size: 0.7em; color: var(--text-secondary); display: block; margin-bottom: 4px;">Dose (${drug.unit})</label>
-              <input type="number" id="dose-${index}" value="${dosePerKg}" step="0.01" min="0" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.8em; background: var(--bg-primary); color: var(--text-primary);">
+          <div class="edit-input-grid">
+            <div class="edit-input-field">
+              <label for="dose-${index}">Dose (${drug.unit})</label>
+              <input type="number" id="dose-${index}" value="${dosePerKg}" step="0.01" min="0">
             </div>
-            ${isInjectable ? `
-            <div style="flex: 1;">
-              <label style="font-size: 0.7em; color: var(--text-secondary); display: block; margin-bottom: 4px;">Concentration (${drug.concentrationUnit})</label>
-              <input type="number" id="conc-${index}" value="${drug.concentration}" step="0.01" min="0" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 0.8em; background: var(--bg-primary); color: var(--text-primary);">
-            </div>
-            ` : ''}
+            ${isInjectable ? `<div class="edit-input-field">
+                                <label for="conc-${index}">Concentration (${drug.concentrationUnit})</label>
+                                <input type="number" id="conc-${index}" value="${concentration}" step="0.01" min="0">
+                             </div>` : ''}
           </div>
-          <button class="edit-btn" style="max-width: fit-content; margin-top: 5px;" onclick="updateDrug(${index})">Update</button>
-        </div>
-      `;
+          <div class="edit-actions">
+            <button class="edit-btn" style="margin-top: 0;" onclick="updateDrug(${index})">Update</button>
+            ${isModified ? `<button class="edit-btn reset-btn" style="margin-top: 0;" onclick="resetDrugToDefault(${index})">Reset</button>` : ''}
+          </div>
+        </div>`;
 
-      // Expanded class
       const isExpandedClass = allExpanded || isEditing ? 'expanded' : '';
 
-      // Assemble card HTML
-      html += `
-        <div class="drug-card ${drug.category} ${isExpandedClass} ${cautionActive ? 'caution-active' : ''}" id="drug-card-${index}">
+      html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${cautionActive ? 'caution-active' : ''}" id="drug-card-${index}">
           ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleDrugCard(${index})">
-            <div class="drug-name${customIndicator}">
-              <span class="toggle-icon">▶</span>
-              ${drug.name}
-            </div>
+            <div class="drug-name${customIndicator}"><span class="toggle-icon">▶</span>${drug.name}</div>
             <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
             ${cautionIconHtml}
           </div>
-
           <div class="drug-details" id="drug-details-${index}">
-            ${ketorolacInfoBox}
-            ${routeSelectorHTML}
+            ${ketorolacInfoBox}${routeSelectorHTML}
             <div class="dose-info">Recommended: ${drug.range}</div>
-            
             <div class="calculation">
               <div class="calculation-result">${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
               ${isInjectable ? `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` : ''}
               ${drug.name !== 'Ketorolac' ? `<div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>` : ''}
             </div>
-            
-            <button class="edit-btn" onclick="toggleEdit(${index})">Edit Dose/Concentration</button>
+            <button class="edit-btn" onclick="toggleEdit(${index})">${isEditing ? 'Close Edit' : 'Edit Dose/Concentration'}</button>
             ${editInputsHtml}
           </div>
-        </div>
-      `;
+        </div>`;
     });
 
     drugResultsDiv.innerHTML = html;
     document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
-  /* -------------------------
-     Infusions calculations
-     ------------------------- */
   function calculateInfusions() {
     const patient = getPatientData();
     const infusionResultsDiv = document.getElementById('infusion-results');
@@ -2605,245 +2291,192 @@
       const minRate = infusion.rateCalculation(infusion.infusionDose.min, weight);
       const maxRate = infusion.rateCalculation(infusion.infusionDose.max, weight);
       
-      // Check if caution is needed
       let isCautionNeeded = infusion.caution ? true : false;
+      let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="infusion-caution-icon-${index}" onclick="event.stopPropagation(); toggleInfusionCautionPopup(${index})">i</span>` : '';
+      let cautionPopupHtml = isCautionNeeded ? `<div id="infusion-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${infusion.caution}</div>` : '';
       
-      let cautionIconHtml = '';
-      let cautionPopupHtml = '';
-      if (isCautionNeeded){
-        cautionIconHtml = `<span class="caution-icon" id="infusion-caution-icon-${index}" onclick="event.stopPropagation(); toggleInfusionCautionPopup(${index})">i</span>`;
-        cautionPopupHtml = `<div id="infusion-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${infusion.caution}</div>`;
-      }
-      
-      // Loading dose info
       let loadingDoseHtml = '';
       if (infusion.loadingDose && infusion.loadingDose.dose > 0) {
-        loadingDoseHtml = `
-          <div class="infusion-detail-row">
-            <div class="infusion-label">Loading Dose:</div>
-            <div class="infusion-value">${infusion.loadingDose.dose} ${infusion.loadingDose.unit}</div>
-          </div>
-          <div class="infusion-note">${infusion.loadingDose.note}</div>
-        `;
+        loadingDoseHtml = `<div class="infusion-detail-row"><div class="infusion-label">Loading Dose:</div><div class="infusion-value">${infusion.loadingDose.dose} ${infusion.loadingDose.unit}</div></div><div class="infusion-note">${infusion.loadingDose.note}</div>`;
       }
       
-      // Expanded class
       const isExpandedClass = allInfusionsExpanded ? 'expanded' : '';
       
-      // Assemble card HTML
-      html += `
-        <div class="drug-card infusion ${isExpandedClass}" id="infusion-card-${index}">
+      html += `<div class="drug-card infusion ${isExpandedClass}" id="infusion-card-${index}">
           ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleInfusionCard(${index})">
-            <div class="drug-name">
-              <span class="toggle-icon">▶</span>
-              ${infusion.name}
-            </div>
+            <div class="drug-name"><span class="toggle-icon">▶</span>${infusion.name}</div>
             <div class="drug-category infusion">${infusion.categoryLabel}</div>
             ${cautionIconHtml}
           </div>
-
           <div class="drug-details" id="infusion-details-${index}">
             <div class="infusion-details">
-              <div class="infusion-detail-row">
-                <div class="infusion-label">Infusion Range:</div>
-                <div class="infusion-value">${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div>
-              </div>
-              
+              <div class="infusion-detail-row"><div class="infusion-label">Infusion Range:</div><div class="infusion-value">${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div></div>
               ${loadingDoseHtml}
-              
-              <div class="infusion-detail-row">
-                <div class="infusion-label">Common Dilution:</div>
-                <div class="infusion-value">${infusion.commonDilution}</div>
-              </div>
-              
+              <div class="infusion-detail-row"><div class="infusion-label">Common Dilution:</div><div class="infusion-value">${infusion.commonDilution}</div></div>
               <div class="infusion-note">${infusion.preparation}</div>
-              
               <div class="calculation">
                 <div class="calculation-result">${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr</div>
                 <div class="volume-result">For ${weight.toFixed(1)} kg patient</div>
                 <div class="dose-info">Rate for ${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div>
               </div>
-              
               ${infusion.notes ? `<div class="infusion-note">${infusion.notes}</div>` : ''}
             </div>
           </div>
-        </div>
-      `;
+        </div>`;
     });
 
     infusionResultsDiv.innerHTML = html;
     document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
-  /* -------------------------
-     Toggle functions for expand/collapse - IMPROVED ANIMATIONS
-     ------------------------- */
-  function toggleDrugCard(index) {
-    const card = document.getElementById(`drug-card-${index}`);
-    if (!card) return;
-    
-    // Use requestAnimationFrame for smoother animation
-    requestAnimationFrame(() => {
-      card.classList.toggle('expanded');
-    });
-  }
-
-  function toggleInfusionCard(index) {
-    const card = document.getElementById(`infusion-card-${index}`);
-    if (!card) return;
-    
-    requestAnimationFrame(() => {
-      card.classList.toggle('expanded');
-    });
-  }
-
-  function toggleAntibioticCard(index) {
+  function toggleDrugCard(index) { requestAnimationFrame(() => { document.getElementById(`drug-card-${index}`).classList.toggle('expanded'); }); }
+  function toggleInfusionCard(index) { requestAnimationFrame(() => { document.getElementById(`infusion-card-${index}`).classList.toggle('expanded'); }); }
+  function toggleAntibioticCard(index) { 
     const card = document.getElementById(`antibiotic-card-${index}`);
     if (!card) return;
-    
-    requestAnimationFrame(() => {
-      card.classList.toggle('expanded');
-      // Update the expanded state array
-      antibioticExpanded[index] = card.classList.contains('expanded');
-    });
+    requestAnimationFrame(() => { card.classList.toggle('expanded'); antibioticExpanded[index] = card.classList.contains('expanded'); });
   }
 
   function toggleAllDrugs() {
     allExpanded = !allExpanded;
-    
-    // Use requestAnimationFrame for smoother batch animation
     requestAnimationFrame(() => {
       drugs.forEach((_, index) => {
         const card = document.getElementById(`drug-card-${index}`);
-        if (card) {
-          if (allExpanded) {
-            card.classList.add('expanded');
-          } else {
-            card.classList.remove('expanded');
-          }
-        }
+        if (card) { card.classList.toggle('expanded', allExpanded); }
       });
-      
-      // Update button text after animation
-      setTimeout(() => {
-        document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
-      }, 300);
+      setTimeout(() => { document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
     });
   }
 
   function toggleAllInfusions() {
     allInfusionsExpanded = !allInfusionsExpanded;
-    
     requestAnimationFrame(() => {
       infusionDrugs.forEach((_, index) => {
         const card = document.getElementById(`infusion-card-${index}`);
-        if (card) {
-          if (allInfusionsExpanded) {
-            card.classList.add('expanded');
-          } else {
-            card.classList.remove('expanded');
-          }
-        }
+        if (card) { card.classList.toggle('expanded', allInfusionsExpanded); }
       });
-      
-      setTimeout(() => {
-        document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
-      }, 300);
+      setTimeout(() => { document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
     });
   }
 
   function toggleAllAntibiotics() {
     allAntibioticsExpanded = !allAntibioticsExpanded;
-    
     requestAnimationFrame(() => {
-      // Update the expanded state for all antibiotic cards
       antibioticExpanded.fill(allAntibioticsExpanded);
       calculateAntibiotics();
-      
-      setTimeout(() => {
-        document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
-      }, 300);
+      setTimeout(() => { document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
     });
   }
 
-  /* -------------------------
-     Edit dose/concentration functions
-     ------------------------- */
   function toggleEdit(index) {
     activeEditIndex = activeEditIndex === index ? null : index;
     calculateDrugs();
   }
 
-  function updateDrug(index) {
-    const newDose = parseFloat(document.getElementById(`dose-${index}`).value);
-    const drug = drugs[index];
-    
-    if (!isNaN(newDose) && newDose > 0) {
-      drug.defaultDose = newDose;
-      
-      // Only update concentration if injectable
-      if (drug.currentRoute === 'IV' || drug.currentRoute === 'IM') {
-        const newConc = parseFloat(document.getElementById(`conc-${index}`).value);
-        if (!isNaN(newConc) && newConc > 0) {
-          drug.concentration = newConc;
-        }
+  /**
+   * Resets a single drug's custom values to default (null).
+   */
+  function resetDrugToDefault(index) {
+      const drug = drugs[index];
+      if (drug) {
+          drug.customDoseIV = null;
+          drug.customDoseIM = null;
+          drug.customDoseOral = null;
+          drug.customConcentration = null;
+          drug.isCustomDoseHigh = false;
+
+          // Re-run calculations
+          saveLastUsedDrugValues();
+          calculateDrugs();
+          checkForCustomDrugValues();
       }
-      
-      // Mark as custom
-      drug.isCustomDoseHigh = false;
-      const rangeMax = parseMaxDoseFromRange(drug.range);
-      if (rangeMax && newDose > rangeMax) {
-        drug.isCustomDoseHigh = true;
-      }
-      
-      // Save to localStorage
-      saveLastUsedDrugValues();
-      
-      // Recalculate and update UI
-      calculateDrugs();
-      
-      // Check for custom values to update indicator
-      checkForCustomDrugValues();
-    }
   }
 
-  /* -------------------------
-     Caution popup functions
-     ------------------------- */
+  /**
+   * Updates a drug's custom values based on input fields.
+   */
+  function updateDrug(index) {
+    const drug = drugs[index];
+    const initialDrug = initialDrugs.find(d => d.name === drug.name);
+    if (!initialDrug) return;
+
+    const newDoseInput = document.getElementById(`dose-${index}`);
+    const newDose = parseFloat(newDoseInput.value);
+
+    const isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
+    let newConc = null;
+    let newConcInput = null;
+    
+    if (isInjectable) {
+        newConcInput = document.getElementById(`conc-${index}`);
+        if (newConcInput) { // Check if conc input exists
+            newConc = parseFloat(newConcInput.value);
+        }
+    }
+
+    if (!isNaN(newDose) && newDose > 0) {
+        // Update Dose based on current route
+        switch (drug.currentRoute) {
+            case 'IV':
+                const defaultIVDose = (drug.name === 'Ketorolac') ? calculateKetorolacDoseAndInfo(getPatientData(), drug).dosePerKg : initialDrug.defaultDose;
+                drug.customDoseIV = (newDose !== defaultIVDose) ? newDose : null;
+                break;
+            case 'IM':
+                const defaultIMDose = (drug.name === 'Ketorolac') ? calculateKetorolacDoseAndInfo(getPatientData(), drug).dosePerKg : (initialDrug.imDose !== undefined ? initialDrug.imDose : initialDrug.defaultDose);
+                drug.customDoseIM = (newDose !== defaultIMDose) ? newDose : null;
+                break;
+            case 'Oral':
+                const defaultOralDose = (drug.name === 'Ketorolac') ? calculateKetorolacDoseAndInfo(getPatientData(), drug).dosePerKg : (initialDrug.oralDose !== undefined ? initialDrug.oralDose : initialDrug.defaultDose);
+                drug.customDoseOral = (newDose !== defaultOralDose) ? newDose : null;
+                break;
+        }
+    }
+
+    if (newConc !== null && !isNaN(newConc) && newConc > 0) {
+        // Update Concentration
+        const defaultConc = initialDrug.concentration;
+        drug.customConcentration = (newConc !== defaultConc) ? newConc : null;
+    } else if (newConcInput && newConcInput.value === '') {
+        // Handle clearing the concentration field
+        drug.customConcentration = null;
+    }
+
+    // Check for high dose
+    drug.isCustomDoseHigh = false;
+    const currentDose = getDoseByRoute(drug, drug.currentRoute);
+    const rangeMax = parseMaxDoseFromRange(drug.range);
+    if (rangeMax && currentDose > rangeMax) {
+        drug.isCustomDoseHigh = true;
+    }
+
+    saveLastUsedDrugValues();
+    calculateDrugs();
+    checkForCustomDrugValues();
+  }
+
+
   function toggleCautionPopup(index) {
     const popup = document.getElementById(`caution-popup-${index}`);
-    if (popup) {
-      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-    }
+    if (popup) { popup.style.display = popup.style.display === 'block' ? 'none' : 'block'; }
   }
 
   function toggleInfusionCautionPopup(index) {
     const popup = document.getElementById(`infusion-caution-popup-${index}`);
-    if (popup) {
-      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-    }
+    if (popup) { popup.style.display = popup.style.display === 'block' ? 'none' : 'block'; }
   }
 
   function toggleAntibioticCautionPopup(index) {
     const popup = document.getElementById(`antibiotic-caution-popup-${index}`);
-    if (popup) {
-      popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
-    }
+    if (popup) { popup.style.display = popup.style.display === 'block' ? 'none' : 'block'; }
   }
 
-  // Close popups when clicking outside
   document.addEventListener('click', function(e) {
     if (!e.target.classList.contains('caution-icon')) {
-      document.querySelectorAll('.caution-popup').forEach(popup => {
-        popup.style.display = 'none';
-      });
+      document.querySelectorAll('.caution-popup').forEach(popup => { popup.style.display = 'none'; });
     }
   });
 
-  /* -------------------------
-     Main calculation orchestrator
-     ------------------------- */
   function calculateAll() {
     calculateEquipment();
     calculateFluids();
@@ -2853,66 +2486,34 @@
     calculateAntibiotics();
   }
 
-  /* -------------------------
-     Reset all drugs to default values
-     ------------------------- */
   function resetAllDrugsToDefault() {
     drugs.forEach(drug => {
-      const initialDrugData = initialDrugs.find(d => d.name === drug.name);
-      if (initialDrugData) {
-        drug.defaultDose = initialDrugData.defaultDose;
-        drug.concentration = initialDrugData.concentration;
-        drug.isCustomDoseHigh = false;
-        
-        // Reset to IV route for all drugs
-        drug.currentRoute = 'IV';
-      }
+      drug.customDoseIV = null;
+      drug.customDoseIM = null;
+      drug.customDoseOral = null;
+      drug.customConcentration = null;
+      drug.isCustomDoseHigh = false;
+      drug.currentRoute = drug.defaultRoute; // Reset route as well
     });
-    
-    // Clear localStorage for last used drug values
     localStorage.removeItem('pediatricAnesthesiaLastUsedDrugValues');
-    
-    // Recalculate and update UI
     calculateDrugs();
-    
-    // Hide custom drug indicator
     document.getElementById('custom-drugs-indicator').style.display = 'none';
   }
-
-  /* -------------------------
-     Memory Functions for Patient Profiles and Drug Sets
-     ------------------------- */
 
   // Patient Profiles
   function savePatientProfile() {
     const profileName = document.getElementById('patient-profile-name').value.trim();
-    if (!profileName) {
-      alert('Please enter a profile name');
-      return;
-    }
+    if (!profileName) { console.error('Please enter a profile name'); return; }
     
-    const patientData = {
-      name: profileName,
-      ageYears: document.getElementById('age-years').value,
-      ageMonths: document.getElementById('age-months').value,
-      weight: document.getElementById('weight').value,
-      currentHb: document.getElementById('currentHb').value,
-      targetHb: document.getElementById('targetHb').value,
-      timestamp: new Date().toISOString()
-    };
-    
+    const patientData = { name: profileName, ageYears: document.getElementById('age-years').value, ageMonths: document.getElementById('age-months').value, weight: document.getElementById('weight').value, currentHb: document.getElementById('currentHb').value, targetHb: document.getElementById('targetHb').value, timestamp: new Date().toISOString() };
     let savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
-    
-    // Check if profile with same name exists
     const existingIndex = savedProfiles.findIndex(p => p.name === profileName);
+    
     if (existingIndex !== -1) {
-      if (!confirm(`Profile "${profileName}" already exists. Overwrite?`)) {
-        return;
-      }
+      // Simple confirm replacement
+      console.log(`Profile "${profileName}" already exists. Overwriting.`);
       savedProfiles[existingIndex] = patientData;
-    } else {
-      savedProfiles.push(patientData);
-    }
+    } else { savedProfiles.push(patientData); }
     
     localStorage.setItem('pediatricAnesthesiaPatientProfiles', JSON.stringify(savedProfiles));
     document.getElementById('patient-profile-name').value = '';
@@ -2923,12 +2524,8 @@
     const savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
     const container = document.getElementById('patient-profiles-list');
     
-    if (savedProfiles.length === 0) {
-      container.innerHTML = '<div class="no-saved-items">No saved patient profiles</div>';
-      return;
-    }
+    if (savedProfiles.length === 0) { container.innerHTML = '<div class="no-saved-items">No saved patient profiles</div>'; return; }
     
-    // Sort by most recent first
     savedProfiles.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     
     container.innerHTML = savedProfiles.map(profile => `
@@ -2941,35 +2538,27 @@
           </div>
         </div>
         <div class="saved-item-actions">
-          <button class="saved-item-btn" onclick="applyPatientProfile('${profile.name}')" title="Apply">
-            <i class="fas fa-play"></i>
-          </button>
-          <button class="saved-item-btn delete" onclick="deletePatientProfile('${profile.name}')" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <button class="saved-item-btn" onclick="applyPatientProfile('${profile.name}')" title="Apply"><i class="fas fa-play"></i></button>
+          <button class="saved-item-btn delete" onclick="deletePatientProfile('${profile.name}')" title="Delete"><i class="fas fa-trash"></i></button>
         </div>
       </div>
     `).join('');
   }
 
   function applyPatientProfile(profileName) {
-    const savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
-    const profile = savedProfiles.find(p => p.name === profileName);
-    
+    const profile = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]').find(p => p.name === profileName);
     if (profile) {
       document.getElementById('age-years').value = profile.ageYears || '';
       document.getElementById('age-months').value = profile.ageMonths || '';
       document.getElementById('weight').value = profile.weight || '';
       document.getElementById('currentHb').value = profile.currentHb || '';
       document.getElementById('targetHb').value = profile.targetHb || '';
-      
       calculateAll();
     }
   }
 
   function deletePatientProfile(profileName) {
-    if (!confirm(`Delete profile "${profileName}"?`)) return;
-    
+    console.log(`Deleting profile "${profileName}".`);
     let savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
     savedProfiles = savedProfiles.filter(p => p.name !== profileName);
     localStorage.setItem('pediatricAnesthesiaPatientProfiles', JSON.stringify(savedProfiles));
@@ -2977,8 +2566,7 @@
   }
 
   function clearAllPatientProfiles() {
-    if (!confirm('Delete ALL saved patient profiles?')) return;
-    
+    console.log('Deleting ALL saved patient profiles.');
     localStorage.removeItem('pediatricAnesthesiaPatientProfiles');
     loadPatientProfiles();
   }
@@ -2986,35 +2574,31 @@
   // Drug Sets
   function saveDrugSet() {
     const setName = document.getElementById('drug-set-name').value.trim();
-    if (!setName) {
-      alert('Please enter a drug set name');
-      return;
-    }
+    if (!setName) { console.error('Please enter a drug set name'); return; }
+    const modifiedCount = countModifiedDrugs();
     
     const drugSet = {
-      name: setName,
-      drugs: drugs.map(drug => ({
-        name: drug.name,
-        defaultDose: drug.defaultDose,
-        concentration: drug.concentration,
-        currentRoute: drug.currentRoute,
-        isCustomDoseHigh: drug.isCustomDoseHigh
-      })),
-      timestamp: new Date().toISOString()
+        name: setName,
+        drugs: drugs.map(drug => ({
+            name: drug.name,
+            customDoseIV: drug.customDoseIV,
+            customDoseIM: drug.customDoseIM,
+            customDoseOral: drug.customDoseOral,
+            customConcentration: drug.customConcentration,
+            currentRoute: drug.currentRoute,
+            isCustomDoseHigh: drug.isCustomDoseHigh
+        })),
+        modifiedCount,
+        timestamp: new Date().toISOString()
     };
     
     let savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
-    
-    // Check if set with same name exists
     const existingIndex = savedSets.findIndex(s => s.name === setName);
+    
     if (existingIndex !== -1) {
-      if (!confirm(`Drug set "${setName}" already exists. Overwrite?`)) {
-        return;
-      }
+      console.log(`Drug set "${setName}" already exists. Overwriting.`);
       savedSets[existingIndex] = drugSet;
-    } else {
-      savedSets.push(drugSet);
-    }
+    } else { savedSets.push(drugSet); }
     
     localStorage.setItem('pediatricAnesthesiaDrugSets', JSON.stringify(savedSets));
     document.getElementById('drug-set-name').value = '';
@@ -3025,12 +2609,8 @@
     const savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
     const container = document.getElementById('drug-sets-list');
     
-    if (savedSets.length === 0) {
-      container.innerHTML = '<div class="no-saved-items">No saved drug sets</div>';
-      return;
-    }
+    if (savedSets.length === 0) { container.innerHTML = '<div class="no-saved-items">No saved drug sets</div>'; return; }
     
-    // Sort by most recent first
     savedSets.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
     
     container.innerHTML = savedSets.map(set => `
@@ -3038,55 +2618,54 @@
         <div>
           <div class="saved-item-name">${set.name}</div>
           <div class="saved-item-details">
-            ${set.drugs.length} drugs | ${new Date(set.timestamp).toLocaleDateString()}
+            ${set.modifiedCount || 0} drugs modified | ${new Date(set.timestamp).toLocaleDateString()}
           </div>
         </div>
         <div class="saved-item-actions">
-          <button class="saved-item-btn" onclick="applyDrugSet('${set.name}')" title="Apply">
-            <i class="fas fa-play"></i>
-          </button>
-          <button class="saved-item-btn delete" onclick="deleteDrugSet('${set.name}')" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <button class="saved-item-btn" onclick="applyDrugSet('${set.name}')" title="Apply"><i class="fas fa-play"></i></button>
+          <button class="saved-item-btn delete" onclick="deleteDrugSet('${set.name}')" title="Delete"><i class="fas fa-trash"></i></button>
         </div>
       </div>
     `).join('');
   }
 
   function applyDrugSet(setName) {
-    const savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
-    const set = savedSets.find(s => s.name === setName);
-    
+    const set = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]').find(s => s.name === setName);
     if (set) {
-      // Apply the saved drug values
       set.drugs.forEach(savedDrug => {
         const drug = drugs.find(d => d.name === savedDrug.name);
-        if (drug) {
-          drug.defaultDose = savedDrug.defaultDose;
-          drug.concentration = savedDrug.concentration;
-          drug.currentRoute = savedDrug.currentRoute;
-          drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
+        if (!drug) return;
+
+        if (savedDrug.customDoseIV !== undefined) {
+            // New format
+            drug.customDoseIV = savedDrug.customDoseIV;
+            drug.customDoseIM = savedDrug.customDoseIM;
+            drug.customDoseOral = savedDrug.customDoseOral;
+            drug.customConcentration = savedDrug.customConcentration;
+        } else {
+            // Old format compatibility
+            const initialDrug = initialDrugs.find(d => d.name === savedDrug.name);
+            if (initialDrug) {
+                drug.customDoseIV = (savedDrug.defaultDose !== initialDrug.defaultDose) ? savedDrug.defaultDose : null;
+                drug.customConcentration = (savedDrug.concentration !== initialDrug.concentration) ? savedDrug.concentration : null;
+                drug.customDoseIM = null;
+                drug.customDoseOral = null;
+            }
         }
+        drug.currentRoute = savedDrug.currentRoute || drug.defaultRoute;
+        drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
       });
       
-      // Save as last used
-      saveLastUsedDrugValues();
-      
-      // Update the UI
+      saveLastUsedDrugValues(); // Save in the *new* format
       calculateDrugs();
-      
-      // Show custom drug indicator
       document.getElementById('custom-drugs-indicator').style.display = 'flex';
       document.getElementById('current-drug-set-name').textContent = setName;
-      
-      // Show custom indicators on drug cards
-      checkForCustomDrugValues();
+      document.getElementById('modified-drugs-count').textContent = countModifiedDrugs();
     }
   }
 
   function deleteDrugSet(setName) {
-    if (!confirm(`Delete drug set "${setName}"?`)) return;
-    
+    console.log(`Deleting drug set "${setName}".`);
     let savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
     savedSets = savedSets.filter(s => s.name !== setName);
     localStorage.setItem('pediatricAnesthesiaDrugSets', JSON.stringify(savedSets));
@@ -3094,28 +2673,22 @@
   }
 
   function clearAllDrugSets() {
-    if (!confirm('Delete ALL saved drug sets?')) return;
-    
+    console.log('Deleting ALL saved drug sets.');
     localStorage.removeItem('pediatricAnesthesiaDrugSets');
     loadDrugSets();
   }
 
-  /* -------------------------
-     Last Used Drug Values Functionality
-     ------------------------- */
   function saveLastUsedDrugValues() {
     const drugValues = drugs.map(drug => ({
-      name: drug.name,
-      defaultDose: drug.defaultDose,
-      concentration: drug.concentration,
-      currentRoute: drug.currentRoute,
-      isCustomDoseHigh: drug.isCustomDoseHigh
+        name: drug.name,
+        customDoseIV: drug.customDoseIV,
+        customDoseIM: drug.customDoseIM,
+        customDoseOral: drug.customDoseOral,
+        customConcentration: drug.customConcentration,
+        currentRoute: drug.currentRoute,
+        isCustomDoseHigh: drug.isCustomDoseHigh
     }));
-    
-    localStorage.setItem('pediatricAnesthesiaLastUsedDrugValues', JSON.stringify({
-      drugs: drugValues,
-      timestamp: new Date().toISOString()
-    }));
+    localStorage.setItem('pediatricAnesthesiaLastUsedDrugValues', JSON.stringify({ drugs: drugValues, timestamp: new Date().toISOString() }));
   }
 
   function loadLastUsedDrugValues() {
@@ -3123,21 +2696,19 @@
     if (savedData) {
       try {
         const data = JSON.parse(savedData);
-        
         if (data.drugs && Array.isArray(data.drugs)) {
           data.drugs.forEach(savedDrug => {
             const drug = drugs.find(d => d.name === savedDrug.name);
             if (drug) {
-              drug.defaultDose = savedDrug.defaultDose;
-              drug.concentration = savedDrug.concentration;
-              drug.currentRoute = savedDrug.currentRoute;
-              drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
+                drug.customDoseIV = savedDrug.customDoseIV;
+                drug.customDoseIM = savedDrug.customDoseIM;
+                drug.customDoseOral = savedDrug.customDoseOral;
+                drug.customConcentration = savedDrug.customConcentration;
+                drug.currentRoute = savedDrug.currentRoute || drug.defaultRoute;
+                drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
             }
           });
-          
-          // Show custom drug indicator
-          document.getElementById('custom-drugs-indicator').style.display = 'flex';
-          document.getElementById('current-drug-set-name').textContent = 'Last Used Values';
+          checkForCustomDrugValues();
         }
       } catch (e) {
         console.error('Error loading last used drug values:', e);
@@ -3145,38 +2716,82 @@
     }
   }
 
-  /* -------------------------
-     Check for Custom Drug Values
-     ------------------------- */
+
   function checkForCustomDrugValues() {
-    const hasCustomValues = drugs.some(drug => hasCustomValues(drug));
+    const modifiedCount = countModifiedDrugs();
+    const indicator = document.getElementById('custom-drugs-indicator');
     
-    if (hasCustomValues) {
-      document.getElementById('custom-drugs-indicator').style.display = 'flex';
+    if (modifiedCount > 0) {
+      indicator.style.display = 'flex';
+      document.getElementById('modified-drugs-count').textContent = modifiedCount;
+      // Try to find a matching saved set name
+      const savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
+      let currentSetName = 'Custom';
+      const currentValues = JSON.stringify(drugs.map(d => d.customDoseIV + d.customDoseIM + d.customDoseOral + d.customConcentration));
+      
+      for(const set of savedSets) {
+          const setValues = JSON.stringify(set.drugs.map(d => d.customDoseIV + d.customDoseIM + d.customDoseOral + d.customConcentration));
+          if(currentValues === setValues) {
+              currentSetName = set.name;
+              break;
+          }
+      }
+      document.getElementById('current-drug-set-name').textContent = currentSetName;
+
     } else {
-      document.getElementById('custom-drugs-indicator').style.display = 'none';
+      indicator.style.display = 'none';
     }
   }
+  
+  function toggleDisclaimer() {
+    const content = document.getElementById('disclaimer-content');
+    const arrow = document.getElementById('disclaimer-arrow');
+    content.classList.toggle('expanded');
+    arrow.classList.toggle('fa-chevron-down');
+    arrow.classList.toggle('fa-chevron-up');
+  }
 
-  /* -------------------------
-     Initialize the app
-     ------------------------- */
+  function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark);
+    updateDarkModeButton();
+  }
+  
+  function updateDarkModeButton() {
+    const isDark = document.body.classList.contains('dark-mode');
+    const icon = document.querySelector('.dark-mode-toggle i');
+    const text = document.querySelector('.dark-mode-toggle span');
+    if (isDark) { icon.className = 'fas fa-sun'; text.textContent = 'Light Mode'; } 
+    else { icon.className = 'fas fa-moon'; text.textContent = 'Dark Mode'; }
+  }
+
+
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the app as before
-    // ... existing initialization code ...
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
     
-    // Add CSS to fix the transparent square issue with category selection
-    const style = document.createElement('style');
-    style.textContent = `
-      .route-selector input[type="radio"]:focus + label {
-        outline: none;
-      }
-      .route-selector label {
-        -webkit-tap-highlight-color: transparent;
-        tap-highlight-color: transparent;
-      }
-    `;
-    document.head.appendChild(style);
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        button.classList.add('active');
+        document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+      });
+    });
+    
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+      document.body.classList.add('dark-mode');
+      updateDarkModeButton();
+    }
+    
+    loadLastUsedDrugValues();
+    calculateAll();
+    loadPatientProfiles();
+    loadDrugSets();
+    checkForCustomDrugValues();
+    antibioticExpanded = new Array(antibiotics.length).fill(false);
   });
   </script>
 </body>

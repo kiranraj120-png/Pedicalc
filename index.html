@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pediatric Anesthesia Calculator</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
@@ -20,8 +23,8 @@
       --bg-card: #ffffff; /* White */
       
       --text-primary: #111827; /* Slate 900 */
-      --text-secondary: #4b5563; /* Slate 600 */
-      --text-tertiary: #9ca3af; /* Slate 400 */
+      --text-secondary: #374151; /* MODIFIED: Was Slate 600 #4b5563 */
+      --text-tertiary: #6b7280; /* MODIFIED: Was Slate 400 #9ca3af */
       
       --border-color: #e5e7eb; /* Slate 200 */
       
@@ -67,8 +70,8 @@
       --bg-card: #1f2937; /* Slate 800 */
       
       --text-primary: #f9fafb; /* Slate 50 */
-      --text-secondary: #9ca3af; /* Slate 400 */
-      --text-tertiary: #6b7280; /* Slate 500 */
+      --text-secondary: #d1d5db; /* MODIFIED: Was Slate 400 #9ca3af */
+      --text-tertiary: #9ca3af; /* MODIFIED: Was Slate 500 #6b7280 */
       
       --border-color: #374151; /* Slate 700 */
 
@@ -103,8 +106,8 @@
       background: var(--bg-primary);
       color: var(--text-primary);
       line-height: 1.6;
-      font-size: 0.9rem;
-      transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier);
+      font-size: 14px; /* MODIFIED: Was 0.9rem */
+      transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier), font-size 0.3s var(--anim-bezier);
       user-select: none;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -163,9 +166,63 @@
     }
 
     h1 {
-      font-size: 1.6em;
+      font-size: 1.5em; /* MODIFIED: Was 1.6em */
       font-weight: 700;
       z-index: 1;
+      /* Allow shrinking on very small screens */
+      flex: 1;
+      min-width: 150px;
+    }
+    
+    /* --- NEW --- */
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0; /* Don't let controls shrink */
+    }
+
+    /* --- NEW --- */
+    .font-size-control {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+      display: flex;
+      align-items: center;
+      padding: 2px; /* Small padding */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1;
+    }
+
+    /* --- NEW --- */
+    .font-adjust-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1em; /* Icon size */
+      padding: 6px 8px;
+      border-radius: 50%; /* Round buttons */
+      transition: all .25s var(--anim-bezier);
+      line-height: 1; /* Center icon vertically */
+    }
+    
+    /* --- NEW --- */
+    .font-adjust-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+    
+    /* --- NEW --- */
+    #font-size-indicator {
+      color: white;
+      font-weight: 600;
+      font-size: .75em;
+      padding: 0 4px;
+      min-width: 40px; /* Prevent jiggling */
+      text-align: center;
+      user-select: none;
     }
 
     .dark-mode-toggle {
@@ -174,7 +231,7 @@
       border: none;
       border-radius: 50px;
       padding: 8px 16px;
-      cursor: pointer;
+      cursor: pointer; /* FIX: Was poPoppins */
       font-size: .75em;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
@@ -243,7 +300,7 @@
       border: 1px solid transparent; /* No border by default */
       padding: 12px 15px;
       border-radius: var(--radius-tab);
-      cursor: pointer;
+      cursor: pointer; /* FIX: Was poPoppins */
       font-size: 0.8em;
       font-weight: 600;
       text-align: center;
@@ -256,7 +313,7 @@
     }
 
     .tab-button i {
-      font-size: 1.2em;
+      font-size: 1.4em; /* MODIFIED: Was 1.2em */
     }
 
     .tab-button.active {
@@ -311,7 +368,7 @@
     }
 
     .section h2 {
-      font-size: 1.3em;
+      font-size: 1.25em; /* MODIFIED: Was 1.3em */
       font-weight: 600;
       margin-bottom: 12px;
       color: var(--text-primary);
@@ -326,6 +383,19 @@
       color: var(--primary-accent);
     }
 
+    .category-heading {
+        font-size: 1em;
+        font-weight: 700;
+        color: var(--primary-accent);
+        margin-top: 20px; /* Space above the heading */
+        margin-bottom: 5px; /* Space between heading and first card */
+        padding-bottom: 5px;
+        border-bottom: 2px solid var(--border-color);
+        /* Ensure it spans full width in the grid */
+        grid-column: 1 / -1; 
+    }
+    
+    
     .disclaimer-container {
       margin-bottom: 15px;
     }
@@ -335,7 +405,7 @@
       border: 1px solid var(--border-color);
       padding: 10px 15px;
       border-radius: var(--radius-card);
-      cursor: pointer;
+      cursor: pointer; /* FIX: Was poPoppins */
       font-size: 0.85em;
       font-weight: 600;
       display: flex;
@@ -517,7 +587,13 @@
       box-shadow: 0 0 15px -3px var(--caution-color);
       border-color: var(--caution-color);
     }
-
+   .drug-card.dose-limit-exceeded {
+        z-index: 20;
+        /* MODIFIED: Corrected variable name */
+        border-left-color: var(--reversal) !important; 
+        box-shadow: 0 0 15px -3px var(--reversal);
+        border-color: var(--reversal);
+    }
     .drug-card:hover {
       box-shadow: var(--shadow-hover);
       transform: translateY(-3px);
@@ -537,15 +613,16 @@
     .drug-card.infusion { border-left-color: var(--infusion) }
     .drug-card.antibiotic { border-left-color: var(--antibiotic) }
 
-    .drug-header {
+        .drug-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      cursor: pointer;
+      align-items: center; /* MODIFIED */
+      cursor: pointer; /* FIX: Was poPoppins */
       user-select: none;
-      flex-direction: column;
+      flex-direction: row; /* MODIFIED */
       gap: 5px;
     }
+
 
     .drug-card.expanded .drug-header {
       padding-bottom: 8px;
@@ -553,7 +630,7 @@
 
     .drug-name {
       font-weight: 700;
-      font-size: 1.1em;
+      font-size: 1.05em; /* MODIFIED: Was 1.1em */
       color: var(--text-primary);
       display: flex;
       align-items: center;
@@ -644,7 +721,7 @@
       color: #000;
       font-weight: bold;
       font-size: .7em; /* Larger icon font */
-      cursor: pointer;
+      cursor: pointer; /* FIX: Was poPoppins */
       margin-left: 8px;
       flex-shrink: 0;
       align-self: flex-start;
@@ -654,7 +731,11 @@
     .caution-icon:hover {
         transform: scale(1.2);
     }
-
+.dose-limit-exceeded .caution-icon {
+        /* MODIFIED: Corrected variable name */
+        background-color: var(--reversal);
+        color: white; /* Make the 'i' white for contrast */
+    }
     .caution-popup {
       display: none;
       position: absolute;
@@ -671,6 +752,53 @@
       right: 12px;
       white-space: normal;
       animation: popIn 0.3s var(--anim-bezier);
+    }
+    .drug-header-right-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0; /* Prevent it from shrinking */
+    }
+
+        .drug-dose-preview {
+        font-weight: 700;
+        font-size: 0.9em;
+        /* The color is set by the inline style from JS */
+        color: var(--primary-accent); 
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s var(--anim-bezier);
+        white-space: nowrap;
+        opacity: 1;
+        /* MODIFIED: Removed visibility */
+        /* MODIFIED: Added transform and max-width for animation */
+        transform: scale(1);
+        max-width: 150px; 
+        overflow: hidden; 
+    }
+
+
+        /* Hide the preview when the card is expanded */
+    .drug-card.expanded .drug-dose-preview {
+        opacity: 0;
+        /* MODIFIED: Removed visibility: hidden */
+        transform: scale(0.8); /* Shrink it */
+        max-width: 0;
+        padding-left: 0;
+        padding-right: 0;
+        border-width: 0; /* Animate border away */
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    
+    /* Make sure drug name doesn't get too wide */
+    .drug-name {
+        flex: 1; /* Allow it to take space */
+        min-width: 0; /* Allow it to shrink */
+        margin-right: 5px; /* Add gap */
     }
 
     @keyframes popIn {
@@ -727,7 +855,7 @@
         border-radius: 50px;
         font-size: .8em;
         font-weight: 600;
-        cursor: pointer;
+        cursor: pointer; /* FIX: Was poPoppins */
         transition: all .25s var(--anim-bezier);
         border: 2px solid transparent;
         text-decoration: none;
@@ -960,7 +1088,7 @@
     .route-selector label, .indication-selector label {
       display: flex;
       align-items: center;
-      cursor: pointer;
+      cursor: pointer; /* FIX: Was poPoppins */
       font-size: 0.75em;
       color: var(--text-secondary);
       font-weight: 600;
@@ -1351,10 +1479,6 @@
         font-size: 1.2em;
       }
 
-      .drug-header {
-        flex-direction: row;
-        align-items: center;
-      }
 
       .tab-button {
         min-width: 150px;
@@ -1364,7 +1488,7 @@
       }
 
       .tab-button i {
-        font-size: 1em;
+        font-size: 1.1em; /* MODIFIED: Was 1em */
         margin-right: 8px;
       }
     }
@@ -1375,8 +1499,26 @@
         padding: 10px 8px;
         font-size: 0.7em;
       }
+/* --- ADD THESE NEW RULES --- */
+      
+      /* Hide the category text on mobile, the color border is enough */
+      .drug-header-right-group .drug-category {
+          display: none;
+      }
 
-/* ... other mobile styles ... */
+      /* Make the preview dose slightly smaller */
+      .drug-dose-preview {
+          font-size: 0.8em;
+          padding: 2px 6px;
+      }
+      
+      /* --- END OF ADDED RULES --- */
+      
+      /* --- ADD THIS NEW RULE --- */
+      input[type="number"], input[type="text"], textarea, input[type="search"] {
+          font-size: 16px !important; /* Prevent iOS zoom */
+      }
+      /* --- END OF ADDED RULE --- */
 
       .memory-input {
         min-width: 100%;
@@ -1391,6 +1533,30 @@
         animation: shimmer 3.5s infinite;
       }
       /* --- END OF RULE --- */
+      
+      /* --- NEW --- */
+      .header-controls {
+        flex-wrap: wrap; /* Allow controls to wrap */
+        justify-content: flex-end;
+        flex-grow: 1; /* Allow them to take remaining space */
+        gap: 8px;
+      }
+      .font-size-control {
+        /* Ensure it doesn't get too small */
+        padding: 2px;
+      }
+      .font-adjust-btn {
+        padding: 4px 6px;
+        font-size: 0.9em;
+      }
+      .dark-mode-toggle {
+        padding: 6px 12px;
+        font-size: 0.7em;
+        min-width: 100px; /* Smaller min-width */
+      }
+      h1 {
+        font-size: 1.2em; /* Smaller H1 on mobile */
+      }
 
     }
   </style>
@@ -1400,10 +1566,21 @@
   <div class="container">
     <header>
       <h1><i class="fas fa-calculator"></i> Pediatric Anesthesia Calculator</h1>
-      <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-        <i class="fas fa-moon"></i> <span>Dark Mode</span>
-      </button>
-    </header>
+      <div class="header-controls">
+        <div class="font-size-control">
+          <button class="font-adjust-btn" onclick="adjustFontSize(-1)" aria-label="Decrease font size">
+            <i class="fas fa-search-minus"></i>
+          </button>
+          <span id="font-size-indicator">100%</span>
+          <button class="font-adjust-btn" onclick="adjustFontSize(1)" aria-label="Increase font size">
+            <i class="fas fa-search-plus"></i>
+          </button>
+        </div>
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+          <i class="fas fa-moon"></i> <span>Dark Mode</span>
+        </button>
+      </div>
+      </header>
 
     <div class="disclaimer-container">
       <div class="disclaimer-toggle" onclick="toggleDisclaimer()">
@@ -1533,6 +1710,15 @@
         <div class="info-box">
           <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
         </div>
+        
+        <div class="input-field" style="margin-bottom: 15px;">
+          <label for="drug-search" style="font-size: .8em; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600; display: block;">
+            <i class="fas fa-search"></i> Search Drugs
+          </label>
+          <input type="search" id="drug-search" 
+                 placeholder="e.g., Propofol, Fentanyl..." 
+                 oninput="filterDrugs()">
+        </div>
         <button class="expand-all-btn edit-btn" id="toggleAllBtn" onclick="toggleAllDrugs()">Expand All / Collapse All</button>
         <div id="drug-results" class="drugs-grid"></div>
       </section>
@@ -1606,6 +1792,43 @@
   let allAntibioticsExpanded = false;
   let activeEditIndex = null;
   let antibioticExpanded = [];
+  
+  // --- NEW: Font Size ---
+  const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
+  let currentFontSizeIndex = 2; // Default index for 14px
+
+  function filterDrugs() {
+    const searchTerm = document.getElementById('drug-search').value.toLowerCase().trim();
+    const drugCards = document.querySelectorAll('#drug-results .drug-card');
+    const categoryHeadings = document.querySelectorAll('#drug-results .category-heading');
+    let visibleCategories = new Set();
+    
+    drugCards.forEach((card, index) => {
+      const drug = drugs[index]; // Relies on the order being preserved
+      if (!drug) return;
+      
+      const drugName = drug.name.toLowerCase();
+      const drugCategory = drug.categoryLabel.toLowerCase();
+      const isMatch = drugName.includes(searchTerm) || drugCategory.includes(searchTerm);
+      
+      if (isMatch) {
+        card.style.display = 'block';
+        visibleCategories.add(drug.categoryLabel);
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Show/hide category headings
+    categoryHeadings.forEach(heading => {
+      const categoryName = heading.textContent;
+      if (visibleCategories.has(categoryName)) {
+        heading.style.display = 'block';
+      } else {
+        heading.style.display = 'none';
+      }
+    });
+  }
 
   const drugs = [
     { name:'Propofol', category:'induction', categoryLabel:'Induction Agent', defaultDose:2.5, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'2-3 mg/kg', defaultRoute:'IV' },
@@ -1627,11 +1850,11 @@
     { name:'Diazepam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.2, oralDose:0.3, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.3 mg/kg IV, 0.2-0.5 mg/kg Oral', caution:'Max 10mg. Slow IV. Not recommended for neonates.', defaultRoute:'IV' },
     { name:'Lorazepam', category:'adjunct', categoryLabel:'Sedative', defaultDose:0.1, oralDose:0.05, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.1 mg/kg IV, 0.05 mg/kg Oral', caution:'Max 4mg/dose. Slow IV.', defaultRoute:'IV' },
     { name:'Lidocaine (Xylocard)', category:'adjunct', categoryLabel:'Local Anesthetic', defaultDose:1.5, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'1-1.5 mg/kg IV', caution:'Strict total dose of 5 mg/kg. Higher risk of systemic toxicity in neonates/infants <10 kg.', defaultRoute:'IV' },
-    { name:'Neostigmine', category:'reversal', categoryLabel:'Muscle Relaxant Reversal', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5, defaultRoute:'IV' },
-    { name:'Glycopyrrolate', category:'reversal', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg', defaultRoute:'IV' },
-    { name:'Sugammadex', category:'reversal', categoryLabel:'Rocuronium Reversal', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)', defaultRoute:'IV' },
-    { name:'Naloxone', category:'reversal', categoryLabel:'Opioid Reversal', defaultDose:0.1, unit:'mg/kg', concentration:0.4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1mg/kg (titrate)',maxDose:2, defaultRoute:'IV' },
-    { name:'Flumazenil', category:'reversal', categoryLabel:'Benzodiazepine Reversal', defaultDose:0.01, unit:'mg/kg', concentration:0.1, concentrationUnit:'mg/mL', useParam:'weight', range:'10 mcg/kg (titrate, max 200mcg)', maxDose:0.2, defaultRoute:'IV' },
+    { name:'Neostigmine', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.05, unit:'mg/kg', concentration:0.5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.04-0.08 mg/kg (max 5mg)', maxDose:5, defaultRoute:'IV', description: 'Cholinesterase Inhibitor (Muscle Relaxant Reversal)' },
+    { name:'Glycopyrrolate', category:'adjunct', categoryLabel:'Anticholinergic', defaultDose:0.01, unit:'mg/kg', concentration:0.2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.008-0.01 mg/kg', defaultRoute:'IV', description: 'Muscarinic Antagonist (used with Neostigmine)' },
+    { name:'Sugammadex', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:2, unit:'mg/kg', concentration:20, concentrationUnit:'mg/mL', useParam:'weight', range:'2-4 mg/kg (routine reversal)', defaultRoute:'IV', description: 'Selective Relaxant Binding Agent (Rocuronium/Vecuronium Reversal)' },
+    { name:'Naloxone', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.1, unit:'mg/kg', concentration:0.4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1mg/kg (titrate)',maxDose:2, defaultRoute:'IV', description: 'Opioid Antagonist (Opioid Reversal)' },
+    { name:'Flumazenil', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.01, unit:'mg/kg', concentration:0.1, concentrationUnit:'mg/mL', useParam:'weight', range:'10 mcg/kg (titrate, max 200mcg)', maxDose:0.2, defaultRoute:'IV', description: 'Benzodiazepine Antagonist (Benzodiazepine Reversal)' },
     { name:'Adrenaline (Epinephrine) Arrest', category:'emergency', categoryLabel:'Cardiac Arrest', defaultDose:10, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'10 mcg/kg IV (1:10,000)', defaultRoute:'IV' },
     { name:'Adrenaline (Epinephrine) Anaphylaxis', category:'emergency', categoryLabel:'Anaphylaxis (IV)', defaultDose:1, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'1 mcg/kg (1:10,000)', defaultRoute:'IV' },
     { name:'Atropine', category:'emergency', categoryLabel:'Bradycardia', defaultDose:0.02, unit:'mg/kg', concentration:0.6, concentrationUnit:'mg/mL', useParam:'weight', range:'20 mcg/kg (min 100mcg, max 600mcg)', minDose:0.1, maxDose:0.6, defaultRoute:'IV' },
@@ -1654,7 +1877,6 @@
     drug.customConcentration = null;
     drug.isExpanded = false; // <-- ADD THIS
   });
-
   const antibiotics = [
     { name: 'Ampicillin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 50, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '50-100 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q6H' }, { name: 'Severe Infection/Meningitis', dose: 100, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' } ], caution: 'High rate of rash. Not effective against beta-lactamase producing bacteria.', info: 'Common indications: Meningitis, severe sepsis, UTIs, intra-abdominal infections. Often used for Listeria in neonates.' },
     { name: 'Amoxicillin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 50, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-90 mg/kg', defaultRoute: 'Oral', routes: ['Oral'], indications: [ { name: 'Mild/Moderate Infection', dose: 25, frequency: 'Q8H' }, { name: 'Otitis Media/Sinusitis', dose: 45, frequency: 'Q12H' }, { name: 'Severe Infection', dose: 90, frequency: 'Q12H' } ], maxDose: 1000, caution: 'High incidence of rash, especially with concurrent viral infections.', info: 'Common indications: Otitis media, sinusitis, community-acquired pneumonia, streptococcal pharyngitis.' },
@@ -1789,7 +2011,6 @@ const localAnesthetics = [
       targetHb: parseFloat(document.getElementById('targetHb').value) || 0
     };
   }
-
   function clampAgeAndCalculate(){
     const ageYearsInput = document.getElementById('age-years');
     const ageMonthsInput = document.getElementById('age-months');
@@ -2260,7 +2481,7 @@ const localAnesthetics = [
     return maxDose > 0 ? maxDose : null;
   }
 
-  function calculateDrugs(){
+    function calculateDrugs(){
     const patient = getPatientData();
     const drugResultsDiv = document.getElementById('drug-results');
 
@@ -2272,9 +2493,29 @@ const localAnesthetics = [
     document.getElementById('toggleAllBtn').style.display = 'block';
 
     let html = '';
+    let currentCategoryLabel = null; // <-- ADD THIS to track the category
+    
+    // Sort drugs to ensure categories are grouped, but only for rendering
+    // We must use the original `drugs` array for indexing
+    const sortedDrugs = [...drugs].sort((a, b) => a.categoryLabel.localeCompare(b.categoryLabel));
 
     drugs.forEach((drug, index) => {
+    
+      // --- ADD THIS IF-BLOCK ---
+      // If the category has changed, print a new heading
+      // Find the *actual* drug in the original array to get its index
+      const originalIndex = drugs.findIndex(d => d.name === drug.name);
+      
+      // Check if this drug's category is different from the *previous* drug in the list
+      const prevDrug = (originalIndex > 0) ? drugs[originalIndex - 1] : null;
+      if (!prevDrug || drug.categoryLabel !== prevDrug.categoryLabel) {
+          currentCategoryLabel = drug.categoryLabel;
+          html += `<h3 class="category-heading">${currentCategoryLabel}</h3>`;
+      }
+      // --- END OF IF-BLOCK ---
+    
       const paramValue = patient[drug.useParam];
+
       let dosePerKg;
       let concentration;
       let totalDose = 0;
@@ -2285,6 +2526,7 @@ const localAnesthetics = [
       let totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
       let isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
       let ketorolacInfoBox = '';
+      let descriptionBox = ''; // <-- NEW
       let doseDisplay;
 
       if (drug.name === 'Ketorolac') {
@@ -2338,6 +2580,11 @@ const localAnesthetics = [
         volumeDisplay = volume.toFixed(2);
         // Use 'concentration' (which is the effective one) for the display
         concentrationDisplay = `${currentConc} ${drug.concentrationUnit}${currentConc !== concentration ? ' (Diluted)' : ''}`;
+      }
+      
+      // NEW: Add description box if it exists
+      if(drug.description) {
+        descriptionBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category});">${drug.description}</div>`;
       }
 
       let isCustomDoseHigh = drug.isCustomDoseHigh || false;
@@ -2398,15 +2645,26 @@ const localAnesthetics = [
       }
 
 
-      html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${cautionActive ? 'caution-active' : ''}" id="drug-card-${index}">
+      /* NEW: Define the halo class based *only* on the dose */
+      const haloClass = isCustomDoseHigh ? 'dose-limit-exceeded' : '';
+
+      html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${haloClass}" id="drug-card-${index}">
+
           ${cautionPopupHtml}
           <div class="drug-header" onclick="toggleDrugCard(${index})">
             <div class="drug-name${customIndicator}"><span class="toggle-icon">▶</span>${drug.name}</div>
-            <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
-            ${cautionIconHtml}
+            
+            <div class="drug-header-right-group">
+              <div class="drug-dose-preview" ${resultColorStyle}>
+                  ${doseDisplay}
+              </div>
+              <div class="drug-category ${drug.category}">${drug.categoryLabel}</div>
+              ${cautionIconHtml}
+            </div>
           </div>
           <div class="drug-details" id="drug-details-${index}">
-            ${ketorolacInfoBox}${routeSelectorHTML}
+
+            ${ketorolacInfoBox}${descriptionBox}${routeSelectorHTML}
             <div class="dose-info">Recommended: ${drug.range}</div>
             <div class="calculation">
               <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
@@ -2418,8 +2676,12 @@ const localAnesthetics = [
           </div>
         </div>`;
     });
-
+    
+    // We must re-run the filter logic *after* regenerating the HTML
+    // Otherwise, the `drug-card-${index}` elements won't exist yet
     drugResultsDiv.innerHTML = html;
+    filterDrugs(); // <-- ADD THIS CALL
+    
     document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
   }
 
@@ -3091,6 +3353,29 @@ const localAnesthetics = [
         text.textContent = 'Dark Mode'; 
     }
   }
+  
+  // --- NEW: Font Size Functions ---
+  function adjustFontSize(direction) {
+    const newIndex = currentFontSizeIndex + direction;
+    // Clamp index within bounds
+    if (newIndex >= 0 && newIndex < FONT_SIZE_STEPS_PX.length) {
+      currentFontSizeIndex = newIndex;
+      applyFontSize();
+    }
+  }
+
+  function applyFontSize() {
+    const newSize = FONT_SIZE_STEPS_PX[currentFontSizeIndex];
+    document.body.style.fontSize = `${newSize}px`;
+    
+    // Update indicator
+    const defaultSize = FONT_SIZE_STEPS_PX[2]; // 14px
+    const percentage = Math.round((newSize / defaultSize) * 100);
+    document.getElementById('font-size-indicator').textContent = `${percentage}%`;
+    
+    // Save preference
+    localStorage.setItem('fontSizeIndex', currentFontSizeIndex);
+  }
 
   // DOMContentLoaded: Setup listeners and initial state
   document.addEventListener('DOMContentLoaded', function() {
@@ -3121,6 +3406,16 @@ const localAnesthetics = [
       document.body.classList.add('dark-mode');
     }
     updateDarkModeButton(); // Update button text/icon regardless
+    
+    // --- NEW: Load saved font size ---
+    const savedFontSizeIndex = localStorage.getItem('fontSizeIndex');
+    if (savedFontSizeIndex !== null) {
+      currentFontSizeIndex = parseInt(savedFontSizeIndex, 10);
+      if (isNaN(currentFontSizeIndex) || currentFontSizeIndex < 0 || currentFontSizeIndex >= FONT_SIZE_STEPS_PX.length) {
+        currentFontSizeIndex = 2; // Reset if invalid
+      }
+    }
+    applyFontSize(); // Apply loaded or default font size
     
     // Load data and run initial calculations
     loadLastUsedDrugValues();

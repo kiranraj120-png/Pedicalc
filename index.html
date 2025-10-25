@@ -5,94 +5,137 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pediatric Anesthesia Calculator</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --bg-primary: #f8fafc;
-      --bg-secondary: #ffffff;
-      --bg-card: #ffffff;
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --text-tertiary: #94a3b8;
-      --border-color: #94a3b8;
-      --shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      /* New Modern Color Palette (Light Mode) */
+      --primary-accent: #6366f1; /* Indigo 500 */
+      --primary-accent-dark: #4338ca; /* Indigo 700 */
+      --primary-accent-light: rgba(99, 102, 241, 0.2); /* Indigo 500 w/ alpha */
+
+      --bg-primary: #f9fafb; /* Slate 50 */
+      --bg-secondary: #ffffff; /* White */
+      --bg-card: #ffffff; /* White */
+      
+      --text-primary: #111827; /* Slate 900 */
+      --text-secondary: #4b5563; /* Slate 600 */
+      --text-tertiary: #9ca3af; /* Slate 400 */
+      
+      --border-color: #e5e7eb; /* Slate 200 */
+      
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-hover: var(--shadow-lg);
+
       --glass-bg: rgba(255, 255, 255, 0.7);
       --glass-border: rgba(255, 255, 255, 0.3);
 
-      --induction: #10b981;
-      --muscle-relaxant: #f59e0b;
-      --analgesic: #3b82f6;
-      --adjunct: #8b5cf6;
-      --reversal: #ef4444;
-      --emergency: #f97316;
-      --steroid: #6366f1;
-      --antiemetic: #84cc16;
-      --local-anesthetic: #d946ef;
-      --infusion: #06b6d4;
-      --antibiotic: #78716c;
-      --primary-accent: #0ea5e9;
-      --caution-color: #fbbf24;
-      --reset-color: #ef4444;
+      /* Updated Drug Category Colors */
+      --induction: #10b981; /* Emerald 500 */
+      --muscle-relaxant: #f59e0b; /* Amber 500 */
+      --analgesic: #3b82f6; /* Blue 500 */
+      --adjunct: #8b5cf6; /* Violet 500 */
+      --reversal: #ef4444; /* Red 500 */
+      --emergency: #f97316; /* Orange 500 */
+      --steroid: #6366f1; /* Indigo 500 (same as primary) */
+      --antiemetic: #84cc16; /* Lime 500 */
+      --local-anesthetic: #d946ef; /* Fuchsia 500 */
+      --infusion: #06b6d4; /* Cyan 500 */
+      --antibiotic: #78716c; /* Stone 500 */
+      
+      --caution-color: #f59e0b; /* Amber 500 */
+      --reset-color: #ef4444; /* Red 500 */
 
       --radius-card: 12px;
       --radius-input: 8px;
       --radius-tab: 8px;
+      
+      --anim-bezier: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     body.dark-mode {
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --bg-card: #1e293b;
-      --text-primary: #f1f5f9;
-      --text-secondary: #cbd5e1;
-      --text-tertiary: #f1f5f9;
-      --border-color: #334155;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-      --glass-bg: rgba(30, 41, 59, 0.7);
+      /* New Modern Color Palette (Dark Mode) */
+      --primary-accent: #818cf8; /* Indigo 400 */
+      --primary-accent-dark: #6366f1; /* Indigo 500 */
+      --primary-accent-light: rgba(129, 140, 248, 0.2); /* Indigo 400 w/ alpha */
+
+      --bg-primary: #111827; /* Slate 900 */
+      --bg-secondary: #1f2937; /* Slate 800 */
+      --bg-card: #1f2937; /* Slate 800 */
+      
+      --text-primary: #f9fafb; /* Slate 50 */
+      --text-secondary: #9ca3af; /* Slate 400 */
+      --text-tertiary: #6b7280; /* Slate 500 */
+      
+      --border-color: #374151; /* Slate 700 */
+
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+      --shadow-hover: var(--shadow-lg);
+      
+      --glass-bg: rgba(31, 41, 55, 0.7); /* Slate 800 w/ alpha */
       --glass-border: rgba(255, 255, 255, 0.1);
-      --emergency: #fbbf24;
-      --caution-color: #f59e0b;
-      --reset-color: #f87171;
+
+      /* Drug colors can be the same, they pop nicely on dark */
+      --caution-color: #fcd34d; /* Amber 300 */
+      --reset-color: #f87171; /* Red 400 */
+      --emergency: #fbbf24; /* Amber 400 */
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      /* FIX: Remove tap highlight on all elements */
+      -webkit-tap-highlight-color: transparent; 
     }
 
-    html, body {
-      font-family: 'Inter', sans-serif;
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif; /* New Font */
       background: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.5;
+      line-height: 1.6;
       font-size: 0.9rem;
-      transition: background-color .4s, color .4s;
+      transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier);
       user-select: none;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
 
     input, textarea {
       user-select: text !important;
+      font-family: 'Poppins', sans-serif;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 15px 10px;
+      /* Add page load animation */
+      animation: containerFadeIn 0.5s ease-out;
+    }
+
+    @keyframes containerFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     header {
-      background: linear-gradient(135deg, var(--primary-accent), #0369a1);
+      background: linear-gradient(135deg, var(--primary-accent), var(--primary-accent-dark));
       color: white;
       padding: 15px;
       border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
       margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
@@ -101,8 +144,6 @@
       gap: 10px;
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
     }
 
     header::before {
@@ -114,6 +155,12 @@
       height: 200%;
       background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
       transform: rotate(30deg);
+      animation: shimmer 5s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { transform: translate(-30%, -30%) rotate(30deg); }
+        100% { transform: translate(30%, 30%) rotate(30deg); }
     }
 
     h1 {
@@ -132,19 +179,39 @@
       font-size: .75em;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
-      transition: all .18s ease;
-      -webkit-tap-highlight-color: transparent;
+      transition: all .25s var(--anim-bezier);
       outline: none;
       z-index: 1;
       display: flex;
       align-items: center;
-      gap: 5px;
+      justify-content: center; /* Center content */
+      gap: 8px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      
+      /* FIX: Prevent jiggling by setting a min-width */
+      min-width: 120px; 
+      overflow: hidden;
+    }
+
+    .dark-mode-toggle:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
     }
 
     .dark-mode-toggle:active {
-      transform: translateY(1px);
+      transform: translateY(0px);
+    }
+    
+    .dark-mode-toggle i {
+        /* Animation for icon */
+        transition: transform 0.4s var(--anim-bezier);
+    }
+    
+    body.dark-mode .dark-mode-toggle i {
+        /* Rotate icon in dark mode */
+        transform: rotate(180deg);
     }
 
     .tab-navigation {
@@ -156,13 +223,13 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
       position: sticky;
-      top: 0;
+      top: 5px; /* Add small top sticky margin */
       z-index: 100;
       background: var(--glass-bg);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
       border: 1px solid var(--border-color);
     }
 
@@ -173,22 +240,20 @@
     .tab-button {
       flex: 1;
       min-width: 120px;
-      background: var(--glass-bg);
-      border: 1px solid var(--border-color);
+      background: transparent; /* Cleaner look */
+      border: 1px solid transparent; /* No border by default */
       padding: 12px 15px;
       border-radius: var(--radius-tab);
       cursor: pointer;
       font-size: 0.8em;
       font-weight: 600;
       text-align: center;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s var(--anim-bezier);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 5px;
-      box-shadow: var(--shadow);
+      color: var(--text-secondary);
     }
 
     .tab-button i {
@@ -199,18 +264,20 @@
       background: var(--primary-accent);
       color: white;
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+      box-shadow: 0 5px 15px var(--primary-accent-light);
     }
 
     .tab-button:not(.active):hover {
       background: var(--bg-card);
-      transform: translateY(-1px);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
     }
 
     .tab-content {
       display: none;
-      animation: fadeIn 0.5s ease;
-      /* Fix for dark mode white area */
+      animation: fadeIn 0.5s var(--anim-bezier);
+      /* FIX: Ensure tab content has correct background in dark mode */
       background: var(--bg-primary); 
     }
 
@@ -219,7 +286,6 @@
         opacity: 0;
         transform: translateY(10px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -230,19 +296,17 @@
       display: block;
     }
 
-    .section, .patient-info {
+    .section, .patient-info, .memory-section {
       background: var(--bg-card);
       padding: 15px;
       border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-md);
       margin-bottom: 15px;
-      transition: box-shadow .3s ease, transform 0.3s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      transition: box-shadow .3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
       border: 1px solid var(--border-color);
     }
 
-    .section:hover {
+    .section:hover, .patient-info:hover, .memory-section:hover {
       transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
     }
@@ -253,10 +317,10 @@
       margin-bottom: 12px;
       color: var(--text-primary);
       border-bottom: 2px solid var(--border-color);
-      padding-bottom: 6px;
+      padding-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .section h2 i {
@@ -278,46 +342,61 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.3s ease;
-      box-shadow: var(--shadow);
+      transition: all 0.3s var(--anim-bezier);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .disclaimer-toggle i:last-child {
+        transition: transform 0.3s var(--anim-bezier);
     }
 
     .disclaimer-toggle:hover {
       background: var(--bg-secondary);
+      border-color: var(--primary-accent);
     }
 
     .disclaimer-content {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.4s var(--anim-bezier), padding 0.4s var(--anim-bezier);
       background: var(--bg-secondary);
       border-radius: 0 0 var(--radius-card) var(--radius-card);
       margin-top: -5px;
       border: 1px solid var(--border-color);
       border-top: none;
-	visibility: hidden;
+      visibility: hidden;
+      padding-left: 15px;
+      padding-right: 15px;
     }
 
     .disclaimer-content.expanded {
       max-height: 200px;
       padding: 15px;
-visibility: visible;
+      visibility: visible;
+    }
+    
+    .disclaimer-content.expanded + .disclaimer-toggle i:last-child {
+        transform: rotate(180deg);
+    }
+    
+    #disclaimer-arrow {
+        transition: transform 0.3s ease;
     }
 
     .warning {
-      background: #fef3c7;
-      border-left: 5px solid #f59e0b;
+      background: #fffbeb; /* Amber 50 */
+      border-left: 5px solid #f59e0b; /* Amber 500 */
       padding: 12px;
-      border-radius: 0 0 8px 8px;
+      border-radius: 8px;
       font-size: 0.8em;
-      color: #92400e;
+      color: #b45309; /* Amber 700 */
       font-weight: 500;
     }
 
     body.dark-mode .warning {
-      background: #451a03;
-      color: #fbbf24;
-      border-left: 5px solid #d97706;
+      background: #451a03; /* Amber 900 */
+      color: #fcd34d; /* Amber 300 */
+      border-left: 5px solid #f59e0b; /* Amber 500 */
     }
 
     .input-group {
@@ -348,13 +427,13 @@ visibility: visible;
       font-size: .9em;
       background: var(--bg-primary);
       color: var(--text-primary);
-      transition: border-color .3s, box-shadow .3s;
+      transition: border-color .3s var(--anim-bezier), box-shadow .3s var(--anim-bezier);
     }
 
     .input-field input:focus {
       outline: none;
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, .2);
+      box-shadow: 0 0 0 3px var(--primary-accent-light);
     }
 
     .info-box {
@@ -365,7 +444,8 @@ visibility: visible;
       border-radius: 8px;
       font-size: 0.85em;
       color: var(--text-secondary);
-      animation: slideIn 0.5s ease;
+      animation: slideIn 0.5s var(--anim-bezier);
+      border: 1px solid var(--border-color);
     }
 
     @keyframes slideIn {
@@ -373,7 +453,6 @@ visibility: visible;
         opacity: 0;
         transform: translateX(-10px);
       }
-
       to {
         opacity: 1;
         transform: translateX(0);
@@ -382,6 +461,7 @@ visibility: visible;
 
     .info-box strong {
       color: var(--primary-accent);
+      font-weight: 600;
     }
 
     .info-box.ketorolac-specific {
@@ -400,14 +480,13 @@ visibility: visible;
       padding: 12px;
       border-left: 6px solid;
       background: var(--bg-secondary);
-      transition: all .35s cubic-bezier(.25, .8, .25, 1);
+      transition: all .35s var(--anim-bezier);
       position: relative;
       z-index: 1;
       will-change: transform, box-shadow, background-color;
-      animation: cardAppear 0.5s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      animation: cardAppear 0.5s var(--anim-bezier);
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
 
     @keyframes cardAppear {
@@ -415,7 +494,6 @@ visibility: visible;
         opacity: 0;
         transform: translateY(10px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -425,7 +503,8 @@ visibility: visible;
     .drug-card.caution-active {
       z-index: 20;
       border-left-color: var(--caution-color) !important;
-      box-shadow: 0 0 10px var(--caution-color);
+      box-shadow: 0 0 15px -3px var(--caution-color);
+      border-color: var(--caution-color);
     }
 
     .drug-card:hover {
@@ -434,6 +513,7 @@ visibility: visible;
       background: var(--bg-card);
     }
 
+    /* Drug Category Borders */
     .drug-card.induction { border-left-color: var(--induction) }
     .drug-card.muscle-relaxant { border-left-color: var(--muscle-relaxant) }
     .drug-card.analgesic { border-left-color: var(--analgesic) }
@@ -451,7 +531,6 @@ visibility: visible;
       justify-content: space-between;
       align-items: flex-start;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
       user-select: none;
       flex-direction: column;
       gap: 5px;
@@ -471,10 +550,11 @@ visibility: visible;
 
     .toggle-icon {
       font-size: 1em;
-      margin-right: 6px;
+      margin-right: 8px; /* Increased margin */
       transform: rotate(0deg);
       transition: transform 350ms cubic-bezier(.175, .885, .32, 1.275);
       will-change: transform;
+      color: var(--primary-accent);
     }
 
     .drug-card.expanded .toggle-icon {
@@ -502,24 +582,30 @@ visibility: visible;
       font-size: 0.65em;
       padding: 4px 8px;
       border-radius: 20px;
-      color: var(--bg-primary);
-      font-weight: 600;
+      color: #fff; /* Default white text */
+      font-weight: 700; /* Bolder */
       text-transform: uppercase;
       letter-spacing: .5px;
       background-color: var(--border-color);
     }
 
-    .drug-category.induction { background-color: var(--induction); color: #000; }
-    .drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); color: #fff; }
-    .drug-category.analgesic { background-color: var(--analgesic); color: #fff; }
-    .drug-category.adjunct { background-color: var(--adjunct); color: #fff; }
-    .drug-category.reversal { background-color: var(--reversal); color: #fff; }
-    .drug-category.emergency { background-color: var(--emergency); color: #000; }
-    .drug-category.steroid { background-color: var(--steroid); color: #fff; }
-    .drug-category.antiemetic { background-color: var(--antiemetic); color: #000; }
-    .drug-category.local-anesthetic { background-color: var(--local-anesthetic); color: #fff; }
-    .drug-category.infusion { background-color: var(--infusion); color: #fff; }
-    .drug-category.antibiotic { background-color: var(--antibiotic); color: #fff; }
+    /* Drug Category Backgrounds */
+    .drug-category.induction { background-color: var(--induction); }
+    .drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); }
+    .drug-category.analgesic { background-color: var(--analgesic); }
+    .drug-category.adjunct { background-color: var(--adjunct); }
+    .drug-category.reversal { background-color: var(--reversal); }
+    .drug-category.emergency { background-color: var(--emergency); }
+    .drug-category.steroid { background-color: var(--steroid); }
+    .drug-category.antiemetic { background-color: var(--antiemetic); }
+    .drug-category.local-anesthetic { background-color: var(--local-anesthetic); }
+    .drug-category.infusion { background-color: var(--infusion); }
+    .drug-category.antibiotic { background-color: var(--antibiotic); }
+    
+    /* Text color adjustments for light backgrounds */
+    .drug-category.antiemetic, .drug-category.induction, body.dark-mode .drug-category.emergency {
+        color: #000;
+    }
 
     .dose-info {
       font-size: .75em;
@@ -529,39 +615,45 @@ visibility: visible;
     }
 
     .caution-icon {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      line-height: 16px;
+      display: inline-flex; /* Use flex for centering */
+      align-items: center;
+      justify-content: center;
+      width: 18px; /* Slightly larger */
+      height: 18px; /* Slightly larger */
+      line-height: 18px;
       text-align: center;
       border-radius: 50%;
       background-color: var(--caution-color);
       color: #000;
       font-weight: bold;
-      font-size: .65em;
+      font-size: .7em; /* Larger icon font */
       cursor: pointer;
       margin-left: 8px;
       flex-shrink: 0;
       align-self: flex-start;
-      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s var(--anim-bezier);
+    }
+    
+    .caution-icon:hover {
+        transform: scale(1.2);
     }
 
     .caution-popup {
       display: none;
       position: absolute;
       z-index: 30;
-      padding: 8px;
-      background: var(--bg-primary);
+      padding: 10px; /* More padding */
+      background: var(--bg-card); /* Use card bg */
       color: var(--text-primary);
       border: 1px solid var(--caution-color);
-      border-radius: 5px;
+      border-radius: 8px; /* Rounded */
       box-shadow: var(--shadow-hover);
       width: 220px;
-      font-size: .7em;
+      font-size: .75em; /* More readable */
       top: 12px;
       right: 12px;
       white-space: normal;
-      animation: popIn 0.3s ease;
+      animation: popIn 0.3s var(--anim-bezier);
     }
 
     @keyframes popIn {
@@ -569,7 +661,6 @@ visibility: visible;
         opacity: 0;
         transform: scale(0.8);
       }
-
       to {
         opacity: 1;
         transform: scale(1);
@@ -585,7 +676,7 @@ visibility: visible;
     }
 
     .calculation {
-      background: var(--bg-card);
+      background: var(--bg-primary); /* Use primary bg for contrast */
       padding: 10px;
       border-radius: var(--radius-input);
       margin-top: 8px;
@@ -595,7 +686,15 @@ visibility: visible;
     .calculation-result {
       font-weight: 800;
       font-size: 1.2em;
-      color: var(--reversal);
+      color: var(--primary-accent); /* Use primary accent */
+    }
+    
+    body.dark-mode .calculation-result {
+        color: var(--primary-accent);
+    }
+    
+    .calculation-result .dose-limit-applied {
+        color: var(--reversal); /* Keep limit red */
     }
 
     .volume-result {
@@ -605,64 +704,124 @@ visibility: visible;
       font-weight: 500;
     }
 
-    .edit-btn {
-      background: transparent;
-      border: 1px solid var(--primary-accent);
-      padding: 5px 12px;
-      border-radius: 50px;
-      font-size: .75em;
-      cursor: pointer;
-      color: var(--primary-accent);
-      margin-top: 8px;
-      transition: all .3s ease;
-      font-weight: 600;
-      max-width: fit-content;
-      -webkit-tap-highlight-color: transparent;
+    /* Base button style */
+    .edit-btn, .memory-btn, .saved-item-btn, .infusion-rate-btn, .expand-all-btn {
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: .8em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .25s var(--anim-bezier);
+        border: 2px solid transparent;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .edit-btn:hover, .memory-btn:hover, .saved-item-btn:hover, .infusion-rate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+    }
+    
+    .edit-btn:active, .memory-btn:active, .saved-item-btn:active, .infusion-rate-btn:active {
+        transform: translateY(0px);
+        box-shadow: var(--shadow);
+    }
+    
+    /* Primary button style (edit, memory) */
+    .edit-btn, .memory-btn {
+        background: transparent;
+        border-color: var(--primary-accent);
+        color: var(--primary-accent);
+        margin-top: 8px;
+    }
+    
+    .edit-btn:hover, .memory-btn:hover {
+        background: var(--primary-accent);
+        color: var(--bg-card); /* White/dark bg */
+        box-shadow: 0 4px 10px var(--primary-accent-light);
+    }
+    
+    /* Special for "Update" button inside edit pane */
+    .edit-actions .edit-btn {
+        margin-top: 0;
+        background: var(--primary-accent);
+        color: var(--bg-card);
+    }
+    .edit-actions .edit-btn:hover {
+        background: var(--primary-accent-dark);
     }
 
-    .edit-btn:hover {
-      background: var(--primary-accent);
-      color: var(--bg-primary);
-      box-shadow: 0 4px 10px rgba(14, 165, 233, .3);
-    }
-    
-    .edit-btn.reset-btn {
+    /* Reset/Warning button */
+    .edit-btn.reset-btn, .memory-btn.warning {
         color: var(--reset-color);
         border-color: var(--reset-color);
+        background: transparent;
     }
     
-    .edit-btn.reset-btn:hover {
+    .edit-btn.reset-btn:hover, .memory-btn.warning:hover {
         background: var(--reset-color);
-        color: var(--bg-primary);
+        color: var(--bg-card);
         box-shadow: 0 4px 10px rgba(239, 68, 68, .3);
     }
 
+    /* Secondary button */
+    .memory-btn.secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border-color: var(--border-color);
+    }
+
+    .memory-btn.secondary:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-color: var(--text-secondary);
+    }
+    
+    /* Infusion Rate CTA */
+    .infusion-rate-btn {
+        background: var(--primary-accent);
+        color: var(--bg-card);
+        border: none;
+        font-size: 1.1em;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+        text-align: center;
+        margin-top: 10px;
+        width: 100%;
+    }
+    .infusion-rate-btn:hover {
+        background: var(--primary-accent-dark);
+    }
 
     .edit-inputs {
       display: none;
-      margin-top: 8px;
-      padding: 8px;
-      background: var(--bg-secondary);
+      margin-top: 10px; /* More space */
+      padding: 10px; /* More padding */
+      background: var(--bg-primary); /* Contrast bg */
       border-radius: var(--radius-input);
-      border: 1px dashed var(--text-tertiary);
+      border: 1px dashed var(--border-color);
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .edit-inputs.active {
       display: flex;
-      animation: slideDown 0.3s ease;
+      animation: slideDown 0.4s var(--anim-bezier);
     }
 
     @keyframes slideDown {
       from {
         opacity: 0;
         max-height: 0;
+        transform: translateY(-10px);
       }
-
       to {
         opacity: 1;
-        max-height: 150px; /* Increased max-height */
+        max-height: 150px; 
+        transform: translateY(0);
       }
     }
     
@@ -681,6 +840,7 @@ visibility: visible;
         color: var(--text-secondary);
         display: block;
         margin-bottom: 4px;
+        font-weight: 600;
     }
     
     .edit-input-field input {
@@ -689,8 +849,14 @@ visibility: visible;
         border: 1px solid var(--border-color);
         border-radius: 5px;
         font-size: 0.8em;
-        background: var(--bg-primary);
+        background: var(--bg-secondary); /* White/darker bg */
         color: var(--text-primary);
+    }
+    
+    .edit-input-field input:focus {
+        outline: none;
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 3px var(--primary-accent-light);
     }
     
     .edit-actions {
@@ -699,7 +865,7 @@ visibility: visible;
         margin-top: 5px;
     }
 
-    .route-selector {
+    .route-selector, .indication-selector {
       display: flex;
       gap: 8px;
       margin-bottom: 12px;
@@ -708,67 +874,47 @@ visibility: visible;
       flex-wrap: wrap;
     }
     
-    .route-selector input[type="radio"]:focus + label {
-        outline: none;
+    .indication-selector {
+        flex-direction: column;
     }
 
-    .route-selector label {
+    .route-selector label, .indication-selector label {
       display: flex;
       align-items: center;
       cursor: pointer;
       font-size: 0.75em;
       color: var(--text-secondary);
       font-weight: 600;
-      padding: 4px 8px;
+      padding: 6px 12px; /* More padding */
       border-radius: 50px;
-      background: var(--bg-secondary);
+      background: var(--bg-primary); /* Use primary bg */
       border: 1px solid var(--border-color);
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
+      transition: all 0.2s var(--anim-bezier);
     }
 
-    .route-selector input[type="radio"] {
+    .route-selector input[type="radio"], .indication-selector input[type="radio"] {
       display: none;
+    }
+    
+    /* Focus visible state for accessibility */
+    .route-selector input[type="radio"]:focus-visible + label,
+    .indication-selector input[type="radio"]:focus-visible + label {
+        outline: 2px solid var(--primary-accent);
+        outline-offset: 2px;
     }
 
     .route-selector input[type="radio"]:checked+label {
       background: var(--primary-accent);
-      color: var(--bg-primary);
+      color: var(--bg-card);
       border-color: var(--primary-accent);
-    }
-
-    .indication-selector {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px dashed var(--border-color);
-    }
-
-    .indication-selector label {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      font-size: 0.75em;
-      color: var(--text-secondary);
-      font-weight: 600;
-      padding: 6px 10px;
-      border-radius: 8px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      transition: all 0.2s ease;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .indication-selector input[type="radio"] {
-      display: none;
+      box-shadow: 0 2px 4px var(--primary-accent-light);
     }
 
     .indication-selector input[type="radio"]:checked+label {
       background: var(--antibiotic);
-      color: var(--bg-primary);
+      color: var(--bg-card);
       border-color: var(--antibiotic);
+      box-shadow: 0 2px 4px rgba(120, 113, 108, 0.3);
     }
 
     .drugs-grid {
@@ -791,11 +937,10 @@ visibility: visible;
       border-radius: var(--radius-card);
       text-align: center;
       border-top: 4px solid var(--primary-accent);
-      transition: all .3s ease;
-      animation: cardAppear 0.5s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      transition: all .3s var(--anim-bezier);
+      animation: cardAppear 0.5s var(--anim-bezier);
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
 
     .equipment-card:hover {
@@ -837,6 +982,8 @@ visibility: visible;
       width: 100%;
       max-width: 350px;
       text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .la-results-container {
@@ -867,7 +1014,7 @@ visibility: visible;
     .la-max-dose {
       font-weight: 800;
       font-size: 1.1em;
-      color: var(--reversal);
+      color: var(--reversal); /* Keep this red for danger */
       text-align: right;
     }
 
@@ -879,14 +1026,14 @@ visibility: visible;
       line-height: 1.3;
     }
 
-    .infusion-details {
+    .infusion-details, .antibiotic-details {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-top: 10px;
     }
 
-    .infusion-detail-row {
+    .infusion-detail-row, .antibiotic-detail-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -894,92 +1041,33 @@ visibility: visible;
       border-bottom: 1px dotted var(--border-color);
     }
 
-    .infusion-detail-row:last-child {
+    .infusion-detail-row:last-child, .antibiotic-detail-row:last-child {
       border-bottom: none;
     }
 
-    .infusion-label {
+    .infusion-label, .antibiotic-label {
       font-weight: 600;
       font-size: 0.85em;
       color: var(--text-primary);
     }
 
-    .infusion-value {
+    .infusion-value, .antibiotic-value {
       font-weight: 600;
       font-size: 0.85em;
       color: var(--primary-accent);
       text-align: right;
     }
-
-    .infusion-note {
-      font-size: 0.75em;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-top: 3px;
-    }
-
-    .antibiotic-details {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .antibiotic-detail-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px dotted var(--border-color);
-    }
-
-    .antibiotic-detail-row:last-child {
-      border-bottom: none;
-    }
-
-    .antibiotic-label {
-      font-weight: 600;
-      font-size: 0.85em;
-      color: var(--text-primary);
-    }
-
+    
     .antibiotic-value {
-      font-weight: 600;
-      font-size: 0.85em;
-      color: var(--primary-accent);
-      text-align: right;
+        color: var(--antibiotic);
     }
 
-    .antibiotic-note {
+    .infusion-note, .antibiotic-note {
       font-size: 0.75em;
       color: var(--text-secondary);
       font-style: italic;
       margin-top: 3px;
-    }
-
-    .infusion-rate-btn {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      background: var(--primary-accent);
-      color: var(--bg-primary);
-      border: none;
-      border-radius: var(--radius-card);
-      font-size: 1.1em;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: var(--shadow);
-      text-align: center;
-      text-decoration: none;
-      margin-top: 10px;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .infusion-rate-btn:hover {
-      background: #0284c7;
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-2px);
+      grid-column: 1 / -1; /* Make note span full width */
     }
 
     footer {
@@ -987,29 +1075,18 @@ visibility: visible;
       margin-top: 20px;
       font-size: 0.8em;
       color: var(--text-secondary);
-      padding: 10px;
+      padding: 20px 10px;
+      border-top: 1px solid var(--border-color);
     }
 
     footer a {
       color: var(--primary-accent);
       text-decoration: none;
+      font-weight: 600;
     }
-
-    .memory-section {
-      background: var(--bg-card);
-      padding: 15px;
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
-      margin-bottom: 15px;
-      transition: box-shadow .3s ease, transform 0.3s ease;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color);
-    }
-
-    .memory-section:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-hover);
+    
+    footer a:hover {
+        text-decoration: underline;
     }
 
     .memory-controls {
@@ -1023,56 +1100,18 @@ visibility: visible;
       flex: 1;
       min-width: 150px;
       padding: 10px 12px;
-      border: 1px solid var(--border-color);
+      border: 2px solid var(--border-color);
       border-radius: var(--radius-input);
       font-size: .9em;
       background: var(--bg-primary);
       color: var(--text-primary);
-      transition: border-color .3s, box-shadow .3s;
+      transition: border-color .3s var(--anim-bezier), box-shadow .3s var(--anim-bezier);
     }
 
     .memory-input:focus {
       outline: none;
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, .2);
-    }
-
-    .memory-btn {
-      background: var(--primary-accent);
-      color: var(--bg-primary);
-      border: none;
-      padding: 10px 15px;
-      border-radius: var(--radius-input);
-      font-size: .8em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .3s ease;
-      white-space: nowrap;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .memory-btn:hover {
-      background: #0284c7;
-      transform: translateY(-1px);
-    }
-
-    .memory-btn.secondary {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-color);
-    }
-
-    .memory-btn.secondary:hover {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-    }
-
-    .memory-btn.warning {
-      background: var(--reversal);
-    }
-
-    .memory-btn.warning:hover {
-      background: #dc2626;
+      box-shadow: 0 0 0 3px var(--primary-accent-light);
     }
 
     .saved-items-container {
@@ -1082,6 +1121,7 @@ visibility: visible;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-input);
       padding: 10px;
+      background: var(--bg-primary);
     }
 
     .saved-item {
@@ -1092,11 +1132,13 @@ visibility: visible;
       margin-bottom: 5px;
       background: var(--bg-secondary);
       border-radius: var(--radius-input);
-      transition: background .3s ease;
+      transition: background .3s var(--anim-bezier);
+      border: 1px solid var(--border-color);
     }
 
     .saved-item:hover {
       background: var(--bg-card);
+      border-color: var(--primary-accent);
     }
 
     .saved-item:last-child {
@@ -1121,29 +1163,29 @@ visibility: visible;
 
     .saved-item-btn {
       background: transparent;
-      border: none;
+      border: 1px solid var(--border-color);
       color: var(--text-secondary);
-      cursor: pointer;
       font-size: .8em;
       padding: 4px 8px;
       border-radius: 4px;
-      transition: all .2s ease;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .saved-item-btn:hover {
       background: var(--primary-accent);
-      color: var(--bg-primary);
+      color: var(--bg-card);
+      border-color: var(--primary-accent);
     }
 
     .saved-item-btn.delete:hover {
       background: var(--reversal);
-      color: var(--bg-primary);
+      color: var(--bg-card);
+      border-color: var(--reversal);
     }
 
     .custom-values-indicator {
-      background: var(--analgesic);
-      color: white;
+      background: var(--primary-accent-light);
+      border: 1px solid var(--primary-accent);
+      color: var(--primary-accent-dark);
       padding: 12px 15px;
       border-radius: var(--radius-card);
       margin-bottom: 15px;
@@ -1152,8 +1194,12 @@ visibility: visible;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      animation: slideIn 0.5s ease;
+      animation: slideIn 0.5s var(--anim-bezier);
       box-shadow: var(--shadow);
+    }
+    
+    body.dark-mode .custom-values-indicator {
+        color: var(--primary-accent);
     }
 
     .no-saved-items {
@@ -1179,12 +1225,10 @@ visibility: visible;
         transform: scale(0.95);
         opacity: 0.7;
       }
-
       50% {
         transform: scale(1.1);
         opacity: 1;
       }
-
       100% {
         transform: scale(0.95);
         opacity: 0.7;
@@ -1198,7 +1242,7 @@ visibility: visible;
       height: 8px;
       border-radius: 50%;
       background-color: var(--primary-accent);
-      margin-left: 6px;
+      margin-left: 8px;
       animation: pulse 2s infinite;
     }
 
@@ -1208,7 +1252,7 @@ visibility: visible;
       }
 
       .drugs-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Slightly wider */
         gap: 15px;
       }
 
@@ -1237,6 +1281,7 @@ visibility: visible;
         min-width: 150px;
         flex-direction: row;
         justify-content: center;
+        font-size: 0.9em; /* Slightly larger tab text */
       }
 
       .tab-button i {
@@ -1282,7 +1327,7 @@ visibility: visible;
 
     <div class="disclaimer-container">
       <div class="disclaimer-toggle" onclick="toggleDisclaimer()">
-        <span><i class="fas fa-exclamation-triangle"></i> Disclaimer(Read this first)</span>
+        <span><i class="fas fa-exclamation-triangle" style="color: var(--caution-color);"></i> Disclaimer (Read this first)</span>
         <i class="fas fa-chevron-down" id="disclaimer-arrow"></i>
       </div>
       <div class="disclaimer-content" id="disclaimer-content">
@@ -1292,6 +1337,7 @@ visibility: visible;
       </div>
     </div>
 
+    <!-- Tab Navigation -->
     <div class="tab-navigation">
       <div class="tab-button active" data-tab="patient-info">
         <i class="fas fa-user-injured"></i>
@@ -1421,7 +1467,7 @@ visibility: visible;
 
       <!-- Drug Settings Memory Section -->
       <section class="memory-section">
-        <h2><i class="fas fa-pills"></i> Drug Settings Memory</h2>
+        <h2><i class="fas fa-cogs"></i> Drug Settings Memory</h2>
         <div class="info-box">
           <strong>Save Custom Drug Settings:</strong> Store your modified drug doses and concentrations as named sets for quick recall.
         </div>
@@ -1449,7 +1495,7 @@ visibility: visible;
     <!-- Infusions Tab -->
     <div class="tab-content" id="infusions">
       <section class="section">
-        <h2><i class="fas fa-tint"></i> Infusion Calculations(!Experimental)</h2>
+        <h2><i class="fas fa-tint"></i> Infusion Calculations (!Experimental)</h2>
         <div class="info-box">
           <strong>Important:</strong> These are high-alert medications. Always verify calculations with a second clinician. Use central lines when possible for vasoactive drugs.
         </div>
@@ -1480,6 +1526,7 @@ visibility: visible;
       </section>
     </div>
 
+    <!-- Footer -->
     <footer>
       <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
     </footer>
@@ -1847,7 +1894,7 @@ visibility: visible;
       let isCautionNeeded = antibiotic.caution ? true : false;
       let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>` : '';
       let cautionPopupHtml = isCautionNeeded ? `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>` : '';
-      let infoBoxHtml = antibiotic.info ? `<div class="info-box ketorolac-specific">${antibiotic.info}</div>` : '';
+      let infoBoxHtml = antibiotic.info ? `<div class="info-box ketorolac-specific" style="border-left-color: var(--antibiotic);">${antibiotic.info}</div>` : '';
       
       let routeSelectorHTML = antibiotic.routes.length > 1 ? '<div class="route-selector">' + antibiotic.routes.map(route => `<input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${antibiotic.currentRoute === route ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')"><label for="antibiotic-route-${index}-${route}">${route === 'Oral' ? 'Oral' : 'Intravenous (IV)'}</label>`).join('') + '</div>' : '';
       
@@ -1874,7 +1921,7 @@ visibility: visible;
               <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range}</div></div>
               <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency}</div></div>
               <div class="calculation">
-                <div class="calculation-result">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
+                <div class="calculation-result" style="color: var(--antibiotic);">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
                 ${volumeDetail}
                 <div class="dose-info">Calculated: ${dosePerKg} ${antibiotic.unit}</div>
               </div>
@@ -2096,7 +2143,7 @@ visibility: visible;
     });
 
     const singleCardHtml = `
-      <div class="drug-card local-anesthetic expanded">
+      <div class="drug-card local-anesthetic expanded" style="border-color: var(--local-anesthetic);">
         <div class="drug-header" style="cursor: default; padding-bottom: 0;">
           <div class="drug-name">Maximum Safe Doses</div>
           <div class="drug-category local-anesthetic">Local Anesthetics</div>
@@ -2241,12 +2288,24 @@ visibility: visible;
                              </div>` : ''}
           </div>
           <div class="edit-actions">
-            <button class="edit-btn" style="margin-top: 0;" onclick="updateDrug(${index})">Update</button>
-            ${isModified ? `<button class="edit-btn reset-btn" style="margin-top: 0;" onclick="resetDrugToDefault(${index})">Reset</button>` : ''}
+            <button class="edit-btn" onclick="updateDrug(${index})">Update</button>
+            ${isModified ? `<button class="edit-btn reset-btn" onclick="resetDrugToDefault(${index})">Reset</button>` : ''}
           </div>
         </div>`;
 
       const isExpandedClass = allExpanded || isEditing ? 'expanded' : '';
+      
+      // Assign dynamic text color to calculation result based on category
+      let resultColorStyle = '';
+      if(drug.category) {
+          resultColorStyle = `style="color: var(--${drug.category});"`;
+          if(drug.category === 'induction' || drug.category === 'antiemetic' || (drug.category === 'emergency' && document.body.classList.contains('dark-mode'))) {
+              resultColorStyle = `style="color: var(--${drug.category}); text-shadow: 0 0 5px rgba(0,0,0,0.2);"`;
+          }
+      } else {
+          resultColorStyle = `style="color: var(--primary-accent);"`;
+      }
+
 
       html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${cautionActive ? 'caution-active' : ''}" id="drug-card-${index}">
           ${cautionPopupHtml}
@@ -2259,7 +2318,7 @@ visibility: visible;
             ${ketorolacInfoBox}${routeSelectorHTML}
             <div class="dose-info">Recommended: ${drug.range}</div>
             <div class="calculation">
-              <div class="calculation-result">${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
+              <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
               ${isInjectable ? `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` : ''}
               ${drug.name !== 'Ketorolac' ? `<div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>` : ''}
             </div>
@@ -2316,11 +2375,11 @@ visibility: visible;
               <div class="infusion-detail-row"><div class="infusion-label">Common Dilution:</div><div class="infusion-value">${infusion.commonDilution}</div></div>
               <div class="infusion-note">${infusion.preparation}</div>
               <div class="calculation">
-                <div class="calculation-result">${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr</div>
+                <div class="calculation-result" style="color: var(--infusion);">${minRate.toFixed(1)} - ${maxRate.toFixed(1)} mL/hr</div>
                 <div class="volume-result">For ${weight.toFixed(1)} kg patient</div>
                 <div class="dose-info">Rate for ${infusion.infusionDose.min}-${infusion.infusionDose.max} ${infusion.infusionDose.unit}</div>
               </div>
-              ${infusion.notes ? `<div class="infusion-note">${infusion.notes}</div>` : ''}
+              ${infusion.notes ? `<div class="infusion-note" style="font-style: normal; border-top: 1px dashed var(--border-color); padding-top: 8px;">${infusion.notes}</div>` : ''}
             </div>
           </div>
         </div>`;
@@ -2364,7 +2423,7 @@ visibility: visible;
     allAntibioticsExpanded = !allAntibioticsExpanded;
     requestAnimationFrame(() => {
       antibioticExpanded.fill(allAntibioticsExpanded);
-      calculateAntibiotics();
+      calculateAntibiotics(); // This will re-render with the correct 'expanded' class
       setTimeout(() => { document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
     });
   }
@@ -2471,6 +2530,7 @@ visibility: visible;
     if (popup) { popup.style.display = popup.style.display === 'block' ? 'none' : 'block'; }
   }
 
+  // Close popups when clicking anywhere else
   document.addEventListener('click', function(e) {
     if (!e.target.classList.contains('caution-icon')) {
       document.querySelectorAll('.caution-popup').forEach(popup => { popup.style.display = 'none'; });
@@ -2746,7 +2806,9 @@ visibility: visible;
   function toggleDisclaimer() {
     const content = document.getElementById('disclaimer-content');
     const arrow = document.getElementById('disclaimer-arrow');
+    // Toggle class on content
     content.classList.toggle('expanded');
+    // Toggle arrow direction
     arrow.classList.toggle('fa-chevron-down');
     arrow.classList.toggle('fa-chevron-up');
   }
@@ -2762,30 +2824,46 @@ visibility: visible;
     const isDark = document.body.classList.contains('dark-mode');
     const icon = document.querySelector('.dark-mode-toggle i');
     const text = document.querySelector('.dark-mode-toggle span');
-    if (isDark) { icon.className = 'fas fa-sun'; text.textContent = 'Light Mode'; } 
-    else { icon.className = 'fas fa-moon'; text.textContent = 'Dark Mode'; }
+    if (isDark) { 
+        icon.className = 'fas fa-sun'; 
+        text.textContent = 'Light Mode'; 
+    } else { 
+        icon.className = 'fas fa-moon'; 
+        text.textContent = 'Dark Mode'; 
+    }
   }
 
-
+  // DOMContentLoaded: Setup listeners and initial state
   document.addEventListener('DOMContentLoaded', function() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
     
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
+        // Deactivate all
         tabButtons.forEach(btn => btn.classList.remove('active'));
         tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Activate clicked
         button.classList.add('active');
-        document.getElementById(button.getAttribute('data-tab')).classList.add('active');
+        const targetTab = document.getElementById(button.getAttribute('data-tab'));
+        if (targetTab) {
+            targetTab.classList.add('active');
+        }
+        
+        // Scroll tab into view if needed
+        button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       });
     });
     
+    // Check for saved dark mode preference
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     if (savedDarkMode) {
       document.body.classList.add('dark-mode');
-      updateDarkModeButton();
     }
+    updateDarkModeButton(); // Update button text/icon regardless
     
+    // Load data and run initial calculations
     loadLastUsedDrugValues();
     calculateAll();
     loadPatientProfiles();

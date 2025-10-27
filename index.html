@@ -875,8 +875,7 @@
             transform: translateY(0px);
             box-shadow: var(--shadow);
         }
-
-        /* Primary button style (edit, memory) */
+		/* Primary button style (edit, memory) */
         .edit-btn, .memory-btn {
             background: transparent;
             border-color: var(--primary-accent);
@@ -1705,7 +1704,7 @@
             <div class="info-box">
                 <strong>Note:</strong> These are maximum recommended doses. Always use the lowest effective dose and consider patient factors.
             </div>
-            <div id="local-anesthetics-results" class="drugs-grid"></div>
+            <div id="local-anesthetics-results" classs="drugs-grid"></div>
         </section>
     </div>
 
@@ -1750,8 +1749,8 @@
                 <button class="memory-btn" onclick="saveDrugSet()">
                     <i class="fas fa-save"></i> Save Current Settings
                 </button>
-                <button class="memory-btn warning" onclick="clearAllDrugSets()">
-                    <i class="fas fa-trash"></i> Clear All
+                <button classExample of a simple, three-paragraph essay
+                <i class="fas fa-trash"></i> Clear All
                 </button>
             </div>
 
@@ -1759,8 +1758,7 @@
             </div>
         </section>
     </div>
-
-    <div class="tab-content" id="infusions">
+	<div class="tab-content" id="infusions">
         <section class="section">
             <h2><i class="fas fa-tint"></i> Infusion Calculations</h2>
             <div class="info-box">
@@ -2221,7 +2219,7 @@
         caution: 'Respiratory depression risk. Monitor respiratory status continuously. Have naloxone available. Chest wall rigidity possible with rapid bolus.',
         notes: 'Standard prep: 500 mcg in 50 mL (10 mcg/mL). For non-intubated patients, use lowest effective dose and monitor closely.'
       },
-      {
+	  {
         name: 'Dopamine Infusion', category: 'infusion', categoryLabel: 'Inotrope/Vasopressor', isExpanded: false,
         loadingDose: { dose: 0, unit: 'mcg/kg', note: 'Loading dose not typically used.' },
         infusionDoseRange: { min: 2, max: 20, unit: 'mcg/kg/min' },
@@ -2613,8 +2611,7 @@
       if (weight < 90) return '4';
       return '5';
     }
-
-    function calculateCentralLineSize(weight){
+	function calculateCentralLineSize(weight){
       if (weight === 0) return 'N/A';
       if (weight <= 5) return '3.0 Fr';
       if (weight <= 10) return '4.0 Fr';
@@ -2850,6 +2847,15 @@
         let descriptionBox = ''; // <-- NEW
         let doseDisplay;
 
+        // *** START FIX ***
+        let notesBox = '';
+        if(drug.notes) {
+          // Use the same styling as your other info boxes
+          notesBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category}); margin-top: 8px;">${drug.notes}</div>`;
+        }
+        // *** END FIX ***
+
+
         if (drug.name === 'Ketorolac') {
           const ketorolacCalc = calculateKetorolacDoseAndInfo(patient, drug);
           let customDose = null;
@@ -3028,7 +3034,7 @@
             </div>
             <div class="drug-details" id="drug-details-${originalIndex}">
 
-              ${ketorolacInfoBox}${descriptionBox}${routeSelectorHTML}
+              ${ketorolacInfoBox}${descriptionBox}${notesBox}${routeSelectorHTML}
               <div class="dose-info">Recommended: ${drug.range}</div>
               <div class="calculation">
                 <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>

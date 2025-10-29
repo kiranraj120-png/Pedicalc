@@ -165,9 +165,16 @@
           left: -50%;
           width: 200%;
           height: 200%;
-          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+          /* MODIFIED: Slightly brighter base gradient */
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
           transform: rotate(30deg);
-          animation: shimmer 5s infinite;
+
+          /* Animation properties */
+          animation-name: shimmer;
+          animation-duration: 4s; /* Base duration */
+          animation-iteration-count: infinite;
+          animation-direction: alternate; /* Makes it reverse smoothly */
+          animation-timing-function: ease-in-out; /* Smoother start/end */
         }
 
         @keyframes shimmer {
@@ -1533,12 +1540,13 @@
           }
 
           /* --- REPLACE OR ADD THIS RULE --- */
-          header::before {
-            /* MODIFIED: Make the shine even brighter (0.3 opacity) and sharper (60%) */
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
+         header::before {
+            /* MODIFIED: Even brighter and sharper gradient for prominence */
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 60%);
 
-            /* Speed up the animation */
-            animation: shimmer 3.5s infinite;
+            /* MODIFIED: Faster animation duration specifically for mobile */
+            animation-duration: 2.5s;
+            /* It inherits 'alternate' and 'ease-in-out' from the base rule */
           }
           /* --- END OF RULE --- */
 
@@ -2074,119 +2082,303 @@
       drug.isExpanded = false; // <-- ADD THIS
     });
     const antibiotics = [
-      { name: 'Ampicillin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 50, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '50-100 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q6H' }, { name: 'Severe Infection/Meningitis', dose: 100, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' } ], caution: 'High rate of rash. Not effective against beta-lactamase producing bacteria.', info: 'Common indications: Meningitis, severe sepsis, UTIs, intra-abdominal infections. Often used for Listeria in neonates.' },
-      { name: 'Amoxicillin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 50, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-90 mg/kg', defaultRoute: 'Oral', routes: ['Oral'], indications: [ { name: 'Mild/Moderate Infection', dose: 25, frequency: 'Q8H' }, { name: 'Otitis Media/Sinusitis', dose: 45, frequency: 'Q12H' }, { name: 'Severe Infection', dose: 90, frequency: 'Q12H' } ], maxDose: 1000, caution: 'High incidence of rash, especially with concurrent viral infections.', info: 'Common indications: Otitis media, sinusitis, community-acquired pneumonia, streptococcal pharyngitis.' },
-      { name: 'Amoxicillin/Clavulanate', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 50, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-90 mg/kg', defaultRoute: 'Oral', routes: ['Oral'], indications: [ { name: 'Standard Dose', dose: 25, frequency: 'Q8H' }, { name: 'Higher Dose (Recurrent Otitis)', dose: 45, frequency: 'Q12H' } ], maxDose: 875, caution: 'Diarrhea and GI upset are more common due to clavulanate.', info: 'Common indications: Recurrent or persistent otitis media, sinusitis, bite wounds. Used when beta-lactamase producing bacteria are suspected.' },
-      { name: 'Cefazolin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 25, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '25-50 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Surgical Prophylaxis', dose: 25, frequency: 'Single dose' }, { name: 'Treatment', dose: 50, frequency: 'Q8H' } ], maxDose: 2000, caution: 'Cross-hypersensitivity with penicillins (approx. 5-10% risk).', info: 'Common indications: Surgical prophylaxis, skin and soft tissue infections caused by MSSA.' },
-      { name: 'Cefotaxime', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 50, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '50-75 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q8H' }, { name: 'Severe Infection/Meningitis', dose: 75, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose' } ], maxDose: 2000, caution: 'Excellent CNS penetration.', info: 'Common indications: Meningitis, serious Gram-negative infections, gonorrhea, sepsis in neonates.' },
-      { name: 'Cefoxitin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 40, unit: 'mg/kg', concentration: 100, concentrationUnit: 'mg/mL', useParam: 'weight', range: '40-80 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Mild/Moderate Infection', dose: 40, frequency: 'Q6H' }, { name: 'Severe Infection', dose: 80, frequency: 'Q4H' }, { name: 'Surgical Prophylaxis', dose: 40, frequency: 'Single dose' } ], maxDose: 2000, caution: 'Good anaerobic coverage. Considered a "cephamycin".', info: 'Common indications: Intra-abdominal infections, pelvic inflammatory disease (PID), surgical prophylaxis for colorectal procedures.' },
-      { name: 'Clindamycin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 10, unit: 'mg/kg', concentration: 150, concentrationUnit: 'mg/mL', useParam: 'weight', range: '10-40 mg/kg', defaultRoute: 'IV', routes: ['IV', 'Oral'], indications: [ { name: 'Mild/Moderate Infection', dose: 10, frequency: 'Q8H' }, { name: 'Severe Infection/MRSA', dose: 40, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 10, frequency: 'Single dose' } ], maxDose: 900, caution: 'High risk of causing C. difficile colitis. Not reliable for CNS infections.', info: 'Common indications: Anaerobic infections, MRSA skin/soft tissue infections, bone/joint infections.' },
-      { name: 'Gentamicin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 7.5, unit: 'mg/kg', concentration: 10, concentrationUnit: 'mg/mL', useParam: 'weight', range: '5-7.5 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Standard Dose', dose: 7.5, frequency: 'Q24H' }, { name: 'Meningitis', dose: 5, frequency: 'Q8H' } ], maxDose: 300, caution: 'NEPHROTOXIC and OTOTOXIC. Therapeutic drug monitoring required.', info: 'Common indications: Severe Gram-negative infections, sepsis, synergistic therapy for endocarditis.' },
-      { name: 'Metronidazole', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 7.5, unit: 'mg/kg', concentration: 5, concentrationUnit: 'mg/mL', useParam: 'weight', range: '7.5-10 mg/kg', defaultRoute: 'IV', routes: ['IV', 'Oral'], indications: [ { name: 'Anaerobic Infections', dose: 7.5, frequency: 'Q8H' }, { name: 'C. difficile Colitis', dose: 10, frequency: 'Q8H (Oral)' }, { name: 'Surgical Prophylaxis', dose: 7.5, frequency: 'Single dose' } ], maxDose: 500, caution: 'Causes disulfiram-like reaction with alcohol. Metallic taste common.', info: 'Common indications: Anaerobic infections (intra-abdominal, brain abscess), C. difficile colitis.' },
-      { name: 'Vancomycin', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 15, unit: 'mg/kg', concentration: 5, concentrationUnit: 'mg/mL', useParam: 'weight', range: '15-20 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Standard Dose', dose: 15, frequency: 'Q6-8H' }, { name: 'Severe Infection/Meningitis', dose: 20, frequency: 'Q6-8H' } ], maxDose: 1000, caution: 'NEPHROTOXIC and OTOTOXIC. Requires therapeutic drug monitoring.', info: 'Common indications: MRSA infections, serious infections in penicillin-allergic patients.' },
-      { name: 'Piperacillin/Tazobactam (Zosyn)', category: 'antibiotic', categoryLabel: 'Antibiotic', defaultDose: 100, unit: 'mg/kg', concentration: 40, concentrationUnit: 'mg/mL', useParam: 'weight', range: '80-100 mg/kg', defaultRoute: 'IV', routes: ['IV'], indications: [ { name: 'Standard Dose', dose: 80, frequency: 'Q8H' }, { name: 'Severe Infection', dose: 100, frequency: 'Q6H' }, { name: 'Surgical Prophylaxis', dose: 80, frequency: 'Single dose' } ], maxDose: 4000, caution: 'Broad-spectrum use can lead to C. diff and fungal superinfections. Contains significant sodium load.', info: 'Common indications: Broad-spectrum coverage for hospital-acquired pneumonia, intra-abdominal infections, febrile neutropenia.' },
-	  // --- NEW DRUGS TO ADD TO 'antibiotics' ARRAY ---
-
-    {
-      name: 'Ceftriaxone',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 75,
-      unit: 'mg/kg',
-      concentration: 100,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '50-100 mg/kg/day',
-      defaultRoute: 'IV',
-      routes: ['IV', 'IM'],
-      indications: [{
-        name: 'Sepsis/Severe Infection',
-        dose: 75,
-        frequency: 'Q24H'
-      }, {
-        name: 'Meningitis',
-        dose: 100,
-        frequency: 'Q12H or Q24H'
-      }],
-      maxDose: 4000,
-      caution: '**CONTRAINDICATION: Do NOT co-administer with IV calcium in neonates (<28 days) due to risk of fatal precipitate.** Avoid in hyperbilirubinemic neonates.',
-      info: 'Commonly reconstituted 1g vial with 9.6mL sterile water to get 100mg/mL.'
-    }, {
-      name: 'Amikacin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 15,
-      unit: 'mg/kg',
-      concentration: 50,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '15-22.5 mg/kg/day',
-      defaultRoute: 'IV',
-      routes: ['IV', 'IM'],
-      indications: [{
-        name: 'Standard Dose (Child >1mo)',
-        dose: 15,
-        frequency: 'Q24H'
-      }, {
-        name: 'Neonatal Sepsis (Term)',
-        dose: 15,
-        frequency: 'Q24H'
-      }],
-      caution: '**NEPHROTOXIC and OTOTOXIC.** Requires therapeutic drug monitoring (TDM). Adjust dose in renal impairment.',
-      info: 'Aminoglycoside. Common preps: 100mg/2mL (50mg/mL) or 500mg/2mL (250mg/mL). Neonatal dosing varies significantly by gestational/postnatal age.'
-    }, {
-      name: 'Azithromycin',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 10,
-      unit: 'mg/kg',
-      concentration: 40,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '10-12 mg/kg/day',
-      defaultRoute: 'Oral',
-      routes: ['Oral'],
-      indications: [{
-        name: 'Pneumonia / Otitis Media',
-        dose: 10,
-        frequency: 'Q24H (for 3-5 days)'
-      }, {
-        name: 'Pharyngitis',
-        dose: 12,
-        frequency: 'Q24H (for 5 days)'
-      }],
-      maxDose: 500,
-      caution: 'Risk of QT prolongation. Use with caution in patients with cardiac arrhythmias.',
-      info: 'Macrolide. Common preps: 100mg/5mL or 200mg/5mL (40mg/mL). A 10mg/kg dose from 200mg/5mL prep is 0.25 mL/kg.'
-    }, {
-      name: 'Cefixime',
-      category: 'antibiotic',
-      categoryLabel: 'Antibiotic',
-      defaultDose: 8,
-      unit: 'mg/kg',
-      concentration: 20,
-      concentrationUnit: 'mg/mL',
-      useParam: 'weight',
-      range: '8-20 mg/kg/day',
-      defaultRoute: 'Oral',
-      routes: ['Oral'],
-      indications: [{
-        name: 'Standard Dose (UTI/Otitis)',
-        dose: 8,
-        frequency: 'Q24H (or 4 mg/kg Q12H)'
-      }, {
-        name: 'Typhoid Fever',
-        dose: 20,
-        frequency: 'Q12H'
-      }],
-      maxDose: 400,
-      caution: 'Hypersensitivity risk in penicillin-allergic patients. Not recommended for children < 6 months.',
-      ageMin: 0.5,
-      info: 'Oral 3rd-gen cephalosporin. Common preps: 50mg/5mL or 100mg/5mL (20mg/mL). An 8mg/kg dose from 100mg/5mL prep is 0.4 mL/kg.'
-    }
+      { 
+        name: 'Ampicillin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 50, 
+        unit: 'mg/kg', 
+        concentration: 100, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '50-100 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q6H', maxPerDose: 2000, note: 'Max daily dose: 12g/day.' }, 
+          { name: 'Severe Infection/Meningitis', dose: 100, frequency: 'Q6H', maxPerDose: 2000, note: 'Max daily dose: 12g/day.' }, 
+          { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose', maxPerDose: 2000 } 
+        ], 
+        caution: 'High rate of rash. Not effective against beta-lactamase producing bacteria.', 
+        info: 'Common indications: Meningitis, severe sepsis, UTIs, intra-abdominal infections. Often used for Listeria in neonates.' 
+      },
+      { 
+        name: 'Amoxicillin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 25, 
+        unit: 'mg/kg', 
+        concentration: 50, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '25-90 mg/kg/day', 
+        defaultRoute: 'Oral', 
+        routes: ['Oral'], 
+        indications: [ 
+          { name: 'Mild/Moderate Infection', dose: 25, frequency: 'Q8H', maxPerDose: 1000 }, 
+          { name: 'Otitis Media/Sinusitis', dose: 45, frequency: 'Q12H', maxPerDose: 1000 }, 
+          { name: 'Severe Infection', dose: 90, frequency: 'Q12H', maxPerDose: 1000, note: 'Max dose 1g/dose. Max daily 4g.' }
+        ], 
+        caution: 'High incidence of rash, especially with concurrent viral infections.', 
+        info: 'Common indications: Otitis media, sinusitis, community-acquired pneumonia, streptococcal pharyngitis.' 
+      },
+      { 
+        name: 'Amoxicillin/Clavulanate', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 25, 
+        unit: 'mg/kg', 
+        concentration: 50, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '25-90 mg/kg/day (amox component)', 
+        defaultRoute: 'Oral', 
+        routes: ['Oral'], 
+        indications: [ 
+          { name: 'Standard Dose', dose: 25, frequency: 'Q8H', maxPerDose: 875 }, 
+          { name: 'Higher Dose (Recurrent Otitis)', dose: 45, frequency: 'Q12H', maxPerDose: 875 } 
+        ], 
+        caution: 'Diarrhea and GI upset are more common due to clavulanate.', 
+        info: 'Dosing based on amoxicillin component.' 
+      },
+      { 
+        name: 'Cefazolin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 25, 
+        unit: 'mg/kg', 
+        concentration: 100, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '25-50 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Surgical Prophylaxis', dose: 25, frequency: 'Single dose', maxPerDose: 2000 }, 
+          { name: 'Treatment', dose: 50, frequency: 'Q8H', maxPerDose: 2000, note: 'Max daily dose 6g/day.' } 
+        ], 
+        caution: 'Cross-hypersensitivity with penicillins (approx. 5-10% risk).', 
+        info: 'Common indications: Surgical prophylaxis, skin and soft tissue infections caused by MSSA.' 
+      },
+      { 
+        name: 'Cefotaxime', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 50, 
+        unit: 'mg/kg', 
+        concentration: 100, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '50-75 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Mild/Moderate Infection', dose: 50, frequency: 'Q8H', maxPerDose: 2000 }, 
+          { name: 'Severe Infection/Meningitis', dose: 75, frequency: 'Q6H', maxPerDose: 2000, note: 'Max daily dose 12g/day.' }, 
+          { name: 'Surgical Prophylaxis', dose: 50, frequency: 'Single dose', maxPerDose: 2000 } 
+        ], 
+        caution: 'Excellent CNS penetration.', 
+        info: 'Common indications: Meningitis, serious Gram-negative infections, gonorrhea, sepsis in neonates.' 
+      },
+      { 
+        name: 'Cefoxitin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 40, 
+        unit: 'mg/kg', 
+        concentration: 100, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '40-80 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Mild/Moderate Infection', dose: 40, frequency: 'Q6H', maxPerDose: 2000 }, 
+          { name: 'Severe Infection', dose: 80, frequency: 'Q4H', maxPerDose: 2000, note: 'Max daily dose 12g/day.' }, 
+          { name: 'Surgical Prophylaxis', dose: 40, frequency: 'Single dose', maxPerDose: 2000 } 
+        ], 
+        caution: 'Good anaerobic coverage. Considered a "cephamycin".', 
+        info: 'Common indications: Intra-abdominal infections, pelvic inflammatory disease (PID), surgical prophylaxis for colorectal procedures.' 
+      },
+      { 
+        name: 'Clindamycin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 10, 
+        unit: 'mg/kg', 
+        concentration: 150, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '10-40 mg/kg/day', 
+        defaultRoute: 'IV', 
+        routes: ['IV', 'Oral'], 
+        indications: [ 
+          { name: 'Mild/Moderate Infection', dose: 10, frequency: 'Q8H', maxPerDose: 900 }, 
+          { name: 'Severe Infection/MRSA', dose: 10, frequency: 'Q6H', maxPerDose: 900, note: 'Dose is 10mg/kg Q6H (40mg/kg/day). Max 2.7g/day.' }, 
+          { name: 'Surgical Prophylaxis', dose: 10, frequency: 'Single dose', maxPerDose: 900 } 
+        ], 
+        caution: 'High risk of causing C. difficile colitis. Not reliable for CNS infections.', 
+        info: 'Common indications: Anaerobic infections, MRSA skin/soft tissue infections, bone/joint infections.' 
+      },
+      { 
+        name: 'Gentamicin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 7.5, 
+        unit: 'mg/kg', 
+        concentration: 10, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '5-7.5 mg/kg/day', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Standard Dose (Once Daily)', dose: 7.5, frequency: 'Q24H' }, // No maxPerDose, trough-driven
+          { name: 'Divided Dosing (Meningitis)', dose: 2.5, frequency: 'Q8H' }  // CORRECTED dose from 5 to 2.5. No maxPerDose.
+        ], 
+        caution: 'NEPHROTOXIC and OTOTOXIC. Therapeutic drug monitoring (troughs) required, especially with divided dosing or impaired renal function.', 
+        info: 'Common indications: Severe Gram-negative infections, sepsis, synergistic therapy for endocarditis.' 
+      },
+      { 
+        name: 'Metronidazole', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 7.5, 
+        unit: 'mg/kg', 
+        concentration: 5, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '7.5-10 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV', 'Oral'], 
+        indications: [ 
+          { name: 'Anaerobic Infections', dose: 7.5, frequency: 'Q8H', maxPerDose: 500 }, 
+          { name: 'C. difficile Colitis', dose: 10, frequency: 'Q8H (Oral)', maxPerDose: 500 }, 
+          { name: 'Surgical Prophylaxis', dose: 7.5, frequency: 'Single dose', maxPerDose: 500, note: 'Max daily 4g.' } 
+        ], 
+        caution: 'Causes disulfiram-like reaction with alcohol. Metallic taste common.', 
+        info: 'Common indications: Anaerobic infections (intra-abdominal, brain abscess), C. difficile colitis.' 
+      },
+      { 
+        name: 'Vancomycin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 15, 
+        unit: 'mg/kg', 
+        concentration: 5, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '15-20 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Standard Dose', dose: 15, frequency: 'Q6-8H', maxPerDose: 1000 }, 
+          { name: 'Severe Infection/Meningitis', dose: 20, frequency: 'Q6-8H', maxPerDose: 1000, note: 'Dosing should be guided by serum troughs or AUC/MIC.' } 
+        ], 
+        caution: 'NEPHROTOXIC and OTOTOXIC. Requires therapeutic drug monitoring.', 
+        info: 'Common indications: MRSA infections, serious infections in penicillin-allergic patients.' 
+      },
+      { 
+        name: 'Piperacillin/Tazobactam (Zosyn)', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 100, 
+        unit: 'mg/kg', 
+        concentration: 40, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '80-100 mg/kg/dose', 
+        defaultRoute: 'IV', 
+        routes: ['IV'], 
+        indications: [ 
+          { name: 'Standard Dose', dose: 80, frequency: 'Q8H', maxPerDose: 4000 }, 
+          { name: 'Severe Infection', dose: 100, frequency: 'Q6H', maxPerDose: 4000, note: 'Max 4g (pip) per dose. Max daily 16g (pip).' }, 
+          { name: 'Surgical Prophylaxis', dose: 80, frequency: 'Single dose', maxPerDose: 4000 } 
+        ], 
+        caution: 'Broad-spectrum use can lead to C. diff and fungal superinfections. Contains significant sodium load.', 
+        info: 'Common indications: Broad-spectrum coverage for hospital-acquired pneumonia, intra-abdominal infections, febrile neutropenia.' 
+      },
+      { 
+        name: 'Ceftriaxone', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 75, 
+        unit: 'mg/kg', 
+        concentration: 100, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '50-100 mg/kg/day', 
+        defaultRoute: 'IV', 
+        routes: ['IV', 'IM'], 
+        indications: [
+          { name: 'Sepsis/Severe Infection', dose: 75, frequency: 'Q24H', maxPerDose: 4000, note: 'Max daily dose: 4000mg/day.' }, // CORRECTED maxPerDose
+          { name: 'Meningitis', dose: 100, frequency: 'Q12H or Q24H', maxPerDose: 2000, note: 'Q12H dosing max 2g/dose. Max daily dose: 4000mg/day.' } // CORRECTED maxPerDose
+        ], 
+        caution: '**CONTRAINDICATION: Do NOT co-administer with IV calcium in neonates (<28 days) due to risk of fatal precipitate.** Avoid in hyperbilirubinemic neonates.', 
+        info: 'Commonly reconstituted 1g vial with 9.6mL sterile water to get 100mg/mL.' 
+      }, 
+      { 
+        name: 'Amikacin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 15, 
+        unit: 'mg/kg', 
+        concentration: 50, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '15-22.5 mg/kg/day', 
+        defaultRoute: 'IV', 
+        routes: ['IV', 'IM'], 
+        indications: [
+          { name: 'Standard Dose (Once Daily)', dose: 15, frequency: 'Q24H' }, // No maxPerDose
+          { name: 'Neonatal Sepsis (Term)', dose: 15, frequency: 'Q24H' } // No maxPerDose
+        ], 
+        caution: '**NEPHROTOXIC and OTOTOXIC.** Requires therapeutic drug monitoring (TDM). Adjust dose in renal impairment.', 
+        info: 'Aminoglycoside. Common preps: 100mg/2mL (50mg/mL) or 500mg/2mL (250mg/mL). Neonatal dosing varies significantly by gestational/postnatal age.' 
+      }, 
+      { 
+        name: 'Azithromycin', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 10, 
+        unit: 'mg/kg', 
+        concentration: 40, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '10-12 mg/kg/day', 
+        defaultRoute: 'Oral', 
+        routes: ['Oral'], 
+        indications: [
+          { name: 'Pneumonia / Otitis Media', dose: 10, frequency: 'Q24H (for 3-5 days)', maxPerDose: 500, note: 'Max daily dose: 500mg/day.' }, 
+          { name: 'Pharyngitis', dose: 12, frequency: 'Q24H (for 5 days)', maxPerDose: 500, note: 'Max daily dose: 500mg/day.' }
+        ], 
+        caution: 'Risk of QT prolongation. Use with caution in patients with cardiac arrhythmias.', 
+        info: 'Macrolide. Common preps: 100mg/5mL or 200mg/5mL (40mg/mL). A 10mg/kg dose from 200mg/5mL prep is 0.25 mL/kg.' 
+      }, 
+      { 
+        name: 'Cefixime', 
+        category: 'antibiotic', 
+        categoryLabel: 'Antibiotic', 
+        defaultDose: 8, 
+        unit: 'mg/kg', 
+        concentration: 20, 
+        concentrationUnit: 'mg/mL', 
+        useParam: 'weight', 
+        range: '8-20 mg/kg/day', 
+        defaultRoute: 'Oral', 
+        routes: ['Oral'], 
+        indications: [
+          { name: 'Standard Dose (UTI/Otitis)', dose: 8, frequency: 'Q24H', maxPerDose: 400, note: 'Max daily dose: 400mg/day.' }, // CORRECTED
+          { name: 'Typhoid Fever', dose: 10, frequency: 'Q12H', maxPerDose: 200, note: 'Max daily dose: 400mg/day.' } // CORRECTED
+        ], 
+        caution: 'Hypersensitivity risk in penicillin-allergic patients. Not recommended for children < 6 months.', 
+        ageMin: 0.5, 
+        info: 'Oral 3rd-gen cephalosporin. Common preps: 50mg/5mL or 100mg/5mL (20mg/mL). An 8mg/kg dose from 100mg/5mL prep is 0.4 mL/kg.' 
+      }
+    ];
 
     // --- END OF NEW ANTIBIOTICS ---
-    ];
+  
 
     const infusionDrugs = [
       {
@@ -2515,16 +2707,27 @@
 
       antibiotics.forEach((antibiotic, index) => {
         const weight = patient.weight;
-        const currentIndication = antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) || { dose: antibiotic.defaultDose, frequency: 'Q6H' };
+        // Find the currently selected indication object, or default to the first one if not found
+        const currentIndication = antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) || 
+                                  (antibiotic.indications.length > 0 ? antibiotic.indications[0] : { dose: antibiotic.defaultDose, frequency: 'N/A' }); // Fallback if no indications array
+        
         const dosePerKg = currentIndication.dose;
         const frequency = currentIndication.frequency;
         let totalDose = weight * dosePerKg;
         let limitApplied = false;
-        if (antibiotic.maxDose && totalDose > antibiotic.maxDose) { totalDose = antibiotic.maxDose; limitApplied = true; }
+
+        // --- NEW MAX DOSE LOGIC ---
+        // Check if the SELECTED INDICATION has a maxPerDose property and apply it
+        if (currentIndication.maxPerDose && totalDose > currentIndication.maxPerDose) { 
+          totalDose = currentIndication.maxPerDose; 
+          limitApplied = true; 
+        }
+        // --- END NEW MAX DOSE LOGIC ---
 
         let volumeDisplay = 'N/A';
         let concentrationDisplay = '';
-        if (antibiotic.currentRoute === 'IV') {
+        // Calculate volume only if the route is IV and concentration is available
+        if (antibiotic.currentRoute === 'IV' && antibiotic.concentration > 0) {
           const volume = totalDose / antibiotic.concentration;
           volumeDisplay = volume.toFixed(2);
           concentrationDisplay = `${antibiotic.concentration} ${antibiotic.concentrationUnit}`;
@@ -2533,20 +2736,35 @@
         let isCautionNeeded = antibiotic.caution ? true : false;
         let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>` : '';
         let cautionPopupHtml = isCautionNeeded ? `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>` : '';
-        let infoBoxHtml = antibiotic.info ? `<div class="info-box ketorolac-specific" style="border-left-color: var(--antibiotic);">${antibiotic.info}</div>` : '';
+        
+        // Use the 'note' from the selected indication if it exists, otherwise use the general 'info' from the drug
+        let infoText = currentIndication.note ? currentIndication.note : (antibiotic.info ? antibiotic.info : '');
+        let infoBoxHtml = infoText ? `<div class="info-box ketorolac-specific" style="border-left-color: var(--antibiotic);">${infoText}</div>` : '';
 
-        let routeSelectorHTML = antibiotic.routes.length > 1 ? '<div class="route-selector">' + antibiotic.routes.map(route => `<input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${antibiotic.currentRoute === route ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')"><label for="antibiotic-route-${index}-${route}">${route === 'Oral' ? 'Oral' : 'Intravenous (IV)'}</label>`).join('') + '</div>' : '';
 
-        let indicationSelectorHTML = antibiotic.indications.length > 1 ? '<div class="indication-selector">' + antibiotic.indications.map(indication => `<input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" name="antibiotic-indication-${index}" value="${indication.name}" ${antibiotic.currentIndication === indication.name ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')"><label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>`).join('') + '</div>' : '';
+        let routeSelectorHTML = '';
+        // Only show route selector if there's more than one route defined
+        if (antibiotic.routes && antibiotic.routes.length > 1) {
+             routeSelectorHTML = '<div class="route-selector">' + antibiotic.routes.map(route => `<input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${antibiotic.currentRoute === route ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')"><label for="antibiotic-route-${index}-${route}">${route === 'Oral' ? 'Oral' : 'Intravenous (IV)'}</label>`).join('') + '</div>';
+        }
+
+        let indicationSelectorHTML = '';
+        // Only show indication selector if there's more than one indication defined
+        if (antibiotic.indications && antibiotic.indications.length > 1) {
+             indicationSelectorHTML = '<div class="indication-selector">' + antibiotic.indications.map(indication => `<input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" name="antibiotic-indication-${index}" value="${indication.name}" ${antibiotic.currentIndication === indication.name ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')"><label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>`).join('') + '</div>';
+        }
 
         let limitInfoHtml = limitApplied ? `<span class="dose-limit-applied">(MAX Limit Applied)</span>` : '';
 
-        const volumeDetail = (antibiotic.currentRoute === 'IV') ?
+        // Determine if volume detail is applicable
+        const volumeDetail = (antibiotic.currentRoute === 'IV' && antibiotic.concentration > 0) ?
           `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
-          `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for Oral Dose</div>`;
+          `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for ${antibiotic.currentRoute} Dose</div>`;
 
-        const isExpandedClass = (allAntibioticsExpanded || antibioticExpanded[index]) ? 'expanded' : '';
+        // Check if the card should be expanded
+        const isExpandedClass = (allAntibioticsExpanded || (antibioticExpanded && antibioticExpanded[index])) ? 'expanded' : '';
 
+        // Build the HTML for this drug card
         html += `<div class="drug-card antibiotic ${isExpandedClass}" id="antibiotic-card-${index}">
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleAntibioticCard(${index})">
@@ -2556,9 +2774,11 @@
             </div>
             <div class="drug-details" id="antibiotic-details-${index}">
               <div class="antibiotic-details">
-                ${routeSelectorHTML}${indicationSelectorHTML}${infoBoxHtml}
-                <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range}</div></div>
-                <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency}</div></div>
+                ${routeSelectorHTML}
+                ${indicationSelectorHTML}
+                ${infoBoxHtml}
+                <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range || 'N/A'}</div></div>
+                <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency || 'N/A'}</div></div>
                 <div class="calculation">
                   <div class="calculation-result" style="color: var(--antibiotic);">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
                   ${volumeDetail}
@@ -2569,6 +2789,7 @@
           </div>`;
       });
 
+      // Update the DOM and the expand/collapse button text
       antibioticsDiv.innerHTML = html;
       document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
     }

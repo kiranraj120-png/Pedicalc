@@ -469,22 +469,27 @@
           border-color: var(--primary-accent);
         }
 
-        /* --- MODIFIED: Corrected grid animation --- */
+                /* --- MODIFIED: Corrected grid animation --- */
         .disclaimer-content {
           display: grid;
           grid-template-rows: 0fr; /* Collapsed */
           overflow: hidden;
-          transition: grid-template-rows 0.4s var(--anim-bezier), margin-top 0.4s var(--anim-bezier);
+          /* MODIFIED: Added border-color to the transition */
+          transition: grid-template-rows 0.4s var(--anim-bezier), margin-top 0.4s var(--anim-bezier), border-color 0.4s var(--anim-bezier);
           background: var(--bg-secondary);
           border-radius: var(--radius-card);
           margin-top: 0;
-          border: 1px solid var(--border-color);
+          /* MODIFIED: Border is transparent by default (fixes the "line") */
+          border: 0px solid transparent;
         }
 
         .disclaimer-content.expanded {
           grid-template-rows: 1fr; /* Expanded */
           margin-top: 8px;
+          /* MODIFIED: Restore border-color only when expanded */
+          border-color: var(--border-color);
         }
+
         
         /* NEW: Wrapper for disclaimer content */
         .disclaimer-wrapper {

@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pediatric MLAD &amp; Caudal Calculator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      /* Primary Accent: Calm, Professional Green */
+      --primary-accent: #059669; /* Emerald 600 */
+      --primary-accent-dark: #065f46; /* Emerald 800 */
+      --primary-accent-light: rgba(5, 150, 105, 0.1); /* Emerald 600 w/ 10% alpha */
+
+      /* Neutrals: Warm, "Classy" Stone Grays */
+      --bg-primary: #f5f5f4; /* Stone 100 (Warmer than Slate 50) */
+      --bg-secondary: #ffffff; /* White */
+      --bg-card: #ffffff; /* White */
+
+      --text-primary: #292524; /* Stone 800 (Softer than pure black) */
+      --text-secondary: #57534e; /* Stone 600 */
+      --text-tertiary: #78716c; /* Stone 500 */
+
+      --border-color: #e7e5e4; /* Stone 200 */
+
+      /* Standard Shadows (can remain the same) */
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --shadow-hover: var(--shadow-lg);
+
+      /* Glass/Sticky Backgrounds */
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(231, 229, 228, 0.7); /* Stone 200 w/ alpha */
+
+      /* --- Updated Drug Category Colors (More Cohesive) --- */
+      --induction: #0ea5e9; /* Sky 500 */
+      --muscle-relaxant: #f59e0b; /* Amber 500 */
+      --analgesic: #059669; /* Emerald 600 (Matches Primary) */
+      --adjunct: #8b5cf6; /* Violet 500 */
+      --reversal: #ef4444; /* Red 500 */
+      --emergency: #f97316; /* Orange 500 (High Alert) */
+      --steroid: #14b8a6; /* Teal 500 */
+      --antiemetic: #84cc16; /* Lime 500 */
+      --local-anesthetic: #f43f5e; /* Rose 500 */
+      --infusion: #06b6d4; /* Cyan 500 */
+      --antibiotic: #78716c; /* Stone 500 (Matches Tertiary Text) */
+
+      /* Semantic Alerts */
+      --caution-color: #f59e0b; /* Amber 500 */
+      --reset-color: #ef4444; /* Red 500 */
+
+      --radius-card: 12px;
+      --radius-input: 8px;
+      --radius-tab: 8px;
+
+      --anim-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.dark-mode {
+      /* Primary Accent: Lighter green for dark BG */
+      --primary-accent: #34d399; /* Emerald 400 */
+      --primary-accent-dark: #10b981; /* Emerald 500 */
+      --primary-accent-light: rgba(52, 211, 153, 0.1); /* Emerald 400 w/ 10% alpha */
+
+      /* Neutrals: Warm, Dark Stone */
+      --bg-primary: #1c1917; /* Stone 900 */
+      --bg-secondary: #292524; /* Stone 800 (Card Color) */
+      --bg-card: #292524; /* Stone 800 */
+
+      --text-primary: #f5f5f4; /* Stone 100 */
+      --text-secondary: #a8a29e; /* Stone 400 */
+      --text-tertiary: #78716c; /* Stone 500 */
+
+      --border-color: #44403c; /* Stone 700 */
+
+      /* Shadows (darkened for dark mode) */
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+      --shadow-hover: var(--shadow-lg);
+
+      /* Glass/Sticky Backgrounds */
+      --glass-bg: rgba(41, 37, 36, 0.85); /* Stone 800 w/ alpha */
+      --glass-border: rgba(68, 64, 60, 0.7); /* Stone 700 w/ alpha */
+      
+      /* Drug colors are the same, they pop nicely on this dark background */
+
+      /* Semantic Alerts (Lighter for dark BG) */
+      --caution-color: #fcd34d; /* Amber 300 */
+      --reset-color: #f87171; /* Red 400 */
+      --emergency: #fbbf24; /* Amber 400 */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      font-size: 14px;
+      transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier), font-size 0.3s var(--anim-bezier);
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      text-rendering: optimizeLegibility;
+    }
+    
+    h1, h2, h3 {
+      letter-spacing: -0.02em; 
+    }
+
+    .calculation-result,
+    .volume-result,
+    .result-value,
+    #font-size-indicator {
+      font-feature-settings: "tnum" on;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="number"] {
+      font-feature-settings: "tnum" on;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input, textarea, select {
+      user-select: text !important;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px 10px;
+      animation: containerFadeIn 0.5s ease-out;
+    }
+
+    @keyframes containerFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-accent), var(--primary-accent-dark));
+      color: white;
+      padding: 15px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+      transform: rotate(30deg);
+      animation-name: shimmer;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+      animation-timing-function: ease-in-out;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translate(-30%, -30%) rotate(30deg); }
+        100% { transform: translate(30%, 30%) rotate(30deg); }
+    }
+
+    h1 {
+      font-size: 1.5em;
+      font-weight: 700;
+      z-index: 1;
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    .font-size-control {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+      display: flex;
+      align-items: center;
+      padding: 2px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1;
+    }
+
+    .font-adjust-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1em;
+      padding: 6px 8px;
+      border-radius: 50%;
+      transition: all .25s var(--anim-bezier);
+      line-height: 1;
+    }
+
+    .font-adjust-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    #font-size-indicator {
+      color: white;
+      font-weight: 600;
+      font-size: .75em;
+      padding: 0 4px;
+      min-width: 40px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .dark-mode-toggle {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 8px 16px;
+      cursor: pointer; 
+      font-size: .75em;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+      transition: all .25s var(--anim-bezier);
+      outline: none;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      min-width: 120px;
+      overflow: hidden;
+    }
+
+    .dark-mode-toggle:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
+    }
+
+    .dark-mode-toggle:active {
+      transform: translateY(0px);
+    }
+
+    .dark-mode-toggle i {
+        transition: transform 0.4s var(--anim-bezier);
+    }
+
+    body.dark-mode .dark-mode-toggle i {
+        transform: rotate(180deg);
+    }
+
+    .section {
+      background: var(--bg-card);
+      padding: 15px;
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 15px;
+      transition: box-shadow .3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
+      border: 1px solid var(--border-color);
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .section h2 {
+      font-size: 1.25em;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section h2 i {
+      color: var(--primary-accent);
+    }
+
+    .warning {
+      background: #fffbeb; /* Amber 50 */
+      border-left: 5px solid #f59e0b; /* Amber 500 */
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.8em;
+      color: #b45309; /* Amber 700 */
+      font-weight: 500;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow);
+    }
+
+    body.dark-mode .warning {
+      background: #451a03; /* Amber 900 */
+      color: #fcd34d; /* Amber 300 */
+      border-left: 5px solid #f59e0b; /* Amber 500 */
+    }
+    
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .input-field label {
+      font-size: .8em;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      font-weight: 600;
+      display: block;
+    }
+    
+    #dosing-parameter-field {
+        background: var(--primary-accent-light);
+        padding: 10px;
+        border-radius: var(--radius-input);
+        border: 1px dashed var(--primary-accent);
+    }
+    #dosing-parameter-field label {
+        color: var(--primary-accent-dark);
+        font-weight: 700;
+        font-size: 0.85em;
+    }
+    body.dark-mode #dosing-parameter-field {
+        border-color: var(--primary-accent);
+    }
+     body.dark-mode #dosing-parameter-field label {
+        color: var(--primary-accent);
+     }
+
+
+    .input-field input, .input-field select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-input);
+      font-size: .9em;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: border-color .3s var(--anim-bezier), box-shadow .3s var(--anim-bezier);
+      appearance: none;
+    }
+    
+    /* NEW: Height for input to match button */
+    .input-field input {
+        height: 40px; 
+    }
+
+    .input-field input:focus, .input-field select:focus {
+      outline: none;
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px var(--primary-accent-light);
+    }
+    
+    .input-field select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2378716c' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    body.dark-mode .input-field select {
+         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a8a29e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+
+
+    .info-box {
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--primary-accent);
+      padding: 12px 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .info-box strong {
+      color: var(--primary-accent);
+      font-weight: 600;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .calculator-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 15px;
+      }
+      /* Custom grid for this page */
+      .mlad-grid {
+        grid-template-columns: 2fr 1fr;
+      }
+       @media (max-width: 900px) {
+        .mlad-grid {
+          grid-template-columns: 1fr; /* Stack on smaller screens */
+        }
+      }
+      .container {
+        padding: 20px 15px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .section h2 {
+        font-size: 1.5em;
+      }
+    }
+
+    .calculator-card {
+      border-radius: var(--radius-card);
+      padding: 15px;
+      border-left: 6px solid var(--infusion);
+      background: var(--bg-secondary);
+      transition: all .35s var(--anim-bezier);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .calculator-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+      background: var(--bg-card);
+    }
+
+    .calculator-title {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .calculator-title::before {
+      content: none; 
+    }
+    
+    .calculator-title i {
+        color: var(--infusion);
+        margin-right: 8px;
+    }
+
+    /* Results */
+    .calculation-result {
+      background: var(--bg-primary);
+      padding: 10px;
+      border-radius: var(--radius-input);
+      margin-top: 12px;
+      border: 1px solid var(--border-color);
+      /* Add transition for when halo is removed */
+      transition: border-color 0.3s var(--anim-bezier), box-shadow 0.3s var(--anim-bezier);
+    }
+    
+    .result-value {
+      font-weight: 800;
+      font-size: 1.4em;
+      color: var(--infusion);
+      text-align: center;
+      margin: 5px 0;
+      line-height: 1.2;
+      transition: color 0.3s var(--anim-bezier);
+    }
+    
+    body.dark-mode .result-value {
+        color: var(--infusion);
+    }
+
+    .result-label {
+      font-size: 0.8em;
+      color: var(--text-secondary);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .result-note {
+      font-size: 0.75em;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-top: 5px;
+      font-style: italic;
+      /* Add transition for when note changes */
+      transition: all 0.3s var(--anim-bezier);
+    }
+    
+    /* --- Toxic Dose Warning Styles --- */
+    @keyframes pulseRed {
+      0% { box-shadow: 0 0 5px 2px rgba(239, 68, 68, 0.4); } /* Red 500 */
+      50% { box-shadow: 0 0 15px 8px rgba(239, 68, 68, 0.7); }
+      100% { box-shadow: 0 0 5px 2px rgba(239, 68, 68, 0.4); }
+    }
+
+    .toxic-dose-warning {
+      animation: pulseRed 1.5s infinite ease-in-out;
+      border: 1px solid var(--reset-color) !important;
+    }
+    
+    .toxic-dose-warning .result-value {
+      color: var(--reset-color) !important;
+    }
+    
+    body.dark-mode .toxic-dose-warning .result-value {
+        color: #f87171 !important; /* Red 400 */
+    }
+
+    .toxic-note {
+      color: var(--reset-color) !important;
+      font-weight: 700 !important;
+      font-size: 0.8em !important;
+      background: rgba(239, 68, 68, 0.1);
+      padding: 5px 8px;
+      border-radius: var(--radius-input);
+      font-style: normal !important;
+    }
+    
+    body.dark-mode .toxic-note {
+        color: #f87171 !important; /* Red 400 */
+        background: rgba(239, 68, 68, 0.2);
+    }
+    /* --- End of New Styles --- */
+
+    /* --- NEW: Reset Button Style --- */
+    .reset-btn {
+        background: var(--border-color);
+        color: var(--text-secondary);
+        border: none;
+        border-radius: var(--radius-input);
+        padding: 0 12px;
+        font-size: 0.9em;
+        cursor: pointer;
+        height: 40px; /* Match input height */
+        flex-shrink: 0;
+        transition: all 0.3s var(--anim-bezier);
+    }
+    .reset-btn:hover {
+        background: var(--text-tertiary);
+        color: var(--bg-primary);
+    }
+    body.dark-mode .reset-btn {
+        background: var(--border-color);
+        color: var(--text-secondary);
+    }
+    body.dark-mode .reset-btn:hover {
+        background: var(--text-tertiary);
+        color: var(--bg-primary);
+    }
+    /* --- End of Reset Button Style --- */
+
+    
+    .reference-card-title {
+        font-size: 1.1em;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .reference-card-title i {
+        color: var(--infusion);
+    }
+
+    .reference-list {
+        font-size: 0.85em;
+        color: var(--text-secondary);
+        line-height: 1.8;
+    }
+    
+    .reference-list p {
+        margin-bottom: 10px;
+    }
+    .reference-list p:last-child {
+        margin-bottom: 0;
+    }
+
+    .reference-list div {
+        margin-bottom: 8px;
+        padding: 5px 0;
+        border-bottom: 1px dotted var(--border-color);
+    }
+    
+    .reference-list div:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .reference-list strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    
+    .reference-list a {
+        color: var(--primary-accent);
+        text-decoration: none;
+        font-weight: 500;
+        word-break: break-all;
+    }
+    .reference-list a:hover {
+        text-decoration: underline;
+        color: var(--primary-accent-dark);
+    }
+    body.dark-mode .reference-list a:hover {
+        color: var(--primary-accent);
+    }
+    .reference-list ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .reference-list li {
+        padding: 8px 0;
+        border-bottom: 1px dotted var(--border-color);
+        line-height: 1.6;
+    }
+    .reference-list li:last-child {
+        border-bottom: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: var(--text-secondary);
+      padding: 20px 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    footer a {
+      color: var(--primary-accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    footer a:hover {
+        text-decoration: underline;
+    }
+    
+    @media (max-width: 480px) {
+        .input-field input, .input-field select {
+            padding: 8px 10px;
+            font-size: 16px; /* Prevent iOS zoom */
+        }
+        input[type="number"] {
+            font-size: 16px !important; /* Prevent iOS zoom */
+        }
+        
+        header::before {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
+            animation-duration: 2.5s;
+        }
+        .header-controls {
+            flex-wrap: wrap; 
+            justify-content: flex-end;
+            flex-grow: 1; 
+            gap: 8px;
+        }
+        .font-size-control {
+            padding: 2px;
+        }
+        .font-adjust-btn {
+            padding: 4px 6px;
+            font-size: 0.9em;
+        }
+        .dark-mode-toggle {
+            padding: 6px 12px;
+            font-size: 0.7em;
+            min-width: 100px;
+        }
+        h1 {
+            font-size: 1.2em;
+        }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-baby"></i> Pediatric MLAD &amp; Caudal Calculator</h1>
+      <div class="header-controls">
+          <div class="font-size-control">
+              <button class="font-adjust-btn" onclick="adjustFontSize(-1)" aria-label="Decrease font size">
+                  <i class="fas fa-search-minus"></i>
+              </button>
+              <span id="font-size-indicator">100%</span>
+              <button class="font-adjust-btn" onclick="adjustFontSize(1)" aria-label="Increase font size">
+                  <i class="fas fa-search-plus"></i>
+              </button>
+          </div>
+          <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+              <i class="fas fa-moon"></i> <span>Dark Mode</span>
+          </button>
+      </div>
+    </header>
+
+    <div class="warning">
+      <i class="fas fa-exclamation-triangle"></i> <strong>Disclaimer:</strong> This calculator is for educational and reference purposes only, based on common pediatric anesthesia guidelines. **MLAD (Minimum Local Anesthetic Dose)** is a concept, not an absolute. Always verify calculations, use professional clinical judgment, and dose based on patient-specific factors.
+    </div>
+
+    <section class="section">
+      <h2><i class="fas fa-calculator"></i> Caudal Block (Armitage Formula)</h2>
+      <div class="calculator-grid mlad-grid">
+        <div class="calculator-card" style="border-left-color: var(--primary-accent);">
+          <div class="calculator-title"><i class="fas fa-keyboard" style="color: var(--primary-accent);"></i> Inputs</div>
+          <div class="input-group">
+            <div class="input-field">
+              <label for="armitage-weight">Patient Weight (kg)</label>
+              <input type="number" id="armitage-weight" placeholder="Enter weight e.g., 7.5" step="0.1" min="0" oninput="calculateArmitage()">
+            </div>
+            <div class="input-field">
+              <label for="armitage-level">Target Level (Armitage Formula)</label>
+              <select id="armitage-level" onchange="calculateArmitage()">
+                <option value="0.5">Sacral (0.5 mL/kg)</option>
+                <option value="1.0">Lumbar (1.0 mL/kg)</option>
+                <option value="1.25">Thoracic (1.25 mL/kg)</option>
+              </select>
+            </div>
+            <div class="input-field">
+              <label for="armitage-conc">Drug Concentration (%)</label>
+              <select id="armitage-conc" onchange="calculateArmitage()">
+                <option value="bupivacaine-0.125">Bupivacaine 0.125% (1.25 mg/mL)</option>
+                <option value="bupivacaine-0.25">Bupivacaine 0.25% (2.5 mg/mL)</option>
+                <option value="ropivacaine-0.2">Ropivacaine 0.2% (2.0 mg/mL)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="calculator-card" style="border-left-color: var(--bg-primary);">
+            <div class="calculation-result" id="armitage-results">
+              <div class="result-label">Total Volume Required</div>
+              <div class="result-value" id="armitage-volume-ml" style="color: var(--primary-accent);">-- mL</div>
+              <div class="result-label">Total Dose Required</div>
+              <div class="result-value" id="armitage-dose-mg" style="color: var(--primary-accent);">-- mg</div>
+              <div class="result-note" id="armitage-note">Enter weight</div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-calculator"></i> MLAD Calculator</h2>
+      <div class="info-box">
+        <strong>Guide:</strong> This calculator is for other blocks (PNB, Spinal) or for customized caudal dosing. The key dosing parameter (e.g., mL/kg or mg/kg) will appear for you to adjust.
+      </div>
+      
+      <div class="calculator-grid mlad-grid">
+        <div class="calculator-card" style="border-left-color: var(--infusion);">
+          <div class="calculator-title"><i class="fas fa-keyboard" style="color: var(--infusion);"></i> Inputs</div>
+          <div class="input-group">
+            <div class="input-field">
+              <label for="child-weight">Patient Weight (kg)</label>
+              <input type="number" id="child-weight" placeholder="Enter weight e.g., 7.5" step="0.1" min="0" oninput="calculateMLAD()">
+            </div>
+            
+            <div class="input-field">
+              <label for="procedure-type">Procedure / Block Type</label>
+              <select id="procedure-type" onchange="updateDosingParameter()">
+                <option value="caudal_sacral">Caudal (Custom)</option>
+                <option value="pnb">Peripheral Nerve Block (PNB)</option>
+                <option value="spinal">Spinal (Infant)</option>
+              </select>
+            </div>
+            
+            <div class="input-field">
+              <label for="drug-type">Drug</label>
+              <select id="drug-type" onchange="updateDosingParameter()">
+                <option value="ropivacaine">Ropivacaine</option>
+                <option value="bupivacaine">Bupivacaine</option>
+                <option value="lidocaine">Lidocaine</option>
+              </select>
+            </div>
+            
+            <div class="input-field" id="dosing-parameter-field">
+              <label id="dosing-param-label" for="dosing-param-value">Dosing Parameter</label>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="number" id="dosing-param-value" step="0.01" min="0" oninput="calculateMLAD()" style="flex: 1;">
+                  <button id="reset-param-btn" class="reset-btn" aria-label="Reset to default">
+                      <i class="fas fa-undo"></i>
+                  </button>
+              </div>
+            </div>
+            
+            <div class="input-field">
+              <label for="concentration-perc">Drug Concentration (%)</label>
+              <select id="concentration-perc" onchange="calculateMLAD()">
+                </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="calculator-card" style="border-left-color: var(--bg-primary);">
+            <div class="calculation-result" id="mlad-results">
+              <div class="result-label" id="mlad-dose-label">Total Dose Required</div>
+              <div class="result-value" id="mlad-dose-mg" style="color: var(--infusion);">-- mg</div>
+              <div class="result-label" id="mlad-volume-label">Total Volume Required</div>
+              <div class="result-value" id="mlad-volume-ml" style="color: var(--infusion);">-- mL</div>
+              <div class="result-note" id="mlad-note">Enter weight</div>
+            </div>
+            
+            <div class="calculation-result" id="max-dose-results" style="margin-top: 15px;">
+              <div class="result-label" style="font-weight: 700;">Max Safe Dose (Reference)</div>
+              <div class="result-value" id="max-dose-mg" style="color: var(--caution-color);">-- mg</div>
+              <div class="result-label">Max Safe Volume (at this conc.)</div>
+              <div class="result-value" id="max-dose-volume-ml" style="color: var(--caution-color);">-- mL</div>
+              <div class="result-note" id="max-dose-note"></div>
+            </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-info-circle"></i> A Note on Dosing Strategies</h2>
+      <div class="calculator-card" style="border-left-color: var(--primary-accent);">
+        <div class="reference-list" style="font-size: 0.85em; color: var(--text-secondary); line-height: 1.8;">
+          <p><strong>MLAD</strong> stands for <strong>Minimum Local Anesthetic Dose</strong>. This app uses two different dosing strategies, which is why the inputs change.</p>
+          
+          <p><strong>1. Volume-Based Dosing (e.g., Caudal Blocks):</strong>
+            <br>
+            For caudal blocks, the primary goal is to achieve a physical "spread" of anesthetic to a specific sensory level. The <strong>Minimum Effective Volume (mL/kg)</strong> is the key parameter. The Armitage formula (0.5, 1.0, 1.25 mL/kg) is the classic example.
+            <br>
+            <em>&raquo; The calculator asks you to input this **Volume (mL/kg)**. It then calculates the total dose (mg) and total volume (mL) required.</em>
+          </p>
+          
+          <p style="margin-bottom: 0;"><strong>2. Dose-Based Dosing (e.g., PNBs, Spinal):</strong>
+            <br>
+            For peripheral nerve blocks or spinal anesthesia, the primary goal is to deliver a specific <strong>Minimum Effective Dose (mg/kg)</strong> to the nerve or CSF.
+            <br>
+            <em>&raquo; The calculator asks you to input this **Dose (mg/kg)**. It then calculates the total dose (mg) and the total volume (mL) needed to deliver that dose.</em>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-book-medical"></i> Drug Reference Ranges (Pediatric)</h2>
+      <div class="calculator-grid">
+        <div class="calculator-card" style="border-left-color: var(--local-anesthetic);">
+          <div class="reference-card-title" style="color: var(--local-anesthetic);"><i class="fas fa-capsules"></i> Ropivacaine (Max: 3 mg/kg)</div>
+          <div class="reference-list">
+            <div><strong>Caudal (Volume):</strong> 0.5 - 1.25 mL/kg (of 0.2%)</div>
+            <div><strong>PNB (Dose):</strong> ~0.56 mg/kg</div>
+            <div><strong>Spinal (Dose):</strong> ~0.8 mg/kg (Infants)</div>
+          </div>
+        </div>
+        
+        <div class="calculator-card" style="border-left-color: var(--local-anesthetic);">
+          <div class="reference-card-title" style="color: var(--local-anesthetic);"><i class="fas fa-capsules"></i> Bupivacaine (Max: 2.5 mg/kg)</div>
+          <div class="reference-list">
+            <div><strong>Caudal (Volume):</strong> 0.5 - 1.25 mL/kg (of 0.125%)</div>
+            <div><strong>PNB (Dose):</strong> ~0.5 mg/kg</div>
+            <div><strong>Spinal (Dose):</strong> 0.8 - 1.0 mg/kg (Infants)</div>
+          </div>
+        </div>
+        
+        <div class="calculator-card" style="border-left-color: var(--local-anesthetic);">
+          <div class="reference-card-title" style="color: var(--local-anesthetic);"><i class="fas fa-capsules"></i> Lidocaine (Max: 5 mg/kg)</div>
+          <div class="reference-list">
+            <div><strong>Max Dose w/ Epi:</strong> 7 mg/kg</div>
+            <div><strong>Caudal (Volume):</strong> 0.5 - 1.25 mL/kg (of 1%)</div>
+            <div><strong>PNB (Dose):</strong> ~1.5 mg/kg</div>
+            <div><strong>Spinal (Dose):</strong> ~1.5 mg/kg (Infants)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-link"></i> References (Direct Links)</h2>
+      <div class="calculator-card" style="border-left-color: var(--analgesic);">
+        <div class="reference-list">
+          <ul>
+            <li>
+              <strong>StatPearls (NCBI): Pediatric Regional Anesthesia</strong><br>
+              <a href="https://www.ncbi.nlm.nih.gov/books/NBK572106/" target="_blank">https://www.ncbi.nlm.nih.gov/books/NBK572106/</a>
+            </li>
+            <li>
+              <strong>StatPearls (NCBI): Local Anesthetics in Children</strong><br>
+              <a href="https://www.ncbi.nlm.nih.gov/books/NBK572090/" target="_blank">https://www.ncbi.nlm.nih.gov/books/NBK572090/</a>
+            </li>
+            <li>
+              <strong>PMC (PubMed): A Practical Guideline for Daily Clinical Practice</strong><br>
+              <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12227213/" target="_blank">https://pmc.ncbi.nlm.nih.gov/articles/PMC12227213/</a>
+            </li>
+            <li>
+              <strong>NYSORA: Pediatric Regional Anesthesia Review</strong><br>
+              <a href="https://www.nysora.com/pediatric-regional-anesthesia-review/pediatric-regional-anesthesia-review/" target="_blank">https://www.nysora.com/pediatric-regional-anesthesia-review/pediatric-regional-anesthesia-review/</a>
+            </li>
+             <li>
+              <strong>ASRA: Guidelines & Articles</strong><br>
+              <a href="httpsa://asra.com/guidelines-articles/guidelines" target="_blank">https://asra.com/guidelines-articles/guidelines</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <a href="https://t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a> | Pediatric MLAD & Caudal Calculator
+  </footer>
+
+  <script>
+    // --- Drug & Dose Database ---
+    const drugData = {
+        ropivacaine: {
+            maxDose_mg_kg: 3.0,
+            concentrations: [0.1, 0.2, 0.5, 0.75],
+            mlad: {
+                caudal_sacral:    { type: 'volume', val: 0.5, unit: 'mL/kg' },
+                pnb:              { type: 'dose', val: 0.56, unit: 'mg/kg' },
+                spinal:           { type: 'dose', val: 0.8, unit: 'mg/kg' }
+            }
+        },
+        bupivacaine: {
+            maxDose_mg_kg: 2.5,
+            concentrations: [0.0625, 0.125, 0.25, 0.5],
+            mlad: {
+                caudal_sacral:    { type: 'volume', val: 0.5, unit: 'mL/kg' },
+                pnb:              { type: 'dose', val: 0.5, unit: 'mg/kg' },
+                spinal:           { type: 'dose', val: 1.0, unit: 'mg/kg' }
+            }
+        },
+        lidocaine: {
+            maxDose_mg_kg: 5.0, // Plain. Use 7.0 with epinephrine.
+            concentrations: [0.5, 1.0, 1.5, 2.0],
+            mlad: {
+                caudal_sacral:    { type: 'volume', val: 0.5, unit: 'mL/kg' },
+                pnb:              { type: 'dose', val: 1.5, unit: 'mg/kg' },
+                spinal:           { type: 'dose', val: 1.5, unit: 'mg/kg' }
+            }
+        }
+    };
+    
+    // --- Armitage Calculator Function ---
+    function calculateArmitage() {
+        const weight = parseFloat(document.getElementById('armitage-weight').value);
+        const volume_ml_kg = parseFloat(document.getElementById('armitage-level').value);
+        
+        // MODIFIED: Parse drug and concentration from value
+        const concValue = document.getElementById('armitage-conc').value; // e.g., "bupivacaine-0.125"
+        const [drugName, concPerc] = concValue.split('-'); // ["bupivacaine", "0.125"]
+        const concMgMl = parseFloat(concPerc) * 10;
+        
+        const volEl = document.getElementById('armitage-volume-ml');
+        const doseEl = document.getElementById('armitage-dose-mg');
+        const noteEl = document.getElementById('armitage-note');
+        const resultBox = document.getElementById('armitage-results');
+
+        if (!weight || weight <= 0) {
+            volEl.textContent = '-- mL';
+            doseEl.textContent = '-- mg';
+            noteEl.textContent = 'Enter weight';
+            resultBox.classList.remove('toxic-dose-warning');
+            noteEl.classList.remove('toxic-note');
+            return;
+        }
+        
+        const total_ml = weight * volume_ml_kg;
+        const total_mg = total_ml * concMgMl;
+        
+        // --- Toxicity Check ---
+        const drugInfo = drugData[drugName];
+        const max_mg_kg = drugInfo.maxDose_mg_kg;
+        const max_mg = max_mg_kg * weight;
+        
+        if (total_mg > max_mg) {
+            resultBox.classList.add('toxic-dose-warning');
+            noteEl.classList.add('toxic-note');
+            noteEl.textContent = `WARNING! Dose exceeds max safe ${max_mg.toFixed(1)} mg!`;
+        } else {
+            resultBox.classList.remove('toxic-dose-warning');
+            noteEl.classList.remove('toxic-note');
+            noteEl.textContent = `Based on ${volume_ml_kg} mL/kg. Max: ${max_mg.toFixed(1)} mg.`;
+        }
+        // --- End of Toxicity Check ---
+        
+        volEl.textContent = `${total_ml.toFixed(2)} mL`;
+        doseEl.textContent = `${total_mg.toFixed(2)} mg`;
+    }
+
+    // --- MLAD Calculator Function (Advanced) ---
+    function calculateMLAD() {
+      const weight = parseFloat(document.getElementById('child-weight').value);
+      const procedure = document.getElementById('procedure-type').value;
+      const drug = document.getElementById('drug-type').value;
+      const concPerc = parseFloat(document.getElementById('concentration-perc').value);
+      const dosingParamValue = parseFloat(document.getElementById('dosing-param-value').value);
+
+      const mladMgEl = document.getElementById('mlad-dose-mg');
+      const mladMlEl = document.getElementById('mlad-volume-ml');
+      const mladNoteEl = document.getElementById('mlad-note');
+      const mladResultBox = document.getElementById('mlad-results'); // Get result box
+      
+      const maxMgEl = document.getElementById('max-dose-mg');
+      const maxMlEl = document.getElementById('max-dose-volume-ml');
+      const maxNoteEl = document.getElementById('max-dose-note');
+      const formulaEl = document.getElementById('formula-display');
+
+      // Clear fields if no weight or param
+      if (!weight || weight <= 0 || !dosingParamValue || dosingParamValue <= 0 || !concPerc) {
+        mladMgEl.textContent = '-- mg';
+        mladMlEl.textContent = '-- mL';
+        mladNoteEl.textContent = 'Enter valid weight, parameter, and concentration';
+        maxMgEl.textContent = '-- mg';
+        maxMlEl.textContent = '-- mL';
+        maxNoteEl.textContent = '';
+        formulaEl.innerHTML = '<div>Enter all values to see the formulas.</div>';
+        mladResultBox.classList.remove('toxic-dose-warning'); // Clear warning
+        mladNoteEl.classList.remove('toxic-note');
+        return;
+      }
+
+      const drugInfo = drugData[drug];
+      const mladInfo = drugInfo.mlad[procedure];
+      const concMgMl = concPerc * 10; // e.g., 0.25% = 2.5 mg/mL
+
+      let total_mg, total_ml, mlad_formula_html, mlad_note_text;
+      let max_mg, max_ml, max_formula_html, max_note_text;
+
+      // 1. Calculate MLAD based on dosing type
+      if (mladInfo.type === 'volume') {
+        const input_ml_kg = dosingParamValue;
+        total_ml = input_ml_kg * weight;
+        total_mg = total_ml * concMgMl;
+        mlad_note_text = `Based on your input of ${input_ml_kg} ${mladInfo.unit}`;
+        mlad_formula_html = `
+          <div><strong>Total Volume:</strong> ${input_ml_kg} mL/kg &times; ${weight} kg = <strong>${total_ml.toFixed(2)} mL</strong></div>
+          <div><strong>Total Dose:</strong> ${total_ml.toFixed(2)} mL &times; ${concMgMl} mg/mL = <strong>${total_mg.toFixed(2)} mg</strong></div>
+        `;
+      } else { // type === 'dose'
+        const input_mg_kg = dosingParamValue;
+        total_mg = input_mg_kg * weight;
+        total_ml = total_mg / concMgMl;
+        mlad_note_text = `Based on your input of ${input_mg_kg} ${mladInfo.unit}`;
+        mlad_formula_html = `
+          <div><strong>Total Dose:</strong> ${input_mg_kg} mg/kg &times; ${weight} kg = <strong>${total_mg.toFixed(2)} mg</strong></div>
+          <div><strong>Total Volume:</strong> ${total_mg.toFixed(2)} mg &divide; ${concMgMl} mg/mL = <strong>${total_ml.toFixed(2)} mL</strong></div>
+        `;
+      }
+
+      // 2. Calculate Max Safe Dose
+      max_mg = drugInfo.maxDose_mg_kg * weight;
+      max_ml = max_mg / concMgMl;
+      max_note_text = `Based on ${drugInfo.maxDose_mg_kg} mg/kg (plain).`;
+      if (drug === 'lidocaine') max_note_text = `Based on 5 mg/kg (Plain) or 7 mg/kg (w/ Epi).`;
+      
+      max_formula_html = `
+        <div style="margin-top: 10px; border-top: 1px dotted var(--border-color); padding-top: 10px;">
+          <div><strong>Max Dose (Plain):</strong> ${drugInfo.maxDose_mg_kg} mg/kg &times; ${weight} kg = <strong>${max_mg.toFixed(2)} mg</strong></div>
+          <div><strong>Max Volume (Plain):</strong> ${max_mg.toFixed(2)} mg &divide; ${concMgMl} mg/mL = <strong>${max_ml.toFixed(2)} mL</strong></div>
+        </div>
+      `;
+      
+      // 3. Update UI
+      mladMgEl.textContent = `${total_mg.toFixed(2)} mg`;
+      mladMlEl.textContent = `${total_ml.toFixed(2)} mL`;
+      
+      maxMgEl.textContent = `${max_mg.toFixed(2)} mg`;
+      maxMlEl.textContent = `${max_ml.toFixed(2)} mL`;
+      maxNoteEl.textContent = max_note_text;
+
+      formulaEl.innerHTML = mlad_formula_html + max_formula_html;
+      
+      // --- FIXED: Added Toxicity Check to this function ---
+      if (total_mg > max_mg) {
+          mladResultBox.classList.add('toxic-dose-warning');
+          mladNoteEl.classList.add('toxic-note');
+          mladNoteEl.textContent = `WARNING! Dose exceeds max safe ${max_mg.toFixed(1)} mg!`;
+      } else {
+          mladResultBox.classList.remove('toxic-dose-warning');
+          mladNoteEl.classList.remove('toxic-note');
+          mladNoteEl.textContent = mlad_note_text; // Set back to normal note
+      }
+      // --- End of Toxicity Check ---
+    }
+
+    // --- Helper to update dynamic dosing parameter ---
+    function updateDosingParameter() {
+        const procedure = document.getElementById('procedure-type').value;
+        const drug = document.getElementById('drug-type').value;
+        const drugInfo = drugData[drug];
+        const mladInfo = drugInfo.mlad[procedure];
+        
+        const paramLabel = document.getElementById('dosing-param-label');
+        const paramInput = document.getElementById('dosing-param-value');
+
+        if (mladInfo.type === 'volume') {
+            paramLabel.textContent = `Minimum Effective Volume (mL/kg)`;
+            paramInput.value = mladInfo.val;
+            paramInput.step = 0.1;
+        } else { // type === 'dose'
+            paramLabel.textContent = `Minimum Effective Dose (mg/kg)`;
+            paramInput.value = mladInfo.val;
+            paramInput.step = 0.01;
+        }
+        
+        updateConcentrations(); // Chain update to concentrations
+    }
+
+
+    // --- Helper to update concentration dropdown ---
+    function updateConcentrations() {
+        const drug = document.getElementById('drug-type').value;
+        const procedure = document.getElementById('procedure-type').value;
+        const drugInfo = drugData[drug];
+        const select = document.getElementById('concentration-perc');
+        const oldSelection = select.value;
+        select.innerHTML = ''; // Clear old options
+        
+        let hasOldSelection = false;
+        
+        drugInfo.concentrations.forEach(conc => {
+            const option = document.createElement('option');
+            option.value = conc;
+            option.textContent = `${conc}% (${conc * 10} mg/mL)`;
+            
+            if (conc == oldSelection) {
+                option.selected = true;
+                hasOldSelection = true;
+            }
+            
+            select.appendChild(option);
+        });
+        
+        // Auto-select common concentrations if the old one isn't present
+        if (!hasOldSelection) {
+             if ( (procedure.includes('caudal') && drug === 'ropivacaine' && select.querySelector('[value="0.2"]')) ) {
+                select.value = 0.2;
+             } else if ( (procedure.includes('caudal') && drug === 'bupivacaine' && select.querySelector('[value="0.125"]')) ) {
+                 select.value = 0.125;
+             } else if ( (procedure.includes('caudal') && drug === 'lidocaine' && select.querySelector('[value="1.0"]')) ) {
+                 select.value = 1.0;
+             } else if ( (procedure === 'spinal' && drug === 'bupivacaine' && select.querySelector('[value="0.5"]')) ) {
+                 select.value = 0.5;
+             } else if ( (procedure === 'pnb' && drug === 'ropivacaine' && select.querySelector('[value="0.2"]')) ) {
+                 select.value = 0.2;
+             }
+        }
+        
+        // After updating, recalculate
+        calculateMLAD();
+    }
+
+
+    // --- Font Size Logic ---
+    const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
+    let currentFontSizeIndex = 2; // Default index for 14px
+
+    function adjustFontSize(direction) {
+      const newIndex = currentFontSizeIndex + direction;
+      if (newIndex >= 0 && newIndex < FONT_SIZE_STEPS_PX.length) {
+        currentFontSizeIndex = newIndex;
+        applyFontSize();
+      }
+    }
+
+    function applyFontSize() {
+      const newSize = FONT_SIZE_STEPS_PX[currentFontSizeIndex];
+      document.body.style.fontSize = `${newSize}px`;
+      const defaultSize = FONT_SIZE_STEPS_PX[2]; // 14px
+      const percentage = Math.round((newSize / defaultSize) * 100);
+      document.getElementById('font-size-indicator').textContent = `${percentage}%`;
+      localStorage.setItem('fontSizeIndex', currentFontSizeIndex);
+    }
+
+    // --- Dark Mode Logic ---
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark);
+      updateDarkModeButton();
+    }
+    
+    function updateDarkModeButton() {
+      const isDark = document.body.classList.contains('dark-mode');
+      const icon = document.querySelector('.dark-mode-toggle i');
+      const text = document.querySelector('.dark-mode-toggle span');
+      if (isDark) { 
+          icon.className = 'fas fa-sun'; 
+          text.textContent = 'Light Mode'; 
+      } else { 
+          icon.className = 'fas fa-moon'; 
+          text.textContent = 'Dark Mode'; 
+      }
+    }
+    
+    // --- Initialization ---
+    window.onload = function() {
+      // Dark mode logic
+      const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+      if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+      }
+      updateDarkModeButton();
+
+      // Font size logic
+      const savedFontSizeIndex = localStorage.getItem('fontSizeIndex');
+      if (savedFontSizeIndex !== null) {
+        currentFontSizeIndex = parseInt(savedFontSizeIndex, 10);
+        if (isNaN(currentFontSizeIndex) || currentFontSizeIndex < 0 || currentFontSizeIndex >= FONT_SIZE_STEPS_PX.length) {
+          currentFontSizeIndex = 2; // Reset if invalid
+        }
+      }
+      applyFontSize();
+
+      // MLAD Calculator logic
+      document.getElementById('child-weight').addEventListener('input', calculateMLAD);
+      document.getElementById('procedure-type').addEventListener('change', updateDosingParameter);
+      document.getElementById('drug-type').addEventListener('change', updateDosingParameter);
+      document.getElementById('dosing-param-value').addEventListener('input', calculateMLAD);
+      document.getElementById('concentration-perc').addEventListener('change', calculateMLAD);
+      // NEW: Event listener for reset button
+      document.getElementById('reset-param-btn').addEventListener('click', updateDosingParameter);
+      
+      updateDosingParameter(); // Populate dropdowns and dynamic input on load
+      
+      // Armitage Calculator logic
+      document.getElementById('armitage-weight').addEventListener('input', calculateArmitage);
+      document.getElementById('armitage-level').addEventListener('change', calculateArmitage);
+      document.getElementById('armitage-conc').addEventListener('change', calculateArmitage);
+      
+      calculateArmitage(); // Run once
+    };
+  </script>
+</body>
+</html>

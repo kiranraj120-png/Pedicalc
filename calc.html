@@ -2,88 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Medical Infusion Rate Calculator</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* ---------------------------------------------------------------------- */
-    /* CSS from Mem.html to define the look and feel */
-    /* ---------------------------------------------------------------------- */
     :root {
-      /* New Modern Color Palette (Light Mode) */
-      --primary-accent: #6366f1; /* Indigo 500 */
-      --primary-accent-dark: #4338ca; /* Indigo 700 */
-      --primary-accent-light: rgba(99, 102, 241, 0.2); /* Indigo 500 w/ alpha */
+      /* Primary Accent: Calm, Professional Green */
+      --primary-accent: #059669; /* Emerald 600 */
+      --primary-accent-dark: #065f46; /* Emerald 800 */
+      --primary-accent-light: rgba(5, 150, 105, 0.1); /* Emerald 600 w/ 10% alpha */
 
-      --bg-primary: #f9fafb; /* Slate 50 */
+      /* Neutrals: Warm, "Classy" Stone Grays */
+      --bg-primary: #f5f5f4; /* Stone 100 (Warmer than Slate 50) */
       --bg-secondary: #ffffff; /* White */
       --bg-card: #ffffff; /* White */
-      
-      --text-primary: #111827; /* Slate 900 */
-      --text-secondary: #4b5563; /* Slate 600 */
-      --text-tertiary: #9ca3af; /* Slate 400 */
-      
-      --border-color: #e5e7eb; /* Slate 200 */
-      
+
+      --text-primary: #292524; /* Stone 800 (Softer than pure black) */
+      --text-secondary: #57534e; /* Stone 600 */
+      --text-tertiary: #78716c; /* Stone 500 */
+
+      --border-color: #e7e5e4; /* Stone 200 */
+
+      /* Standard Shadows (can remain the same) */
       --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
       --shadow-hover: var(--shadow-lg);
 
-      --glass-bg: rgba(255, 255, 255, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.3);
+      /* Glass/Sticky Backgrounds */
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(231, 229, 228, 0.7); /* Stone 200 w/ alpha */
 
-      /* Updated Drug Category Colors (Reused as needed) */
-      --induction: #10b981; /* Emerald 500 */
+      /* --- Updated Drug Category Colors (More Cohesive) --- */
+      --induction: #0ea5e9; /* Sky 500 */
       --muscle-relaxant: #f59e0b; /* Amber 500 */
-      --analgesic: #3b82f6; /* Blue 500 */
+      --analgesic: #059669; /* Emerald 600 (Matches Primary) */
       --adjunct: #8b5cf6; /* Violet 500 */
-      --reversal: #ef4444; /* Red 500 */
-      --emergency: #f97316; /* Orange 500 */
-      --steroid: #6366f1; /* Indigo 500 (same as primary) */
+      --reversal: #ef4444; /* Red 500 (Alert) */
+      --emergency: #f97316; /* Orange 500 (High Alert) */
+      --steroid: #14b8a6; /* Teal 500 */
       --antiemetic: #84cc16; /* Lime 500 */
-      --local-anesthetic: #d946ef; /* Fuchsia 500 */
+      --local-anesthetic: #f43f5e; /* Rose 500 */
       --infusion: #06b6d4; /* Cyan 500 */
-      --antibiotic: #78716c; /* Stone 500 */
-      
+      --antibiotic: #78716c; /* Stone 500 (Matches Tertiary Text) */
+
+      /* Semantic Alerts */
       --caution-color: #f59e0b; /* Amber 500 */
       --reset-color: #ef4444; /* Red 500 */
 
       --radius-card: 12px;
       --radius-input: 8px;
       --radius-tab: 8px;
-      
+
       --anim-bezier: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     body.dark-mode {
-      /* New Modern Color Palette (Dark Mode) */
-      --primary-accent: #818cf8; /* Indigo 400 */
-      --primary-accent-dark: #6366f1; /* Indigo 500 */
-      --primary-accent-light: rgba(129, 140, 248, 0.2); /* Indigo 400 w/ alpha */
+      /* Primary Accent: Lighter green for dark BG */
+      --primary-accent: #34d399; /* Emerald 400 */
+      --primary-accent-dark: #10b981; /* Emerald 500 */
+      --primary-accent-light: rgba(52, 211, 153, 0.1); /* Emerald 400 w/ 10% alpha */
 
-      --bg-primary: #111827; /* Slate 900 */
-      --bg-secondary: #1f2937; /* Slate 800 */
-      --bg-card: #1f2937; /* Slate 800 */
-      
-      --text-primary: #f9fafb; /* Slate 50 */
-      --text-secondary: #9ca3af; /* Slate 400 */
-      --text-tertiary: #6b7280; /* Slate 500 */
-      
-      --border-color: #374151; /* Slate 700 */
+      /* Neutrals: Warm, Dark Stone */
+      --bg-primary: #1c1917; /* Stone 900 */
+      --bg-secondary: #292524; /* Stone 800 (Card Color) */
+      --bg-card: #292524; /* Stone 800 */
 
-      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+      --text-primary: #f5f5f4; /* Stone 100 */
+      --text-secondary: #a8a29e; /* Stone 400 */
+      --text-tertiary: #78716c; /* Stone 500 */
+
+      --border-color: #44403c; /* Stone 700 */
+
+      /* Shadows (darkened for dark mode) */
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
       --shadow-hover: var(--shadow-lg);
-      
-      --glass-bg: rgba(31, 41, 55, 0.7); /* Slate 800 w/ alpha */
-      --glass-border: rgba(255, 255, 255, 0.1);
 
-      /* Drug colors can be the same, they pop nicely on dark */
+      /* Glass/Sticky Backgrounds */
+      --glass-bg: rgba(41, 37, 36, 0.85); /* Stone 800 w/ alpha */
+      --glass-border: rgba(68, 64, 60, 0.7); /* Stone 700 w/ alpha */
+      
+      /* Drug colors are the same, they pop nicely on this dark background */
+
+      /* Semantic Alerts (Lighter for dark BG) */
       --caution-color: #fcd34d; /* Amber 300 */
       --reset-color: #f87171; /* Red 400 */
       --emergency: #fbbf24; /* Amber 400 */
@@ -94,7 +102,7 @@
       margin: 0;
       padding: 0;
       /* FIX: Remove tap highlight on all elements */
-      -webkit-tap-highlight-color: transparent; 
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
@@ -105,13 +113,35 @@
       font-family: 'Poppins', sans-serif; /* New Font */
       background: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
-      font-size: 0.9rem;
-      transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier);
+      line-height: 1.7; /* MODIFIED: Increased for readability */
+      font-size: 14px; /* MODIFIED: Was 0.9rem */
+      transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier), font-size 0.3s var(--anim-bezier);
       user-select: none;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      overscroll-behavior: contain; /* NEW: Prevents overscroll bounce */
+      text-rendering: optimizeLegibility; /* NEW: Improves font rendering */
+    }
+    
+    /* NEW: Tighter letter spacing for headings */
+    h1, h2, h3 {
+      letter-spacing: -0.02em; 
+    }
+
+    /* NEW: Use Tabular Numbers for all numeric-heavy elements */
+    .calculation-result,
+    .volume-result,
+    .result-value, /* Added for Inf.html */
+    #font-size-indicator {
+      font-feature-settings: "tnum" on;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* NEW: Also apply to inputs, where users type numbers */
+    input[type="number"] {
+      font-feature-settings: "tnum" on;
+      font-variant-numeric: tabular-nums;
     }
 
     input, textarea, select {
@@ -136,7 +166,7 @@
       background: linear-gradient(135deg, var(--primary-accent), var(--primary-accent-dark));
       color: white;
       padding: 15px;
-      border-radius: var(--radius-card);
+      border-radius: var(--radius-card); /* MODIFIED: Restored original radius */
       box-shadow: var(--shadow-md);
       margin-bottom: 15px;
       display: flex;
@@ -144,7 +174,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
-      position: relative;
+      position: relative; /* MODIFIED: Removed sticky */
       overflow: hidden;
     }
 
@@ -157,18 +187,78 @@
       height: 200%;
       background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
       transform: rotate(30deg);
-      animation: shimmer 5s infinite;
+      
+      /* MODIFIED: Use long-hand properties for easier overriding */
+      animation-name: shimmer;
+      animation-duration: 4s; /* Base duration */
+      animation-iteration-count: infinite;
+      animation-direction: alternate; /* This makes it go back and forth */
+      animation-timing-function: ease-in-out; /* This makes the start/end smoother */
     }
-    
+
     @keyframes shimmer {
         0% { transform: translate(-30%, -30%) rotate(30deg); }
         100% { transform: translate(30%, 30%) rotate(30deg); }
     }
 
     h1 {
-      font-size: 1.6em;
+      font-size: 1.5em; /* MODIFIED: Was 1.6em */
       font-weight: 700;
       z-index: 1;
+      /* Allow shrinking on very small screens */
+      flex: 1;
+      min-width: 150px;
+    }
+
+    /* --- NEW --- */
+    .header-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-shrink: 0; /* Don't let controls shrink */
+    }
+
+    /* --- NEW --- */
+    .font-size-control {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+      display: flex;
+      align-items: center;
+      padding: 2px; /* Small padding */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1;
+    }
+
+    /* --- NEW --- */
+    .font-adjust-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1em; /* Icon size */
+      padding: 6px 8px;
+      border-radius: 50%; /* Round buttons */
+      transition: all .25s var(--anim-bezier);
+      line-height: 1; /* Center icon vertically */
+    }
+
+    /* --- NEW --- */
+    .font-adjust-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    /* --- NEW --- */
+    #font-size-indicator {
+      color: white;
+      font-weight: 600;
+      font-size: .75em;
+      padding: 0 4px;
+      min-width: 40px; /* Prevent jiggling */
+      text-align: center;
+      user-select: none;
     }
 
     .dark-mode-toggle {
@@ -177,7 +267,7 @@
       border: none;
       border-radius: 50px;
       padding: 8px 16px;
-      cursor: pointer;
+      cursor: pointer; 
       font-size: .75em;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
@@ -190,9 +280,9 @@
       gap: 8px;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      
+
       /* FIX: Prevent jiggling by setting a min-width */
-      min-width: 120px; 
+      min-width: 120px;
       overflow: hidden;
     }
 
@@ -205,17 +295,16 @@
     .dark-mode-toggle:active {
       transform: translateY(0px);
     }
-    
+
     .dark-mode-toggle i {
         /* Animation for icon */
         transition: transform 0.4s var(--anim-bezier);
     }
-    
+
     body.dark-mode .dark-mode-toggle i {
         /* Rotate icon in dark mode */
         transform: rotate(180deg);
     }
-
 
     .section {
       background: var(--bg-card);
@@ -233,7 +322,7 @@
     }
 
     .section h2 {
-      font-size: 1.3em;
+      font-size: 1.25em; /* MODIFIED: Was 1.3em */
       font-weight: 600;
       margin-bottom: 12px;
       color: var(--text-primary);
@@ -247,7 +336,6 @@
     .section h2 i {
       color: var(--primary-accent);
     }
-
 
     .warning {
       background: #fffbeb; /* Amber 50 */
@@ -265,6 +353,12 @@
       background: #451a03; /* Amber 900 */
       color: #fcd34d; /* Amber 300 */
       border-left: 5px solid #f59e0b; /* Amber 500 */
+    }
+    
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .input-field label {
@@ -284,7 +378,6 @@
       background: var(--bg-primary);
       color: var(--text-primary);
       transition: border-color .3s var(--anim-bezier), box-shadow .3s var(--anim-bezier);
-      /* Override any specific Inf.html styles */
       appearance: none; /* For select consistency */
     }
 
@@ -293,6 +386,19 @@
       border-color: var(--primary-accent);
       box-shadow: 0 0 0 3px var(--primary-accent-light);
     }
+    
+    /* Make select dropdown arrows visible */
+    .input-field select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2378716c' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    body.dark-mode .input-field select {
+         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a8a29e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+
 
     .info-box {
       background: var(--bg-secondary);
@@ -310,7 +416,7 @@
       font-weight: 600;
     }
 
-    /* Calculator cards - adopting drug-card style */
+    /* Calculator cards */
     .calculator-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -360,7 +466,7 @@
     }
 
     .calculator-title::before {
-      content: none; /* Remove Inf.html custom marker */
+      content: none; 
     }
     
     .calculator-title i {
@@ -368,13 +474,6 @@
         margin-right: 8px;
     }
 
-    /* Input groups */
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    
     /* Results */
     .calculation-result {
       background: var(--bg-primary); /* Use primary bg for contrast */
@@ -387,10 +486,14 @@
     .result-value {
       font-weight: 800;
       font-size: 1.4em;
-      color: var(--infusion);
+      color: var(--infusion); /* Use infusion color */
       text-align: center;
       margin: 5px 0;
       line-height: 1.2;
+    }
+    
+    body.dark-mode .result-value {
+        color: var(--infusion); /* Keep infusion color in dark mode */
     }
 
     .result-label {
@@ -408,28 +511,6 @@
       font-style: italic;
     }
     
-    /* Button */
-    .calculate-btn {
-      background: var(--primary-accent);
-      color: var(--bg-card);
-      border: none;
-      padding: 10px 15px;
-      border-radius: 50px; /* Use rounded button style from Mem.html */
-      font-size: 0.9em;
-      cursor: pointer;
-      font-weight: 600;
-      margin-top: 10px;
-      transition: all 0.3s var(--anim-bezier);
-      width: 100%;
-      box-shadow: var(--shadow-md);
-    }
-
-    .calculate-btn:hover {
-      background: var(--primary-accent-dark);
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-2px);
-    }
-
     /* Utility classes for Infusion-specific reference section */
     .reference-card-title {
         font-size: 1.1em;
@@ -460,7 +541,7 @@
         color: var(--text-primary);
         font-weight: 600;
     }
-    
+
     footer {
       text-align: center;
       margin-top: 20px;
@@ -483,10 +564,39 @@
     @media (max-width: 480px) {
         .input-field input, .input-field select {
             padding: 8px 10px;
-            font-size: 0.85em;
+            font-size: 16px; /* Prevent iOS zoom */
+        }
+        input[type="number"] {
+            font-size: 16px !important; /* Prevent iOS zoom */
+        }
+        
+        /* Header adjustments from Mod.html */
+        header::before {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
+            animation-duration: 2.5s;
+        }
+        .header-controls {
+            flex-wrap: wrap; 
+            justify-content: flex-end;
+            flex-grow: 1; 
+            gap: 8px;
+        }
+        .font-size-control {
+            padding: 2px;
+        }
+        .font-adjust-btn {
+            padding: 4px 6px;
+            font-size: 0.9em;
+        }
+        .dark-mode-toggle {
+            padding: 6px 12px;
+            font-size: 0.7em;
+            min-width: 100px; /* Smaller min-width */
+        }
+        h1 {
+            font-size: 1.2em; /* Smaller H1 on mobile */
         }
     }
-
   </style>
 </head>
 
@@ -494,9 +604,20 @@
   <div class="container">
     <header>
       <h1><i class="fas fa-calculator"></i> Medical Infusion Rate Calculator</h1>
-      <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-        <i class="fas fa-moon"></i> <span>Dark Mode</span>
-      </button>
+      <div class="header-controls">
+          <div class="font-size-control">
+              <button class="font-adjust-btn" onclick="adjustFontSize(-1)" aria-label="Decrease font size">
+                  <i class="fas fa-search-minus"></i>
+              </button>
+              <span id="font-size-indicator">100%</span>
+              <button class="font-adjust-btn" onclick="adjustFontSize(1)" aria-label="Increase font size">
+                  <i class="fas fa-search-plus"></i>
+              </button>
+          </div>
+          <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+              <i class="fas fa-moon"></i> <span>Dark Mode</span>
+          </button>
+      </div>
     </header>
 
     <div class="warning">
@@ -691,17 +812,54 @@
   </footer>
 
   <script>
-    // Handle custom drop factor input
-    document.getElementById('drop-factor').addEventListener('change', function() {
-      const customInput = document.getElementById('custom-drop-factor');
-      if (this.value === 'custom') {
-        customInput.style.display = 'block';
-        customInput.focus();
-      } else {
-        customInput.style.display = 'none';
-        calculateRate();
+    // --- Font Size Logic (from Mod.html) ---
+    const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
+    let currentFontSizeIndex = 2; // Default index for 14px
+
+    function adjustFontSize(direction) {
+      const newIndex = currentFontSizeIndex + direction;
+      // Clamp index within bounds
+      if (newIndex >= 0 && newIndex < FONT_SIZE_STEPS_PX.length) {
+        currentFontSizeIndex = newIndex;
+        applyFontSize();
       }
-    });
+    }
+
+    function applyFontSize() {
+      const newSize = FONT_SIZE_STEPS_PX[currentFontSizeIndex];
+      document.body.style.fontSize = `${newSize}px`;
+
+      // Update indicator
+      const defaultSize = FONT_SIZE_STEPS_PX[2]; // 14px
+      const percentage = Math.round((newSize / defaultSize) * 100);
+      document.getElementById('font-size-indicator').textContent = `${percentage}%`;
+
+      // Save preference
+      localStorage.setItem('fontSizeIndex', currentFontSizeIndex);
+    }
+
+    // --- Dark Mode Logic (from Mod.html) ---
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDark);
+      updateDarkModeButton();
+    }
+    
+    function updateDarkModeButton() {
+      const isDark = document.body.classList.contains('dark-mode');
+      const icon = document.querySelector('.dark-mode-toggle i');
+      const text = document.querySelector('.dark-mode-toggle span');
+      if (isDark) { 
+          icon.className = 'fas fa-sun'; 
+          text.textContent = 'Light Mode'; 
+      } else { 
+          icon.className = 'fas fa-moon'; 
+          text.textContent = 'Dark Mode'; 
+      }
+    }
+    
+    // --- Original Calculator Logic (from Inf.html) ---
 
     // Rate Calculator (mL/hr & gtts/min)
     function calculateRate() {
@@ -937,34 +1095,36 @@
       document.getElementById('volume-note').textContent = note;
     }
 
-    // Dark mode toggle (from Mem.html for consistent visuals)
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', isDark);
-      updateDarkModeButton();
-    }
-    
-    function updateDarkModeButton() {
-      const isDark = document.body.classList.contains('dark-mode');
-      const icon = document.querySelector('.dark-mode-toggle i');
-      const text = document.querySelector('.dark-mode-toggle span');
-      if (isDark) { 
-          icon.className = 'fas fa-sun'; 
-          text.textContent = 'Light Mode'; 
-      } else { 
-          icon.className = 'fas fa-moon'; 
-          text.textContent = 'Dark Mode'; 
-      }
-    }
-
-    // Initialize on load
+    // --- Merged Initialization ---
     window.onload = function() {
+      // Dark mode logic (from Mod.html)
       const savedDarkMode = localStorage.getItem('darkMode') === 'true';
       if (savedDarkMode) {
         document.body.classList.add('dark-mode');
       }
-      updateDarkModeButton(); // Update button text/icon regardless
+      updateDarkModeButton();
+
+      // Font size logic (from Mod.html)
+      const savedFontSizeIndex = localStorage.getItem('fontSizeIndex');
+      if (savedFontSizeIndex !== null) {
+        currentFontSizeIndex = parseInt(savedFontSizeIndex, 10);
+        if (isNaN(currentFontSizeIndex) || currentFontSizeIndex < 0 || currentFontSizeIndex >= FONT_SIZE_STEPS_PX.length) {
+          currentFontSizeIndex = 2; // Reset if invalid
+        }
+      }
+      applyFontSize(); // Apply loaded or default font size
+
+      // Original Inf.html logic
+      document.getElementById('drop-factor').addEventListener('change', function() {
+        const customInput = document.getElementById('custom-drop-factor');
+        if (this.value === 'custom') {
+          customInput.style.display = 'block';
+          customInput.focus();
+        } else {
+          customInput.style.display = 'none';
+          calculateRate();
+        }
+      });
       
       // Set up initial calculations
       calculateRate();

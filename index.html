@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EQG7VWLLQ9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-EQG7VWLLQ9');
-</script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Pediatric Anesthesia Calculator</title>
@@ -165,16 +156,15 @@
           left: -50%;
           width: 200%;
           height: 200%;
-          /* MODIFIED: Slightly brighter base gradient */
-          background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
           transform: rotate(30deg);
-
-          /* Animation properties */
+          
+          /* MODIFIED: Use long-hand properties for easier overriding */
           animation-name: shimmer;
           animation-duration: 4s; /* Base duration */
           animation-iteration-count: infinite;
-          animation-direction: alternate; /* Makes it reverse smoothly */
-          animation-timing-function: ease-in-out; /* Smoother start/end */
+          animation-direction: alternate; /* This makes it go back and forth */
+          animation-timing-function: ease-in-out; /* This makes the start/end smoother */
         }
 
         @keyframes shimmer {
@@ -1035,7 +1025,6 @@
             border-radius: var(--radius-input);
             border: 1px dashed var(--border-color);
         }
-
         .infusion-dilution-input {
             display: flex;
             align-items: center;
@@ -1540,14 +1529,14 @@
           }
 
           /* --- REPLACE OR ADD THIS RULE --- */
-         header::before {
-            /* MODIFIED: Even brighter and sharper gradient for prominence */
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 60%);
+          header::before {
+            /* MODIFIED: Make the shine even brighter (0.3 opacity) and sharper (60%) */
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
 
-            /* MODIFIED: Faster animation duration specifically for mobile */
+            /* MODIFIED: Speed up the animation duration for mobile */
             animation-duration: 2.5s;
-            /* It inherits 'alternate' and 'ease-in-out' from the base rule */
           }
+        
           /* --- END OF RULE --- */
 
           /* --- NEW --- */
@@ -1819,6 +1808,7 @@
     let allAntibioticsExpanded = false;
     let activeEditIndex = null;
     let antibioticExpanded = [];
+    let currentBaseDeficit = 0; // <-- NEW: Store base deficit globally
 
     // --- NEW: Font Size ---
     const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
@@ -1991,7 +1981,7 @@
       defaultRoute: 'IV',
       notes: 'For hyperkalemia (with ECG changes) or symptomatic hypocalcemia.'
     },
-    {
+ {
       name: 'Sodium Bicarbonate (8.4%)',
       category: 'emergency',
       categoryLabel: 'Alkalinizer',
@@ -2000,11 +1990,12 @@
       concentration: 1,
       concentrationUnit: 'mEq/mL',
       useParam: 'weight',
-      range: '1-2 mEq/kg/dose (1-2 mL/kg)',
+      range: '1-2 mEq/kg/dose (Emergency Bolus)',
       caution: 'Ensure adequate ventilation to blow off CO2. Can cause hypernatremia/hyperosmolality. Incompatible with catecholamines & calcium.',
       routes: ['IV'],
       defaultRoute: 'IV',
-      notes: 'For severe metabolic acidosis, hyperkalemia, or TCA overdose.'
+      notes: 'Emergency Bolus (no deficit): 1-2 mEq/kg. Calculated Dose (with deficit): 0.3 x Wt(kg) x Base Deficit.',
+      specialHandling: 'bicarbonate' // <-- This is the new flag
     },
     {
       name: 'Furosemide',
@@ -2377,9 +2368,6 @@
       }
     ];
 
-    // --- END OF NEW ANTIBIOTICS ---
-  
-
     const infusionDrugs = [
       {
         name: 'Adrenaline (Epinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', isExpanded: false,
@@ -2630,7 +2618,6 @@
       const antibiotic = antibiotics[index];
       if (antibiotic) { antibiotic.currentIndication = indication; calculateAntibiotics(); }
     }
-
     function calculateKetorolacDoseAndInfo(patient, drug) {
       const age = patient.age;
       const weight = patient.weight;
@@ -2707,9 +2694,7 @@
 
       antibiotics.forEach((antibiotic, index) => {
         const weight = patient.weight;
-        // Find the currently selected indication object, or default to the first one if not found
-        const currentIndication = antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) || 
-                                  (antibiotic.indications.length > 0 ? antibiotic.indications[0] : { dose: antibiotic.defaultDose, frequency: 'N/A' }); // Fallback if no indications array
+        const currentIndication = antibiotic.indications.find(ind => ind.name === antibiotic.currentIndication) || { dose: antibiotic.defaultDose, frequency: 'Q6H' };
         
         const dosePerKg = currentIndication.dose;
         const frequency = currentIndication.frequency;
@@ -2717,7 +2702,7 @@
         let limitApplied = false;
 
         // --- NEW MAX DOSE LOGIC ---
-        // Check if the SELECTED INDICATION has a maxPerDose property and apply it
+        // Check if the SELECTED INDICATION has a maxPerDose
         if (currentIndication.maxPerDose && totalDose > currentIndication.maxPerDose) { 
           totalDose = currentIndication.maxPerDose; 
           limitApplied = true; 
@@ -2726,8 +2711,7 @@
 
         let volumeDisplay = 'N/A';
         let concentrationDisplay = '';
-        // Calculate volume only if the route is IV and concentration is available
-        if (antibiotic.currentRoute === 'IV' && antibiotic.concentration > 0) {
+        if (antibiotic.currentRoute === 'IV') {
           const volume = totalDose / antibiotic.concentration;
           volumeDisplay = volume.toFixed(2);
           concentrationDisplay = `${antibiotic.concentration} ${antibiotic.concentrationUnit}`;
@@ -2737,34 +2721,23 @@
         let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>` : '';
         let cautionPopupHtml = isCautionNeeded ? `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>` : '';
         
-        // Use the 'note' from the selected indication if it exists, otherwise use the general 'info' from the drug
+        // Use the 'note' from the indication if it exists, otherwise use the 'info' from the drug
         let infoText = currentIndication.note ? currentIndication.note : (antibiotic.info ? antibiotic.info : '');
         let infoBoxHtml = infoText ? `<div class="info-box ketorolac-specific" style="border-left-color: var(--antibiotic);">${infoText}</div>` : '';
 
 
-        let routeSelectorHTML = '';
-        // Only show route selector if there's more than one route defined
-        if (antibiotic.routes && antibiotic.routes.length > 1) {
-             routeSelectorHTML = '<div class="route-selector">' + antibiotic.routes.map(route => `<input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${antibiotic.currentRoute === route ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')"><label for="antibiotic-route-${index}-${route}">${route === 'Oral' ? 'Oral' : 'Intravenous (IV)'}</label>`).join('') + '</div>';
-        }
+        let routeSelectorHTML = antibiotic.routes.length > 1 ? '<div class="route-selector">' + antibiotic.routes.map(route => `<input type="radio" id="antibiotic-route-${index}-${route}" name="antibiotic-route-${index}" value="${route}" ${antibiotic.currentRoute === route ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticRoute(${index}, '${route}')"><label for="antibiotic-route-${index}-${route}">${route === 'Oral' ? 'Oral' : 'Intravenous (IV)'}</label>`).join('') + '</div>' : '';
 
-        let indicationSelectorHTML = '';
-        // Only show indication selector if there's more than one indication defined
-        if (antibiotic.indications && antibiotic.indications.length > 1) {
-             indicationSelectorHTML = '<div class="indication-selector">' + antibiotic.indications.map(indication => `<input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" name="antibiotic-indication-${index}" value="${indication.name}" ${antibiotic.currentIndication === indication.name ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')"><label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>`).join('') + '</div>';
-        }
+        let indicationSelectorHTML = antibiotic.indications.length > 1 ? '<div class="indication-selector">' + antibiotic.indications.map(indication => `<input type="radio" id="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}" name="antibiotic-indication-${index}" value="${indication.name}" ${antibiotic.currentIndication === indication.name ? 'checked' : ''} onclick="event.stopPropagation(); selectAntibioticIndication(${index}, '${indication.name}')"><label for="antibiotic-indication-${index}-${indication.name.replace(/\s+/g, '-')}">${indication.name}</label>`).join('') + '</div>' : '';
 
         let limitInfoHtml = limitApplied ? `<span class="dose-limit-applied">(MAX Limit Applied)</span>` : '';
 
-        // Determine if volume detail is applicable
-        const volumeDetail = (antibiotic.currentRoute === 'IV' && antibiotic.concentration > 0) ?
+        const volumeDetail = (antibiotic.currentRoute === 'IV') ?
           `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` :
-          `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for ${antibiotic.currentRoute} Dose</div>`;
+          `<div class="volume-result" style="font-style:normal;">Concentration/Volume Not Applicable for Oral Dose</div>`;
 
-        // Check if the card should be expanded
-        const isExpandedClass = (allAntibioticsExpanded || (antibioticExpanded && antibioticExpanded[index])) ? 'expanded' : '';
+        const isExpandedClass = (allAntibioticsExpanded || antibioticExpanded[index]) ? 'expanded' : '';
 
-        // Build the HTML for this drug card
         html += `<div class="drug-card antibiotic ${isExpandedClass}" id="antibiotic-card-${index}">
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleAntibioticCard(${index})">
@@ -2774,11 +2747,9 @@
             </div>
             <div class="drug-details" id="antibiotic-details-${index}">
               <div class="antibiotic-details">
-                ${routeSelectorHTML}
-                ${indicationSelectorHTML}
-                ${infoBoxHtml}
-                <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range || 'N/A'}</div></div>
-                <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency || 'N/A'}</div></div>
+                ${routeSelectorHTML}${indicationSelectorHTML}${infoBoxHtml}
+                <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range}</div></div>
+                <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency}</div></div>
                 <div class="calculation">
                   <div class="calculation-result" style="color: var(--antibiotic);">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
                   ${volumeDetail}
@@ -2789,7 +2760,6 @@
           </div>`;
       });
 
-      // Update the DOM and the expand/collapse button text
       antibioticsDiv.innerHTML = html;
       document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All';
     }
@@ -3028,9 +2998,24 @@
       return maxDose > 0 ? maxDose : null;
     }
 
+      // --- NEW: Function to handle Base Deficit calculation ---
+      function calculateBicarbDeficit() {
+          const baseDeficitInput = document.getElementById('base-deficit-input');
+          const baseDeficit = baseDeficitInput ? (parseFloat(baseDeficitInput.value) || 0) : 0;
+          
+          // Store the value globally so it persists on re-renders
+          currentBaseDeficit = baseDeficit;
+          
+          // Re-render only the drug calculations
+          calculateDrugs();
+      }
+
       function calculateDrugs(){
       const patient = getPatientData();
       const drugResultsDiv = document.getElementById('drug-results');
+      
+      // --- MODIFIED: Use the globally stored base deficit ---
+      const baseDeficit = currentBaseDeficit;
 
       if (!patient.weight){
         drugResultsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient weight to calculate drug doses</p>';
@@ -3063,8 +3048,11 @@
         }
         // --- END OF IF-BLOCK ---
 
+        // --- (START) CORRECTED CODE BLOCK ---
+
         const paramValue = patient[drug.useParam];
 
+        // --- Variable Declarations (ALL logic) ---
         let dosePerKg;
         let concentration;
         let totalDose = 0;
@@ -3074,37 +3062,124 @@
         let volumeDisplay = 'N/A';
         let totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
         let isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
+        
         let ketorolacInfoBox = '';
-        let descriptionBox = ''; // <-- NEW
-        let doseDisplay;
-
-        // *** START FIX ***
+        let descriptionBox = '';
         let notesBox = '';
+        let bicarbInputHtml = ''; // For bicarb
+        let bicarbInfoBox = ''; // For bicarb
+        
+        let calculationHtml = ''; // Final HTML for the calculation box
+        let doseDisplay = 'N/A';  // Final dose string for the HEADER
+        let limitInfoHtml = '';     // <-- Declared high-level
+        let adjustedInfoHtml = '';  // <-- Declared high-level
+
         if(drug.notes) {
-          // Use the same styling as your other info boxes
           notesBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category}); margin-top: 8px;">${drug.notes}</div>`;
         }
-        // *** END FIX ***
+        if(drug.description) {
+          descriptionBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category});">${drug.description}</div>`;
+        }
+        
+        let resultColorStyle = '';
+        if(drug.category) {
+            resultColorStyle = `style="color: var(--${drug.category});"`;
+            if(drug.category === 'induction' || drug.category === 'antiemetic' || (drug.category === 'emergency' && document.body.classList.contains('dark-mode'))) {
+                resultColorStyle = `style="color: var(--${drug.category}); text-shadow: 0 0 5px rgba(0,0,0,0.2);"`;
+            }
+        } else {
+            resultColorStyle = `style="color: var(--primary-accent);"`;
+        }
 
+        // --- Main Dose Logic (Bicarb, Keto, Other) ---
+        if (drug.specialHandling === 'bicarbonate') {
+          isInjectable = true;
+          totalDoseUnit = 'mEq';
+          concentration = getConcentration(drug);
+          concentrationDisplay = `${concentration} ${drug.concentrationUnit}`;
 
-        if (drug.name === 'Ketorolac') {
+          // --- MODIFIED: Added a calculate button ---
+          bicarbInputHtml = `
+            <div class="edit-input-field" style="margin-bottom: 10px; padding: 10px; background: var(--bg-primary); border-radius: var(--radius-input); border: 1px dashed var(--border-color);">
+              <label for="base-deficit-input" style="font-weight: 600;">Base Deficit (mEq/L)</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="number" id="base-deficit-input" value="${baseDeficit > 0 ? baseDeficit : ''}" placeholder="Enter base deficit (if known)" style="flex: 1;">
+                <button class="edit-btn" onclick="calculateBicarbDeficit()" style="margin-top: 0; padding: 6px 12px; font-size: 0.8em;">Calculate</button>
+              </div>
+            </div>
+          `;
+
+          if (baseDeficit > 0) {
+            // --- Base Deficit Formula ---
+            totalDose = 0.3 * paramValue * baseDeficit;
+            const halfDose = totalDose / 2;
+            doseDisplay = `${totalDose.toFixed(2)} mEq`; // <-- for header
+            dosePerKg = 'N/A (Deficit)';
+            volumeDisplay = (halfDose / concentration).toFixed(2); 
+
+            bicarbInfoBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category});">
+                              <strong>Calculated Total Deficit:</strong> ${totalDose.toFixed(2)} mEq<br>
+                              <strong>Recommended Initial Dose:</strong> Give <strong>${halfDose.toFixed(2)} mEq</strong> (${volumeDisplay} mL) slowly, then reassess.
+                            </div>`;
+            
+            calculationHtml = `
+              <div class="calculation-result" ${resultColorStyle}>${doseDisplay} (Total Deficit)</div>
+              <div class="volume-result">Initial Dose Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>
+              <div class="dose-info">Calculated: 0.3 x ${paramValue} kg x ${baseDeficit} BE</div>
+            `;
+
+          } else {
+            // --- Emergency Bolus Formula (No deficit entered) ---
+            dosePerKg = getDoseByRoute(drug, drug.currentRoute); 
+            totalDose = paramValue * dosePerKg;
+            if (drug.maxDose && totalDose > drug.maxDose){ totalDose = drug.maxDose; limitApplied = true; }
+            if (drug.minDose && totalDose < drug.minDose){ totalDose = drug.minDose; limitApplied = true; }
+            
+            doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; // <-- for header
+            volumeDisplay = (totalDose / concentration).toFixed(2);
+            
+            if(limitApplied) limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`; // <-- Assign to high-level var
+
+            bicarbInfoBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category});">
+                              <strong>Emergency Bolus:</strong> No base deficit entered. Using standard bolus dose.
+                            </div>`;
+
+            calculationHtml = `
+              <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml}</div>
+              <div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>
+              <div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>
+            `;
+          }
+
+        } else if (drug.name === 'Ketorolac') {
+          // --- Ketorolac Logic ---
           const ketorolacCalc = calculateKetorolacDoseAndInfo(patient, drug);
           let customDose = null;
           if(drug.currentRoute === 'IV') customDose = drug.customDoseIV;
           else if(drug.currentRoute === 'IM') customDose = drug.customDoseIM;
           else if(drug.currentRoute === 'Oral') customDose = drug.customDoseOral;
 
-          // Use custom dose if set, otherwise use the calculated default
           dosePerKg = (customDose !== null) ? customDose : ketorolacCalc.dosePerKg;
-          // Recalculate total dose if custom, otherwise use calculated display
           totalDose = (customDose !== null) ? (paramValue * customDose) : ketorolacCalc.totalDose;
-
           totalDoseUnit = ketorolacCalc.doseUnit;
-          doseDisplay = (customDose !== null) ? `${totalDose.toFixed(2)} ${totalDoseUnit}` : ketorolacCalc.displayDoseString;
+          doseDisplay = (customDose !== null) ? `${totalDose.toFixed(2)} ${totalDoseUnit}` : ketorolacCalc.displayDoseString; // <-- for header
 
           ketorolacInfoBox = `<div class="info-box ketorolac-specific"><strong>Ketorolac Dosing for ${patient.weight.toFixed(1)} kg (${patient.ageYears} Y, ${patient.ageMonths} M):</strong><div>${ketorolacCalc.doseInfo}</div><div>${ketorolacCalc.duration}</div>${ketorolacCalc.specialNote ? `<div>**Note:** ${ketorolacCalc.specialNote}</div>` : ''}</div>`;
+          
+          concentration = getConcentration(drug);
+          if (isInjectable && typeof totalDose === 'number' && totalDose > 0){
+            volumeDisplay = (totalDose / concentration).toFixed(2);
+            concentrationDisplay = `${concentration} ${drug.concentrationUnit}`;
+          }
+
+          calculationHtml = `
+            <div class="calculation-result" ${resultColorStyle}>${doseDisplay}</div>
+            ${isInjectable ? `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` : ''}
+            ${drug.name !== 'Ketorolac' ? `<div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>` : ''}
+          `;
 
         } else {
+          // --- Logic for ALL OTHER drugs ---
           dosePerKg = getDoseByRoute(drug, drug.currentRoute);
 
           if (drug.name.includes('Paracetamol') && patient.weight > 0 && patient.weight < 10){
@@ -3121,33 +3196,35 @@
           if (drug.minDose && totalDose < drug.minDose){ totalDose = drug.minDose; limitApplied = true; }
 
           if (drug.unit.includes('mcg') && totalDose < 1) { doseDisplay = `${(totalDose * 1000).toFixed(0)} mcg`; }
-          else { doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; }
-        }
+          else { doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; } // <-- for header
 
-        // Get current concentration (custom or default)
-        concentration = getConcentration(drug);
+          concentration = getConcentration(drug);
 
-        if (isInjectable && typeof totalDose === 'number' && totalDose > 0){
-          let volume = totalDose / concentration;
-          let currentConc = concentration;
+          if (isInjectable && typeof totalDose === 'number' && totalDose > 0){
+            let volume = totalDose / concentration;
+            let currentConc = concentration;
 
-          if (volume < 1 && dilutionTiers[drug.name]){
-            const newConc = dilutionTiers[drug.name].find(conc => (totalDose / conc) >= 1);
-            if (newConc){ volume = totalDose / newConc; currentConc = newConc; }
+            if (volume < 1 && dilutionTiers[drug.name]){
+              const newConc = dilutionTiers[drug.name].find(conc => (totalDose / conc) >= 1);
+              if (newConc){ volume = totalDose / newConc; currentConc = newConc; }
+            }
+            volumeDisplay = volume.toFixed(2);
+            concentrationDisplay = `${currentConc} ${drug.concentrationUnit}${currentConc !== concentration ? ' (Diluted)' : ''}`;
           }
-          volumeDisplay = volume.toFixed(2);
-          // Use 'concentration' (which is the effective one) for the display
-          concentrationDisplay = `${currentConc} ${drug.concentrationUnit}${currentConc !== concentration ? ' (Diluted)' : ''}`;
-        }
+          
+          if(limitApplied) limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`; // <-- Assign to high-level var
+          if(doseAdjusted) adjustedInfoHtml = `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>`; // <-- Assign to high-level var
 
-        // NEW: Add description box if it exists
-        if(drug.description) {
-          descriptionBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category});">${drug.description}</div>`;
+          calculationHtml = `
+            <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
+            ${isInjectable ? `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` : ''}
+            <div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>
+          `;
         }
-
-        // --- (START) CORRECTED/MERGED LOGIC ---
         
-        // 1. Check for High Dose
+        // --- Caution, Contraindication, and Edit Logic (ALL drugs) ---
+        
+        // Check for High Dose
         let isCustomDoseHigh = drug.isCustomDoseHigh || false;
         const currentDoseForRangeCheck = getDoseByRoute(drug, drug.currentRoute);
         const rangeMax = parseMaxDoseFromRange(drug.range);
@@ -3155,7 +3232,7 @@
             isCustomDoseHigh = true; 
         }
 
-        // 2. Check for Contraindication
+        // Check for Contraindication
         let isContraindicated = false;
         let contraindicationText = '';
 
@@ -3163,7 +3240,6 @@
             isContraindicated = true;
             contraindicationText = `Contraindicated for age < ${drug.ageMin} years.`;
         }
-        // Use age in months for comparison
         if (drug.ageMinMonths && (patient.age * 12) < drug.ageMinMonths) { 
             isContraindicated = true;
             contraindicationText = `Contraindicated for age < ${drug.ageMinMonths} months.`;
@@ -3174,7 +3250,7 @@
             contraindicationText = drug.caution; // The caution already has the full warning
         }
         
-        // 3. Determine overall caution state and popup content
+        // Determine overall caution state and popup content
         let cautionActive = drug.caution || isCustomDoseHigh || isContraindicated;
         let cautionIconHtml = '';
         let cautionPopupHtml = '';
@@ -3194,12 +3270,7 @@
             cautionPopupHtml = `<div id="caution-popup-${originalIndex}" class="caution-popup">${popupMessage}</div>`;
         }
         
-        // 4. Determine the "halo" class
-        // Apply 'dose-limit-exceeded' (red halo) if contraindicated OR custom dose is high
         const haloClass = (isContraindicated || isCustomDoseHigh) ? 'dose-limit-exceeded' : '';
-
-        // --- (END) CORRECTED/MERGED LOGIC ---
-
         const hasCustom = hasCustomValues(drug);
         const customIndicator = hasCustom ? ' has-custom' : '';
 
@@ -3212,11 +3283,8 @@
           }).join('') + '</div>';
         }
 
-        let limitInfoHtml = limitApplied ? `<span class="dose-limit-applied">(MAX Limit Applied)</span>` : '';
-        let adjustedInfoHtml = doseAdjusted ? `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>` : '';
-
         const isEditing = activeEditIndex === originalIndex;
-        const isModified = hasCustomValues(drug); // Check if modified for reset button
+        const isModified = hasCustomValues(drug); 
 
         const editInputsHtml = `
           <div class="edit-inputs ${isEditing ? 'active' : ''}" id="edit-inputs-${originalIndex}">
@@ -3237,17 +3305,11 @@
           </div>`;
 
         const isExpandedClass = (allExpanded || drug.isExpanded) ? 'expanded' : '';
+        
+        // --- (END) CORRECTED CODE BLOCK ---
 
-        // Assign dynamic text color to calculation result based on category
-        let resultColorStyle = '';
-        if(drug.category) {
-            resultColorStyle = `style="color: var(--${drug.category});"`;
-            if(drug.category === 'induction' || drug.category === 'antiemetic' || (drug.category === 'emergency' && document.body.classList.contains('dark-mode'))) {
-                resultColorStyle = `style="color: var(--${drug.category}); text-shadow: 0 0 5px rgba(0,0,0,0.2);"`;
-            }
-        } else {
-            resultColorStyle = `style="color: var(--primary-accent);"`;
-        }
+
+        // --- (START) CORRECTED HTML BLOCK ---
 
         html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${haloClass}" id="drug-card-${originalIndex}">
 
@@ -3265,17 +3327,23 @@
             </div>
             <div class="drug-details" id="drug-details-${originalIndex}">
 
+              ${bicarbInputHtml}
+              ${bicarbInfoBox}
               ${ketorolacInfoBox}${descriptionBox}${notesBox}${routeSelectorHTML}
               <div class="dose-info">Recommended: ${drug.range}</div>
+              
               <div class="calculation">
-                <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
-                ${isInjectable ? `<div class="volume-result">Volume: ${volumeDisplay} mL (@ ${concentrationDisplay})</div>` : ''}
-                ${drug.name !== 'Ketorolac' ? `<div class="dose-info">Calculated: ${dosePerKg} ${drug.unit}</div>` : ''}
+                ${calculationHtml} 
               </div>
-              <button class="edit-btn" onclick="toggleEdit(${originalIndex})">${isEditing ? 'Close Edit' : 'Edit Dose/Concentration'}</button>
-              ${editInputsHtml}
-            </div>
+              
+              ${ (drug.specialHandling === 'bicarbonate' && baseDeficit > 0) ? '' : `
+                <button class="edit-btn" onclick="toggleEdit(${originalIndex})">${isEditing ? 'Close Edit' : 'Edit Dose/Concentration'}</button>
+                ${editInputsHtml}
+              `}
+              </div>
           </div>`;
+          
+        // --- (END) CORRECTED HTML BLOCK ---
       });
 
       // We must re-run the filter logic *after* regenerating the HTML
@@ -3310,7 +3378,6 @@
 
       calculateInfusions();
     }
-
     /**
      * Updates an infusion's custom values based on input fields.
      */
@@ -3413,8 +3480,11 @@
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleInfusionCard(${index})">
               <div class="drug-name"><span class="toggle-icon">▶</span>${infusion.name}</div>
-              <div class="drug-category infusion">${infusion.categoryLabel}</div>
-              ${cautionIconHtml}
+              <div class="drug-header-right-group">
+                  <div class="drug-dose-preview" style="color: var(--infusion);">${rate.toFixed(2)} mL/hr</div>
+                  <div class="drug-category infusion">${infusion.categoryLabel}</div>
+                  ${cautionIconHtml}
+              </div>
             </div>
             <div class="drug-details" id="infusion-details-${index}">
               <div class="infusion-details">
@@ -3954,7 +4024,6 @@ function clearAllDrugSets() {
           text.textContent = 'Dark Mode';
       }
     }
-
     // --- NEW: Font Size Functions ---
     function adjustFontSize(direction) {
       const newIndex = currentFontSizeIndex + direction;

@@ -1675,6 +1675,7 @@
             </div>
         </div>
     </div>
+    </div>
 
     <div class="tab-navigation">
         <div class="tab-button active" data-tab="patient-info">
@@ -1778,7 +1779,25 @@
             </div>
             <div id="local-anesthetics-results" classs="drugs-grid"></div>
         </section>
-    </div>
+        
+        <section class="section">
+            <h2><i class="fas fa-life-ring"></i> L.A.S.T. Rescue (20% Intralipid)</h2>
+            <div class="info-box" style="border-left-color: var(--reversal);">
+                <strong>High Alert:</strong> For suspected Local Anesthetic Systemic Toxicity (LAST). This protocol is based on <a href="https://www.lipidrescue.org" target="_blank" style="color: var(--primary-accent);">LipidRescue.org</a> guidelines.
+            </div>
+            <div id="intralipid-results">
+                </div>
+        </section>
+        <section class="section">
+            <h2><i class="fas fa-calculator"></i> Caudal & MLAD Calculator</h2>
+            <div class="info-box">
+                <strong>Advanced Calculations:</strong> For Modified Armitage formula-based caudal calculation and Minimum Local Anesthetic Dose (MLAD).
+            </div>
+            <a href="mlad.html" class="infusion-rate-btn" target="_self">
+                <i class="fas fa-external-link-alt"></i> Open Caudal & MLAD Calculator
+            </a>
+        </section>
+        </div>
 
     <div class="tab-content" id="drug-calculations">
         <div id="custom-drugs-indicator" class="custom-values-indicator" style="display: none;">
@@ -3030,6 +3049,65 @@
         </div>`;
     }
 
+    // --- NEW FUNCTION for Intralipid ---
+    function calculateIntralipid() {
+      const patient = getPatientData();
+      const intralipidDiv = document.getElementById('intralipid-results');
+
+      if (!patient.weight) {
+        intralipidDiv.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Enter patient weight to calculate LAST rescue doses</p>';
+        return;
+      }
+      
+      const weight = patient.weight;
+      const concentrationMgPerMl = 200; // 20% = 200 mg/mL
+      const bolusDoseMlPerKg = 1.5;
+      const infusionRateMlPerKgPerMin = 0.25;
+      const maxDoseMlPerKg = 10;
+
+      // Calculations
+      const bolusMl = bolusDoseMlPerKg * weight;
+      const bolusMg = bolusMl * concentrationMgPerMl;
+      const infusionMlPerMin = infusionRateMlPerKgPerMin * weight;
+      const maxCumulativeMl = maxDoseMlPerKg * weight;
+
+      // Format numbers
+      const bolusMlDisplay = bolusMl.toFixed(1);
+      const bolusMgDisplay = bolusMg.toFixed(0);
+      const infusionMlPerMinDisplay = infusionMlPerMin.toFixed(1);
+      const maxCumulativeMlDisplay = maxCumulativeMl.toFixed(0);
+
+      const intralipidHtml = `
+        <div class="drug-card reversal expanded" style="border-color: var(--reversal);">
+          <div class="drug-header" style="cursor: default; padding-bottom: 0;">
+            <div class="drug-name">20% Intralipid Dosing Protocol</div>
+            <div class="drug-category reversal">LAST Rescue</div>
+          </div>
+          <div class="la-results-container" style="gap: 12px; margin-top: 15px;">
+            <div class="la-result-row" style="grid-template-columns: 1fr; border-bottom: 2px solid var(--border-color); padding-bottom: 12px;">
+              <div style="font-size: 1.1em; line-height: 1.6; color: var(--text-primary);">
+                Give bolus of <strong>${bolusMgDisplay} mg</strong> (<strong>${bolusMlDisplay} mL</strong>) over 1-2 mins.
+              </div>
+            </div>
+            <div class="la-result-row" style="grid-template-columns: 1fr; border: none;">
+              <div style="font-size: 1em; line-height: 1.6; color: var(--text-primary);">
+                Start infusion immediately after bolus at <strong>${infusionMlPerMinDisplay} mL/min</strong>.
+                <br>Bolus can be repeated 1-2 times at 5 min interval if HD instability present.
+                <br>If HD stability not restored after 5-10 min, double infusion rate to <strong>${(infusionMlPerMinDisplay * 2).toFixed(1)} mL/min</strong>.
+                <br>Max cumulative dose is <strong>${maxCumulativeMlDisplay} mL</strong>.
+              </div>
+            </div>
+          </div>
+          <div class="dose-info" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); font-style:normal;">
+              Doses are for <strong>20% Intralipid (200 mg/mL)</strong> based on patient weight of ${weight.toFixed(1)} kg.
+          </div>
+        </div>
+      `;
+
+      intralipidDiv.innerHTML = intralipidHtml;
+    }
+    // --- END NEW FUNCTION ---
+
     function calculateLocalAnesthetics() {
       const patient = getPatientData();
       const localAnestheticsDiv = document.getElementById('local-anesthetics-results');
@@ -3067,6 +3145,9 @@
       `;
 
       localAnestheticsDiv.innerHTML = singleCardHtml;
+
+      // --- ADD THIS LINE ---
+      calculateIntralipid(); // Calculate intralipid doses whenever LAs are calculated
     }
 
     function parseMaxDoseFromRange(rangeString){
@@ -3450,7 +3531,6 @@
              infusion.currentDilutionUnit !== infusion.defaultDilutionUnit ||
              infusion.currentDilutionVol !== infusion.defaultDilutionVol;
     }
-
     /**
      * Resets a single infusion's custom values to default.
      */

@@ -1691,7 +1691,7 @@
             </div>
         </div>
     </div>
-
+ 
 
     <div class="tab-navigation">
         <div class="tab-button active" data-tab="patient-info">
@@ -1718,7 +1718,11 @@
             <i class="fas fa-bacteria"></i>
             <span>Antibiotics</span>
         </div>
-    </div>
+        <div class="tab-button" data-tab="info">
+            <i class="fas fa-info-circle"></i>
+            <span>Info</span>
+        </div>
+        </div>
 
     <div class="tab-content active" id="patient-info">
         <section class="patient-info">
@@ -1897,6 +1901,146 @@
         </section>
     </div>
 
+    <div class="tab-content" id="info">
+        <section class="section">
+            <h2><i class="fas fa-info-circle"></i> A Deeper Dive into Pediatric Calculations</h2>
+            <div class="info-box" style="border-left-color: var(--caution-color);">
+                <strong>Important Disclaimer:</strong> This information is for educational and reference purposes only. It is <strong>not</strong> a substitute for professional clinical judgment. All calculations, doses, and clinical decisions must be verified by a qualified medical professional according to institutional policies and patient-specific factors.
+            </div>
+            <p style="margin-top: 10px; line-height: 1.6;">
+                The axiom "children are not small adults" is the guiding principle of pediatric anesthesia. A child's physiology is in a constant state of change. Factors like a higher metabolic rate, larger body surface area-to-weight ratio, immature organ function, and different body compositions (e.g., higher total body water) drastically alter pharmacokinetics (what the body does to a drug) and pharmacodynamics (what the drug does to the body).
+            </p>
+            <p style="margin-top: 10px; line-height: 1.6;">
+                For this reason, precise, weight-based calculations are the foundation of safety. This guide provides context for some of the most common formulas used in daily practice.
+            </p>
+        </section>
+    
+        <section class="section">
+            <h2><i class="fas fa-tint"></i> Fluid and Blood Management</h2>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 10px; margin-bottom: 5px;">Maintenance Fluid Rate (The "4-2-1" Rule)</h3>
+            <p>The Holliday-Segar ("4-2-1") rule estimates the hourly fluid required to replace basal losses for a 24-hour period. It is the foundation for calculating both maintenance infusions and fasting deficits.</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>First 0-10 kg of body weight:</strong> 4 mL/kg/hr</li>
+                <li><strong>Next 10-20 kg of body weight:</strong> 2 mL/kg/hr</li>
+                <li><strong>For weight > 20 kg:</strong> 1 mL/kg/hr</li>
+            </ul>
+            <div class="info-box" style="margin-top: 10px;">
+                <strong>Example for a 25 kg child:</strong><br>
+                1. (10 kg × 4 mL) = 40 mL/hr<br>
+                2. (10 kg × 2 mL) = 20 mL/hr<br>
+                3. (5 kg × 1 mL) = 5 mL/hr<br>
+                <strong>Total Rate:</strong> 40 + 20 + 5 = <strong>65 mL/hr</strong>
+            </div>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Fasting Fluid Deficit</h3>
+            <p>Patients are NPO (nil per os) before surgery, creating a fluid deficit. This is calculated as:</p>
+            <div class="calculation" style="margin-top: 5px; text-align: center; padding: 15px; font-size: 1.1em; font-weight: 600; color: var(--text-primary); background: var(--bg-primary);">
+                Deficit (mL) = Maintenance Rate (mL/hr) × Hours NPO
+            </div>
+            <p style="margin-top: 10px;">This deficit is often replaced intraoperatively, typically by giving 50% in the first hour, 25% in the second hour, and 25% in the third hour, in addition to ongoing maintenance fluids.</p>
+
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Estimated Blood Volume (EBV)</h3>
+            <p>Knowing the EBV is the first step in estimating surgical blood loss tolerance. It varies significantly with age.</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Premature Neonate:</strong> 90-100 mL/kg</li>
+                <li><strong>Full-Term Neonate (0-30 days):</strong> 80-90 mL/kg</li>
+                <li><strong>Infant (1-12 months):</strong> 80 mL/kg</li>
+                <li><strong>Child (>1 year):</strong> 70-75 mL/kg</li>
+            </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Maximum Allowable Blood Loss (MABL)</h3>
+            <p>This formula helps the team anticipate the "transfusion trigger," the point at which the benefits of transfusion are considered to outweigh the risks.</p>
+            <div class="calculation" style="margin-top: 5px; text-align: center; padding: 15px; font-size: 1.1em; font-weight: 600; color: var(--text-primary); background: var(--bg-primary);">
+                MABL = (EBV × (Hct<sub>initial</sub> - Hct<sub>target</sub>)) / Hct<sub>initial</sub>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-lungs"></i> Airway Management Formulas</h2>
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 10px; margin-bottom: 5px;">Endotracheal Tube (ETT) Size</h3>
+            <p>Historically, uncuffed tubes were preferred due to the belief that the cricoid cartilage provided a natural "cuff." However, modern, high-volume, low-pressure cuffed tubes are now widely used as they offer a more reliable seal, reduce anesthetic gas pollution, and may lower aspiration risk.</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Uncuffed ETT Size (Cole's Formula):</strong> (Age in years ÷ 4) + 4</li>
+                <li><strong>Cuffed ETT Size:</strong> (Age in years ÷ 4) + 3.5 (or 0.5 mm smaller than uncuffed)</li>
+            </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">ETT Insertion Depth (Oral)</h3>
+            <p>These are estimates. Tube placement <strong>must</strong> always be confirmed clinically (bilateral breath sounds, chest rise) and with end-tidal capnography.</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>For Neonates:</strong> Weight (kg) + 6 = Depth (cm at lip)</li>
+                <li><strong>For Children (>1 year):</strong> ETT Internal Diameter (mm) × 3 = Depth (cm at lip)</li>
+            </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Supraglottic Airway (LMA/i-gel) Sizing</h3>
+            <p>Unlike ETTs, supraglottic airways are sized based on weight categories, which vary slightly by brand. A common approximation is:</p>
+            <div class="la-results-container" style="margin-top: 5px;">
+                <div class="la-result-row"><div class="la-name">&lt; 5 kg</div><div class="la-max-dose" style="color: var(--text-primary);">Size 1</div></div>
+                <div class="la-result-row"><div class="la-name">5 - 10 kg</div><div class="la-max-dose" style="color: var(--text-primary);">Size 1.5</div></div>
+                <div class="la-result-row"><div class="la-name">10 - 20 kg</div><div class="la-max-dose" style="color: var(--text-primary);">Size 2</div></div>
+                <div class="la-result-row"><div class="la-name">20 - 30 kg</div><div class="la-max-dose" style="color: var(--text-primary);">Size 2.5</div></div>
+                <div class="la-result-row"><div class="la-name">30 - 50 kg</div><div class="la-max-dose" style="color: var(--text-primary);">Size 3</div></div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-syringe"></i> Drug Dosing & Emergency</h2>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 10px; margin-bottom: 5px;">The Weight-Based Dosing Principle</h3>
+            <p>All dosing is in <strong>mg/kg</strong> or <strong>mcg/kg</strong>. A simple "decimal point error" (e.g., 10 mcg/kg vs 1.0 mcg/kg) can be catastrophic, especially with potent drugs. For neonates and small infants, doses are often drawn up in a 1 mL syringe to improve accuracy. Understanding drug <strong>concentration</strong> (e.g., mg/mL) is as important as the dose itself.</p>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Key PALS Emergency Medications</h3>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Epinephrine (Cardiac Arrest):</strong> <strong>0.01 mg/kg</strong> (or 10 mcg/kg). This is 0.1 mL/kg of the 1:10,000 (0.1 mg/mL) concentration.</li>
+                <li><strong>Atropine (Symptomatic Bradycardia):</strong> <strong>0.02 mg/kg</strong> (or 20 mcg/kg).
+                    <ul style="margin-left: 25px; list-style-type: circle;">
+                        <li><strong>Minimum dose:</strong> 0.1 mg (to prevent paradoxical bradycardia).</li>
+                        <li><strong>Maximum single dose:</strong> 0.5 mg in children, 1 mg in adolescents.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Maximum Local Anesthetic Doses</h3>
+            <p>Adhering to these limits is essential to prevent <strong>LAST (Local Anesthetic Systemic Toxicity)</strong>, a life-threatening emergency. All areas using local anesthetics should have a LAST rescue kit, including 20% Intralipid emulsion.</p>
+            <div class="la-results-container" style="margin-top: 5px;">
+                <div class="la-result-row">
+                    <div class="la-name">Lidocaine (Plain)</div>
+                    <div class="la-max-dose" style="color: var(--text-primary);">3 - 4.5 <span class="la-detail">mg/kg</span></div>
+                </div>
+                <div class="la-result-row">
+                    <div class="la-name">Lidocaine (with Epinephrine)</div>
+                    <div class="la-max-dose" style="color: var(--text-primary);">7 <span class="la-detail">mg/kg</span></div>
+                </div>
+                <div class="la-result-row">
+                    <div class="la-name">Bupivacaine (Plain)</div>
+                    <div class="la-max-dose" style="color: var(--text-primary);">2 - 2.5 <span class="la-detail">mg/kg</span></div>
+                </div>
+                <div class="la-result-row">
+                    <div class="la-name">Bupivacaine (with Epinephrine)</div>
+                    <div class="la-max-dose" style="color: var(--text-primary);">3 <span class="la-detail">mg/kg</span></div>
+                </div>
+            </div>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Emergency Defibrillation Energy</h3>
+            <p>In a pediatric cardiac arrest (VF/pVT), the energy dose is weight-based.</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Initial Shock:</strong> 2 Joules/kg</li>
+                <li><strong>Subsequent Shocks:</strong> Escalate to 4 Joules/kg</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-book"></i> Sources for Further Reading</h2>
+            <ul style="margin-left: 20px; list-style-type: disc; padding-left: 15px; line-height: 1.7;">
+                <li>Holliday-Segar Method: <a href="https://www.ncbi.nlm.nih.gov/books/NBK532305/" target="_blank">ncbi.nlm.nih.gov/books/NBK532305/</a></li>
+                <li>Pediatric Airway Formulas: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9663958/" target="_blank">pmc.ncbi.nlm.nih.gov/articles/PMC9663958/</a></li>
+                <li>MABL and Fluid Management: <a href="https://www.mdcalc.com/calc/3905/maximum-allowable-blood-loss-abl-without-transfusion" target="_blank">mdcalc.com/calc/3905/maximum-allowable-blood-loss</a></li>
+                <li>PALS Guidelines (AHA): <a href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000000901" target="_blank">ahajournals.org/doi/10.1161/CIR.0000000000000901</a></li>
+                <li>Local Anesthetic Systemic Toxicity (LAST): <a href="https://www.lipidrescue.org/" target="_blank">lipidrescue.org</a></li>
+            </ul>
+        </section>
+    </div>
     <footer>
         <a href="https://www.t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
     </footer>
@@ -2937,8 +3081,71 @@
       return '7.0 Fr';
     }
 
+    function calculateGuedelAirway(weight, age) {
+        // Prefers weight, falls back to age
+        if (weight > 0) {
+            if (weight < 3) return { size: '000', length: '40 mm', color: 'var(--local-anesthetic)' }; // Pink/Rose
+            if (weight < 5) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // Blue
+            if (weight < 10) return { size: '0', length: '60 mm', color: '#222222' }; // Black
+            if (weight < 20) return { size: '1', length: '70 mm', color: '#F0F0F0' }; // White
+            if (weight < 40) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' }; // Green
+            if (weight < 60) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' }; // Yellow
+            if (weight < 90) return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Red
+            return { size: '5', length: '110 mm', color: 'var(--emergency)' }; // Orange
+        }
+        if (age > 0) {
+            if (age < 0.1) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // <1m
+            if (age < 1) return { size: '0', length: '60 mm', color: '#222222' }; // <1y
+            if (age < 5) return { size: '1', length: '70 mm', color: '#F0F0F0' }; // <5y
+            if (age < 12) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' }; // <12y
+            if (age < 16) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' }; // <16y
+            return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Adult
+        }
+        return { size: 'N/A', length: 'N/A', color: 'var(--border-color)' };
+    }
+
+    function calculateFaceMask(weight, age) {
+        // Prefers weight, falls back to age
+        if (weight > 0) {
+            if (weight < 3) return { size: '0', color: 'var(--local-anesthetic)' }; // Neonatal, Pink
+            if (weight < 10) return { size: '1', color: 'var(--emergency)' }; // Infant, Orange
+            if (weight < 20) return { size: '2', color: '#F0F0F0' }; // Toddler, White
+            if (weight < 40) return { size: '3', color: 'var(--muscle-relaxant)' }; // Child, Yellow
+            if (weight < 70) return { size: '4', color: 'var(--reversal)' }; // Small/Medium Adult, Red
+            return { size: '5', color: 'var(--primary-accent)' }; // Large Adult, Green
+        }
+        if (age > 0) {
+            if (age < 0.1) return { size: '0', color: 'var(--local-anesthetic)' }; // <1m
+            if (age < 1) return { size: '1', color: 'var(--emergency)' }; // <1y
+            if (age < 5) return { size: '2', color: '#F0F0F0' }; // <5y
+            if (age < 12) return { size: '3', color: 'var(--muscle-relaxant)' }; // <12y
+            if (age < 16) return { size: '4', color: 'var(--reversal)' }; // <16y
+            return { size: '5', color: 'var(--primary-accent)' }; // Adult
+        }
+        return { size: 'N/A', color: 'var(--border-color)' };
+    }
+
+    function calculateRylesTube(weight, age) {
+        // Diameter for feeding, prefers weight, falls back to age
+        if (weight > 0) {
+            if (weight < 2.5) return { size: '5 Fr', color: 'var(--antibiotic)' }; // Grey
+            if (weight < 5) return { size: '6 Fr', color: 'var(--antiemetic)' }; // Light Green
+            if (weight < 15) return { size: '8 Fr', color: 'var(--induction)' }; // Blue
+            if (weight < 30) return { size: '10 Fr', color: '#222222' }; // Black
+            return { size: '12 Fr', color: '#F0F0F0' }; // White
+        }
+        if (age > 0) {
+            if (age < 0.1) return { size: '6 Fr', color: 'var(--antiemetic)' }; // <1m
+            if (age < 3) return { size: '8 Fr', color: 'var(--induction)' }; // <3y
+            if (age < 8) return { size: '10 Fr', color: '#222222' }; // <8y
+            return { size: '12 Fr', color: '#F0F0F0' }; // >8y
+        }
+        return { size: 'N/A', color: 'var(--border-color)' };
+    }
+
     function calculateEquipment(){
       const patient = getPatientData();
+      // Original calculations
       const uncuffedSize = calculateETTSize(patient.age, patient.weight);
       const cuffedSize = calculateCuffedETTSize(patient.age, patient.weight);
       const depth = calculateETTDepth(patient.age, patient.weight);
@@ -2946,6 +3153,12 @@
       const proSealLMA = calculateProSealLMASize(patient.weight);
       const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
       const centralLineSize = calculateCentralLineSize(patient.weight);
+      
+      // --- NEW CALCULATIONS ---
+      const guedel = calculateGuedelAirway(patient.weight, patient.age);
+      const mask = calculateFaceMask(patient.weight, patient.age);
+      const ryles = calculateRylesTube(patient.weight, patient.age);
+      // --- END NEW CALCULATIONS ---
 
       let uncuffedValueClass = 'equipment-value';
       if (uncuffedSize.includes('Enter')){ uncuffedValueClass += ' error'; }
@@ -2981,8 +3194,39 @@
           <div class="equipment-value">${centralLineSize}</div>
           <div class="equipment-detail">French size based on weight</div>
         </div>
+        
+        <div class="equipment-card" style="border: 3px solid ${mask.color};">
+          <div class="equipment-title">Anesthesia Face Mask</div>
+          <div class="equipment-value">${mask.size}</div>
+          <div class="equipment-detail">Size (0-5)</div>
+        </div>
+        <div class="equipment-card" style="border: 3px solid ${guedel.color};">
+          <div class="equipment-title">Guedel's Airway (OPA)</div>
+          <div class="equipment-value">${guedel.size}</div>
+          <div class="equipment-detail">${guedel.length}</div>
+        </div>
+        <div class="equipment-card" style="border: 3px solid ${ryles.color};">
+          <div class="equipment-title">Ryle's Tube (NG)</div>
+          <div class="equipment-value">${ryles.size}</div>
+          <div class="equipment-detail">Diameter (for feeding)</div>
+        </div>
+        `;
+      
+      // --- NEW INFO BOX ---
+      const infoBoxHTML = `
+        <div class="info-box" style="grid-column: 1/-1; margin-top: 10px;">
+          <strong><i class="fas fa-ruler-combined"></i> Sizing Confirmation:</strong>
+          <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+            <li><strong>Face Mask:</strong> Visually fit from <strong>bridge of nose</strong> to <strong>groove of chin</strong>.</li>
+            <li><strong>Guedel's Airway (OPA):</strong> Measure from <strong>corner of mouth</strong> to <strong>angle of the mandible</strong>.</li>
+            <li><strong>Ryle's Tube (NG) Length:</strong> Measure using the **NEX method** (Tip of **N**ose &rarr; **E**arlobe &rarr; **X**iphoid process).</li>
+          </ul>
+        </div>
       `;
-      document.getElementById('equipment-results').innerHTML = equipmentHTML;
+      // --- END NEW INFO BOX ---
+
+      // Add the new info box after the equipment grid
+      document.getElementById('equipment-results').innerHTML = equipmentHTML + infoBoxHTML;
     }
 
     function calculateMaintenanceFluid(weight){

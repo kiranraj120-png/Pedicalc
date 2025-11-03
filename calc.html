@@ -3,7 +3,6 @@
 <head>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6062360145892080"
      crossorigin="anonymous"></script>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EQG7VWLLQ9"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -484,6 +483,22 @@
         color: var(--infusion);
         margin-right: 8px;
     }
+    
+    /* --- NEW: Dilution Helper Card Style --- */
+    .calculator-card.dilution-helper {
+        border-left-color: var(--adjunct);
+    }
+    .calculator-card.dilution-helper .calculator-title i {
+        color: var(--adjunct);
+    }
+    .calculator-card.dilution-helper .result-value {
+        color: var(--adjunct);
+    }
+    body.dark-mode .calculator-card.dilution-helper .result-value {
+        color: var(--adjunct); /* Keep color in dark mode */
+    }
+    /* --- END NEW --- */
+
 
     /* Results */
     .calculation-result {
@@ -638,7 +653,7 @@
     <section class="section">
       <h2><i class="fas fa-syringe"></i> Infusion Rate Calculators</h2>
       <div class="info-box">
-        <strong>Quick Guide:</strong> Select the appropriate calculator based on your needs. All calculators work in real-time as you input values.
+        <strong>Quick Guide:</strong> Select the appropriate calculator based on your needs. All calculators work in real-time as you input values. (Note: 1% solution = 10 mg/mL)
       </div>
       
       <div class="calculator-grid">
@@ -774,8 +789,45 @@
             <div class="result-note" id="volume-note"></div>
           </div>
         </div>
-
-      </div>
+        
+        <div class="calculator-card dilution-helper">
+          <div class="calculator-title"><i class="fas fa-vial"></i> Dilution Helper (C₁V₁ = C₂V₂)</div>
+          <div class="input-group">
+            <div class="input-field">
+              <label>Initial Solution (C₁V₁)</label>
+              <div style="display: flex; gap: 5px; align-items: center;">
+                <input type="number" id="initial-conc" placeholder="Conc." step="0.1" min="0" oninput="calculateDilution()" style="flex: 1;">
+                <select id="initial-conc-unit" onchange="calculateDilution()" style="flex: 1;">
+                  <option value="mg/ml">mg/mL</option>
+                  <option value="%">%</option>
+                </select>
+                <span style="color: var(--text-secondary); font-size: 0.9em;">in</span>
+                <input type="number" id="initial-volume" placeholder="Volume" step="0.1" min="0" oninput="calculateDilution()" style="flex: 1;">
+                <span style="color: var(--text-secondary); font-size: 0.9em;">mL</span>
+              </div>
+            </div>
+            
+            <div class="input-field">
+              <label>Desired Concentration (C₂)</label>
+              <div style="display: flex; gap: 5px; align-items: center;">
+                <input type="number" id="desired-conc" placeholder="Conc." step="0.1" min="0" oninput="calculateDilution()" style="flex: 2;">
+                <select id="desired-conc-unit" onchange="calculateDilution()" style="flex: 1;">
+                  <option value="mg/ml">mg/mL</option>
+                  <option value="%">%</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="calculation-result">
+            <div class="result-label">Diluent to Add</div>
+            <div class="result-value" id="diluent-to-add-result">--</div>
+            <div class="result-label">Final Volume (V₂)</div>
+            <div class="result-value" id="final-volume-result">--</div>
+            <div class="result-note" id="dilution-note"></div>
+          </div>
+        </div>
+        </div>
     </section>
 
     <section class="section">
@@ -1105,6 +1157,73 @@
       
       document.getElementById('volume-note').textContent = note;
     }
+    
+    // --- NEW: Dilution Helper Calculator ---
+    function calculateDilution() {
+      const initialConcVal = parseFloat(document.getElementById('initial-conc').value);
+      const initialConcUnit = document.getElementById('initial-conc-unit').value;
+      const initialVolume = parseFloat(document.getElementById('initial-volume').value);
+      const desiredConcVal = parseFloat(document.getElementById('desired-conc').value);
+      const desiredConcUnit = document.getElementById('desired-conc-unit').value;
+
+      const diluentResultEl = document.getElementById('diluent-to-add-result');
+      const finalVolumeResultEl = document.getElementById('final-volume-result');
+      const noteEl = document.getElementById('dilution-note');
+
+      // Helper to convert all concentrations to mg/mL
+      // Note: 1% (w/v) = 1 g / 100 mL = 1000 mg / 100 mL = 10 mg/mL
+      function convertToMgPerMl(value, unit) {
+        if (unit === '%') {
+          return value * 10;
+        }
+        return value; // Already in mg/mL
+      }
+
+      if (!initialConcVal || !initialVolume || !desiredConcVal) {
+        diluentResultEl.textContent = '--';
+        finalVolumeResultEl.textContent = '--';
+        noteEl.textContent = 'Enter all values';
+        return;
+      }
+
+      const c1 = convertToMgPerMl(initialConcVal, initialConcUnit); // Initial Conc in mg/mL
+      const v1 = initialVolume;                                   // Initial Volume in mL
+      const c2 = convertToMgPerMl(desiredConcVal, desiredConcUnit); // Desired Conc in mg/mL
+
+      if (c1 <= 0 || v1 <= 0 || c2 <= 0) {
+        diluentResultEl.textContent = '--';
+        finalVolumeResultEl.textContent = '--';
+        noteEl.textContent = 'Values must be greater than zero';
+        return;
+      }
+
+      // Critical validation: Cannot dilute to a *higher* concentration
+      if (c2 > c1) {
+        diluentResultEl.textContent = 'Error';
+        finalVolumeResultEl.textContent = 'Error';
+        noteEl.textContent = 'Desired concentration must be less than initial concentration.';
+        return;
+      }
+      
+      if (c2 === c1) {
+        diluentResultEl.textContent = '0 mL';
+        finalVolumeResultEl.textContent = `${v1.toFixed(1)} mL`;
+        noteEl.textContent = 'No dilution needed; concentrations are equal.';
+        return;
+      }
+
+      // Formula: C1 * V1 = C2 * V2
+      // Solve for V2: V2 = (C1 * V1) / C2
+      const v2 = (c1 * v1) / c2; // Final Volume
+      
+      // Diluent to add = Final Volume - Initial Volume
+      const diluentToAdd = v2 - v1;
+
+      diluentResultEl.textContent = `${diluentToAdd.toFixed(1)} mL`;
+      finalVolumeResultEl.textContent = `${v2.toFixed(1)} mL`;
+      noteEl.textContent = `Add ${diluentToAdd.toFixed(1)} mL of diluent to your ${v1} mL solution.`;
+    }
+    // --- END NEW ---
 
     // --- Merged Initialization ---
     window.onload = function() {
@@ -1142,6 +1261,7 @@
       calculateDoseRate();
       calculateDuration();
       calculateVolume();
+      calculateDilution(); // <-- ADDED THIS LINE
     };
   </script>
 </body>

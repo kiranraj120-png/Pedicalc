@@ -2830,13 +2830,13 @@
         const drug = drugs[index];
         if (!drug) return;
 
-        drug.isFavorite = !drug.isFavorite;
+        drug.isFavorite = !drug.isFavorite; // State is toggled
         saveFavorites();
 
         // Animate the star
         const btn = document.getElementById(`fav-btn-${index}`);
         if (btn) {
-            // Explicitly add or remove the class instead of toggle
+            // EXPLICITLY add or remove the class. This is more reliable.
             if (drug.isFavorite) {
                 btn.classList.add('favorited');
             } else {
@@ -2848,7 +2848,7 @@
             setTimeout(() => btn.classList.remove('pulse'), 400);
         }
         
-        // If we are in "favorites only" mode and just unfavorited a drug,
+        // If we are in "favorites only" mode AND we just unfavorited a drug,
         // we need to re-run the filter to make it disappear.
         if (showFavoritesOnly && !drug.isFavorite) {
             filterDrugs();

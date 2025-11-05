@@ -1360,6 +1360,73 @@
           grid-column: 1 / -1; /* Make note span full width */
         }
 
+        /* --- NEW: Favorites --- */
+        .favorite-toggle-btn {
+          color: var(--border-color); /* Default: empty star */
+          font-size: 1.1em;
+          margin-right: 10px;
+          cursor: pointer;
+          transition: all 0.3s var(--anim-bezier);
+          vertical-align: middle; /* Align with text */
+        }
+
+        .favorite-toggle-btn:hover {
+          color: #f59e0b; /* Amber 500 */
+          transform: scale(1.2);
+        }
+
+        .favorite-toggle-btn.favorited {
+          color: #f59e0b; /* Amber 500 */
+          text-shadow: 0 0 10px var(--caution-color);
+        }
+        
+        .favorite-toggle-btn.pulse {
+          animation: starPulse 0.4s var(--anim-bezier);
+        }
+
+        @keyframes starPulse {
+          0% { transform: scale(1.1); }
+          50% { transform: scale(1.4); }
+          100% { transform: scale(1); }
+        }
+
+        .favorites-filter-container {
+          margin-bottom: 15px;
+        }
+
+        .favorites-filter-toggle {
+          background: var(--bg-card);
+          border: 1px solid var(--border-color);
+          color: var(--text-secondary);
+          padding: 8px 16px;
+          border-radius: 50px;
+          font-size: .8em;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all .25s var(--anim-bezier);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          box-shadow: var(--shadow);
+        }
+
+        .favorites-filter-toggle:hover {
+          border-color: var(--caution-color);
+          color: var(--caution-color);
+          box-shadow: var(--shadow-md);
+        }
+
+        .favorites-filter-toggle.active {
+          background: var(--caution-color);
+          border-color: var(--caution-color);
+          color: #000;
+          box-shadow: 0 4px 10px rgba(245, 158, 11, .3);
+        }
+        body.dark-mode .favorites-filter-toggle.active {
+            color: #000;
+        }
+        /* --- END: Favorites --- */
+
         footer {
           text-align: center;
           margin-top: 20px;
@@ -1830,10 +1897,16 @@
         <section class="section">
             <h2><i class="fas fa-pills"></i> Drug Calculations</h2>
             <div class="info-box">
-                <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
-            </div>
+                    <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
+                </div>
+                
+                <div class="favorites-filter-container">
+                    <button class="favorites-filter-toggle" id="favorites-filter-toggle" onclick="toggleFavoritesFilter()">
+                        <i class="fas fa-star"></i> Show Favorites Only
+                    </button>
+                </div>
 
-            <div class="input-field" style="margin-bottom: 15px;">
+                <div class="input-field" style="margin-bottom: 15px;">
                 <label for="drug-search" style="font-size: .8em; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600; display: block;">
                     <i class="fas fa-search"></i> Search Drugs
                 </label>
@@ -2054,6 +2127,7 @@
     let activeEditIndex = null;
     let antibioticExpanded = [];
     let currentBaseDeficit = 0; // <-- NEW: Store base deficit globally
+    let showFavoritesOnly = false;
 
     // --- NEW: Font Size ---
     const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
@@ -2082,11 +2156,20 @@
       const drugCards = document.querySelectorAll('#drug-results .drug-card');
       const categoryHeadings = document.querySelectorAll('#drug-results .category-heading');
       let visibleCategories = new Set();
+      
       drugCards.forEach((card, index) => {
         // Find the drug in the *original* array by its card ID's index
         const originalIndex = parseInt(card.id.split('-')[2], 10);
         const drug = drugs[originalIndex]; 
         if (!drug) return;
+
+        // --- NEW FAVORITES LOGIC ---
+        // If showFavoritesOnly is on and this drug is NOT a favorite, hide it.
+        if (showFavoritesOnly && !drug.isFavorite) {
+            card.style.display = 'none';
+            return; // Skip to next card
+        }
+        // --- END NEW LOGIC ---
 
         const drugName = drug.name.toLowerCase();
         const drugCategory = drug.categoryLabel.toLowerCase();
@@ -2142,7 +2225,7 @@
       { name:'Magnesium Sulphate', category:'emergency', categoryLabel:'Asthma/Torsades', defaultDose:50, unit:'mg/kg', concentration:500, concentrationUnit:'mg/mL', useParam:'weight', range:'25-50 mg/kg', caution:'Infuse over 10-20 minutes.', defaultRoute:'IV' },
       { name:'Adenosine 1st Dose', category:'emergency', categoryLabel:'SVT', defaultDose:0.1, unit:'mg/kg', concentration:3, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1 mg/kg (max 6mg)', maxDose:6, defaultRoute:'IV' },
       { name:'Adenosine 2nd Dose', category:'emergency', categoryLabel:'SVT', defaultDose:0.2, unit:'mg/kg', concentration:3, concentrationUnit:'mg/mL', useParam:'weight', range:'0.2 mg/kg (max 12mg)', maxDose:12, defaultRoute:'IV' },
-      { name:'Phenylephrine', category:'emergency', categoryLabel:'Vasopressor', defaultDose:10, unit:'mcg/kg', concentration:100, concentrationUnit:'mcg/mL', useParam:'weight', range:'5-20 mcg/kg', caution:'Total dose: 50-100 mcg. Use for acute hypotension.', defaultRoute:'IV' },
+      { name:'Phenylephrine', category:'emergency', categoryLabel:'Vasopressor', defaultDose:5, unit:'mcg/kg', concentration:50, concentrationUnit:'mcg/mL', useParam:'weight', range:'5-20 mcg/kg', caution:'Bolus doses of 50-100 mcg can be given. Use for acute hypotension. Titrate dose according to response. Can cause BRADYCARDIA', maxDose:500, defaultRoute:'IV' },
       { name:'Dexamethasone', category:'steroid', categoryLabel:'Steroid', defaultDose:0.15, unit:'mg/kg', concentration:4, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
       { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
       { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
@@ -2328,12 +2411,13 @@
 
     // Add custom value fields to all drugs
     drugs.forEach(drug => {
-      drug.customDoseIV = null;
-      drug.customDoseIM = null;
-      drug.customDoseOral = null;
-      drug.customConcentration = null;
-      drug.isExpanded = false; // <-- ADD THIS
-    });
+              drug.customDoseIV = null;
+              drug.customDoseIM = null;
+              drug.customDoseOral = null;
+              drug.customConcentration = null;
+              drug.isExpanded = false; // <-- ADD THIS
+              drug.isFavorite = false; // <-- ADD THIS
+            });
     const antibiotics = [
       { 
         name: 'Ampicillin', 
@@ -2741,6 +2825,59 @@
 	  
     ];
 
+    // --- NEW: Favorite Functions ---
+    function toggleFavorite(index) {
+        const drug = drugs[index];
+        if (!drug) return;
+
+        drug.isFavorite = !drug.isFavorite;
+        saveFavorites();
+
+        // Animate the star
+        const btn = document.getElementById(`fav-btn-${index}`);
+        if (btn) {
+            btn.classList.toggle('favorited', drug.isFavorite);
+            if (drug.isFavorite) {
+                btn.classList.add('pulse');
+                setTimeout(() => btn.classList.remove('pulse'), 400);
+            }
+        }
+        
+        // If we are in "favorites only" mode and just unfavorited a drug,
+        // we need to re-run the filter to make it disappear.
+        if (showFavoritesOnly) {
+            filterDrugs();
+        }
+    }
+
+    function saveFavorites() {
+        const favorites = drugs.filter(d => d.isFavorite).map(d => d.name);
+        localStorage.setItem('pediatricAnesthesiaFavorites', JSON.stringify(favorites));
+    }
+
+    function loadFavorites() {
+        const favorites = JSON.parse(localStorage.getItem('pediatricAnesthesiaFavorites') || '[]');
+        favorites.forEach(name => {
+            const drug = drugs.find(d => d.name === name);
+            if (drug) {
+                drug.isFavorite = true;
+            }
+        });
+    }
+
+    function toggleFavoritesFilter() {
+        showFavoritesOnly = !showFavoritesOnly;
+        
+        const btn = document.getElementById('favorites-filter-toggle');
+        btn.classList.toggle('active', showFavoritesOnly);
+        btn.innerHTML = showFavoritesOnly 
+            ? '<i class="fas fa-star"></i> Showing Favorites' 
+            : '<i class="fas fa-star"></i> Show Favorites Only';
+
+        filterDrugs(); // Re-run filter
+    }
+    // --- END: Favorite Functions ---
+
     const dilutionTiers = {
       'Fentanyl': [50,10,5], 'Atropine': [0.6,0.1], 'Glycopyrrolate': [0.2,0.04],
       'Ondansetron': [2,1], 'Vecuronium': [1,0.5], 'Atracurium': [10,5,2.5],
@@ -3082,7 +3219,15 @@
     }
 
     function calculateGuedelAirway(weight, age) {
-        // Prefers weight, falls back to age
+        // Prefers age, falls back to weight
+        if (age > 0) {
+            if (age < 0.1) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // <1m
+            if (age < 1) return { size: '0', length: '60 mm', color: '#222222' }; // <1y
+            if (age < 5) return { size: '1', length: '70 mm', color: '#F0F0F0' }; // <5y
+            if (age < 12) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' }; // <12y
+            if (age < 16) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' }; // <16y
+            return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Adult
+        }
         if (weight > 0) {
             if (weight < 3) return { size: '000', length: '40 mm', color: 'var(--local-anesthetic)' }; // Pink/Rose
             if (weight < 5) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // Blue
@@ -3093,27 +3238,11 @@
             if (weight < 90) return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Red
             return { size: '5', length: '110 mm', color: 'var(--emergency)' }; // Orange
         }
-        if (age > 0) {
-            if (age < 0.1) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // <1m
-            if (age < 1) return { size: '0', length: '60 mm', color: '#222222' }; // <1y
-            if (age < 5) return { size: '1', length: '70 mm', color: '#F0F0F0' }; // <5y
-            if (age < 12) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' }; // <12y
-            if (age < 16) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' }; // <16y
-            return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Adult
-        }
         return { size: 'N/A', length: 'N/A', color: 'var(--border-color)' };
     }
 
     function calculateFaceMask(weight, age) {
-        // Prefers weight, falls back to age
-        if (weight > 0) {
-            if (weight < 3) return { size: '0', color: 'var(--local-anesthetic)' }; // Neonatal, Pink
-            if (weight < 10) return { size: '1', color: 'var(--emergency)' }; // Infant, Orange
-            if (weight < 20) return { size: '2', color: '#F0F0F0' }; // Toddler, White
-            if (weight < 40) return { size: '3', color: 'var(--muscle-relaxant)' }; // Child, Yellow
-            if (weight < 70) return { size: '4', color: 'var(--reversal)' }; // Small/Medium Adult, Red
-            return { size: '5', color: 'var(--primary-accent)' }; // Large Adult, Green
-        }
+        // Prefers age, falls back to weight
         if (age > 0) {
             if (age < 0.1) return { size: '0', color: 'var(--local-anesthetic)' }; // <1m
             if (age < 1) return { size: '1', color: 'var(--emergency)' }; // <1y
@@ -3122,23 +3251,31 @@
             if (age < 16) return { size: '4', color: 'var(--reversal)' }; // <16y
             return { size: '5', color: 'var(--primary-accent)' }; // Adult
         }
+        if (weight > 0) {
+            if (weight < 3) return { size: '0', color: 'var(--local-anesthetic)' }; // Neonatal, Pink
+            if (weight < 10) return { size: '1', color: 'var(--emergency)' }; // Infant, Orange
+            if (weight < 20) return { size: '2', color: '#F0F0F0' }; // Toddler, White
+            if (weight < 40) return { size: '3', color: 'var(--muscle-relaxant)' }; // Child, Yellow
+            if (weight < 70) return { size: '4', color: 'var(--reversal)' }; // Small/Medium Adult, Red
+            return { size: '5', color: 'var(--primary-accent)' }; // Large Adult, Green
+        }
         return { size: 'N/A', color: 'var(--border-color)' };
     }
 
     function calculateRylesTube(weight, age) {
-        // Diameter for feeding, prefers weight, falls back to age
+        // Diameter for feeding, prefers age, falls back to weight
+        if (age > 0) {
+            if (age < 0.1) return { size: '6 Fr', color: 'var(--antiemetic)' }; // <1m
+            if (age < 3) return { size: '8 Fr', color: 'var(--induction)' }; // <3y
+            if (age < 8) return { size: '10 Fr', color: '#222222' }; // <8y
+            return { size: '12 Fr', color: '#F0F0F0' }; // >8y
+        }
         if (weight > 0) {
             if (weight < 2.5) return { size: '5 Fr', color: 'var(--antibiotic)' }; // Grey
             if (weight < 5) return { size: '6 Fr', color: 'var(--antiemetic)' }; // Light Green
             if (weight < 15) return { size: '8 Fr', color: 'var(--induction)' }; // Blue
             if (weight < 30) return { size: '10 Fr', color: '#222222' }; // Black
             return { size: '12 Fr', color: '#F0F0F0' }; // White
-        }
-        if (age > 0) {
-            if (age < 0.1) return { size: '6 Fr', color: 'var(--antiemetic)' }; // <1m
-            if (age < 3) return { size: '8 Fr', color: 'var(--induction)' }; // <3y
-            if (age < 8) return { size: '10 Fr', color: '#222222' }; // <8y
-            return { size: '12 Fr', color: '#F0F0F0' }; // >8y
         }
         return { size: 'N/A', color: 'var(--border-color)' };
     }
@@ -3742,7 +3879,12 @@
 
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleDrugCard(${originalIndex})">
-              <div class="drug-name${customIndicator}"><span class="toggle-icon">▶</span>${drug.name}</div>
+              <div class="drug-name${customIndicator}">
+                <span class="favorite-toggle-btn ${drug.isFavorite ? 'favorited' : ''}" id="fav-btn-${originalIndex}" onclick="event.stopPropagation(); toggleFavorite(${originalIndex})">
+                    <i class="fas fa-star"></i>
+                </span>
+                <span class="toggle-icon">▶</span>${drug.name}
+              </div>
 
               <div class="drug-header-right-group">
                 <div class="drug-dose-preview" ${resultColorStyle}>
@@ -4515,6 +4657,7 @@ function clearAllDrugSets() {
       applyFontSize(); // Apply loaded or default font size
 
       // Load data and run initial calculations
+      loadFavorites();
       loadLastUsedDrugValues();
       calculateAll();
       loadPatientProfiles();

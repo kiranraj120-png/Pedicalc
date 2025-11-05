@@ -2836,16 +2836,28 @@
         // Animate the star
         const btn = document.getElementById(`fav-btn-${index}`);
         if (btn) {
-            // EXPLICITLY add or remove the class. This is more reliable.
+            
+            // --- FIX FOR MOBILE RENDERING BUG ---
+            
+            // 1. Set the final style (remove 'favorited' if needed)
             if (drug.isFavorite) {
                 btn.classList.add('favorited');
             } else {
                 btn.classList.remove('favorited');
             }
-            
-            // Run pulse animation on every click (select and deselect)
+
+            // 2. Force a browser reflow (read a layout property)
+            // This ensures the class removal is "painted" before the animation starts.
+            void btn.offsetWidth; 
+
+            // 3. Add the animation class
             btn.classList.add('pulse');
-            setTimeout(() => btn.classList.remove('pulse'), 400);
+            
+            // 4. Remove the animation class after it finishes
+            setTimeout(() => {
+                btn.classList.remove('pulse');
+            }, 400);
+            // --- END FIX ---
         }
         
         // If we are in "favorites only" mode AND we just unfavorited a drug,

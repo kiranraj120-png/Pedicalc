@@ -1370,10 +1370,16 @@
           vertical-align: middle; /* Align with text */
         }
 
-        .favorite-toggle-btn:hover {
-          color: #f59e0b; /* Amber 500 */
-          transform: scale(1.2);
+        /* --- MODIFIED for mobile touch fix --- */
+        /* Apply hover effects ONLY on devices that can actually hover (like a mouse) */
+        @media (hover: hover) and (pointer: fine) {
+          .favorite-toggle-btn:hover {
+            color: #f59e0b; /* Amber 500 */
+            transform: scale(1.2);
+          }
         }
+        /* On touch devices, this rule will not apply, 
+           preventing the "sticky hover" bug. */
 
         .favorite-toggle-btn.favorited {
           color: #f59e0b; /* Amber 500 */

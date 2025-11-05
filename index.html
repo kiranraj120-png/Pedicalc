@@ -2836,7 +2836,12 @@
         // Animate the star
         const btn = document.getElementById(`fav-btn-${index}`);
         if (btn) {
-            btn.classList.toggle('favorited', drug.isFavorite);
+            // Explicitly add or remove the class instead of toggle
+            if (drug.isFavorite) {
+                btn.classList.add('favorited');
+            } else {
+                btn.classList.remove('favorited');
+            }
             
             // Run pulse animation on every click (select and deselect)
             btn.classList.add('pulse');
@@ -2845,7 +2850,7 @@
         
         // If we are in "favorites only" mode and just unfavorited a drug,
         // we need to re-run the filter to make it disappear.
-        if (showFavoritesOnly) {
+        if (showFavoritesOnly && !drug.isFavorite) {
             filterDrugs();
         }
     }

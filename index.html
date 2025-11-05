@@ -2837,10 +2837,10 @@
         const btn = document.getElementById(`fav-btn-${index}`);
         if (btn) {
             btn.classList.toggle('favorited', drug.isFavorite);
-            if (drug.isFavorite) {
-                btn.classList.add('pulse');
-                setTimeout(() => btn.classList.remove('pulse'), 400);
-            }
+            
+            // Run pulse animation on every click (select and deselect)
+            btn.classList.add('pulse');
+            setTimeout(() => btn.classList.remove('pulse'), 400);
         }
         
         // If we are in "favorites only" mode and just unfavorited a drug,

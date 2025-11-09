@@ -625,17 +625,22 @@
 
         /* --- NEW: Weight Input w/ Toggle --- */
         .weight-input-container {
-          display: flex;
-          align-items: center;
-          gap: 8px; /* --- FIX: Add gap for separation --- */
+          /* MODIFIED: Use grid to match the height container */
+          display: grid;
+          grid-template-columns: 1fr auto; /* Input area, then button */
+          align-items: center; /* Keep vertical alignment */
+          gap: 8px;
         }
 
         .weight-input-container input {
-          /* --- FIX: Restore all border properties --- */
-          /* The input should take up all available space */
-          flex-grow: 1;
-          /* --- FIX: Ensure input has a minimum width for placeholder --- */
+          /* MODIFIED: Assign to grid area 1 */
+          grid-area: 1 / 1;
+          width: 100%; /* Fill the grid area */
           min-width: 80px; 
+        }
+        .weight-input-container .unit-toggle-btn {
+          grid-area: 1 / 2;
+          height: 100%;
         }
 
         /* --- START OF MODIFIED BUTTON STYLES --- */

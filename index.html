@@ -3,7 +3,6 @@
 <head>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6062360145892080"
      crossorigin="anonymous"></script>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-EQG7VWLLQ9"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -218,6 +217,62 @@
             0% { transform: translate(-30%, -30%) rotate(30deg); }
             100% { transform: translate(30%, 30%) rotate(30deg); }
         }
+        
+        /* --- NEW STICKY WRAPPER (FOR BLUR) --- */
+        .sticky-header-wrapper {
+            position: sticky;
+            top: 5px;
+            z-index: 101;
+            /* The background/blur is now on this wrapper */
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-card);
+            padding: 8px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* --- PATIENT SAFETY HEADER (MODIFIED) --- */
+        .patient-safety-header {
+            /* --- REMOVED STICKY AND BLUR --- */
+            top: 5px; /* Stick just below the top */
+            z-index: 101; /* Above the tab navigation */
+            /* --- NEW: Frosted Glass Effect --- */
+            /* --- MODIFIED: Now sits inside the wrapper --- */
+            background: var(--caution-color);
+            /* --- END MODIFIED --- */
+            color: #000;
+            padding: 8px 12px;
+            border-radius: var(--radius-input);
+            /* box-shadow: var(--shadow-md); */ /* Shadow is on parent */
+            margin-bottom: 8px; /* --- This creates the blurred gap --- */
+            /* display: flex; */ /* JS will change this */
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-align: center;
+            animation: fadeIn 0.3s var(--anim-bezier);
+        }
+        body.dark-mode .patient-safety-header {
+            background: var(--caution-color); /* Restore solid color */
+            color: #000;
+        }
+
+        body.dark-mode .tab-navigation {
+            background: var(--bg-secondary); /* Match card background */
+            border-color: var(--border-color);
+        }
+        .patient-safety-header span {
+            display: inline-block;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        /* --- END --- */
 
         h1 {
           font-size: 1.5em; /* MODIFIED: Was 1.6em */
@@ -328,18 +383,15 @@
           display: flex;
           overflow-x: auto;
           gap: 5px;
-          margin-bottom: 15px;
+          /* margin-bottom: 15px; */ /* Removed, parent has margin */
           padding: 5px;
           scrollbar-width: none;
           -ms-overflow-style: none;
-          position: sticky;
-          top: 5px; /* MODIFIED: Stick to top of viewport */
+          /* --- All sticky, background, and shadow properties are removed --- */
+          /* --- They are now on the .sticky-header-wrapper --- */
           z-index: 100;
-          background: var(--glass-bg);
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          border-radius: var(--radius-card);
-          box-shadow: var(--shadow-md);
+          background: var(--bg-primary); /* --- Add a solid background --- */
+          border-radius: var(--radius-tab);
           border: 1px solid var(--border-color);
         }
 
@@ -536,7 +588,7 @@
 
         .input-group {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
           gap: 12px;
           margin-top: 10px;
         }
@@ -570,6 +622,144 @@
           border-color: var(--primary-accent);
           box-shadow: 0 0 0 3px var(--primary-accent-light);
         }
+
+        /* --- NEW: Weight Input w/ Toggle --- */
+        .weight-input-container {
+          display: flex;
+          align-items: center;
+          gap: 8px; /* --- FIX: Add gap for separation --- */
+        }
+
+        .weight-input-container input {
+          /* --- FIX: Restore all border properties --- */
+          /* The input should take up all available space */
+          flex-grow: 1;
+          /* --- FIX: Ensure input has a minimum width for placeholder --- */
+          min-width: 80px; 
+        }
+
+        /* --- START OF MODIFIED BUTTON STYLES --- */
+        .unit-toggle-btn {
+            display: flex;
+            position: relative;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            /* --- FIX: Restore left border --- */
+            border-left-width: 2px;
+            height: 100%;
+            /* --- NEW: Make button rounded --- */
+            border-radius: 50px;
+            transition: all .25s var(--anim-bezier);
+            flex-shrink: 0;
+            padding: 4px;
+            width: 100px; /* Fixed width */
+            cursor: pointer;
+            user-select: none;
+        }
+        .weight-input-container input:focus + .unit-toggle-btn {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px var(--primary-accent-light);
+            z-index: 2;
+            /* --- FIX: Removed border-left-width: 0 --- */
+        }
+        .unit-slider {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            width: calc(50% - 4px); /* Space for the 4px padding */
+            background: var(--primary-accent);
+            /* --- NEW: Make slider rounded --- */
+            border-radius: 50px;
+            transition: left 0.3s var(--anim-bezier);
+            z-index: 1;
+        }
+        .unit-toggle-btn.lbs-active .unit-slider {
+            left: 50%;
+        }
+        .unit-option {
+            flex: 1;
+            text-align: center;
+            font-weight: 600;
+            font-size: .85em;
+            color: var(--text-secondary);
+            z-index: 2;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s var(--anim-bezier);
+        }
+        .unit-option.active {
+            color: white;
+        }
+        body.dark-mode .unit-option.active {
+            color: var(--bg-primary); /* Dark text on light green button */
+        }
+        /* --- END OF MODIFIED BUTTON STYLES --- */
+
+        /* --- END: Weight Input --- */
+
+        /* --- NEW: Height Input --- */
+        .height-input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            /* Use a grid to layer the inputs for animation */
+            display: grid;
+            grid-template-columns: 1fr auto; /* Input area, then button */
+        }
+        
+        /* This wrapper holds the layered inputs */
+        .height-input-container > input,
+        .height-input-container > .height-input-group {
+            grid-area: 1 / 1; /* Both inputs live in the first cell */
+            transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
+            width: 100%; /* Ensure they fill the cell */
+        }
+
+        .height-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .height-input-group input {
+            width: 100%; /* Each input (ft, in) takes 50% of the group */
+        }
+
+        /* Default state: CM is visible, FT is hidden */
+        .height-input-group {
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+        }
+        #height-cm {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        /* Active state: FT is visible, CM is hidden */
+        .height-input-container.ft-active .height-input-group {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+        .height-input-container.ft-active #height-cm {
+            opacity: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+        }
+        
+        /* The toggle button lives in the second cell */
+        .height-input-container .unit-toggle-btn {
+            grid-area: 1 / 2;
+            height: 100%;
+        }
+        .height-input-container .unit-toggle-btn.lbs-active .unit-slider {
+            left: 50%; /* Re-use 'lbs-active' class name, it's fine */
+        }
+        /* --- END: Height Input --- */
 
         .info-box {
           background: var(--bg-secondary);
@@ -689,7 +879,6 @@
           display: flex;
           align-items: center;
         }
-
         .toggle-icon {
           font-size: 1em;
           margin-right: 8px; /* Increased margin */
@@ -740,7 +929,6 @@
           letter-spacing: .5px;
           background-color: var(--border-color);
         }
-
         /* Drug Category Backgrounds */
         .drug-category.induction { background-color: var(--induction); }
         .drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); }
@@ -1415,7 +1603,6 @@
           gap: 8px;
           box-shadow: var(--shadow);
         }
-
         .favorites-filter-toggle:hover {
           border-color: var(--caution-color);
           color: var(--caution-color);
@@ -1651,9 +1838,10 @@
 
         @media (max-width: 480px) {
           .tab-button {
-            min-width: 100px;
-            padding: 10px 8px;
+            min-width: 90px; /* Tighter */
+            padding: 8px 6px; /* Less padding */
             font-size: 0.7em;
+            gap: 3px; /* Reduce gap between icon and text */
           }
     /* --- ADD THESE NEW RULES --- */
 
@@ -1664,11 +1852,36 @@
 
           /* Make the preview dose slightly smaller */
           .drug-dose-preview {
-              font-size: 0.8em;
-              padding: 2px 6px;
+              font-size: 0.75em; /* Slightly smaller */
+              padding: 2px 5px; /* Tighter */
           }
 
           /* --- END OF ADDED RULES --- */
+
+          /* --- NEW COMPACT RULES --- */
+          .drug-card {
+            padding: 10px; /* Was 12px */
+          }
+          .drug-name {
+            font-size: 1.0em; /* Was 1.05em default */
+          }
+          .calculation-result {
+            font-size: 1.1em; /* Was 1.2em default */
+          }
+          .volume-result, .dose-info {
+            font-size: 0.75em; /* Was 0.8em / 0.75em */
+            margin-top: 2px; /* Tighter */
+          }
+          .equipment-card {
+            padding: 10px; /* Was 12px */
+          }
+          .equipment-value {
+            font-size: 1.25em; /* Was 1.4em */
+          }
+          .equipment-title {
+            font-size: 0.8em; /* Was 0.85em */
+          }
+          /* --- END COMPACT RULES --- */
 
           /* --- ADD THIS NEW RULE --- */
           input[type="number"], input[type="text"], textarea, input[type="search"] {
@@ -1712,7 +1925,7 @@
             min-width: 100px; /* Smaller min-width */
           }
           h1 {
-            font-size: 1.2em; /* Smaller H1 on mobile */
+            font-size: 1.15em; /* Slightly smaller */
           }
 
         }
@@ -1751,6 +1964,11 @@
         </div>
     </header>
 
+    <div id="patient-safety-header" class="patient-safety-header" style="display: none;">
+        <span id="safety-header-age">---</span>
+        <span id="safety-header-weight">---</span>
+        <span id="safety-header-bmi" style="display: none;">---</span>
+    </div>
     <div class="disclaimer-container">
         <div class="disclaimer-toggle" onclick="toggleDisclaimer()">
             <span><i class="fas fa-exclamation-triangle" style="color: var(--caution-color);"></i> Disclaimer (Read this first)</span>
@@ -1811,8 +2029,33 @@
                 </div>
 
                 <div class="input-field">
-                    <label for="weight">Weight (kg)</label>
-                    <input type="number" id="weight" placeholder="Enter weight" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                    <label for="weight" id="weight-label">Weight (kg)</label>
+                    <div class="weight-input-container">
+                        <input type="number" id="weight" placeholder="Enter weight in kg" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                        <div class="unit-toggle-btn" id="unit-toggle" aria-label="Toggle weight unit">
+                            <div class="unit-slider"></div>
+                            <div class="unit-option" data-unit="kg">kg</div>
+                            <div class="unit-option" data-unit="lbs">lbs</div>
+                        </div>
+                        </div>
+                </div>
+
+                <div class="input-field">
+                    <label for="height-cm" id="height-label">Height (cm)</label>
+                    <div class="height-input-container" id="height-input-container">
+                        <input type="number" id="height-cm" placeholder="cm" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                        
+                        <div class="height-input-group">
+                            <input type="number" id="height-ft" placeholder="ft" step="1" min="0" oninput="debouncedCalculateAll()">
+                            <input type="number" id="height-in" placeholder="in" step="0.1" min="0" max="11.9" oninput="debouncedCalculateAll()">
+                        </div>
+
+                        <div class="unit-toggle-btn" id="height-unit-toggle" aria-label="Toggle height unit">
+                            <div class="unit-slider"></div>
+                            <div class="unit-option" data-unit="cm">cm</div>
+                            <div class="unit-option" data-unit="ft">ft</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="input-field">
@@ -1988,7 +2231,7 @@
             </div>
             <p style="margin-top: 10px; line-height: 1.6;">
                 The axiom "children are not small adults" is the guiding principle of pediatric anesthesia. A child's physiology is in a constant state of change. Factors like a higher metabolic rate, larger body surface area-to-weight ratio, immature organ function, and different body compositions (e.g., higher total body water) drastically alter pharmacokinetics (what the body does to a drug) and pharmacodynamics (what the drug does to the body).
-            </p>
+            </pre>
             <p style="margin-top: 10px; line-height: 1.6;">
                 For this reason, precise, weight-based calculations are the foundation of safety. This guide provides context for some of the most common formulas used in daily practice.
             </p>
@@ -2134,6 +2377,18 @@
     let antibioticExpanded = [];
     let currentBaseDeficit = 0; // <-- NEW: Store base deficit globally
     let showFavoritesOnly = false;
+    
+    // --- NEW: Weight Unit ---
+    let currentWeightUnit = 'kg'; // 'kg' or 'lbs'
+    const KG_TO_LBS = 2.20462;
+    // --- END: Weight Unit ---
+
+    // --- NEW: Height Unit ---
+    let currentHeightUnit = 'cm'; // 'cm' or 'ft'
+    const CM_TO_IN = 0.393701;
+    const IN_TO_CM = 2.54;
+    const FT_TO_CM = 30.48;
+    // --- END: Height Unit ---
 
     // --- NEW: Font Size ---
     const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
@@ -2934,9 +3189,29 @@
       const years = parseFloat(document.getElementById('age-years').value) || 0;
       const months = parseFloat(document.getElementById('age-months').value) || 0;
       const totalAge = years + (months/12);
+      
+      let weightInKg = parseFloat(document.getElementById('weight').value) || 0;
+      
+      // Convert weight to KG if input is in LBS
+      if (currentWeightUnit === 'lbs' && weightInKg > 0) {
+        weightInKg = weightInKg / KG_TO_LBS;
+      }
+      
+      // --- NEW: Read height and convert to CM ---
+      let heightInCm = 0;
+      if (currentHeightUnit === 'cm') {
+        heightInCm = parseFloat(document.getElementById('height-cm').value) || 0;
+      } else {
+        const ft = parseFloat(document.getElementById('height-ft').value) || 0;
+        const inches = parseFloat(document.getElementById('height-in').value) || 0;
+        heightInCm = (ft * FT_TO_CM) + (inches * IN_TO_CM);
+      }
+      // --- END: Height ---
+      
       return {
         age: totalAge, ageYears: years, ageMonths: months,
-        weight: parseFloat(document.getElementById('weight').value) || 0,
+        weight: weightInKg, // This value is NOW ALWAYS in KG
+        height: heightInCm, // This value is NOW ALWAYS in CM
         currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
         targetHb: parseFloat(document.getElementById('targetHb').value) || 0
       };
@@ -4145,7 +4420,6 @@
           });
       }
     }
-
     function toggleInfusionCard(index) {
       requestAnimationFrame(() => {
           const card = document.getElementById(`infusion-card-${index}`);
@@ -4322,6 +4596,47 @@
     });
 
     function calculateAll() {
+      const patient = getPatientData(); // Get patient data once
+
+      // --- NEW SAFETY HEADER UPDATE ---
+      const safetyHeader = document.getElementById('patient-safety-header');
+      const safetyAge = document.getElementById('safety-header-age');
+      const safetyWeight = document.getElementById('safety-header-weight');
+      const safetyBmi = document.getElementById('safety-header-bmi'); // Get BMI span
+
+      if (patient.weight > 0 || (patient.ageYears > 0 || patient.ageMonths > 0) || patient.height > 0) {
+          safetyHeader.style.display = 'flex';
+          safetyAge.textContent = `AGE: ${patient.ageYears} Y, ${patient.ageMonths} M`;
+          
+          // Display weight in the currently selected unit
+          let displayWeight = patient.weight; // patient.weight is always in kg
+          let displayUnit = 'kg';
+          if (currentWeightUnit === 'lbs') {
+              displayWeight = patient.weight * KG_TO_LBS;
+              displayUnit = 'lbs';
+          }
+          safetyWeight.textContent = `WEIGHT: ${displayWeight.toFixed(1)} ${displayUnit}`;
+
+          // --- NEW: BMI Calculation and Display ---
+          let bmi = 0;
+          if (patient.weight > 0 && patient.height > 0) {
+            const heightInM = patient.height / 100;
+            bmi = patient.weight / (heightInM * heightInM);
+          }
+          
+          if (bmi > 0) {
+            safetyBmi.textContent = `BMI: ${bmi.toFixed(1)}`;
+            safetyBmi.style.display = 'inline-block';
+          } else {
+            safetyBmi.style.display = 'none';
+          }
+          // --- END: BMI ---
+
+      } else {
+          safetyHeader.style.display = 'none';
+      }
+      // --- END SAFETY HEADER UPDATE ---
+
       calculateEquipment();
       calculateFluids();
       calculateDrugs();
@@ -4348,8 +4663,19 @@
     function savePatientProfile() {
       const profileName = document.getElementById('patient-profile-name').value.trim();
       if (!profileName) { console.error('Please enter a profile name'); return; }
+      
+      // --- NEW: Ensure weight is saved in KG ---
+      let weightToSave = parseFloat(document.getElementById('weight').value) || 0;
+      if (currentWeightUnit === 'lbs' && weightToSave > 0) {
+        weightToSave = (weightToSave / KG_TO_LBS).toFixed(2); // Save in kg
+      }
+      // --- END: Weight Unit ---
 
-      const patientData = { name: profileName, ageYears: document.getElementById('age-years').value, ageMonths: document.getElementById('age-months').value, weight: document.getElementById('weight').value, currentHb: document.getElementById('currentHb').value, targetHb: document.getElementById('targetHb').value, timestamp: new Date().toISOString() };
+      // Get height in CM from the master function
+      const currentPatientData = getPatientData();
+      const heightToSave = currentPatientData.height > 0 ? currentPatientData.height.toFixed(1) : '';
+
+      const patientData = { name: profileName, ageYears: document.getElementById('age-years').value, ageMonths: document.getElementById('age-months').value, weight: weightToSave, height: heightToSave, currentHb: document.getElementById('currentHb').value, targetHb: document.getElementById('targetHb').value, timestamp: new Date().toISOString() };
       let savedProfiles = JSON.parse(localStorage.getItem('pediatricAnesthesiaPatientProfiles') || '[]');
       const existingIndex = savedProfiles.findIndex(p => p.name === profileName);
 
@@ -4372,12 +4698,15 @@
 
       savedProfiles.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-      container.innerHTML = savedProfiles.map(profile => `
+      // --- CORRECTED TEMPLATE LITERAL ---
+      container.innerHTML = savedProfiles.map(profile => {
+        let heightDetail = profile.height ? ` | ${profile.height} cm` : '';
+        return `
         <div class="saved-item">
           <div>
             <div class="saved-item-name">${profile.name}</div>
             <div class="saved-item-details">
-              ${profile.ageYears || 0}Y ${profile.ageMonths || 0}M | ${profile.weight || 0} kg |
+              ${profile.ageYears || 0}Y ${profile.ageMonths || 0}M | ${profile.weight || 0} kg${heightDetail} |
               Hb: ${profile.currentHb || 'N/A'} → ${profile.targetHb || 'N/A'}
             </div>
           </div>
@@ -4386,7 +4715,9 @@
             <button class="saved-item-btn delete" onclick="deletePatientProfile('${profile.name}')" title="Delete"><i class="fas fa-trash"></i></button>
           </div>
         </div>
-      `).join('');
+        `; // Note: The template literal is now self-contained and correct.
+      }).join('');
+      // --- END CORRECTION ---
     }
 
     function applyPatientProfile(profileName) {
@@ -4394,9 +4725,41 @@
       if (profile) {
         document.getElementById('age-years').value = profile.ageYears || '';
         document.getElementById('age-months').value = profile.ageMonths || '';
-        document.getElementById('weight').value = profile.weight || '';
+        
+        // --- NEW: Handle weight unit conversion on load ---
+        let weightToDisplay = parseFloat(profile.weight) || 0;
+        if (currentWeightUnit === 'lbs' && weightToDisplay > 0) {
+          weightToDisplay = (weightToDisplay * KG_TO_LBS).toFixed(1);
+        }
+        document.getElementById('weight').value = weightToDisplay || '';
+        // --- END: Weight Unit ---
+        
         document.getElementById('currentHb').value = profile.currentHb || '';
         document.getElementById('targetHb').value = profile.targetHb || '';
+        
+        // --- NEW: Load Height ---
+        const heightInCm = parseFloat(profile.height) || 0;
+        if (heightInCm > 0) {
+            if (currentHeightUnit === 'cm') {
+                document.getElementById('height-cm').value = heightInCm.toFixed(1);
+                document.getElementById('height-ft').value = '';
+                document.getElementById('height-in').value = '';
+            } else {
+                // Convert cm to ft and inches
+                const totalInches = heightInCm * CM_TO_IN;
+                const feet = Math.floor(totalInches / 12);
+                const inches = (totalInches % 12).toFixed(1);
+                document.getElementById('height-cm').value = '';
+                document.getElementById('height-ft').value = feet;
+                document.getElementById('height-in').value = inches;
+            }
+        } else {
+             document.getElementById('height-cm').value = '';
+             document.getElementById('height-ft').value = '';
+             document.getElementById('height-in').value = '';
+        }
+        // --- END: Load Height ---
+
         calculateAll();
       }
     }
@@ -4616,6 +4979,124 @@ function clearAllDrugSets() {
           text.textContent = 'Dark Mode';
       }
     }
+
+    // --- NEW: Weight Unit Functions ---
+    function updateWeightUnitUI() {
+        const weightInput = document.getElementById('weight');
+        const weightLabel = document.getElementById('weight-label');
+        const unitToggleBtn = document.getElementById('unit-toggle');
+        const unitOptionKg = unitToggleBtn.querySelector('.unit-option[data-unit="kg"]');
+        const unitOptionLbs = unitToggleBtn.querySelector('.unit-option[data-unit="lbs"]');
+
+        unitToggleBtn.classList.remove('lbs-active');
+        unitOptionKg.classList.remove('active');
+        unitOptionLbs.classList.remove('active');
+
+        if (currentWeightUnit === 'lbs') {
+            weightLabel.textContent = 'Weight (lbs)';
+            weightInput.placeholder = 'Enter weight in lbs';
+            unitToggleBtn.classList.add('lbs-active');
+            unitOptionLbs.classList.add('active');
+        } else { // 'kg'
+            weightLabel.textContent = 'Weight (kg)';
+            weightInput.placeholder = 'Enter weight in kg';
+            unitOptionKg.classList.add('active');
+        }
+    }
+
+    function toggleWeightUnit() {
+        const weightInput = document.getElementById('weight');
+        let currentWeight = parseFloat(weightInput.value) || 0;
+
+        if (currentWeightUnit === 'kg') {
+            // --- Switching from KG to LBS ---
+            currentWeightUnit = 'lbs';
+            if (currentWeight > 0) {
+                weightInput.value = (currentWeight * KG_TO_LBS).toFixed(1);
+            }
+        } else {
+            // --- Switching from LBS to KG ---
+            currentWeightUnit = 'kg';
+            if (currentWeight > 0) {
+                weightInput.value = (currentWeight / KG_TO_LBS).toFixed(1);
+            }
+        }
+        
+        localStorage.setItem('weightUnit', currentWeightUnit);
+        updateWeightUnitUI();
+        
+        // We call calculateAll, which will use getPatientData(). 
+        // getPatientData() will read the *newly converted* value and 
+        // (if in lbs) convert it *back* to kg for the calculations.
+        calculateAll();
+    }
+    // --- END: Weight Unit Functions ---
+
+    // --- NEW: Height Unit Functions ---
+    function updateHeightUnitUI() {
+        const heightInputContainer = document.getElementById('height-input-container');
+        const heightLabel = document.getElementById('height-label');
+        const unitToggleBtn = document.getElementById('height-unit-toggle');
+        const unitOptionCm = unitToggleBtn.querySelector('.unit-option[data-unit="cm"]');
+        const unitOptionFt = unitToggleBtn.querySelector('.unit-option[data-unit="ft"]');
+
+        // Use 'lbs-active' class, it's generic enough
+        unitToggleBtn.classList.remove('lbs-active');
+        unitOptionCm.classList.remove('active');
+        unitOptionFt.classList.remove('active');
+        heightInputContainer.classList.remove('ft-active');
+
+        if (currentHeightUnit === 'ft') {
+            heightLabel.textContent = 'Height (ft/in)';
+            unitToggleBtn.classList.add('lbs-active');
+            unitOptionFt.classList.add('active');
+            heightInputContainer.classList.add('ft-active');
+        } else { // 'cm'
+            heightLabel.textContent = 'Height (cm)';
+            unitOptionCm.classList.add('active');
+        }
+    }
+
+    function toggleHeightUnit() {
+        // Get current values BEFORE toggling
+        const cmInput = document.getElementById('height-cm');
+        const ftInput = document.getElementById('height-ft');
+        const inInput = document.getElementById('height-in');
+        
+        const heightCm = parseFloat(cmInput.value) || 0;
+        const heightFt = parseFloat(ftInput.value) || 0;
+        const heightIn = parseFloat(inInput.value) || 0;
+
+        if (currentHeightUnit === 'cm') {
+            // --- Switching from CM to FT ---
+            currentHeightUnit = 'ft';
+            if (heightCm > 0) {
+                const totalInches = heightCm * CM_TO_IN;
+                const feet = Math.floor(totalInches / 12);
+                const inches = (totalInches % 12);
+                ftInput.value = feet;
+                inInput.value = inches > 0 ? inches.toFixed(1) : '';
+                cmInput.value = ''; // Clear old input
+            }
+        } else {
+            // --- Switching from FT to CM ---
+            currentHeightUnit = 'cm';
+            const totalCm = (heightFt * FT_TO_CM) + (heightIn * IN_TO_CM);
+            if (totalCm > 0) {
+                cmInput.value = totalCm.toFixed(1);
+                ftInput.value = ''; // Clear old inputs
+                inInput.value = '';
+            }
+        }
+        
+        localStorage.setItem('heightUnit', currentHeightUnit);
+        updateHeightUnitUI();
+        
+        // This will read the newly populated fields
+        calculateAll();
+    }
+    // --- END: Height Unit Functions ---
+    
     // --- NEW: Font Size Functions ---
     function adjustFontSize(direction) {
       const newIndex = currentFontSizeIndex + direction;
@@ -4641,6 +5122,30 @@ function clearAllDrugSets() {
 
     // DOMContentLoaded: Setup listeners and initial state
     document.addEventListener('DOMContentLoaded', function() {
+      
+      // --- NEW: Create Sticky Wrapper and Move Bars ---
+      try {
+        const container = document.querySelector('.container');
+        const header = document.querySelector('header');
+        const safetyBar = document.getElementById('patient-safety-header');
+        const tabNav = document.querySelector('.tab-navigation');
+        
+        if (container && header && safetyBar && tabNav) {
+          const stickyWrapper = document.createElement('div');
+          stickyWrapper.className = 'sticky-header-wrapper';
+          
+          // Move the safety bar and tab nav into the new wrapper
+          stickyWrapper.appendChild(safetyBar);
+          stickyWrapper.appendChild(tabNav);
+          
+          // Insert the wrapper after the main header
+          header.parentNode.insertBefore(stickyWrapper, header.nextSibling);
+        }
+      } catch (e) {
+        console.error("Failed to create sticky wrapper:", e);
+      }
+      // --- END NEW ---
+
       const tabButtons = document.querySelectorAll('.tab-button');
       const tabContents = document.querySelectorAll('.tab-content');
 
@@ -4668,6 +5173,26 @@ function clearAllDrugSets() {
         document.body.classList.add('dark-mode');
       }
       updateDarkModeButton(); // Update button text/icon regardless
+      
+      // --- NEW: Load saved weight unit ---
+      const savedWeightUnit = localStorage.getItem('weightUnit');
+      if (savedWeightUnit === 'lbs') {
+        currentWeightUnit = 'lbs';
+      }
+      updateWeightUnitUI();
+
+      // --- NEW: Add click listeners for the new toggle ---
+      document.getElementById('unit-toggle').addEventListener('click', toggleWeightUnit);
+      // --- END: Weight Unit ---
+      
+      // --- NEW: Load saved height unit ---
+      const savedHeightUnit = localStorage.getItem('heightUnit');
+      if (savedHeightUnit === 'ft') {
+        currentHeightUnit = 'ft';
+      }
+      updateHeightUnitUI();
+      document.getElementById('height-unit-toggle').addEventListener('click', toggleHeightUnit);
+      // --- END: Height Unit ---
 
       // --- NEW: Load saved font size ---
       const savedFontSizeIndex = localStorage.getItem('fontSizeIndex');

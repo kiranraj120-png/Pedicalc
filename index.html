@@ -383,8 +383,8 @@
           display: flex;
           overflow-x: auto;
           gap: 5px;
-          /* margin-bottom: 15px; */ /* Removed, parent has margin */
-          padding: 0px; /* MODIFIED: Removed padding */
+          /* margin-bottom: 5px; */ /* Removed, parent has margin */
+          padding: 4px 0; /* NEW: Add 4px vertical padding for breathing room */
           scrollbar-width: none;
           -ms-overflow-style: none;
           /* --- All sticky, background, and shadow properties are removed --- */
@@ -393,6 +393,7 @@
           background: transparent; /* MODIFIED: Make transparent */
           border-radius: var(--radius-tab);
           border: none; /* MODIFIED: Remove border */
+          
         }
 
         .tab-navigation::-webkit-scrollbar {
@@ -617,7 +618,7 @@
 
         .input-field input {
           width: 100%;
-          padding: 10px 12px;
+          padding: 8px 12px;
           border: 2px solid var(--border-color);
           border-radius: var(--radius-input);
           font-size: .9em;
@@ -774,6 +775,37 @@
             left: 50%; /* Re-use 'lbs-active' class name, it's fine */
         }
         /* --- END: Height Input --- */
+
+        /* --- NEW: BMI Status Badge in Weight Input --- */
+        .input-with-status-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            grid-area: 1 / 1; /* Takes the input's grid spot */
+        }
+        .input-with-status-wrapper input {
+            /* Ensure input fills the wrapper and has padding for the badge */
+            width: 100%;
+            height: 100%;
+            padding-right: 95px; /* Space for the badge */
+        }
+        .weight-bmi-status {
+            position: absolute;
+            top: 50%;
+            right: 8px; /* Padding from the right edge */
+            transform: translateY(-50%);
+            font-size: 0.75em;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+            padding: 3px 6px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            display: none; /* Hidden by default */
+            pointer-events: none; /* So it doesn't block typing */
+            white-space: nowrap;
+        }
+        /* --- END: BMI Status Badge --- */
 
         .info-box {
           background: var(--bg-secondary);
@@ -2031,11 +2063,6 @@
         </div>
     </header>
 
-    <div id="patient-safety-header" class="patient-safety-header" style="display: none;">
-        <span id="safety-header-age">---</span>
-        <span id="safety-header-weight">---</span>
-        <span id="safety-header-bmi" style="display: none;">---</span>
-    </div>
     <div class="disclaimer-container">
         <div class="disclaimer-toggle" onclick="toggleDisclaimer()">
             <span><i class="fas fa-exclamation-triangle" style="color: var(--caution-color);"></i> Disclaimer (Read this first)</span>
@@ -2048,6 +2075,14 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="patient-safety-header" class="patient-safety-header" style="display: none;">
+        <span id="safety-header-age">---</span>
+        <span id="safety-header-weight">---</span>
+        <span id="safety-header-bmi" style="display: none;">---</span>
+        <span id="safety-header-bmi-percentile" style="display: none;">---</span>
+        <span id="safety-header-bsa" style="display: none;">---</span>
     </div>
  
 
@@ -2084,7 +2119,12 @@
 
     <div class="tab-content active" id="patient-info">
         <section class="patient-info">
-            <h2><i class="fas fa-user-circle"></i> Patient Information</h2>
+            <h2 style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <span><i class="fas fa-user-circle"></i> Patient Information</span>
+                <button class="memory-btn secondary" id="clear-patient-info-btn" style="padding: 4px 8px; font-size: 0.6em; margin-top: 0; margin-bottom: 0;" onclick="clearPatientInfo()">
+                    <i class="fas fa-times"></i> Reset
+                </button>
+            </h2>
             <div class="input-group">
                 <div class="input-field">
                     <label for="age-years">Age</label>
@@ -2098,7 +2138,10 @@
                 <div class="input-field">
                     <label for="weight" id="weight-label">Weight (kg)</label>
                     <div class="weight-input-container">
-                        <input type="number" id="weight" placeholder="Enter weight in kg" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                        <div class="input-with-status-wrapper">
+                            <input type="number" id="weight" placeholder="Enter weight in kg" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                            <span id="weight-bmi-status" class="weight-bmi-status"></span>
+                        </div>
                         <div class="unit-toggle-btn" id="unit-toggle" aria-label="Toggle weight unit">
                             <div class="unit-slider"></div>
                             <div class="unit-option" data-unit="kg">kg</div>
@@ -2132,7 +2175,16 @@
                         <input type="number" id="targetHb" placeholder="Target" step="0.1" min="0" oninput="debouncedCalculateAll()">
                     </div>
                 </div>
-            </div>
+                <div class="input-field">
+                    <label>Biological Sex</label>
+                    <div class="route-selector" style="margin-bottom: 0; padding-bottom: 0; border: none;">
+                        <input type="radio" id="sex-male" name="sex" value="male" checked onclick="debouncedCalculateAll()">
+                        <label for="sex-male"><i class="fas fa-mars"></i> Male</label>
+                        <input type="radio" id="sex-female" name="sex" value="female" onclick="debouncedCalculateAll()">
+                        <label for="sex-female"><i class="fas fa-venus"></i> Female</label>
+                    </div>
+                </div>
+                </div>
         </section>
 
         <section class="memory-section">
@@ -2210,6 +2262,10 @@
 
         <section class="section">
             <h2><i class="fas fa-pills"></i> Drug Calculations</h2>
+            
+            <div class="warning" id="obesity-warning-box" style="display: none; margin-bottom: 15px;">
+                <strong>Caution:</strong> Your patient may be overweight/obese. You may need to consider Ideal Body Weight (IBW) for dosing some medications.
+            </div>
             <div class="info-box">
                     <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
                 </div>
@@ -2296,7 +2352,7 @@
             </div>
             <p style="margin-top: 10px; line-height: 1.6;">
                 The axiom "children are not small adults" is the guiding principle of pediatric anesthesia. A child's physiology is in a constant state of change. Factors like a higher metabolic rate, larger body surface area-to-weight ratio, immature organ function, and different body compositions (e.g., higher total body water) drastically alter pharmacokinetics (what the body does to a drug) and pharmacodynamics (what the drug does to the body).
-            </pre>
+            </p>
             <p style="margin-top: 10px; line-height: 1.6;">
                 For this reason, precise, weight-based calculations are the foundation of safety. This guide provides context for some of the most common formulas used in daily practice.
             </p>
@@ -2320,34 +2376,33 @@
                 <strong>Total Rate:</strong> 40 + 20 + 5 = <strong>65 mL/hr</strong>
             </div>
 
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">NPO Fasting Guidelines (The '2-4-6' Rule)</h3>
+            <p>This safety standard is designed to minimize the risk of pulmonary aspiration of stomach contents while also preventing dehydration. The "2-4-6" rule is a common mnemonic:</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>2 Hours:</strong> Clear liquids (water, pulp-free juice)</li>
+                <li><strong>4 Hours:</strong> Breast milk</li>
+                <li><strong>6 Hours:</strong> Formula, non-human milk, light meal (e.g., toast, cereal)</li>
+                <li><strong>8 Hours:</strong> Heavy, fatty, or fried meal</li>
+            </ul>
+            <div class="info-box" style="margin-top: 10px;">
+                <strong>Example:</strong> A 2-year-old drinks 100 mL of formula at 6:00 AM. Their "6-hour" NPO time expires at 12:00 PM (noon). They are safe for an anesthetic to begin any time after 12:00 PM.
+            </div>
+
             <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Fasting Fluid Deficit</h3>
             <p>Patients are NPO (nil per os) before surgery, creating a fluid deficit. This is calculated as:</p>
             <div class="calculation" style="margin-top: 5px; text-align: center; padding: 15px; font-size: 1.1em; font-weight: 600; color: var(--text-primary); background: var(--bg-primary);">
                 Deficit (mL) = Maintenance Rate (mL/hr) × Hours NPO
             </div>
+            <div class="info-box" style="margin-top: 10px;">
+                <strong>Example for a 25 kg child (65 mL/hr rate) fasting for 6 hours:</strong><br>
+                Deficit = 65 mL/hr × 6 hrs = <strong>390 mL</strong><br>
+                This 390 mL is replaced *in addition* to their ongoing 65 mL/hr maintenance.
+            </div>
             <p style="margin-top: 10px;">This deficit is often replaced intraoperatively, typically by giving 50% in the first hour, 25% in the second hour, and 25% in the third hour, in addition to ongoing maintenance fluids.</p>
 
 
             <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Estimated Blood Volume (EBV)</h3>
-            <p>Knowing the EBV is the first step in estimating surgical blood loss tolerance. It varies significantly with age.</p>
-            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
-                <li><strong>Premature Neonate:</strong> 90-100 mL/kg</li>
-                <li><strong>Full-Term Neonate (0-30 days):</strong> 80-90 mL/kg</li>
-                <li><strong>Infant (1-12 months):</strong> 80 mL/kg</li>
-                <li><strong>Child (>1 year):</strong> 70-75 mL/kg</li>
-            </ul>
-
-            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Maximum Allowable Blood Loss (MABL)</h3>
-            <p>This formula helps the team anticipate the "transfusion trigger," the point at which the benefits of transfusion are considered to outweigh the risks.</p>
-            <div class="calculation" style="margin-top: 5px; text-align: center; padding: 15px; font-size: 1.1em; font-weight: 600; color: var(--text-primary); background: var(--bg-primary);">
-                MABL = (EBV × (Hct<sub>initial</sub> - Hct<sub>target</sub>)) / Hct<sub>initial</sub>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2><i class="fas fa-lungs"></i> Airway Management Formulas</h2>
-            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 10px; margin-bottom: 5px;">Endotracheal Tube (ETT) Size</h3>
-            <p>Historically, uncuffed tubes were preferred due to the belief that the cricoid cartilage provided a natural "cuff." However, modern, high-volume, low-pressure cuffed tubes are now widely used as they offer a more reliable seal, reduce anesthetic gas pollution, and may lower aspiration risk.</p>
+                      <p>Historically, uncuffed tubes were preferred due to the belief that the cricoid cartilage provided a natural "cuff." However, modern, high-volume, low-pressure cuffed tubes are now widely used as they offer a more reliable seal, reduce anesthetic gas pollution, and may lower aspiration risk.</p>
             <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
                 <li><strong>Uncuffed ETT Size (Cole's Formula):</strong> (Age in years ÷ 4) + 4</li>
                 <li><strong>Cuffed ETT Size:</strong> (Age in years ÷ 4) + 3.5 (or 0.5 mm smaller than uncuffed)</li>
@@ -2429,6 +2484,9 @@
         </section>
     </div>
     <footer>
+        <p style="font-size: 0.8em; color: var(--text-tertiary); margin-bottom: 8px; padding: 0 10px;">
+            *BMI-for-age categories are based on a simplified model of the CDC growth charts. For definitive clinical assessment, please consult the official CDC website.
+        </p>
         <a href="https://www.t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
     </footer>
 </div>
@@ -2730,6 +2788,21 @@
       routes: ['IV'],
       defaultRoute: 'IV',
       notes: 'For Status Epilepticus (second-line). Do not administer via IM route for loading.'
+    },
+   {
+      name: 'Dantrolene (Ryanodex)',
+      category: 'emergency',
+      categoryLabel: 'MH Antidote',
+      defaultDose: 2.5,
+      unit: 'mg/kg',
+      concentration: 50,
+      concentrationUnit: 'mg/mL',
+      useParam: 'weight',
+      range: '2.5 mg/kg IV bolus, repeat as needed (Max 10 mg/kg)',
+      caution: 'For Malignant Hyperthermia (Ryanodex). Reconstitute 250mg vial with 5mL sterile water (without bacteriostatic agent). Repeat bolus as needed up to 10 mg/kg total dose. VESICANT.',
+      routes: ['IV'],
+      defaultRoute: 'IV',
+      notes: 'Ryanodex Reconstitution: 250mg vial + 5mL sterile water = 50 mg/mL.'
     }
 
     // --- END OF NEW DRUGS ---
@@ -3273,8 +3346,13 @@
       }
       // --- END: Height ---
       
+      const sex = document.getElementById('sex-male').checked ? 'male' : 'female';
+      const totalAgeInMonths = (years * 12) + months;
+
       return {
         age: totalAge, ageYears: years, ageMonths: months,
+        totalAgeInMonths: totalAgeInMonths, // NEW: Age in months
+        sex: sex, // NEW: Patient sex
         weight: weightInKg, // This value is NOW ALWAYS in KG
         height: heightInCm, // This value is NOW ALWAYS in CM
         currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
@@ -4660,15 +4738,84 @@
         document.querySelectorAll('.caution-popup').forEach(popup => { popup.style.display = 'none'; });
       }
     });
+    // --- START: BMI-for-Age (Simplified Lookup) ---
+
+    // Simplified BMI percentile cutoffs for BOYS (Ages 2-20)
+    const bmi_percentiles_boys = [
+      { minAge: 24,  label: "2 Yrs", p5: 14.8, p85: 18.0, p95: 18.9 }, // 24-35 mos
+      { minAge: 36,  label: "3 Yrs", p5: 14.5, p85: 17.8, p95: 18.6 }, // 36-47 mos
+      { minAge: 48,  label: "4-5 Yrs", p5: 14.1, p85: 17.8, p95: 19.1 }, // 48-71 mos
+      { minAge: 72,  label: "6-7 Yrs", p5: 14.0, p85: 18.4, p95: 20.2 }, // 72-95 mos
+      { minAge: 96,  label: "8-9 Yrs", p5: 14.4, p85: 19.6, p95: 21.9 }, // 96-119 mos
+      { minAge: 120, label: "10-11 Yrs", p5: 15.0, p85: 21.1, p95: 23.9 }, // 120-143 mos
+      { minAge: 144, label: "12-13 Yrs", p5: 15.8, p85: 22.8, p95: 25.9 }, // 144-167 mos
+      { minAge: 168, label: "14-15 Yrs", p5: 16.8, p85: 24.5, p95: 27.6 }, // 168-191 mos
+      { minAge: 192, label: "16-20 Yrs", p5: 17.8, p85: 25.9, p95: 30.6 }  // 192-240 mos
+    ];
+
+    // Simplified BMI percentile cutoffs for GIRLS (Ages 2-20)
+    const bmi_percentiles_girls = [
+      { minAge: 24,  label: "2 Yrs", p5: 14.4, p85: 17.8, p95: 18.7 }, // 24-35 mos
+      { minAge: 36,  label: "3 Yrs", p5: 14.0, p85: 17.5, p95: 18.4 }, // 36-47 mos
+      { minAge: 48,  label: "4-5 Yrs", p5: 13.8, p85: 17.6, p95: 19.0 }, // 48-71 mos
+      { minAge: 72,  label: "6-7 Yrs", p5: 13.8, p85: 18.3, p95: 20.2 }, // 72-95 mos
+      { minAge: 96,  label: "8-9 Yrs", p5: 14.2, p85: 19.6, p95: 22.1 }, // 96-119 mos
+      { minAge: 120, label: "10-11 Yrs", p5: 14.8, p85: 21.2, p95: 24.3 }, // 120-143 mos
+      { minAge: 144, label: "12-13 Yrs", p5: 15.7, p85: 23.1, p95: 26.5 }, // 144-167 mos
+      { minAge: 168, label: "14-15 Yrs", p5: 16.5, p85: 24.6, p95: 28.3 }, // 168-191 mos
+      { minAge: 192, label: "16-20 Yrs", p5: 17.3, p85: 25.7, p95: 30.8 }  // 192-240 mos
+    ];
+    
+    // Main function to calculate BMI-for-Age (Simplified Lookup Method)
+    function calculateBMIForAge(patient, bmi) {
+        // Data is for 24 months (2 years) to 240 months (20 years)
+        if (patient.totalAgeInMonths < 24 || patient.totalAgeInMonths > 240) {
+            return { percentile: 'N/A', status: 'Age out of range (2-20y)' };
+        }
+
+        const dataSet = patient.sex === 'male' ? bmi_percentiles_boys : bmi_percentiles_girls;
+
+        // Find the correct age group
+        // We reverse the array to find the *last* matching 'minAge' that the patient qualifies for
+        const ageGroupData = dataSet.slice().reverse().find(d => patient.totalAgeInMonths >= d.minAge);
+
+        if (!ageGroupData) {
+            // This should not happen if age is in range, but good to have
+            return { percentile: 'N/A', status: 'Data not found' };
+        }
+
+        // Now, just categorize based on the cutoffs
+        if (bmi < ageGroupData.p5) {
+            return { percentile: '< 5th', status: 'Underweight' };
+        } else if (bmi >= ageGroupData.p95) {
+            return { percentile: '≥ 95th', status: 'Obese' };
+        } else if (bmi >= ageGroupData.p85) {
+            return { percentile: '85th-94th', status: 'Overweight' };
+        } else {
+            return { percentile: '5th-84th', status: 'Healthy Weight' };
+        }
+    }
+    
+    // --- END: BMI-for-Age ---
 
     function calculateAll() {
       const patient = getPatientData(); // Get patient data once
+
+      // --- NEW: Get references for placeholder and badge ---
+      const weightInput = document.getElementById('weight');
+      const weightBmiStatus = document.getElementById('weight-bmi-status');
+      const obesityWarning = document.getElementById('obesity-warning-box'); // <-- ADD THIS
+      const defaultPlaceholderKg = 'Enter weight in kg';
+      const defaultPlaceholderLbs = 'Enter weight in lbs';
+      // --- END NEW ---
 
       // --- NEW SAFETY HEADER UPDATE ---
       const safetyHeader = document.getElementById('patient-safety-header');
       const safetyAge = document.getElementById('safety-header-age');
       const safetyWeight = document.getElementById('safety-header-weight');
       const safetyBmi = document.getElementById('safety-header-bmi'); // Get BMI span
+      const safetyBmiPercentile = document.getElementById('safety-header-bmi-percentile');
+      const safetyBsa = document.getElementById('safety-header-bsa'); // Get BSA span
 
       if (patient.weight > 0 || (patient.ageYears > 0 || patient.ageMonths > 0) || patient.height > 0) {
           safetyHeader.style.display = 'flex';
@@ -4697,9 +4844,79 @@
             safetyBmi.style.display = 'none';
           }
           // --- END: BMI ---
+          
+          // --- NEW: BMI-for-Age Percentile ---
+          if (bmi > 0 && patient.totalAgeInMonths >= 24) { // CDC data starts at 24 months
+              const bmiData = calculateBMIForAge(patient, bmi);
+              // safetyBmiPercentile.textContent = `BMI: ${bmiData.percentile} %tile`; // No longer needed
+              safetyBmiPercentile.style.display = 'none'; // Hide percentile from header
+              
+              // Set color based on status
+              if (bmiData.status === 'Underweight') {
+                  safetyBmiPercentile.style.background = 'var(--induction)'; // Blue
+                  safetyBmiPercentile.style.color = '#fff';
+              } else if (bmiData.status === 'Overweight' || bmiData.status === 'Obese') {
+                  safetyBmiPercentile.style.background = 'var(--reversal)'; // Red
+                  safetyBmiPercentile.style.color = '#fff';
+              } else { // Healthy Weight
+                  safetyBmiPercentile.style.background = 'var(--primary-accent-light)';
+                  safetyBmiPercentile.style.color = 'var(--primary-accent-dark)';
+              }
+
+              // --- NEW: Update Weight Badge and Placeholder ---
+              
+              // 1. Show BMI Status Badge
+              weightBmiStatus.textContent = `${bmiData.status} *`;
+              weightBmiStatus.style.display = 'inline-block';
+
+              // 2. Control Badge Color and Warning Box
+              if (bmiData.status === 'Overweight' || bmiData.status === 'Obese') {
+                  weightBmiStatus.style.color = 'var(--reversal)';
+                  if (obesityWarning) obesityWarning.style.display = 'block'; // <-- ADD THIS
+              } else if (bmiData.status === 'Underweight') {
+                  weightBmiStatus.style.color = 'var(--induction)';
+                  if (obesityWarning) obesityWarning.style.display = 'none'; // <-- ADD THIS
+              } else { // Healthy Weight
+                  weightBmiStatus.style.color = 'var(--primary-accent-dark)';
+                  if (obesityWarning) obesityWarning.style.display = 'none'; // <-- ADD THIS
+              }
+              
+              // 3. Reset placeholder (we are no longer using it for status)
+              weightInput.placeholder = (currentWeightUnit === 'lbs') ? defaultPlaceholderLbs : defaultPlaceholderKg;
+              // --- END: New Logic ---
+
+          } else {
+              safetyBmiPercentile.style.display = 'none';
+
+              // --- NEW: Reset placeholder and hide badge/warning ---
+              weightInput.placeholder = (currentWeightUnit === 'lbs') ? defaultPlaceholderLbs : defaultPlaceholderKg;
+              if (weightBmiStatus) weightBmiStatus.style.display = 'none';
+              if (obesityWarning) obesityWarning.style.display = 'none'; // <-- ADD THIS
+              // --- END: New Logic ---
+          }
+          // --- END: BMI-for-Age ---
+          
+          // --- NEW: BSA Calculation and Display ---
+          let bsa = 0;
+          if (patient.weight > 0 && patient.height > 0) {
+            // Using Mosteller formula
+            bsa = Math.sqrt((patient.height * patient.weight) / 3600);
+          }
+          
+          if (bsa > 0) {
+            safetyBsa.textContent = `BSA: ${bsa.toFixed(2)} m²`;
+            safetyBsa.style.display = 'inline-block';
+          } else {
+            safetyBsa.style.display = 'none';
+          }
+          // --- END: BSA ---
 
       } else {
           safetyHeader.style.display = 'none';
+          
+          // --- NEW: Hide badge if no patient data ---
+          if (weightBmiStatus) weightBmiStatus.style.display = 'none';
+          // --- END NEW ---
       }
       // --- END SAFETY HEADER UPDATE ---
 
@@ -4710,6 +4927,8 @@
       calculateInfusions();
       calculateAntibiotics();
     }
+
+
 
     function resetAllDrugsToDefault() {
       drugs.forEach(drug => {
@@ -5186,6 +5405,24 @@ function clearAllDrugSets() {
       localStorage.setItem('fontSizeIndex', currentFontSizeIndex);
     }
 
+    function clearPatientInfo() {
+        document.getElementById('age-years').value = '';
+        document.getElementById('age-months').value = '';
+        document.getElementById('weight').value = '';
+        document.getElementById('height-cm').value = '';
+        document.getElementById('height-ft').value = '';
+        document.getElementById('height-in').value = '';
+        document.getElementById('currentHb').value = '';
+        document.getElementById('targetHb').value = '';
+        document.getElementById('sex-male').checked = true; // Reset sex to default
+        
+        // Also clear the profile name input, as it's part of the "patient"
+        document.getElementById('patient-profile-name').value = '';
+
+        // We must call calculateAll() to update the UI
+        calculateAll(); 
+    }
+
     // DOMContentLoaded: Setup listeners and initial state
     document.addEventListener('DOMContentLoaded', function() {
       
@@ -5193,10 +5430,12 @@ function clearAllDrugSets() {
       try {
         const container = document.querySelector('.container');
         const header = document.querySelector('header');
+        const disclaimer = document.querySelector('.disclaimer-container'); // <-- Find the disclaimer
         const safetyBar = document.getElementById('patient-safety-header');
         const tabNav = document.querySelector('.tab-navigation');
         
-        if (container && header && safetyBar && tabNav) {
+        // Add disclaimer to the check
+        if (container && header && disclaimer && safetyBar && tabNav) { 
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-header-wrapper';
           
@@ -5204,8 +5443,8 @@ function clearAllDrugSets() {
           stickyWrapper.appendChild(safetyBar);
           stickyWrapper.appendChild(tabNav);
           
-          // Insert the wrapper after the main header
-          header.parentNode.insertBefore(stickyWrapper, header.nextSibling);
+          // Insert the wrapper after the DISCLAIMER, not the header
+          disclaimer.parentNode.insertBefore(stickyWrapper, disclaimer.nextSibling);
         }
       } catch (e) {
         console.error("Failed to create sticky wrapper:", e);

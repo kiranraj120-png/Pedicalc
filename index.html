@@ -384,15 +384,15 @@
           overflow-x: auto;
           gap: 5px;
           /* margin-bottom: 15px; */ /* Removed, parent has margin */
-          padding: 5px;
+          padding: 0px; /* MODIFIED: Removed padding */
           scrollbar-width: none;
           -ms-overflow-style: none;
           /* --- All sticky, background, and shadow properties are removed --- */
           /* --- They are now on the .sticky-header-wrapper --- */
           z-index: 100;
-          background: var(--bg-primary); /* --- Add a solid background --- */
+          background: transparent; /* MODIFIED: Make transparent */
           border-radius: var(--radius-tab);
-          border: 1px solid var(--border-color);
+          border: none; /* MODIFIED: Remove border */
         }
 
         .tab-navigation::-webkit-scrollbar {
@@ -416,6 +416,8 @@
           align-items: center;
           gap: 5px;
           color: var(--text-secondary);
+          /* --- NEW: Subtle pressed look --- */
+          box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .tab-button i {
@@ -433,6 +435,7 @@
           background: var(--bg-card);
           color: var(--text-primary);
           transform: translateY(-2px);
+          /* MODIFIED: Ensure we replace the inset shadow */
           box-shadow: var(--shadow);
         }
 
@@ -591,6 +594,12 @@
           grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
           gap: 12px;
           margin-top: 10px;
+        }
+
+        /* --- NEW: Group for Hb inputs --- */
+        .hb-input-group {
+          display: flex;
+          gap: 8px;
         }
 
         .age-input-group {
@@ -898,17 +907,29 @@
           transform: rotate(90deg);
         }
 
-        /* --- MODIFIED: Corrected grid animation --- */
+        /* --- MODIFIED: Switched to max-height for smooth animation --- */
         .drug-details {
-          display: grid;
-          grid-template-rows: 0fr; /* Collapsed */
+          /* display: grid; */ /* <-- REMOVED */
+          /* grid-template-rows: 0fr; */ /* <-- REMOVED */
+          max-height: 0px; /* <-- NEW: Collapsed state */
           overflow: hidden;
-          transition: grid-template-rows 0.35s var(--anim-bezier);
-          will-change: grid-template-rows;
+          transition: max-height 0.35s var(--anim-bezier); /* <-- NEW: Animate max-height */
+          will-change: max-height; /* <-- NEW */
         }
 
         .drug-card.expanded .drug-details {
-          grid-template-rows: 1fr; /* Expanded */
+          /* grid-template-rows: 1fr; */ /* <-- REMOVED */
+          max-height: 100vh; /* <-- NEW: Expanded state (auto-height) */
+        }
+
+        /* --- NEW: Animate content on expand --- */
+        .drug-card.expanded .drug-details > .details-wrapper,
+        .drug-card.expanded .infusion-details > .details-wrapper,
+        .drug-card.expanded .antibiotic-details > .details-wrapper {
+            opacity: 1;
+            transform: translateY(0);
+            /* Delay animation until grid starts opening */
+            /* transition-delay: 0.1s; */ /* <-- REMOVED to eliminate pause */
         }
         
         /* NEW: Wrapper for details content */
@@ -920,6 +941,11 @@
         /* NEW: Add padding to the inner wrapper */
         .drug-details > .details-wrapper {
             padding-top: 12px;
+            /* --- NEW: Smooth Animation --- */
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
+            will-change: opacity, transform;
         }
         /* --- END MODIFICATION --- */
 
@@ -1493,18 +1519,20 @@
           line-height: 1.3;
         }
 
-        /* --- MODIFIED: Corrected grid animation --- */
+        /* --- MODIFIED: Switched to max-height for smooth animation --- */
         .infusion-details, .antibiotic-details {
-          display: grid; /* MODIFIED: Use grid for animation */
-          grid-template-rows: 0fr;
+          /* display: grid; */ /* <-- REMOVED */
+          /* grid-template-rows: 0fr; */ /* <-- REMOVED */
+          max-height: 0px; /* <-- NEW: Collapsed state */
           overflow: hidden;
-          transition: grid-template-rows 0.35s var(--anim-bezier);
-          will-change: grid-template-rows;
+          transition: max-height 0.35s var(--anim-bezier); /* <-- NEW: Animate max-height */
+          will-change: max-height; /* <-- NEW */
         }
         
         .drug-card.expanded .infusion-details,
         .drug-card.expanded .antibiotic-details {
-            grid-template-rows: 1fr;
+            /* grid-template-rows: 1fr; */ /* <-- REMOVED */
+            max-height: 100vh; /* <-- NEW: Expanded state (auto-height) */
         }
         
         /* NEW: Add padding to the inner wrapper */
@@ -1512,6 +1540,11 @@
         .antibiotic-details > .details-wrapper {
             overflow: hidden;
             padding-top: 12px;
+            /* --- NEW: Smooth Animation --- */
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
+            will-change: opacity, transform;
         }
         /* --- END MODIFICATION --- */
 
@@ -1865,7 +1898,7 @@
 
           /* --- NEW COMPACT RULES --- */
           .drug-card {
-            padding: 10px; /* Was 12px */
+            padding: 8px; /* MODIFIED: Was 10px */
           }
           .drug-name {
             font-size: 1.0em; /* Was 1.05em default */
@@ -1887,6 +1920,35 @@
             font-size: 0.8em; /* Was 0.85em */
           }
           /* --- END COMPACT RULES --- */
+
+          /* --- START: ADDED COMPACT RULES --- */
+          .drugs-grid {
+            gap: 8px; /* Was 12px */
+          }
+          /* Make the pill-buttons for routes smaller */
+          .route-selector {
+            gap: 5px; /* Was 8px */
+            margin-bottom: 8px; /* Was 12px */
+          }
+          .route-selector label {
+            padding: 4px 10px; /* Was 6px 12px */
+            font-size: 0.7em; /* Was 0.75em */
+          }
+          /* Tighten up the calculation box */
+          .calculation {
+            padding: 8px; /* Was 10px */
+            margin-top: 5px; /* Was 8px */
+          }
+          /* Tighten the Infusion edit pane */
+          .infusion-edit-pane {
+            padding: 8px; /* Was 10px */
+            gap: 8px; /* Was 12px */
+          }
+          .infusion-dilution-input .input-wrapper input {
+            padding: 4px; /* Was 6px */
+          }
+          /* --- END: ADDED COMPACT RULES --- */
+
 
           /* --- ADD THIS NEW RULE --- */
           input[type="number"], input[type="text"], textarea, input[type="search"] {
@@ -2064,13 +2126,11 @@
                 </div>
 
                 <div class="input-field">
-                    <label for="currentHb">Current Hb (g/dL)</label>
-                    <input type="number" id="currentHb" placeholder="e.g., 12.0" step="0.1" min="0" oninput="debouncedCalculateAll()">
-                </div>
-
-                <div class="input-field">
-                    <label for="targetHb">Target Hb (g/dL)</label>
-                    <input type="number" id="targetHb" placeholder="e.g., 8.0" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                    <label>Hb (g/dL)</label>
+                    <div class="hb-input-group">
+                        <input type="number" id="currentHb" placeholder="Current" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                        <input type="number" id="targetHb" placeholder="Target" step="0.1" min="0" oninput="debouncedCalculateAll()">
+                    </div>
                 </div>
             </div>
         </section>
@@ -3442,16 +3502,17 @@
         html += `<div class="drug-card antibiotic ${isExpandedClass}" id="antibiotic-card-${index}">
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleAntibioticCard(${index})">
-              <div class="drug-name"><span class="toggle-icon">▶</span>${antibiotic.name}</div>
+              <div class="drug-name"><span class="toggle-icon"><i class="fas fa-chevron-right"></i></span>${antibiotic.name}</div>
               <div class="drug-category antibiotic">${antibiotic.categoryLabel}</div>
               ${cautionIconHtml}
             </div>
             <div class="antibiotic-details" id="antibiotic-details-${index}">
               <div class="details-wrapper">
                 ${routeSelectorHTML}${indicationSelectorHTML}${infoBoxHtml}
-                <div class="antibiotic-detail-row"><div class="antibiotic-label">Dose Range:</div><div class="antibiotic-value">${antibiotic.range}</div></div>
+                
                 <div class="antibiotic-detail-row"><div class="antibiotic-label">Frequency:</div><div class="antibiotic-value">${frequency}</div></div>
                 <div class="calculation">
+                  <div class="dose-info" style="margin-top: 0; padding-bottom: 4px; border-bottom: 1px dotted var(--border-color); margin-bottom: 5px;">Recommended: ${antibiotic.range}</div>
                   <div class="calculation-result" style="color: var(--antibiotic);">${totalDose.toFixed(2)} mg ${limitInfoHtml}</div>
                   ${volumeDetail}
                   <div class="dose-info">Calculated: ${dosePerKg} ${antibiotic.unit}</div>
@@ -4186,7 +4247,7 @@
                 <span class="favorite-toggle-btn ${drug.isFavorite ? 'favorited' : ''}" id="fav-btn-${originalIndex}" onclick="event.stopPropagation(); toggleFavorite(${originalIndex})">
                     <i class="fas fa-star"></i>
                 </span>
-                <span class="toggle-icon">▶</span>${drug.name}
+                <span class="toggle-icon"><i class="fas fa-chevron-right"></i></span>${drug.name}
               </div>
 
               <div class="drug-header-right-group">
@@ -4202,9 +4263,9 @@
                   ${bicarbInputHtml}
                   ${bicarbInfoBox}
                   ${ketorolacInfoBox}${descriptionBox}${notesBox}${routeSelectorHTML}
-                  <div class="dose-info">Recommended: ${drug.range}</div>
                   
                   <div class="calculation">
+                    <div class="dose-info" style="margin-top: 0; padding-bottom: 4px; border-bottom: 1px dotted var(--border-color); margin-bottom: 5px;">Recommended: ${drug.range}</div>
                     ${calculationHtml} 
                   </div>
                   
@@ -4351,7 +4412,7 @@
         html += `<div class="drug-card infusion ${isExpandedClass}" id="infusion-card-${index}">
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleInfusionCard(${index})">
-              <div class="drug-name"><span class="toggle-icon">▶</span>${infusion.name}</div>
+              <div class="drug-name"><span class="toggle-icon"><i class="fas fa-chevron-right"></i></span>${infusion.name}</div>
               <div class="drug-header-right-group">
                   <div class="drug-dose-preview" style="color: var(--infusion);">${rate.toFixed(2)} mL/hr</div>
                   <div class="drug-category infusion">${infusion.categoryLabel}</div>

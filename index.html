@@ -17,7 +17,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -939,19 +939,19 @@
           transform: rotate(90deg);
         }
 
-        /* --- MODIFIED: Switched to max-height for smooth animation --- */
+        /* --- FIX: Reverted to the more reliable 'grid' animation --- */
         .drug-details {
-          /* display: grid; */ /* <-- REMOVED */
-          /* grid-template-rows: 0fr; */ /* <-- REMOVED */
-          max-height: 0px; /* <-- NEW: Collapsed state */
+          display: grid; /* <-- RESTORED */
+          grid-template-rows: 0fr; /* <-- RESTORED */
+          max-height: none; /* <-- CHANGED */
           overflow: hidden;
-          transition: max-height 0.35s var(--anim-bezier); /* <-- NEW: Animate max-height */
-          will-change: max-height; /* <-- NEW */
+          transition: grid-template-rows 0.35s var(--anim-bezier); /* <-- CHANGED */
+          will-change: grid-template-rows; /* <-- CHANGED */
         }
 
         .drug-card.expanded .drug-details {
-          /* grid-template-rows: 1fr; */ /* <-- REMOVED */
-          max-height: 100vh; /* <-- NEW: Expanded state (auto-height) */
+          grid-template-rows: 1fr; /* <-- RESTORED */
+          max-height: none; /* <-- REMOVED */
         }
 
         /* --- NEW: Animate content on expand --- */
@@ -1551,20 +1551,20 @@
           line-height: 1.3;
         }
 
-        /* --- MODIFIED: Switched to max-height for smooth animation --- */
+        /* --- FIX: Reverted to the more reliable 'grid' animation --- */
         .infusion-details, .antibiotic-details {
-          /* display: grid; */ /* <-- REMOVED */
-          /* grid-template-rows: 0fr; */ /* <-- REMOVED */
-          max-height: 0px; /* <-- NEW: Collapsed state */
+          display: grid; /* <-- RESTORED */
+          grid-template-rows: 0fr; /* <-- RESTORED */
+          max-height: none; /* <-- CHANGED */
           overflow: hidden;
-          transition: max-height 0.35s var(--anim-bezier); /* <-- NEW: Animate max-height */
-          will-change: max-height; /* <-- NEW */
+          transition: grid-template-rows 0.35s var(--anim-bezier); /* <-- CHANGED */
+          will-change: grid-template-rows; /* <-- CHANGED */
         }
         
         .drug-card.expanded .infusion-details,
         .drug-card.expanded .antibiotic-details {
-            /* grid-template-rows: 1fr; */ /* <-- REMOVED */
-            max-height: 100vh; /* <-- NEW: Expanded state (auto-height) */
+            grid-template-rows: 1fr; /* <-- RESTORED */
+            max-height: none; /* <-- REMOVED */
         }
         
         /* NEW: Add padding to the inner wrapper */
@@ -3216,7 +3216,7 @@
     // --- END OF NEW DRUG ---
   ];
   const localAnesthetics = [
-      { name: 'Lignocaine (Plain)', maxDose: 3, unit: 'mg/kg', caution: 'Without epinephrine' },
+      { name: 'Lignocaine (Plain)', maxDose: 4.5, unit: 'mg/kg', caution: 'Without epinephrine' },
       { name: 'Lignocaine (With Epinephrine)', maxDose: 7, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },
       { name: 'Bupivacaine (Plain)', maxDose: 2, unit: 'mg/kg', caution: 'Without epinephrine' },
       { name: 'Bupivacaine (With Epinephrine)', maxDose: 3, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },

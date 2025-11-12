@@ -13,7 +13,7 @@
       gtag('config', 'G-P5H9YSJRSF');
     </script>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -78,10 +78,10 @@
           --reversal: #ef4444;
           --emergency: #f97316;
           --steroid: #14b8a6;
-          --antiemetic: #84cc16;
+          --antiemetic: #4d7c0f;
           --local-anesthetic: #f43f5e;
           --infusion: #06b6d4;
-          --antibiotic: #78716c;
+          --antibiotic: #4f46e5;
 
           /* Semantic Alerts */
           --caution-color: #f59e0b;
@@ -136,9 +136,12 @@
 
         html {
             scroll-behavior: smooth;
+            touch-action: manipulation; /* Disables double-tap to zoom */
         }
 
         body {
+          overflow-x: hidden; /* Stops the page from swaying sideways */
+          width: 100%;
           font-family: 'Manrope', sans-serif;
           background: var(--bg-primary);
           color: var(--text-primary);
@@ -864,6 +867,7 @@
           cursor: pointer;
           user-select: none;
           flex-direction: row;
+          flex-wrap: nowrap;
           gap: 5px;
         }
 
@@ -1786,10 +1790,17 @@
           .drugs-grid {
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 15px;
+            align-items: start; /* Prevents cards from stretching/overlapping when neighbors expand */
+          }
+          
+          .drug-card {
+            min-width: 0; /* Prevents horizontal content overflow/overlapping */
+            max-width: 100%;
           }
 
           .equipment-grid {
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            align-items: start;
           }
 
           h1 {
@@ -1802,6 +1813,16 @@
 
           .drug-name {
             font-size: 1.2em;
+            flex: 1 1 auto; /* Allows name to shrink so it can wrap */
+            white-space: normal; /* Turns on wrapping */
+            overflow-wrap: anywhere; /* Breaks long words if needed */
+            margin-right: 10px;
+          }
+
+          .drug-header {
+            flex-wrap: wrap; /* Allows the header row to wrap on large screens */
+            gap: 8px;
+            row-gap: 4px;
           }
 
 
@@ -2547,7 +2568,7 @@
                 <li>Holliday-Segar Method: <a href="https://www.ncbi.nlm.nih.gov/books/NBK532305/" target="_blank">ncbi.nlm.nih.gov/books/NBK532305/</a></li>
                 <li>Pediatric Airway Formulas: <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9663958/" target="_blank">pmc.ncbi.nlm.nih.gov/articles/PMC9663958/</a></li>
                 <li>MABL and Fluid Management: <a href="https://www.mdcalc.com/calc/3905/maximum-allowable-blood-loss-abl-without-transfusion" target="_blank">mdcalc.com/calc/3905/maximum-allowable-blood-loss</a></li>
-                <li>PALS Guidelines (AHA): <a href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000000901" target="_blank">ahajournals.org/doi/10.1161/CIR.0000000000000901</a></li>
+                <li>PALS Guidelines (AHA): <a href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000000901" target="_blank">AHA Circulation Guidelines (2020)</a></li>
                 <li>Local Anesthetic Systemic Toxicity (LAST): <a href="https://www.lipidrescue.org/" target="_blank">lipidrescue.org</a></li>
             </ul>
         </section>

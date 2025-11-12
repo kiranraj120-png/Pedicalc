@@ -2051,7 +2051,7 @@
                 <i class="fas fa-download"></i> <span>Install App</span>
             </button>
 
-            <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+            <button id="dark-mode-btn" class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
                 <i class="fas fa-moon"></i> <span>Dark Mode</span>
             </button>
         </div>
@@ -5224,8 +5224,15 @@ function clearAllDrugSets() {
 
     function updateDarkModeButton() {
       const isDark = document.body.classList.contains('dark-mode');
-      const icon = document.querySelector('.dark-mode-toggle i');
-      const text = document.querySelector('.dark-mode-toggle span');
+      // Target the specific ID so we don't overwrite the Install button
+      const btn = document.getElementById('dark-mode-btn');
+      
+      // Safety check in case button isn't found
+      if (!btn) return;
+
+      const icon = btn.querySelector('i');
+      const text = btn.querySelector('span');
+      
       if (isDark) {
           icon.className = 'fas fa-sun';
           text.textContent = 'Light Mode';

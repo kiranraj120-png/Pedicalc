@@ -5267,17 +5267,12 @@ function clearAllDrugSets() {
     });
 </script>
 <script>
-    // FORCE UNREGISTER SERVICE WORKER (Kill Switch)
+    // PWA Service Worker Registration
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            for(let registration of registrations) {
-                registration.unregister()
-                .then(function() {
-                    console.log('Service Worker Unregistered');
-                    // Optional: Force reload if we found one to clear the cache
-                    // window.location.reload(); 
-                });
-            }
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed: ', err));
         });
     }
 </script>

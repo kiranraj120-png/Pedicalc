@@ -5279,7 +5279,63 @@ function clearAllDrugSets() {
         });
     }
 </script>
+<div id="ios-install-prompt" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); padding: 20px; border-top: 1px solid #e5e5e5; box-shadow: 0 -4px 15px rgba(0,0,0,0.15); z-index: 9999; text-align: center; font-family: -apple-system, system-ui, sans-serif; padding-bottom: 25px;">
+   <div style="max-width: 400px; margin: 0 auto; position: relative;">
+       <button onclick="dismissIOSPrompt()" style="position: absolute; top: -10px; right: 0px; background: none; border: none; font-size: 1.5em; color: #888; padding: 10px; cursor: pointer; line-height: 1;">×</button>
+       
+       <p style="margin: 0 0 10px 0; font-weight: 700; font-size: 1.1em; color: #333;">Install PediCalc App</p>
+       
+       <p style="margin: 0 0 15px 0; font-size: 0.95em; color: #555;">
+           To install this app on your iPhone:
+       </p>
+       
+       <div style="display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 0.9em; color: #333; margin-bottom: 20px;">
+           <span>1. Tap</span>
+           <img src="https://img.icons8.com/ios-glyphs/30/007AFF/share-rounded.png" alt="Share" style="width: 24px; height: 24px; vertical-align: middle;">
+           <span>2. Select <strong>"Add to Home Screen"</strong></span>
+           <img src="https://img.icons8.com/ios-glyphs/30/000000/plus-math.png" alt="Add" style="width: 20px; height: 20px; border: 1px solid #ccc; border-radius: 4px; padding: 2px; vertical-align: middle;">
+       </div>
 
+       <div style="border-top: 1px solid #eee; padding-top: 15px;">
+           <label style="font-size: 0.9em; color: #666; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
+               <input type="checkbox" id="ios-dont-show" style="width: 16px; height: 16px; accent-color: #059669;">
+               Don't show this again
+           </label>
+       </div>
+   </div>
+</div>
+
+<script>
+   function isIOS() {
+       return /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+   }
+
+   function isInStandaloneMode() {
+       return ('standalone' in window.navigator) && (window.navigator.standalone);
+   }
+
+   function dismissIOSPrompt() {
+       const checkbox = document.getElementById('ios-dont-show');
+       const prompt = document.getElementById('ios-install-prompt');
+       
+       // Save preference if checked
+       if (checkbox && checkbox.checked) {
+           localStorage.setItem('iosInstallPromptDismissed', 'true');
+       }
+       
+       prompt.style.display = 'none';
+   }
+
+   // Check if previously dismissed
+   const alreadyDismissed = localStorage.getItem('iosInstallPromptDismissed') === 'true';
+
+   // Show logic
+   if (isIOS() && !isInStandaloneMode() && !alreadyDismissed) {
+       setTimeout(function() {
+           document.getElementById('ios-install-prompt').style.display = 'block';
+       }, 2500);
+   }
+</script>
 
 </body>
 </html>

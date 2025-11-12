@@ -1,17 +1,17 @@
-const CACHE_NAME = 'pedicalc-v2'; // Changed to v2 to force update
+const CACHE_NAME = 'pedicalc-v3'; // Bumped version to force update
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/calc.html',
-  '/mlad.html'
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './calc.html',
+  './mlad.html'
 ];
 
-// Install Service Worker
+// Install Event (Cache files immediately)
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Force this new worker to take over immediately
+  self.skipWaiting(); // Force new worker to activate
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
@@ -19,7 +19,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Service Worker
+// Activate Event (Clean up old versions)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -28,14 +28,32 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  self.clients.claim(); // Take control of all clients immediately
+  self.clients.claim();
 });
 
-// Fetch Event
+// Fetch Event (Network First Strategy)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        // If network works, return response AND cache it for later
+        return caches.open(CACHE_NAME).then((cache) => {
+          // We copy the response because a stream can only be consumed once
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      })
+      .catch(() => {
+        // If network fails (Offline), look in cache
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          // Fallback: If looking for "folder/" (root), serve index.html
+          if (event.request.url.endsWith('/')) {
+             return caches.match('./index.html');
+          }
+        });
+      })
   );
 });

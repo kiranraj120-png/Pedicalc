@@ -2046,6 +2046,11 @@
                     <i class="fas fa-search-plus"></i>
                 </button>
             </div>
+
+            <button id="pwa-install-btn" class="dark-mode-toggle" style="display: none;" onclick="installPWA()">
+                <i class="fas fa-download"></i> <span>Install App</span>
+            </button>
+
             <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
                 <i class="fas fa-moon"></i> <span>Dark Mode</span>
             </button>
@@ -5459,6 +5464,56 @@ function clearAllDrugSets() {
                 .catch(err => console.log('SW Fail:', err));
         });
     }
+	// --- Android PWA Install Logic ---
+
+let deferredPrompt; // To store the event
+const installBtn = document.getElementById('pwa-install-btn');
+
+// 1. Listen for the 'beforeinstallprompt' event
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent the mini-infobar from appearing on mobile
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  deferredPrompt = e;
+  // Update UI notify the user they can install the PWA
+  if(installBtn) {
+      installBtn.style.display = 'flex';
+      // Optional: Add a pulse animation to draw attention
+      installBtn.classList.add('pulse'); 
+  }
+  console.log('PWA Install event captured');
+});
+
+// 2. The function triggered by the button click
+async function installPWA() {
+  if (!deferredPrompt) {
+      return;
+  }
+  // Show the install prompt
+  deferredPrompt.prompt();
+  // Wait for the user to respond to the prompt
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(`User response to the install prompt: ${outcome}`);
+  
+  // We've used the prompt, and can't use it again, discard it
+  deferredPrompt = null;
+  
+  // Hide the button
+  if(installBtn) {
+      installBtn.style.display = 'none';
+  }
+}
+
+// 3. Check if app was installed successfully
+window.addEventListener('appinstalled', () => {
+  // Hide the app-provided install promotion
+  if(installBtn) {
+      installBtn.style.display = 'none';
+  }
+  // Clear the deferredPrompt so it can be garbage collected
+  deferredPrompt = null;
+  console.log('PWA was installed');
+});
 </script>
 <div id="ios-install-prompt" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); padding: 20px; border-top: 1px solid #e5e5e5; box-shadow: 0 -4px 15px rgba(0,0,0,0.15); z-index: 9999; text-align: center; font-family: -apple-system, system-ui, sans-serif; padding-bottom: 25px;">
    <div style="max-width: 400px; margin: 0 auto; position: relative;">

@@ -1,45 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6062360145892080"
-     crossorigin="anonymous"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EQG7VWLLQ9"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6062360145892080"
+         crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EQG7VWLLQ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-EQG7VWLLQ9');
-</script>
+      gtag('config', 'G-EQG7VWLLQ9');
+      gtag('config', 'G-P5H9YSJRSF');
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Pediatric Anesthesia Calculator</title>
+    
+    <title>Pediatric Anesthesia & Emergency Drug Dosage Calculator | Free Medical Tool</title>
+    <meta name="description" content="Free pediatric anesthesia calculator for medical professionals. Calculate drug doses, airway equipment sizing, fluid management, and emergency medications based on weight and age.">
+    <meta name="keywords" content="pediatric anesthesia calculator, emergency drug calculator, airway sizing, PALS algorithms, medical calculator, anesthesia drugs, pediatric dosage, Dr. Kiranraj">
+    <meta name="author" content="Dr. Kiranraj">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://YOUR-WEBSITE-URL.com/" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pediatric Anesthesia Calculator by Dr. Kiranraj">
+    <meta property="og:description" content="Instant calculation of pediatric drug doses, airway equipment, and emergency algorithms.">
+    <meta property="og:site_name" content="Pediatric Anesthesia Calculator">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pediatric Anesthesia Calculator">
+    <meta name="twitter:description" content="Instant calculation of pediatric drug doses, airway equipment, and emergency algorithms.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-          /* Primary Accent: Calm, Professional Green */
-          --primary-accent: #059669; /* Emerald 600 */
-          --primary-accent-dark: #065f46; /* Emerald 800 */
-          --primary-accent-light: rgba(5, 150, 105, 0.1); /* Emerald 600 w/ 10% alpha */
+          /* Primary Accent */
+          --primary-accent: #059669;
+          --primary-accent-dark: #065f46;
+          --primary-accent-light: rgba(5, 150, 105, 0.1);
 
-          /* Neutrals: Warm, "Classy" Stone Grays */
-          --bg-primary: #f5f5f4; /* Stone 100 (Warmer than Slate 50) */
-          --bg-secondary: #ffffff; /* White */
-          --bg-card: #ffffff; /* White */
+          /* Neutrals */
+          --bg-primary: #f5f5f4;
+          --bg-secondary: #ffffff;
+          --bg-card: #ffffff;
 
-          --text-primary: #292524; /* Stone 800 (Softer than pure black) */
-          --text-secondary: #57534e; /* Stone 600 */
-          --text-tertiary: #78716c; /* Stone 500 */
+          --text-primary: #292524;
+          --text-secondary: #57534e;
+          --text-tertiary: #78716c;
 
-          --border-color: #e7e5e4; /* Stone 200 */
+          --border-color: #e7e5e4;
 
-          /* Standard Shadows (can remain the same) */
+          /* Standard Shadows */
           --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
           --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
           --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
@@ -47,24 +64,24 @@
 
           /* Glass/Sticky Backgrounds */
           --glass-bg: rgba(255, 255, 255, 0.85);
-          --glass-border: rgba(231, 229, 228, 0.7); /* Stone 200 w/ alpha */
+          --glass-border: rgba(231, 229, 228, 0.7);
 
-          /* --- Updated Drug Category Colors (More Cohesive) --- */
-          --induction: #0ea5e9; /* Sky 500 */
-          --muscle-relaxant: #f59e0b; /* Amber 500 */
-          --analgesic: #059669; /* Emerald 600 (Matches Primary) */
-          --adjunct: #8b5cf6; /* Violet 500 */
-          --reversal: #ef4444; /* Red 500 (Alert) */
-          --emergency: #f97316; /* Orange 500 (High Alert) */
-          --steroid: #14b8a6; /* Teal 500 */
-          --antiemetic: #84cc16; /* Lime 500 */
-          --local-anesthetic: #f43f5e; /* Rose 500 */
-          --infusion: #06b6d4; /* Cyan 500 */
-          --antibiotic: #78716c; /* Stone 500 (Matches Tertiary Text) */
+          /* Drug Category Colors */
+          --induction: #0ea5e9;
+          --muscle-relaxant: #f59e0b;
+          --analgesic: #059669;
+          --adjunct: #8b5cf6;
+          --reversal: #ef4444;
+          --emergency: #f97316;
+          --steroid: #14b8a6;
+          --antiemetic: #84cc16;
+          --local-anesthetic: #f43f5e;
+          --infusion: #06b6d4;
+          --antibiotic: #78716c;
 
           /* Semantic Alerts */
-          --caution-color: #f59e0b; /* Amber 500 */
-          --reset-color: #ef4444; /* Red 500 */
+          --caution-color: #f59e0b;
+          --reset-color: #ef4444;
 
           --radius-card: 12px;
           --radius-input: 8px;
@@ -74,45 +91,42 @@
         }
 
         body.dark-mode {
-          /* Primary Accent: Lighter green for dark BG */
-          --primary-accent: #34d399; /* Emerald 400 */
-          --primary-accent-dark: #10b981; /* Emerald 500 */
-          --primary-accent-light: rgba(52, 211, 153, 0.1); /* Emerald 400 w/ 10% alpha */
+          /* Primary Accent */
+          --primary-accent: #34d399;
+          --primary-accent-dark: #10b981;
+          --primary-accent-light: rgba(52, 211, 153, 0.1);
 
-          /* Neutrals: Warm, Dark Stone */
-          --bg-primary: #1c1917; /* Stone 900 */
-          --bg-secondary: #292524; /* Stone 800 (Card Color) */
-          --bg-card: #292524; /* Stone 800 */
+          /* Neutrals */
+          --bg-primary: #1c1917;
+          --bg-secondary: #292524;
+          --bg-card: #292524;
 
-          --text-primary: #f5f5f4; /* Stone 100 */
-          --text-secondary: #a8a29e; /* Stone 400 */
-          --text-tertiary: #78716c; /* Stone 500 */
+          --text-primary: #f5f5f4;
+          --text-secondary: #a8a29e;
+          --text-tertiary: #78716c;
 
-          --border-color: #44403c; /* Stone 700 */
+          --border-color: #44403c;
 
-          /* Shadows (darkened for dark mode) */
+          /* Shadows */
           --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
           --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
           --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
           --shadow-hover: var(--shadow-lg);
 
           /* Glass/Sticky Backgrounds */
-          --glass-bg: rgba(41, 37, 36, 0.85); /* Stone 800 w/ alpha */
-          --glass-border: rgba(68, 64, 60, 0.7); /* Stone 700 w/ alpha */
+          --glass-bg: rgba(41, 37, 36, 0.85);
+          --glass-border: rgba(68, 64, 60, 0.7);
           
-          /* Drug colors are the same, they pop nicely on this dark background */
-
-          /* Semantic Alerts (Lighter for dark BG) */
-          --caution-color: #fcd34d; /* Amber 300 */
-          --reset-color: #f87171; /* Red 400 */
-          --emergency: #fbbf24; /* Amber 400 */
+          /* Semantic Alerts */
+          --caution-color: #fcd34d;
+          --reset-color: #f87171;
+          --emergency: #fbbf24;
         }
 
         * {
           box-sizing: border-box;
           margin: 0;
           padding: 0;
-          /* FIX: Remove tap highlight on all elements */
           -webkit-tap-highlight-color: transparent;
         }
 
@@ -121,26 +135,25 @@
         }
 
         body {
-          font-family: 'Poppins', sans-serif; /* New Font */
+          font-family: 'Manrope', sans-serif;
           background: var(--bg-primary);
           color: var(--text-primary);
-          line-height: 1.7; /* MODIFIED: Increased for readability */
-          font-size: 14px; /* MODIFIED: Was 0.9rem */
+          line-height: 1.7;
+          font-size: 14px;
           transition: background-color 0.4s var(--anim-bezier), color 0.4s var(--anim-bezier), font-size 0.3s var(--anim-bezier);
           user-select: none;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           overflow-x: hidden;
-          overscroll-behavior: contain; /* NEW: Prevents overscroll bounce */
-          text-rendering: optimizeLegibility; /* NEW: Improves font rendering */
+          overscroll-behavior: contain; /* Prevents overscroll bounce */
+          text-rendering: optimizeLegibility;
         }
         
-        /* NEW: Tighter letter spacing for headings */
         h1, h2, h3 {
           letter-spacing: -0.02em; 
         }
 
-        /* NEW: Use Tabular Numbers for all numeric-heavy elements */
+        /* Use Tabular Numbers for all numeric-heavy elements */
         .calculation-result,
         .volume-result,
         .equipment-value,
@@ -153,7 +166,6 @@
           font-variant-numeric: tabular-nums;
         }
 
-        /* NEW: Also apply to inputs, where users type numbers */
         input[type="number"],
         .infusion-dilution-input input {
           font-feature-settings: "tnum" on;
@@ -162,7 +174,7 @@
 
         input, textarea {
           user-select: text !important;
-          font-family: 'Poppins', sans-serif;
+          font-family: 'Manrope', sans-serif;
         }
 
         .container {
@@ -170,7 +182,6 @@
           margin: 0 auto;
           padding: 15px 10px;
            padding-top: 40px;
-          /* Add page load animation */
           animation: containerFadeIn 0.5s ease-out;
         }
 
@@ -183,7 +194,7 @@
           background: linear-gradient(135deg, var(--primary-accent), var(--primary-accent-dark));
           color: white;
           padding: 15px;
-          border-radius: var(--radius-card); /* MODIFIED: Restored original radius */
+          border-radius: var(--radius-card);
           box-shadow: var(--shadow-md);
           margin-bottom: 15px;
           display: flex;
@@ -191,7 +202,7 @@
           align-items: center;
           flex-wrap: wrap;
           gap: 10px;
-          position: relative; /* MODIFIED: Removed sticky */
+          position: relative;
           overflow: hidden;
         }
 
@@ -204,13 +215,11 @@
           height: 200%;
           background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
           transform: rotate(30deg);
-          
-          /* MODIFIED: Use long-hand properties for easier overriding */
           animation-name: shimmer;
-          animation-duration: 4s; /* Base duration */
+          animation-duration: 4s;
           animation-iteration-count: infinite;
-          animation-direction: alternate; /* This makes it go back and forth */
-          animation-timing-function: ease-in-out; /* This makes the start/end smoother */
+          animation-direction: alternate;
+          animation-timing-function: ease-in-out;
         }
 
         @keyframes shimmer {
@@ -218,12 +227,10 @@
             100% { transform: translate(30%, 30%) rotate(30deg); }
         }
         
-        /* --- NEW STICKY WRAPPER (FOR BLUR) --- */
         .sticky-header-wrapper {
             position: sticky;
             top: 5px;
             z-index: 101;
-            /* The background/blur is now on this wrapper */
             background: var(--glass-bg);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
@@ -234,21 +241,14 @@
             box-shadow: var(--shadow-md);
         }
         
-        /* --- PATIENT SAFETY HEADER (MODIFIED) --- */
         .patient-safety-header {
-            /* --- REMOVED STICKY AND BLUR --- */
-            top: 5px; /* Stick just below the top */
-            z-index: 101; /* Above the tab navigation */
-            /* --- NEW: Frosted Glass Effect --- */
-            /* --- MODIFIED: Now sits inside the wrapper --- */
+            top: 5px;
+            z-index: 101;
             background: var(--caution-color);
-            /* --- END MODIFIED --- */
             color: #000;
             padding: 8px 12px;
             border-radius: var(--radius-input);
-            /* box-shadow: var(--shadow-md); */ /* Shadow is on parent */
-            margin-bottom: 8px; /* --- This creates the blurred gap --- */
-            /* display: flex; */ /* JS will change this */
+            margin-bottom: 8px;
             justify-content: center;
             align-items: center;
             gap: 20px;
@@ -258,12 +258,12 @@
             animation: fadeIn 0.3s var(--anim-bezier);
         }
         body.dark-mode .patient-safety-header {
-            background: var(--caution-color); /* Restore solid color */
+            background: var(--caution-color);
             color: #000;
         }
 
         body.dark-mode .tab-navigation {
-            background: var(--bg-secondary); /* Match card background */
+            background: var(--bg-secondary);
             border-color: var(--border-color);
         }
         .patient-safety-header span {
@@ -272,64 +272,57 @@
             padding: 2px 8px;
             border-radius: 4px;
         }
-        /* --- END --- */
 
         h1 {
-          font-size: 1.5em; /* MODIFIED: Was 1.6em */
+          font-size: 1.5em;
           font-weight: 700;
           z-index: 1;
-          /* Allow shrinking on very small screens */
           flex: 1;
           min-width: 150px;
         }
 
-        /* --- NEW --- */
         .header-controls {
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0; /* Don't let controls shrink */
+            flex-shrink: 0;
         }
 
-        /* --- NEW --- */
         .font-size-control {
           background: rgba(255, 255, 255, 0.2);
           border-radius: 50px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
           display: flex;
           align-items: center;
-          padding: 2px; /* Small padding */
+          padding: 2px;
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
           z-index: 1;
         }
 
-        /* --- NEW --- */
         .font-adjust-btn {
           background: transparent;
           border: none;
           color: white;
           cursor: pointer;
-          font-size: 1em; /* Icon size */
+          font-size: 1em;
           padding: 6px 8px;
-          border-radius: 50%; /* Round buttons */
+          border-radius: 50%;
           transition: all .25s var(--anim-bezier);
-          line-height: 1; /* Center icon vertically */
+          line-height: 1;
         }
 
-        /* --- NEW --- */
         .font-adjust-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
 
-        /* --- NEW --- */
         #font-size-indicator {
           color: white;
           font-weight: 600;
           font-size: .75em;
           padding: 0 4px;
-          min-width: 40px; /* Prevent jiggling */
+          min-width: 40px;
           text-align: center;
           user-select: none;
         }
@@ -340,7 +333,7 @@
           border: none;
           border-radius: 50px;
           padding: 8px 16px;
-          cursor: pointer; /* FIX: Was poPoppins */
+          cursor: pointer;
           font-size: .75em;
           font-weight: 600;
           box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
@@ -349,12 +342,10 @@
           z-index: 1;
           display: flex;
           align-items: center;
-          justify-content: center; /* Center content */
+          justify-content: center;
           gap: 8px;
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
-
-          /* FIX: Prevent jiggling by setting a min-width */
           min-width: 120px;
           overflow: hidden;
         }
@@ -370,12 +361,10 @@
         }
 
         .dark-mode-toggle i {
-            /* Animation for icon */
             transition: transform 0.4s var(--anim-bezier);
         }
 
         body.dark-mode .dark-mode-toggle i {
-            /* Rotate icon in dark mode */
             transform: rotate(180deg);
         }
 
@@ -383,17 +372,13 @@
           display: flex;
           overflow-x: auto;
           gap: 5px;
-          /* margin-bottom: 5px; */ /* Removed, parent has margin */
-          padding: 4px 0; /* NEW: Add 4px vertical padding for breathing room */
+          padding: 4px 0;
           scrollbar-width: none;
           -ms-overflow-style: none;
-          /* --- All sticky, background, and shadow properties are removed --- */
-          /* --- They are now on the .sticky-header-wrapper --- */
           z-index: 100;
-          background: transparent; /* MODIFIED: Make transparent */
+          background: transparent;
           border-radius: var(--radius-tab);
-          border: none; /* MODIFIED: Remove border */
-          
+          border: none;
         }
 
         .tab-navigation::-webkit-scrollbar {
@@ -403,11 +388,11 @@
         .tab-button {
           flex: 1;
           min-width: 120px;
-          background: transparent; /* Cleaner look */
-          border: 1px solid transparent; /* No border by default */
+          background: transparent;
+          border: 1px solid transparent;
           padding: 12px 15px;
           border-radius: var(--radius-tab);
-          cursor: pointer; /* FIX: Was poPoppins */
+          cursor: pointer;
           font-size: 0.8em;
           font-weight: 600;
           text-align: center;
@@ -417,12 +402,11 @@
           align-items: center;
           gap: 5px;
           color: var(--text-secondary);
-          /* --- NEW: Subtle pressed look --- */
           box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .tab-button i {
-          font-size: 1.4em; /* MODIFIED: Was 1.2em */
+          font-size: 1.4em;
         }
 
         .tab-button.active {
@@ -436,14 +420,12 @@
           background: var(--bg-card);
           color: var(--text-primary);
           transform: translateY(-2px);
-          /* MODIFIED: Ensure we replace the inset shadow */
           box-shadow: var(--shadow);
         }
 
         .tab-content {
           display: none;
           animation: fadeIn 0.5s var(--anim-bezier);
-          /* FIX: Ensure tab content has correct background in dark mode */
           background: var(--bg-primary);
         }
 
@@ -478,7 +460,7 @@
         }
 
         .section h2 {
-          font-size: 1.25em; /* MODIFIED: Was 1.3em */
+          font-size: 1.25em;
           font-weight: 600;
           margin-bottom: 12px;
           color: var(--text-primary);
@@ -497,11 +479,10 @@
             font-size: 1em;
             font-weight: 700;
             color: var(--primary-accent);
-            margin-top: 20px; /* Space above the heading */
-            margin-bottom: 5px; /* Space between heading and first card */
+            margin-top: 20px;
+            margin-bottom: 5px;
             padding-bottom: 5px;
             border-bottom: 2px solid var(--border-color);
-            /* Ensure it spans full width in the grid */
             grid-column: 1 / -1;
         }
 
@@ -515,13 +496,12 @@
           border: 1px solid var(--border-color);
           padding: 10px 15px;
           border-radius: var(--radius-card);
-          cursor: pointer; /* FIX: Was poPoppins */
+          cursor: pointer;
           font-size: 0.85em;
           font-weight: 600;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          /* REVERTED: Back to original transition */
           transition: all 0.3s var(--anim-bezier);
           box-shadow: var(--shadow-md);
         }
@@ -536,34 +516,28 @@
           border-color: var(--primary-accent);
         }
 
-                /* --- MODIFIED: Corrected grid animation --- */
         .disclaimer-content {
           display: grid;
           grid-template-rows: 0fr; /* Collapsed */
           overflow: hidden;
-          /* MODIFIED: Added border-color to the transition */
           transition: grid-template-rows 0.4s var(--anim-bezier), margin-top 0.4s var(--anim-bezier), border-color 0.4s var(--anim-bezier);
           background: var(--bg-secondary);
           border-radius: var(--radius-card);
           margin-top: 0;
-          /* MODIFIED: Border is transparent by default (fixes the "line") */
           border: 0px solid transparent;
         }
 
         .disclaimer-content.expanded {
           grid-template-rows: 1fr; /* Expanded */
           margin-top: 8px;
-          /* MODIFIED: Restore border-color only when expanded */
           border-color: var(--border-color);
         }
 
         
-        /* NEW: Wrapper for disclaimer content */
         .disclaimer-wrapper {
             overflow: hidden;
-            padding: 0px; /* Padding is now INSIDE the collapsible area */
+            padding: 0px;
         }
-        /* --- END MODIFICATION --- */
 
 
         .disclaimer-content.expanded + .disclaimer-toggle i:last-child {
@@ -575,19 +549,19 @@
         }
 
         .warning {
-          background: #fffbeb; /* Amber 50 */
-          border-left: 5px solid #f59e0b; /* Amber 500 */
+          background: #fffbeb;
+          border-left: 5px solid #f59e0b;
           padding: 12px;
           border-radius: 8px;
           font-size: 0.8em;
-          color: #b45309; /* Amber 700 */
+          color: #b45309;
           font-weight: 500;
         }
 
         body.dark-mode .warning {
-          background: #451a03; /* Amber 900 */
-          color: #fcd34d; /* Amber 300 */
-          border-left: 5px solid #f59e0b; /* Amber 500 */
+          background: #451a03;
+          color: #fcd34d;
+          border-left: 5px solid #f59e0b;
         }
 
         .input-group {
@@ -597,7 +571,6 @@
           margin-top: 10px;
         }
 
-        /* --- NEW: Group for Hb inputs --- */
         .hb-input-group {
           display: flex;
           gap: 8px;
@@ -633,19 +606,16 @@
           box-shadow: 0 0 0 3px var(--primary-accent-light);
         }
 
-        /* --- NEW: Weight Input w/ Toggle --- */
         .weight-input-container {
-          /* MODIFIED: Use grid to match the height container */
           display: grid;
-          grid-template-columns: 1fr auto; /* Input area, then button */
-          align-items: center; /* Keep vertical alignment */
+          grid-template-columns: 1fr auto;
+          align-items: center;
           gap: 8px;
         }
 
         .weight-input-container input {
-          /* MODIFIED: Assign to grid area 1 */
           grid-area: 1 / 1;
-          width: 100%; /* Fill the grid area */
+          width: 100%;
           min-width: 80px; 
         }
         .weight-input-container .unit-toggle-btn {
@@ -653,21 +623,18 @@
           height: 100%;
         }
 
-        /* --- START OF MODIFIED BUTTON STYLES --- */
         .unit-toggle-btn {
             display: flex;
             position: relative;
             background: var(--bg-primary);
             border: 2px solid var(--border-color);
-            /* --- FIX: Restore left border --- */
             border-left-width: 2px;
             height: 100%;
-            /* --- NEW: Make button rounded --- */
             border-radius: 50px;
             transition: all .25s var(--anim-bezier);
             flex-shrink: 0;
             padding: 4px;
-            width: 100px; /* Fixed width */
+            width: 100px;
             cursor: pointer;
             user-select: none;
         }
@@ -675,16 +642,14 @@
             border-color: var(--primary-accent);
             box-shadow: 0 0 0 3px var(--primary-accent-light);
             z-index: 2;
-            /* --- FIX: Removed border-left-width: 0 --- */
         }
         .unit-slider {
             position: absolute;
             top: 4px;
             bottom: 4px;
             left: 4px;
-            width: calc(50% - 4px); /* Space for the 4px padding */
+            width: calc(50% - 4px);
             background: var(--primary-accent);
-            /* --- NEW: Make slider rounded --- */
             border-radius: 50px;
             transition: left 0.3s var(--anim-bezier);
             z-index: 1;
@@ -709,28 +674,22 @@
             color: white;
         }
         body.dark-mode .unit-option.active {
-            color: var(--bg-primary); /* Dark text on light green button */
+            color: var(--bg-primary);
         }
-        /* --- END OF MODIFIED BUTTON STYLES --- */
 
-        /* --- END: Weight Input --- */
-
-        /* --- NEW: Height Input --- */
         .height-input-container {
             display: flex;
             align-items: center;
             gap: 8px;
-            /* Use a grid to layer the inputs for animation */
             display: grid;
-            grid-template-columns: 1fr auto; /* Input area, then button */
+            grid-template-columns: 1fr auto;
         }
         
-        /* This wrapper holds the layered inputs */
         .height-input-container > input,
         .height-input-container > .height-input-group {
-            grid-area: 1 / 1; /* Both inputs live in the first cell */
+            grid-area: 1 / 1;
             transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
-            width: 100%; /* Ensure they fill the cell */
+            width: 100%;
         }
 
         .height-input-group {
@@ -739,10 +698,9 @@
         }
 
         .height-input-group input {
-            width: 100%; /* Each input (ft, in) takes 50% of the group */
+            width: 100%;
         }
 
-        /* Default state: CM is visible, FT is hidden */
         .height-input-group {
             opacity: 0;
             transform: translateX(20px);
@@ -754,7 +712,6 @@
             pointer-events: auto;
         }
 
-        /* Active state: FT is visible, CM is hidden */
         .height-input-container.ft-active .height-input-group {
             opacity: 1;
             transform: translateX(0);
@@ -766,25 +723,21 @@
             pointer-events: none;
         }
         
-        /* The toggle button lives in the second cell */
         .height-input-container .unit-toggle-btn {
             grid-area: 1 / 2;
             height: 100%;
         }
         .height-input-container .unit-toggle-btn.lbs-active .unit-slider {
-            left: 50%; /* Re-use 'lbs-active' class name, it's fine */
+            left: 50%;
         }
-        /* --- END: Height Input --- */
 
-        /* --- NEW: BMI Status Badge in Weight Input --- */
         .input-with-status-wrapper {
             position: relative;
             width: 100%;
             height: 100%;
-            grid-area: 1 / 1; /* Takes the input's grid spot */
+            grid-area: 1 / 1;
         }
         .input-with-status-wrapper input {
-            /* Ensure input fills the wrapper and has padding for the badge */
             width: 100%;
             height: 100%;
             padding-right: 95px; /* Space for the badge */
@@ -792,7 +745,7 @@
         .weight-bmi-status {
             position: absolute;
             top: 50%;
-            right: 8px; /* Padding from the right edge */
+            right: 8px;
             transform: translateY(-50%);
             font-size: 0.75em;
             font-weight: 700;
@@ -801,11 +754,10 @@
             padding: 3px 6px;
             border-radius: 5px;
             border: 1px solid var(--border-color);
-            display: none; /* Hidden by default */
-            pointer-events: none; /* So it doesn't block typing */
+            display: none;
+            pointer-events: none;
             white-space: nowrap;
         }
-        /* --- END: BMI Status Badge --- */
 
         .info-box {
           background: var(--bg-secondary);
@@ -879,7 +831,6 @@
         }
        .drug-card.dose-limit-exceeded {
             z-index: 20;
-            /* MODIFIED: Corrected variable name */
             border-left-color: var(--reversal) !important;
             box-shadow: 0 0 15px -3px var(--reversal);
             border-color: var(--reversal);
@@ -890,7 +841,6 @@
           background: var(--bg-card);
         }
 
-        /* Drug Category Borders */
         .drug-card.induction { border-left-color: var(--induction) }
         .drug-card.muscle-relaxant { border-left-color: var(--muscle-relaxant) }
         .drug-card.analgesic { border-left-color: var(--analgesic) }
@@ -906,10 +856,10 @@
             .drug-header {
           display: flex;
           justify-content: space-between;
-          align-items: center; /* MODIFIED */
-          cursor: pointer; /* FIX: Was poPoppins */
+          align-items: center;
+          cursor: pointer;
           user-select: none;
-          flex-direction: row; /* MODIFIED */
+          flex-direction: row;
           gap: 5px;
         }
 
@@ -920,16 +870,15 @@
 
         .drug-name {
           font-weight: 700;
-          font-size: 1.05em; /* MODIFIED: Was 1.1em */
+          font-size: 1.05em;
           color: var(--text-primary);
           display: flex;
           align-items: center;
         }
         .toggle-icon {
           font-size: 1em;
-          margin-right: 8px; /* Increased margin */
+          margin-right: 8px;
           transform: rotate(0deg);
-          /* MODIFIED: Changed to a smoother, standard ease-out */
           transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
           will-change: transform;
           color: var(--primary-accent);
@@ -939,60 +888,50 @@
           transform: rotate(90deg);
         }
 
-        /* --- FIX: Reverted to the more reliable 'grid' animation --- */
         .drug-details {
-          display: grid; /* <-- RESTORED */
-          grid-template-rows: 0fr; /* <-- RESTORED */
-          max-height: none; /* <-- CHANGED */
+          display: grid;
+          grid-template-rows: 0fr;
+          max-height: none;
           overflow: hidden;
-          transition: grid-template-rows 0.35s var(--anim-bezier); /* <-- CHANGED */
-          will-change: grid-template-rows; /* <-- CHANGED */
+          transition: grid-template-rows 0.35s var(--anim-bezier);
+          will-change: grid-template-rows;
         }
 
         .drug-card.expanded .drug-details {
-          grid-template-rows: 1fr; /* <-- RESTORED */
-          max-height: none; /* <-- REMOVED */
+          grid-template-rows: 1fr;
+          max-height: none;
         }
 
-        /* --- NEW: Animate content on expand --- */
         .drug-card.expanded .drug-details > .details-wrapper,
         .drug-card.expanded .infusion-details > .details-wrapper,
         .drug-card.expanded .antibiotic-details > .details-wrapper {
             opacity: 1;
             transform: translateY(0);
-            /* Delay animation until grid starts opening */
-            /* transition-delay: 0.1s; */ /* <-- REMOVED to eliminate pause */
         }
         
-        /* NEW: Wrapper for details content */
         .details-wrapper {
             overflow: hidden;
-            /* Padding is applied to specific wrappers below */
         }
 
-        /* NEW: Add padding to the inner wrapper */
         .drug-details > .details-wrapper {
             padding-top: 12px;
-            /* --- NEW: Smooth Animation --- */
             opacity: 0;
             transform: translateY(-10px);
             transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
             will-change: opacity, transform;
         }
-        /* --- END MODIFICATION --- */
 
 
         .drug-category {
           font-size: 0.65em;
           padding: 4px 8px;
           border-radius: 20px;
-          color: #fff; /* Default white text */
-          font-weight: 700; /* Bolder */
+          color: #fff;
+          font-weight: 700;
           text-transform: uppercase;
           letter-spacing: .5px;
           background-color: var(--border-color);
         }
-        /* Drug Category Backgrounds */
         .drug-category.induction { background-color: var(--induction); }
         .drug-category.muscle-relaxant { background-color: var(--muscle-relaxant); }
         .drug-category.analgesic { background-color: var(--analgesic); }
@@ -1005,8 +944,7 @@
         .drug-category.infusion { background-color: var(--infusion); }
         .drug-category.antibiotic { background-color: var(--antibiotic); }
 
-        /* Text color adjustments for light backgrounds */
-        .drug-category.antiemetic, body.dark-mode .drug-category.emergency {
+        body.dark-mode .drug-category.emergency {
             color: #000;
         }
 
@@ -1018,19 +956,19 @@
         }
 
         .caution-icon {
-          display: inline-flex; /* Use flex for centering */
+          display: inline-flex;
           align-items: center;
           justify-content: center;
-          width: 18px; /* Slightly larger */
-          height: 18px; /* Slightly larger */
+          width: 18px;
+          height: 18px;
           line-height: 18px;
           text-align: center;
           border-radius: 50%;
           background-color: var(--caution-color);
           color: #000;
           font-weight: bold;
-          font-size: .7em; /* Larger icon font */
-          cursor: pointer; /* FIX: Was poPoppins */
+          font-size: .7em;
+          cursor: pointer;
           margin-left: 8px;
           flex-shrink: 0;
           align-self: flex-start;
@@ -1040,22 +978,21 @@
             transform: scale(1.2);
         }
     .dose-limit-exceeded .caution-icon {
-            /* MODIFIED: Corrected variable name */
             background-color: var(--reversal);
-            color: white; /* Make the 'i' white for contrast */
+            color: white;
         }
         .caution-popup {
           display: none;
           position: absolute;
           z-index: 30;
-          padding: 10px; /* More padding */
-          background: var(--bg-card); /* Use card bg */
+          padding: 10px;
+          background: var(--bg-card);
           color: var(--text-primary);
           border: 1px solid var(--caution-color);
-          border-radius: 8px; /* Rounded */
+          border-radius: 8px;
           box-shadow: var(--shadow-hover);
           width: 220px;
-          font-size: .75em; /* More readable */
+          font-size: .75em;
           top: 12px;
           right: 12px;
           white-space: normal;
@@ -1065,41 +1002,35 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            flex-shrink: 0; /* Prevent it from shrinking */
+            flex-shrink: 0;
         }
 
             .drug-dose-preview {
             font-weight: 700;
             font-size: 0.9em;
-            /* The color is set by the inline style from JS */
             color: var(--primary-accent);
             padding: 3px 8px;
             border-radius: 6px;
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier); /* MODIFIED: Simplified transition */
+            transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
             white-space: nowrap;
             opacity: 1;
-            /* MODIFIED: Added transform */
             transform: scale(1);
             max-width: 150px;
             overflow: hidden;
         }
 
 
-            /* Hide the preview when the card is expanded */
-        /* MODIFIED: Simplified rule */
         .drug-card.expanded .drug-dose-preview {
             opacity: 0;
-            transform: scale(0.8); /* Shrink it */
+            transform: scale(0.8);
         }
 
-
-        /* Make sure drug name doesn't get too wide */
         .drug-name {
-            flex: 1; /* Allow it to take space */
-            min-width: 0; /* Allow it to shrink */
-            margin-right: 5px; /* Add gap */
+            flex: 1;
+            min-width: 0;
+            margin-right: 5px;
         }
 
         @keyframes popIn {
@@ -1122,7 +1053,7 @@
         }
 
         .calculation {
-          background: var(--bg-primary); /* Use primary bg for contrast */
+          background: var(--bg-primary);
           padding: 10px;
           border-radius: var(--radius-input);
           margin-top: 8px;
@@ -1132,7 +1063,7 @@
         .calculation-result {
           font-weight: 800;
           font-size: 1.2em;
-          color: var(--primary-accent); /* Use primary accent */
+          color: var(--primary-accent);
         }
 
         body.dark-mode .calculation-result {
@@ -1140,7 +1071,7 @@
         }
         
         .calculation-result .dose-limit-applied {
-            color: var(--reversal); /* Keep limit red */
+            color: var(--reversal);
         }
 
         .volume-result {
@@ -1150,13 +1081,12 @@
           font-weight: 500;
         }
 
-        /* Base button style */
         .edit-btn, .memory-btn, .saved-item-btn, .infusion-rate-btn, .expand-all-btn {
             padding: 8px 16px;
             border-radius: 50px;
             font-size: .8em;
             font-weight: 600;
-            cursor: pointer; /* FIX: Was poPoppins */
+            cursor: pointer;
             transition: all .25s var(--anim-bezier);
             border: 2px solid transparent;
             text-decoration: none;
@@ -1165,7 +1095,6 @@
             justify-content: center;
             gap: 8px;
         }
-
         .edit-btn:hover, .memory-btn:hover, .saved-item-btn:hover, .infusion-rate-btn:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
@@ -1175,8 +1104,7 @@
             transform: translateY(0px);
             box-shadow: var(--shadow);
         }
-		/* Primary button style (edit, memory) */
-        .edit-btn, .memory-btn {
+		.edit-btn, .memory-btn {
             background: transparent;
             border-color: var(--primary-accent);
             color: var(--primary-accent);
@@ -1185,11 +1113,10 @@
 
         .edit-btn:hover, .memory-btn:hover {
             background: var(--primary-accent);
-            color: var(--bg-card); /* White/dark bg */
+            color: var(--bg-card);
             box-shadow: 0 4px 10px var(--primary-accent-light);
         }
 
-        /* Special for "Update" button inside edit pane */
         .edit-actions .edit-btn {
             margin-top: 0;
             background: var(--primary-accent);
@@ -1199,7 +1126,6 @@
             background: var(--primary-accent-dark);
         }
 
-        /* Reset/Warning button */
         .edit-btn.reset-btn, .memory-btn.warning {
             color: var(--reset-color);
             border-color: var(--reset-color);
@@ -1212,7 +1138,6 @@
             box-shadow: 0 4px 10px rgba(239, 68, 68, .3);
         }
 
-        /* Secondary button */
         .memory-btn.secondary {
           background: transparent;
           color: var(--text-secondary);
@@ -1225,7 +1150,6 @@
           border-color: var(--text-secondary);
         }
 
-        /* Infusion Rate CTA */
         .infusion-rate-btn {
             background: var(--primary-accent);
             color: var(--bg-card);
@@ -1241,32 +1165,27 @@
             background: var(--primary-accent-dark);
         }
 
-        /* --- MODIFIED: Corrected grid animation --- */
         .edit-inputs {
           display: grid;
-          grid-template-rows: 0fr; /* Collapsed */
+          grid-template-rows: 0fr;
           overflow: hidden;
           transition: grid-template-rows 0.4s var(--anim-bezier), margin-top 0.4s var(--anim-bezier);
           margin-top: 0;
         }
 
         .edit-inputs.active {
-          grid-template-rows: 1fr; /* Expanded */
+          grid-template-rows: 1fr;
           margin-top: 10px;
         }
         
-        /* NEW: Wrapper for edit content */
         .edit-inputs-wrapper {
-            overflow: hidden; /* This is the key */
+            overflow: hidden;
         }
         
-        /* NEW: Add padding to the inner wrapper */
         .edit-inputs > .edit-inputs-wrapper {
-            min-width: 0; /* Fix for grid blowout */
+            min-width: 0;
         }
-        /* --- END MODIFICATION --- */
         
-        /* NEW: Inner wrapper for .edit-inputs content */
         .edit-inputs-content {
             padding: 10px;
             background: var(--bg-primary);
@@ -1314,7 +1233,7 @@
             border: 1px solid var(--border-color);
             border-radius: 5px;
             font-size: 0.8em;
-            background: var(--bg-secondary); /* White/darker bg */
+            background: var(--bg-secondary);
             color: var(--text-primary);
         }
 		.edit-input-field input:focus {
@@ -1343,7 +1262,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
+            flex-wrap: wrap;
         }
 
         .infusion-dilution-input label {
@@ -1352,7 +1271,7 @@
             font-weight: 600;
             margin-bottom: 4px;
             display: block;
-            width: 100%; /* Full width label */
+            width: 100%;
         }
 
         .infusion-dilution-input .input-wrapper {
@@ -1377,17 +1296,17 @@
             font-size: 0.8em;
             background: var(--bg-secondary);
             color: var(--text-primary);
-            font-family: 'Poppins', sans-serif;
-            height: 30px; /* Match input height */
-            margin-top: auto; /* Align with bottom of inputs */
+            font-family: 'Manrope', sans-serif;
+            height: 30px;
+            margin-top: auto;
         }
 
         .infusion-dilution-input .separator {
             font-size: 0.8em;
             color: var(--text-secondary);
             font-weight: 600;
-            align-self: flex-end; /* Align with bottom of inputs */
-            padding-bottom: 6px; /* Adjust alignment */
+            align-self: flex-end;
+            padding-bottom: 6px;
         }
 
         .route-selector, .indication-selector {
@@ -1406,13 +1325,13 @@
         .route-selector label, .indication-selector label {
           display: flex;
           align-items: center;
-          cursor: pointer; /* FIX: Was poPoppins */
+          cursor: pointer;
           font-size: 0.75em;
           color: var(--text-secondary);
           font-weight: 600;
-          padding: 6px 12px; /* More padding */
+          padding: 6px 12px;
           border-radius: 50px;
-          background: var(--bg-primary); /* Use primary bg */
+          background: var(--bg-primary);
           border: 1px solid var(--border-color);
           transition: all 0.2s var(--anim-bezier);
         }
@@ -1421,7 +1340,6 @@
           display: none;
         }
 
-        /* Focus visible state for accessibility */
         .route-selector input[type="radio"]:focus-visible + label,
         .indication-selector input[type="radio"]:focus-visible + label {
             outline: 2px solid var(--primary-accent);
@@ -1539,7 +1457,7 @@
         .la-max-dose {
           font-weight: 800;
           font-size: 1.1em;
-          color: var(--reversal); /* Keep this red for danger */
+          color: var(--reversal);
           text-align: right;
         }
 
@@ -1551,34 +1469,30 @@
           line-height: 1.3;
         }
 
-        /* --- FIX: Reverted to the more reliable 'grid' animation --- */
         .infusion-details, .antibiotic-details {
-          display: grid; /* <-- RESTORED */
-          grid-template-rows: 0fr; /* <-- RESTORED */
-          max-height: none; /* <-- CHANGED */
+          display: grid;
+          grid-template-rows: 0fr;
+          max-height: none;
           overflow: hidden;
-          transition: grid-template-rows 0.35s var(--anim-bezier); /* <-- CHANGED */
-          will-change: grid-template-rows; /* <-- CHANGED */
+          transition: grid-template-rows 0.35s var(--anim-bezier);
+          will-change: grid-template-rows;
         }
         
         .drug-card.expanded .infusion-details,
         .drug-card.expanded .antibiotic-details {
-            grid-template-rows: 1fr; /* <-- RESTORED */
-            max-height: none; /* <-- REMOVED */
+            grid-template-rows: 1fr;
+            max-height: none;
         }
         
-        /* NEW: Add padding to the inner wrapper */
         .infusion-details > .details-wrapper,
         .antibiotic-details > .details-wrapper {
             overflow: hidden;
             padding-top: 12px;
-            /* --- NEW: Smooth Animation --- */
             opacity: 0;
             transform: translateY(-10px);
             transition: opacity 0.3s var(--anim-bezier), transform 0.3s var(--anim-bezier);
             will-change: opacity, transform;
         }
-        /* --- END MODIFICATION --- */
 
 
         .infusion-detail-row, .antibiotic-detail-row {
@@ -1615,32 +1529,27 @@
           color: var(--text-secondary);
           font-style: italic;
           margin-top: 3px;
-          grid-column: 1 / -1; /* Make note span full width */
+          grid-column: 1 / -1;
         }
 
-        /* --- NEW: Favorites --- */
         .favorite-toggle-btn {
-          color: var(--border-color); /* Default: empty star */
+          color: var(--border-color);
           font-size: 1.1em;
           margin-right: 10px;
           cursor: pointer;
           transition: all 0.3s var(--anim-bezier);
-          vertical-align: middle; /* Align with text */
+          vertical-align: middle;
         }
 
-        /* --- MODIFIED for mobile touch fix --- */
-        /* Apply hover effects ONLY on devices that can actually hover (like a mouse) */
         @media (hover: hover) and (pointer: fine) {
           .favorite-toggle-btn:hover {
-            color: #f59e0b; /* Amber 500 */
+            color: #f59e0b;
             transform: scale(1.2);
           }
         }
-        /* On touch devices, this rule will not apply, 
-           preventing the "sticky hover" bug. */
 
         .favorite-toggle-btn.favorited {
-          color: #f59e0b; /* Amber 500 */
+          color: #f59e0b;
           text-shadow: 0 0 10px var(--caution-color);
         }
         
@@ -1688,7 +1597,6 @@
         body.dark-mode .favorites-filter-toggle.active {
             color: #000;
         }
-        /* --- END: Favorites --- */
 
         footer {
           text-align: center;
@@ -1872,7 +1780,7 @@
           }
 
           .drugs-grid {
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Slightly wider */
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 15px;
           }
 
@@ -1897,121 +1805,96 @@
             min-width: 150px;
             flex-direction: row;
             justify-content: center;
-            font-size: 0.9em; /* Slightly larger tab text */
+            font-size: 0.9em;
           }
 
           .tab-button i {
-            font-size: 1.1em; /* MODIFIED: Was 1em */
+            font-size: 1.1em;
             margin-right: 8px;
           }
         }
 
         @media (max-width: 480px) {
           .tab-button {
-            min-width: 90px; /* Tighter */
-            padding: 8px 6px; /* Less padding */
+            min-width: 90px;
+            padding: 8px 6px;
             font-size: 0.7em;
-            gap: 3px; /* Reduce gap between icon and text */
+            gap: 3px;
           }
-    /* --- ADD THESE NEW RULES --- */
-
-          /* Hide the category text on mobile, the color border is enough */
           .drug-header-right-group .drug-category {
               display: none;
           }
 
-          /* Make the preview dose slightly smaller */
           .drug-dose-preview {
-              font-size: 0.75em; /* Slightly smaller */
-              padding: 2px 5px; /* Tighter */
+              font-size: 0.75em;
+              padding: 2px 5px;
           }
 
-          /* --- END OF ADDED RULES --- */
-
-          /* --- NEW COMPACT RULES --- */
           .drug-card {
-            padding: 8px; /* MODIFIED: Was 10px */
+            padding: 8px;
           }
           .drug-name {
-            font-size: 1.0em; /* Was 1.05em default */
+            font-size: 1.0em;
           }
           .calculation-result {
-            font-size: 1.1em; /* Was 1.2em default */
+            font-size: 1.1em;
           }
           .volume-result, .dose-info {
-            font-size: 0.75em; /* Was 0.8em / 0.75em */
-            margin-top: 2px; /* Tighter */
+            font-size: 0.75em;
+            margin-top: 2px;
           }
           .equipment-card {
-            padding: 10px; /* Was 12px */
+            padding: 10px;
           }
           .equipment-value {
-            font-size: 1.25em; /* Was 1.4em */
+            font-size: 1.25em;
           }
           .equipment-title {
-            font-size: 0.8em; /* Was 0.85em */
+            font-size: 0.8em;
           }
-          /* --- END COMPACT RULES --- */
-
-          /* --- START: ADDED COMPACT RULES --- */
           .drugs-grid {
-            gap: 8px; /* Was 12px */
+            gap: 8px;
           }
-          /* Make the pill-buttons for routes smaller */
           .route-selector {
-            gap: 5px; /* Was 8px */
-            margin-bottom: 8px; /* Was 12px */
+            gap: 5px;
+            margin-bottom: 8px;
           }
           .route-selector label {
-            padding: 4px 10px; /* Was 6px 12px */
-            font-size: 0.7em; /* Was 0.75em */
+            padding: 4px 10px;
+            font-size: 0.7em;
           }
-          /* Tighten up the calculation box */
           .calculation {
-            padding: 8px; /* Was 10px */
-            margin-top: 5px; /* Was 8px */
+            padding: 8px;
+            margin-top: 5px;
           }
-          /* Tighten the Infusion edit pane */
           .infusion-edit-pane {
-            padding: 8px; /* Was 10px */
-            gap: 8px; /* Was 12px */
+            padding: 8px;
+            gap: 8px;
           }
           .infusion-dilution-input .input-wrapper input {
-            padding: 4px; /* Was 6px */
+            padding: 4px;
           }
-          /* --- END: ADDED COMPACT RULES --- */
 
-
-          /* --- ADD THIS NEW RULE --- */
           input[type="number"], input[type="text"], textarea, input[type="search"] {
               font-size: 16px !important; /* Prevent iOS zoom */
           }
-          /* --- END OF ADDED RULE --- */
 
           .memory-input {
             min-width: 100%;
           }
 
-          /* --- REPLACE OR ADD THIS RULE --- */
           header::before {
-            /* MODIFIED: Make the shine even brighter (0.3 opacity) and sharper (60%) */
             background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%);
-
-            /* MODIFIED: Speed up the animation duration for mobile */
             animation-duration: 2.5s;
           }
         
-          /* --- END OF RULE --- */
-
-          /* --- NEW --- */
           .header-controls {
-            flex-wrap: wrap; /* Allow controls to wrap */
+            flex-wrap: wrap;
             justify-content: flex-end;
-            flex-grow: 1; /* Allow them to take remaining space */
+            flex-grow: 1;
             gap: 8px;
           }
           .font-size-control {
-            /* Ensure it doesn't get too small */
             padding: 2px;
           }
           .font-adjust-btn {
@@ -2021,26 +1904,46 @@
           .dark-mode-toggle {
             padding: 6px 12px;
             font-size: 0.7em;
-            min-width: 100px; /* Smaller min-width */
+            min-width: 100px;
           }
           h1 {
-            font-size: 1.15em; /* Slightly smaller */
+            font-size: 1.15em;
           }
 
         }
     </style>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P5H9YSJRSF"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
 
-        gtag('config', 'G-P5H9YSJRSF');
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Pediatric Anesthesia Calculator",
+      "operatingSystem": "Web Browser, iOS, Android",
+      "applicationCategory": "MedicalApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+          "@type": "Person",
+          "name": "Dr. Kiran Raj",
+          "jobTitle": "Anesthesiologist"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "124",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "featureList": "Pediatric Drug Dosage, PALS Emergency Algorithms, Airway Equipment Sizing, Fluid Maintenance (4-2-1), LAST Protocol",
+      "audience": {
+        "@type": "MedicalAudience",
+        "audienceType": "Clinician"
+      }
+    }
     </script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6062360145892080"
-     crossorigin="anonymous"></script>
-
 </head>
 
 <body>
@@ -2062,6 +1965,8 @@
             </button>
         </div>
     </header>
+
+ 
 
     <div class="disclaimer-container">
         <div class="disclaimer-toggle" onclick="toggleDisclaimer()">
@@ -2402,7 +2307,35 @@
 
 
             <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Estimated Blood Volume (EBV)</h3>
-                      <p>Historically, uncuffed tubes were preferred due to the belief that the cricoid cartilage provided a natural "cuff." However, modern, high-volume, low-pressure cuffed tubes are now widely used as they offer a more reliable seal, reduce anesthetic gas pollution, and may lower aspiration risk.</p>
+            <p>A child's blood volume (in mL/kg) is higher than an adult's (65-70 mL/kg) and varies significantly with age. This is critical for estimating MABL.</p>
+            <div class="la-results-container" style="margin-top: 5px;">
+                <div class="la-result-row"><div class="la-name">Premature Neonate</div><div class="la-max-dose" style="color: var(--text-primary);">90-100 <span class="la-detail">mL/kg</span></div></div>
+                <div class="la-result-row"><div class="la-name">Full-Term Neonate (&lt;1m)</div><div class="la-max-dose" style="color: var(--text-primary);">80-90 <span class="la-detail">mL/kg</span></div></div>
+                <div class="la-result-row"><div class="la-name">Infant (1m - 1y)</div><div class="la-max-dose" style="color: var(--text-primary);">75-80 <span class="la-detail">mL/kg</span></div></div>
+                <div class="la-result-row"><div class="la-name">Child (&gt;1y)</div><div class="la-max-dose" style="color: var(--text-primary);">70-75 <span class="la-detail">mL/kg</span></div></div>
+                <div class="la-result-row"><div class="la-name">Adult</div><div class="la-max-dose" style="color: var(--text-primary);">65-70 <span class="la-detail">mL/kg</span></div></div>
+            </div>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Maximum Allowable Blood Loss (MABL)</h3>
+            <p>This formula estimates the volume of blood loss (in mL) that can be tolerated before the patient's hemoglobin (Hb) reaches a pre-determined "target" level, often 8-10 g/dL. This calculator uses the initial Hb (Current Hb) for this formula.</p>
+            <div class="calculation" style="margin-top: 5px; text-align: center; padding: 15px; font-size: 1.1em; font-weight: 600; color: var(--text-primary); background: var(--bg-primary);">
+                MABL (mL) = EBV × (Initial Hb - Target Hb) ÷ Initial Hb
+            </div>
+            <div class="info-box" style="margin-top: 10px;">
+                <strong>Example for a 25 kg child (EBV ≈1875 mL, Initial Hb=14, Target Hb=10):</strong><br>
+                MABL = 1875 × (14 - 10) ÷ 14<br>
+                MABL = 1875 × 4 ÷ 14 = <strong>535 mL</strong>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-wind"></i> Airway Management Formulas</h2>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 10px; margin-bottom: 5px;">Endotracheal Tube (ETT) Sizing (Age &gt; 1 Year)</h3>
+            <p>ETT size is based on the internal diameter (ID) in millimeters. Formulas provide an estimate; the correct size must be confirmed by assessing for an audible air leak around the tube.</p>
+            <p style="margin-top: 5px;">
+                Historically, uncuffed tubes were preferred due to the belief that the cricoid cartilage provided a natural "cuff." However, modern, high-volume, low-pressure cuffed tubes are now widely used as they offer a more reliable seal, reduce anesthetic gas pollution, and may lower aspiration risk.
+            </p>
             <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
                 <li><strong>Uncuffed ETT Size (Cole's Formula):</strong> (Age in years ÷ 4) + 4</li>
                 <li><strong>Cuffed ETT Size:</strong> (Age in years ÷ 4) + 3.5 (or 0.5 mm smaller than uncuffed)</li>
@@ -2412,7 +2345,7 @@
             <p>These are estimates. Tube placement <strong>must</strong> always be confirmed clinically (bilateral breath sounds, chest rise) and with end-tidal capnography.</p>
             <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
                 <li><strong>For Neonates:</strong> Weight (kg) + 6 = Depth (cm at lip)</li>
-                <li><strong>For Children (>1 year):</strong> ETT Internal Diameter (mm) × 3 = Depth (cm at lip)</li>
+                <li><strong>For Children (&gt;1 year):</strong> ETT Internal Diameter (mm) × 3 = Depth (cm at lip)</li>
             </ul>
 
             <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Supraglottic Airway (LMA/i-gel) Sizing</h3>
@@ -2483,11 +2416,33 @@
             </ul>
         </section>
     </div>
-    <footer>
-        <p style="font-size: 0.8em; color: var(--text-tertiary); margin-bottom: 8px; padding: 0 10px;">
-            *BMI-for-age categories are based on a simplified model of the CDC growth charts. For definitive clinical assessment, please consult the official CDC website.
+    
+    <section class="seo-content" style="padding: 20px 15px; background: var(--bg-card); margin-top: 20px; border-top: 1px solid var(--border-color);">
+        <h2 style="font-size: 1.1em; color: var(--primary-accent); margin-bottom: 10px;">About the Pedi Calc Tool</h2>
+        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6;">
+            This pediatric anesthesia calculator assists clinicians in rapidly determining weight-based interventions. By standardizing calculations for airway equipment, fluid management (4-2-1 rule), and PALS emergency algorithms, it aims to reduce cognitive load during critical perioperative moments.
         </p>
-        <a href="https://www.t.me/utopiccc">Ⓡ︎2025 Dr. Kiranraj</a>
+
+        <h3 style="font-size: 1em; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">How to Use This Calculator</h3>
+        <ol style="font-size: 0.9em; color: var(--text-secondary); margin-left: 20px; line-height: 1.6; margin-bottom: 15px;">
+            <li style="margin-bottom: 5px;"><strong>Input Patient Data:</strong> Enter the patient's Age and Weight in the 'Patient Info' tab. This triggers the automatic calculation of all parameters.</li>
+            <li style="margin-bottom: 5px;"><strong>Review Safety:</strong> Check the sticky header for real-time BMI and BSA calculations to ensure data accuracy.</li>
+            <li style="margin-bottom: 5px;"><strong>Navigate & Search:</strong> Use the tabs to switch between Airway, Drugs, and Infusions. Use the search bar to find specific medications (e.g., "Fentanyl") instantly.</li>
+            <li style="margin-bottom: 5px;"><strong>Customization:</strong> Tap the "Edit" button on any drug card to modify the standard dose or concentration for your specific institutional protocols.</li>
+        </ol>
+        
+        <p style="font-size: 0.8em; margin-top: 15px; color: var(--text-tertiary); border-top: 1px dashed var(--border-color); padding-top: 10px;">
+            <em>*BMI-for-age categories are based on a simplified model of CDC growth charts. For definitive clinical assessment, please consult official sources.</em>
+        </p>
+    </section>
+
+    <footer style="background: var(--bg-primary); padding: 20px; text-align: center; border-top: 1px solid var(--border-color);">
+        <div style="margin-bottom: 10px;">
+            <a href="https://www.t.me/utopiccc" style="margin-right: 15px; text-decoration: none; color: var(--text-secondary); font-weight: 600;">&copy; 2025 Dr. Kiranraj</a>
+            <a href="https://sites.google.com/view/pedicalcprivacypolicy" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Privacy Policy</a>
+            <span style="margin: 0 10px; color: var(--border-color);">|</span>
+            <a href="mailto:kiranraj120@gmail.com" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Contact</a>
+        </div>
     </footer>
 </div>
 
@@ -2498,26 +2453,20 @@
     let allAntibioticsExpanded = false;
     let activeEditIndex = null;
     let antibioticExpanded = [];
-    let currentBaseDeficit = 0; // <-- NEW: Store base deficit globally
+    let currentBaseDeficit = 0;
     let showFavoritesOnly = false;
     
-    // --- NEW: Weight Unit ---
     let currentWeightUnit = 'kg'; // 'kg' or 'lbs'
     const KG_TO_LBS = 2.20462;
-    // --- END: Weight Unit ---
 
-    // --- NEW: Height Unit ---
     let currentHeightUnit = 'cm'; // 'cm' or 'ft'
     const CM_TO_IN = 0.393701;
     const IN_TO_CM = 2.54;
     const FT_TO_CM = 30.48;
-    // --- END: Height Unit ---
 
-    // --- NEW: Font Size ---
-    const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16]; // Base is 14px
+    const FONT_SIZE_STEPS_PX = [12, 13, 14, 15, 16];
     let currentFontSizeIndex = 2; // Default index for 14px
     
-    // --- NEW: Debounce Utility Function ---
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -2530,7 +2479,6 @@
       };
     }
     
-    // --- NEW: Debounced Calculation Functions ---
     const debouncedCalculateAll = debounce(calculateAll, 250);
     const debouncedClampAndCalculate = debounce(clampAgeAndCalculate, 250);
 
@@ -2542,18 +2490,14 @@
       let visibleCategories = new Set();
       
       drugCards.forEach((card, index) => {
-        // Find the drug in the *original* array by its card ID's index
         const originalIndex = parseInt(card.id.split('-')[2], 10);
         const drug = drugs[originalIndex]; 
         if (!drug) return;
 
-        // --- NEW FAVORITES LOGIC ---
-        // If showFavoritesOnly is on and this drug is NOT a favorite, hide it.
         if (showFavoritesOnly && !drug.isFavorite) {
             card.style.display = 'none';
-            return; // Skip to next card
+            return;
         }
-        // --- END NEW LOGIC ---
 
         const drugName = drug.name.toLowerCase();
         const drugCategory = drug.categoryLabel.toLowerCase();
@@ -2567,7 +2511,6 @@
         }
       });
 
-      // Show/hide category headings
       categoryHeadings.forEach(heading => {
         const categoryName = heading.textContent;
         if (visibleCategories.has(categoryName)) {
@@ -2614,8 +2557,6 @@
       { name:'Hydrocortisone', category:'steroid', categoryLabel:'Steroid', defaultDose:1, unit:'mg/kg', concentration:50, concentrationUnit:'mg/mL', useParam:'weight', range:'1-2 mg/kg', defaultRoute:'IV' },
       { name:'Ondansetron', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.1, unit:'mg/kg', concentration:2, concentrationUnit:'mg/mL', useParam:'weight', range:'0.05-0.15 mg/kg (max 8mg)', maxDose:8, defaultRoute:'IV' },
       { name:'Metoclopramide', category:'antiemetic', categoryLabel:'Antiemetic', defaultDose:0.15, unit:'mg/kg', concentration:5, concentrationUnit:'mg/mL', useParam:'weight', range:'0.1-0.2 mg/kg (max 10mg)', maxDose:10, defaultRoute:'IV' },
-	  // --- NEW DRUGS TO ADD TO THE 'drugs' ARRAY ---
-
     {
       name: 'Ibuprofen',
       category: 'analgesic',
@@ -2629,7 +2570,7 @@
       caution: 'Contraindicated < 3 months. Risk of renal impairment in dehydrated children. Give with food/milk.',
       routes: ['Oral'],
       defaultRoute: 'Oral',
-      ageMinMonths: 3, // 3 months
+      ageMinMonths: 3,
       notes: 'Common preparation: 100mg/5mL (20mg/mL). A 10 mg/kg dose is 0.5 mL/kg.'
     },
     {
@@ -2724,7 +2665,7 @@
       routes: ['IV'],
       defaultRoute: 'IV',
       notes: 'Emergency Bolus (no deficit): 1-2 mEq/kg. Calculated Dose (with deficit): 0.3 x Wt(kg) x Base Deficit.',
-      specialHandling: 'bicarbonate' // <-- This is the new flag
+      specialHandling: 'bicarbonate'
     },
     {
       name: 'Furosemide',
@@ -2805,17 +2746,15 @@
       notes: 'Ryanodex Reconstitution: 250mg vial + 5mL sterile water = 50 mg/mL.'
     }
 
-    // --- END OF NEW DRUGS ---
     ];
 
-    // Add custom value fields to all drugs
     drugs.forEach(drug => {
               drug.customDoseIV = null;
               drug.customDoseIM = null;
               drug.customDoseOral = null;
               drug.customConcentration = null;
-              drug.isExpanded = false; // <-- ADD THIS
-              drug.isFavorite = false; // <-- ADD THIS
+              drug.isExpanded = false;
+              drug.isFavorite = false;
             });
     const antibiotics = [
       { 
@@ -2969,8 +2908,8 @@
         defaultRoute: 'IV', 
         routes: ['IV'], 
         indications: [ 
-          { name: 'Standard Dose (Once Daily)', dose: 7.5, frequency: 'Q24H' }, // No maxPerDose, trough-driven
-          { name: 'Divided Dosing (Meningitis)', dose: 2.5, frequency: 'Q8H' }  // CORRECTED dose from 5 to 2.5. No maxPerDose.
+          { name: 'Standard Dose (Once Daily)', dose: 7.5, frequency: 'Q24H' },
+          { name: 'Divided Dosing (Meningitis)', dose: 2.5, frequency: 'Q8H' }
         ], 
         caution: 'NEPHROTOXIC and OTOTOXIC. Therapeutic drug monitoring (troughs) required, especially with divided dosing or impaired renal function.', 
         info: 'Common indications: Severe Gram-negative infections, sepsis, synergistic therapy for endocarditis.' 
@@ -3047,8 +2986,8 @@
         defaultRoute: 'IV', 
         routes: ['IV', 'IM'], 
         indications: [
-          { name: 'Sepsis/Severe Infection', dose: 75, frequency: 'Q24H', maxPerDose: 4000, note: 'Max daily dose: 4000mg/day.' }, // CORRECTED maxPerDose
-          { name: 'Meningitis', dose: 100, frequency: 'Q12H or Q24H', maxPerDose: 2000, note: 'Q12H dosing max 2g/dose. Max daily dose: 4000mg/day.' } // CORRECTED maxPerDose
+          { name: 'Sepsis/Severe Infection', dose: 75, frequency: 'Q24H', maxPerDose: 4000, note: 'Max daily dose: 4000mg/day.' },
+          { name: 'Meningitis', dose: 100, frequency: 'Q12H or Q24H', maxPerDose: 2000, note: 'Q12H dosing max 2g/dose. Max daily dose: 4000mg/day.' }
         ], 
         caution: '**CONTRAINDICATION: Do NOT co-administer with IV calcium in neonates (<28 days) due to risk of fatal precipitate.** Avoid in hyperbilirubinemic neonates.', 
         info: 'Commonly reconstituted 1g vial with 9.6mL sterile water to get 100mg/mL.' 
@@ -3066,8 +3005,8 @@
         defaultRoute: 'IV', 
         routes: ['IV', 'IM'], 
         indications: [
-          { name: 'Standard Dose (Once Daily)', dose: 15, frequency: 'Q24H' }, // No maxPerDose
-          { name: 'Neonatal Sepsis (Term)', dose: 15, frequency: 'Q24H' } // No maxPerDose
+          { name: 'Standard Dose (Once Daily)', dose: 15, frequency: 'Q24H' },
+          { name: 'Neonatal Sepsis (Term)', dose: 15, frequency: 'Q24H' }
         ], 
         caution: '**NEPHROTOXIC and OTOTOXIC.** Requires therapeutic drug monitoring (TDM). Adjust dose in renal impairment.', 
         info: 'Aminoglycoside. Common preps: 100mg/2mL (50mg/mL) or 500mg/2mL (250mg/mL). Neonatal dosing varies significantly by gestational/postnatal age.' 
@@ -3104,8 +3043,8 @@
         defaultRoute: 'Oral', 
         routes: ['Oral'], 
         indications: [
-          { name: 'Standard Dose (UTI/Otitis)', dose: 8, frequency: 'Q24H', maxPerDose: 400, note: 'Max daily dose: 400mg/day.' }, // CORRECTED
-          { name: 'Typhoid Fever', dose: 10, frequency: 'Q12H', maxPerDose: 200, note: 'Max daily dose: 400mg/day.' } // CORRECTED
+          { name: 'Standard Dose (UTI/Otitis)', dose: 8, frequency: 'Q24H', maxPerDose: 400, note: 'Max daily dose: 400mg/day.' },
+          { name: 'Typhoid Fever', dose: 10, frequency: 'Q12H', maxPerDose: 200, note: 'Max daily dose: 400mg/day.' }
         ], 
         caution: 'Hypersensitivity risk in penicillin-allergic patients. Not recommended for children < 6 months.', 
         ageMin: 0.5, 
@@ -3184,8 +3123,6 @@
         caution: 'POTENT VESICANT - Must use central line. Risk of peripheral and splanchnic ischemia. Monitor for limb perfusion and urine output.',
         notes: 'Standard prep: 5 units in 50 mL (0.1 units/mL). Dose range corresponds to 0.2 - 8 milliunits/kg/min. Not standard to use "mg" or "mcg" for dilution unit.'
       },
-	  // --- NEW DRUG TO ADD TO 'infusionDrugs' ARRAY ---
-
     {
       name: 'Salbutamol Infusion',
       category: 'infusion',
@@ -3213,7 +3150,6 @@
       notes: 'Standard prep: 5 mg in 50 mL (100 mcg/mL). For severe status asthmaticus unresponsive to nebulizers or for hyperkalemia.'
     }
 
-    // --- END OF NEW DRUG ---
   ];
   const localAnesthetics = [
       { name: 'Lignocaine (Plain)', maxDose: 4.5, unit: 'mg/kg', caution: 'Without epinephrine' },
@@ -3224,43 +3160,31 @@
 	  
     ];
 
-    // --- NEW: Favorite Functions ---
     function toggleFavorite(index) {
         const drug = drugs[index];
         if (!drug) return;
 
-        drug.isFavorite = !drug.isFavorite; // State is toggled
+        drug.isFavorite = !drug.isFavorite;
         saveFavorites();
 
-        // Animate the star
         const btn = document.getElementById(`fav-btn-${index}`);
         if (btn) {
             
-            // --- FIX FOR MOBILE RENDERING BUG ---
-            
-            // 1. Set the final style (remove 'favorited' if needed)
             if (drug.isFavorite) {
                 btn.classList.add('favorited');
             } else {
                 btn.classList.remove('favorited');
             }
 
-            // 2. Force a browser reflow (read a layout property)
-            // This ensures the class removal is "painted" before the animation starts.
             void btn.offsetWidth; 
 
-            // 3. Add the animation class
             btn.classList.add('pulse');
             
-            // 4. Remove the animation class after it finishes
             setTimeout(() => {
                 btn.classList.remove('pulse');
             }, 400);
-            // --- END FIX ---
         }
         
-        // If we are in "favorites only" mode AND we just unfavorited a drug,
-        // we need to re-run the filter to make it disappear.
         if (showFavoritesOnly && !drug.isFavorite) {
             filterDrugs();
         }
@@ -3280,7 +3204,6 @@
             }
         });
     }
-
     function toggleFavoritesFilter() {
         showFavoritesOnly = !showFavoritesOnly;
         
@@ -3292,7 +3215,6 @@
 
         filterDrugs(); // Re-run filter
     }
-    // --- END: Favorite Functions ---
 
     const dilutionTiers = {
       'Fentanyl': [50,10,5], 'Atropine': [0.6,0.1], 'Glycopyrrolate': [0.2,0.04],
@@ -3300,7 +3222,6 @@
       'Cisatracurium': [2,1,0.5], 'Adrenaline (Epinephrine) Anaphylaxis': [10,5]
     };
 
-    // Initialization/Route assignment
     drugs.forEach(drug => {
       if (drug.name === 'Ketorolac') { drug.routes = ['IV', 'IM', 'Oral']; drug.defaultRoute = 'IV'; }
       else { drug.routes = drug.defaultRoute ? [drug.defaultRoute] : ['IV']; if (drug.imDose !== undefined) drug.routes.push('IM'); if (drug.oralDose !== undefined) drug.routes.push('Oral'); }
@@ -3314,10 +3235,9 @@
       antibiotic.currentIndication = antibiotic.indications ? antibiotic.indications[0].name : 'Standard';
     });
 
-    // Store a copy of initial drug data
     const initialDrugs = JSON.parse(JSON.stringify(drugs.map(d => ({
         name: d.name,
-        defaultDose: d.defaultDose, // This is IV default
+        defaultDose: d.defaultDose,
         imDose: d.imDose,
         oralDose: d.oralDose,
         concentration: d.concentration
@@ -3330,12 +3250,10 @@
       
       let weightInKg = parseFloat(document.getElementById('weight').value) || 0;
       
-      // Convert weight to KG if input is in LBS
       if (currentWeightUnit === 'lbs' && weightInKg > 0) {
         weightInKg = weightInKg / KG_TO_LBS;
       }
       
-      // --- NEW: Read height and convert to CM ---
       let heightInCm = 0;
       if (currentHeightUnit === 'cm') {
         heightInCm = parseFloat(document.getElementById('height-cm').value) || 0;
@@ -3344,17 +3262,16 @@
         const inches = parseFloat(document.getElementById('height-in').value) || 0;
         heightInCm = (ft * FT_TO_CM) + (inches * IN_TO_CM);
       }
-      // --- END: Height ---
       
       const sex = document.getElementById('sex-male').checked ? 'male' : 'female';
       const totalAgeInMonths = (years * 12) + months;
 
       return {
         age: totalAge, ageYears: years, ageMonths: months,
-        totalAgeInMonths: totalAgeInMonths, // NEW: Age in months
-        sex: sex, // NEW: Patient sex
-        weight: weightInKg, // This value is NOW ALWAYS in KG
-        height: heightInCm, // This value is NOW ALWAYS in CM
+        totalAgeInMonths: totalAgeInMonths,
+        sex: sex,
+        weight: weightInKg,
+        height: heightInCm,
         currentHb: parseFloat(document.getElementById('currentHb').value) || 0,
         targetHb: parseFloat(document.getElementById('targetHb').value) || 0
       };
@@ -3389,11 +3306,9 @@
           case 'IV':
               return drug.customDoseIV !== null ? drug.customDoseIV : initialDrug.defaultDose;
           case 'IM':
-              // Use IM default if available, otherwise fall back to IV default
               const defaultIM = initialDrug.imDose !== undefined ? initialDrug.imDose : initialDrug.defaultDose;
               return drug.customDoseIM !== null ? drug.customDoseIM : defaultIM;
           case 'Oral':
-              // Use Oral default if available, otherwise fall back to IV default
               const defaultOral = initialDrug.oralDose !== undefined ? initialDrug.oralDose : initialDrug.defaultDose;
               return drug.customDoseOral !== null ? drug.customDoseOral : defaultOral;
           default:
@@ -3417,8 +3332,6 @@
       const initialDrug = initialDrugs.find(d => d.name === drug.name);
       if (!initialDrug) return false;
 
-      // Check if custom values are set (not null)
-      // The reset button will set them back to null, clearing the marker.
       const isIvDoseMod = drug.customDoseIV !== null;
       const isImDoseMod = drug.customDoseIM !== null;
       const isOralDoseMod = drug.customDoseOral !== null;
@@ -3438,8 +3351,8 @@
       const drug = drugs[index];
       if (drug) {
         drug.currentRoute = route;
-        activeEditIndex = index; // Keep edit pane open when switching routes
-        calculateDrugs(); // Recalculate to show new route's values
+        activeEditIndex = index;
+        calculateDrugs();
       }
     }
 
@@ -3512,7 +3425,6 @@
         }
       } else { doseInfo = 'Enter Age and Weight for Ketorolac Dose.'; }
 
-      // This is the *calculated* default dose for this route/age/weight
       let editableDosePerKg = (dosePerKg > 0) ? dosePerKg : 0;
 
       return { dosePerKg: editableDosePerKg, totalDose, displayDoseString, doseUnit: 'mg', doseInfo, specialNote, maxDosePerDose, maxDailyDose, duration };
@@ -3540,13 +3452,10 @@
         let totalDose = weight * dosePerKg;
         let limitApplied = false;
 
-        // --- NEW MAX DOSE LOGIC ---
-        // Check if the SELECTED INDICATION has a maxPerDose
         if (currentIndication.maxPerDose && totalDose > currentIndication.maxPerDose) { 
           totalDose = currentIndication.maxPerDose; 
           limitApplied = true; 
         }
-        // --- END NEW MAX DOSE LOGIC ---
 
         let volumeDisplay = 'N/A';
         let concentrationDisplay = '';
@@ -3560,7 +3469,6 @@
         let cautionIconHtml = isCautionNeeded ? `<span class="caution-icon" id="antibiotic-caution-icon-${index}" onclick="event.stopPropagation(); toggleAntibioticCautionPopup(${index})">i</span>` : '';
         let cautionPopupHtml = isCautionNeeded ? `<div id="antibiotic-caution-popup-${index}" class="caution-popup"><strong>CAUTION:</strong> ${antibiotic.caution}</div>` : '';
         
-        // Use the 'note' from the indication if it exists, otherwise use the 'info' from the drug
         let infoText = currentIndication.note ? currentIndication.note : (antibiotic.info ? antibiotic.info : '');
         let infoBoxHtml = infoText ? `<div class="info-box ketorolac-specific" style="border-left-color: var(--antibiotic);">${infoText}</div>` : '';
 
@@ -3661,70 +3569,66 @@
     }
 
     function calculateGuedelAirway(weight, age) {
-        // Prefers age, falls back to weight
         if (age > 0) {
-            if (age < 0.1) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // <1m
-            if (age < 1) return { size: '0', length: '60 mm', color: '#222222' }; // <1y
-            if (age < 5) return { size: '1', length: '70 mm', color: '#F0F0F0' }; // <5y
-            if (age < 12) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' }; // <12y
-            if (age < 16) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' }; // <16y
-            return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Adult
+            if (age < 0.1) return { size: '00', length: '50 mm', color: 'var(--induction)' };
+            if (age < 1) return { size: '0', length: '60 mm', color: '#222222' };
+            if (age < 5) return { size: '1', length: '70 mm', color: '#F0F0F0' };
+            if (age < 12) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' };
+            if (age < 16) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' };
+            return { size: '4', length: '100 mm', color: 'var(--reversal)' };
         }
         if (weight > 0) {
-            if (weight < 3) return { size: '000', length: '40 mm', color: 'var(--local-anesthetic)' }; // Pink/Rose
-            if (weight < 5) return { size: '00', length: '50 mm', color: 'var(--induction)' }; // Blue
-            if (weight < 10) return { size: '0', length: '60 mm', color: '#222222' }; // Black
-            if (weight < 20) return { size: '1', length: '70 mm', color: '#F0F0F0' }; // White
-            if (weight < 40) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' }; // Green
-            if (weight < 60) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' }; // Yellow
-            if (weight < 90) return { size: '4', length: '100 mm', color: 'var(--reversal)' }; // Red
-            return { size: '5', length: '110 mm', color: 'var(--emergency)' }; // Orange
+            if (weight < 3) return { size: '000', length: '40 mm', color: 'var(--local-anesthetic)' };
+            if (weight < 5) return { size: '00', length: '50 mm', color: 'var(--induction)' };
+            if (weight < 10) return { size: '0', length: '60 mm', color: '#222222' };
+            if (weight < 20) return { size: '1', length: '70 mm', color: '#F0F0F0' };
+            if (weight < 40) return { size: '2', length: '80 mm', color: 'var(--primary-accent)' };
+            if (weight < 60) return { size: '3', length: '90 mm', color: 'var(--muscle-relaxant)' };
+            if (weight < 90) return { size: '4', length: '100 mm', color: 'var(--reversal)' };
+            return { size: '5', length: '110 mm', color: 'var(--emergency)' };
         }
         return { size: 'N/A', length: 'N/A', color: 'var(--border-color)' };
     }
 
     function calculateFaceMask(weight, age) {
-        // Prefers age, falls back to weight
         if (age > 0) {
-            if (age < 0.1) return { size: '0', color: 'var(--local-anesthetic)' }; // <1m
-            if (age < 1) return { size: '1', color: 'var(--emergency)' }; // <1y
-            if (age < 5) return { size: '2', color: '#F0F0F0' }; // <5y
-            if (age < 12) return { size: '3', color: 'var(--muscle-relaxant)' }; // <12y
-            if (age < 16) return { size: '4', color: 'var(--reversal)' }; // <16y
-            return { size: '5', color: 'var(--primary-accent)' }; // Adult
+            if (age < 0.1) return { size: '0', color: 'var(--local-anesthetic)' };
+            if (age < 1) return { size: '1', color: 'var(--emergency)' };
+            if (age < 5) return { size: '2', color: '#F0F0F0' };
+            if (age < 12) return { size: '3', color: 'var(--muscle-relaxant)' };
+            if (age < 16) return { size: '4', color: 'var(--reversal)' };
+            return { size: '5', color: 'var(--primary-accent)' };
         }
         if (weight > 0) {
-            if (weight < 3) return { size: '0', color: 'var(--local-anesthetic)' }; // Neonatal, Pink
-            if (weight < 10) return { size: '1', color: 'var(--emergency)' }; // Infant, Orange
-            if (weight < 20) return { size: '2', color: '#F0F0F0' }; // Toddler, White
-            if (weight < 40) return { size: '3', color: 'var(--muscle-relaxant)' }; // Child, Yellow
-            if (weight < 70) return { size: '4', color: 'var(--reversal)' }; // Small/Medium Adult, Red
-            return { size: '5', color: 'var(--primary-accent)' }; // Large Adult, Green
+            if (weight < 3) return { size: '0', color: 'var(--local-anesthetic)' };
+            if (weight < 10) return { size: '1', color: 'var(--emergency)' };
+            if (weight < 20) return { size: '2', color: '#F0F0F0' };
+            if (weight < 40) return { size: '3', color: 'var(--muscle-relaxant)' };
+            if (weight < 70) return { size: '4', color: 'var(--reversal)' };
+            return { size: '5', color: 'var(--primary-accent)' };
         }
         return { size: 'N/A', color: 'var(--border-color)' };
     }
 
     function calculateRylesTube(weight, age) {
-        // Diameter for feeding, prefers age, falls back to weight
         if (age > 0) {
-            if (age < 0.1) return { size: '6 Fr', color: 'var(--antiemetic)' }; // <1m
-            if (age < 3) return { size: '8 Fr', color: 'var(--induction)' }; // <3y
-            if (age < 8) return { size: '10 Fr', color: '#222222' }; // <8y
-            return { size: '12 Fr', color: '#F0F0F0' }; // >8y
+            if (age < 0.1) return { size: '6 Fr', color: 'var(--antiemetic)' };
+            if (age < 3) return { size: '8 Fr', color: 'var(--induction)' };
+            if (age < 8) return { size: '10 Fr', color: '#222222' };
+            return { size: '12 Fr', color: '#F0F0F0' };
         }
         if (weight > 0) {
-            if (weight < 2.5) return { size: '5 Fr', color: 'var(--antibiotic)' }; // Grey
-            if (weight < 5) return { size: '6 Fr', color: 'var(--antiemetic)' }; // Light Green
-            if (weight < 15) return { size: '8 Fr', color: 'var(--induction)' }; // Blue
-            if (weight < 30) return { size: '10 Fr', color: '#222222' }; // Black
-            return { size: '12 Fr', color: '#F0F0F0' }; // White
+            if (weight < 2.5) return { size: '5 Fr', color: 'var(--antibiotic)' };
+            if (weight < 5) return { size: '6 Fr', color: 'var(--antiemetic)' };
+            if (weight < 15) return { size: '8 Fr', color: 'var(--induction)' };
+            if (weight < 30) return { size: '10 Fr', color: '#222222' };
+            return { size: '12 Fr', color: '#F0F0F0' };
         }
         return { size: 'N/A', color: 'var(--border-color)' };
     }
 
     function calculateEquipment(){
       const patient = getPatientData();
-      // Original calculations
       const uncuffedSize = calculateETTSize(patient.age, patient.weight);
       const cuffedSize = calculateCuffedETTSize(patient.age, patient.weight);
       const depth = calculateETTDepth(patient.age, patient.weight);
@@ -3733,11 +3637,9 @@
       const igelSize = patient.weight === 0 ? 'N/A' : calculateIGelSize(patient.weight);
       const centralLineSize = calculateCentralLineSize(patient.weight);
       
-      // --- NEW CALCULATIONS ---
       const guedel = calculateGuedelAirway(patient.weight, patient.age);
       const mask = calculateFaceMask(patient.weight, patient.age);
       const ryles = calculateRylesTube(patient.weight, patient.age);
-      // --- END NEW CALCULATIONS ---
 
       let uncuffedValueClass = 'equipment-value';
       if (uncuffedSize.includes('Enter')){ uncuffedValueClass += ' error'; }
@@ -3791,7 +3693,6 @@
         </div>
         `;
       
-      // --- NEW INFO BOX ---
       const infoBoxHTML = `
         <div class="info-box" style="grid-column: 1/-1; margin-top: 10px;">
           <strong><i class="fas fa-ruler-combined"></i> Sizing Confirmation:</strong>
@@ -3802,9 +3703,7 @@
           </ul>
         </div>
       `;
-      // --- END NEW INFO BOX ---
 
-      // Add the new info box after the equipment grid
       document.getElementById('equipment-results').innerHTML = equipmentHTML + infoBoxHTML;
     }
 
@@ -3888,7 +3787,6 @@
         </div>`;
     }
 
-    // --- NEW FUNCTION for Intralipid ---
     function calculateIntralipid() {
       const patient = getPatientData();
       const intralipidDiv = document.getElementById('intralipid-results');
@@ -3899,18 +3797,16 @@
       }
       
       const weight = patient.weight;
-      const concentrationMgPerMl = 200; // 20% = 200 mg/mL
+      const concentrationMgPerMl = 200;
       const bolusDoseMlPerKg = 1.5;
       const infusionRateMlPerKgPerMin = 0.25;
       const maxDoseMlPerKg = 10;
 
-      // Calculations
       const bolusMl = bolusDoseMlPerKg * weight;
       const bolusMg = bolusMl * concentrationMgPerMl;
       const infusionMlPerMin = infusionRateMlPerKgPerMin * weight;
       const maxCumulativeMl = maxDoseMlPerKg * weight;
 
-      // Format numbers
       const bolusMlDisplay = bolusMl.toFixed(1);
       const bolusMgDisplay = bolusMg.toFixed(0);
       const infusionMlPerMinDisplay = infusionMlPerMin.toFixed(1);
@@ -3945,7 +3841,6 @@
 
       intralipidDiv.innerHTML = intralipidHtml;
     }
-    // --- END NEW FUNCTION ---
 
     function calculateLocalAnesthetics() {
       const patient = getPatientData();
@@ -3985,8 +3880,7 @@
 
       localAnestheticsDiv.innerHTML = singleCardHtml;
 
-      // --- ADD THIS LINE ---
-      calculateIntralipid(); // Calculate intralipid doses whenever LAs are calculated
+      calculateIntralipid();
     }
 
     function parseMaxDoseFromRange(rangeString){
@@ -4000,15 +3894,12 @@
       return maxDose > 0 ? maxDose : null;
     }
 
-      // --- NEW: Function to handle Base Deficit calculation ---
       function calculateBicarbDeficit() {
           const baseDeficitInput = document.getElementById('base-deficit-input');
           const baseDeficit = baseDeficitInput ? (parseFloat(baseDeficitInput.value) || 0) : 0;
           
-          // Store the value globally so it persists on re-renders
           currentBaseDeficit = baseDeficit;
           
-          // Re-render only the drug calculations
           calculateDrugs();
       }
 
@@ -4016,7 +3907,6 @@
       const patient = getPatientData();
       const drugResultsDiv = document.getElementById('drug-results');
       
-      // --- MODIFIED: Use the globally stored base deficit ---
       const baseDeficit = currentBaseDeficit;
 
       if (!patient.weight){
@@ -4027,20 +3917,14 @@
       document.getElementById('toggleAllBtn').style.display = 'block';
 
       let html = '';
-      let currentCategoryLabel = null; // <-- ADD THIS to track the category
+      let currentCategoryLabel = null;
 
-      // Sort drugs to ensure categories are grouped, but only for rendering
-      // We must use the original `drugs` array for indexing
       const sortedDrugs = [...drugs].sort((a, b) => a.categoryLabel.localeCompare(b.categoryLabel));
 
       sortedDrugs.forEach((drug) => {
 
-        // --- ADD THIS IF-BLOCK ---
-        // If the category has changed, print a new heading
-        // Find the *actual* drug in the original array to get its index
         const originalIndex = drugs.findIndex(d => d.name === drug.name);
 
-        // Check if this drug's category is different from the *previous* drug in the sorted list
         const currentSortedIndex = sortedDrugs.findIndex(d => d.name === drug.name);
         const prevSortedDrug = (currentSortedIndex > 0) ? sortedDrugs[currentSortedIndex - 1] : null;
 
@@ -4048,13 +3932,9 @@
             currentCategoryLabel = drug.categoryLabel;
             html += `<h3 class="category-heading">${currentCategoryLabel}</h3>`;
         }
-        // --- END OF IF-BLOCK ---
-
-        // --- (START) CORRECTED CODE BLOCK ---
 
         const paramValue = patient[drug.useParam];
 
-        // --- Variable Declarations (ALL logic) ---
         let dosePerKg;
         let concentration;
         let totalDose = 0;
@@ -4068,13 +3948,13 @@
         let ketorolacInfoBox = '';
         let descriptionBox = '';
         let notesBox = '';
-        let bicarbInputHtml = ''; // For bicarb
-        let bicarbInfoBox = ''; // For bicarb
+        let bicarbInputHtml = '';
+        let bicarbInfoBox = '';
         
-        let calculationHtml = ''; // Final HTML for the calculation box
-        let doseDisplay = 'N/A';  // Final dose string for the HEADER
-        let limitInfoHtml = '';     // <-- Declared high-level
-        let adjustedInfoHtml = '';  // <-- Declared high-level
+        let calculationHtml = '';
+        let doseDisplay = 'N/A';
+        let limitInfoHtml = '';
+        let adjustedInfoHtml = '';
 
         if(drug.notes) {
           notesBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category}); margin-top: 8px;">${drug.notes}</div>`;
@@ -4093,14 +3973,12 @@
             resultColorStyle = `style="color: var(--primary-accent);"`;
         }
 
-        // --- Main Dose Logic (Bicarb, Keto, Other) ---
         if (drug.specialHandling === 'bicarbonate') {
           isInjectable = true;
           totalDoseUnit = 'mEq';
           concentration = getConcentration(drug);
           concentrationDisplay = `${concentration} ${drug.concentrationUnit}`;
 
-          // --- MODIFIED: Added a calculate button ---
           bicarbInputHtml = `
             <div class="edit-input-field" style="margin-bottom: 10px; padding: 10px; background: var(--bg-primary); border-radius: var(--radius-input); border: 1px dashed var(--border-color);">
               <label for="base-deficit-input" style="font-weight: 600;">Base Deficit (mEq/L)</label>
@@ -4112,10 +3990,9 @@
           `;
 
           if (baseDeficit > 0) {
-            // --- Base Deficit Formula ---
             totalDose = 0.3 * paramValue * baseDeficit;
             const halfDose = totalDose / 2;
-            doseDisplay = `${totalDose.toFixed(2)} mEq`; // <-- for header
+            doseDisplay = `${totalDose.toFixed(2)} mEq`;
             dosePerKg = 'N/A (Deficit)';
             volumeDisplay = (halfDose / concentration).toFixed(2); 
 
@@ -4131,16 +4008,15 @@
             `;
 
           } else {
-            // --- Emergency Bolus Formula (No deficit entered) ---
             dosePerKg = getDoseByRoute(drug, drug.currentRoute); 
             totalDose = paramValue * dosePerKg;
             if (drug.maxDose && totalDose > drug.maxDose){ totalDose = drug.maxDose; limitApplied = true; }
             if (drug.minDose && totalDose < drug.minDose){ totalDose = drug.minDose; limitApplied = true; }
             
-            doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; // <-- for header
+            doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`;
             volumeDisplay = (totalDose / concentration).toFixed(2);
             
-            if(limitApplied) limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`; // <-- Assign to high-level var
+            if(limitApplied) limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`;
 
             bicarbInfoBox = `<div class="info-box ketorolac-specific" style="border-left-color: var(--${drug.category});">
                               <strong>Emergency Bolus:</strong> No base deficit entered. Using standard bolus dose.
@@ -4154,7 +4030,6 @@
           }
 
         } else if (drug.name === 'Ketorolac') {
-          // --- Ketorolac Logic ---
           const ketorolacCalc = calculateKetorolacDoseAndInfo(patient, drug);
           let customDose = null;
           if(drug.currentRoute === 'IV') customDose = drug.customDoseIV;
@@ -4164,7 +4039,7 @@
           dosePerKg = (customDose !== null) ? customDose : ketorolacCalc.dosePerKg;
           totalDose = (customDose !== null) ? (paramValue * customDose) : ketorolacCalc.totalDose;
           totalDoseUnit = ketorolacCalc.doseUnit;
-          doseDisplay = (customDose !== null) ? `${totalDose.toFixed(2)} ${totalDoseUnit}` : ketorolacCalc.displayDoseString; // <-- for header
+          doseDisplay = (customDose !== null) ? `${totalDose.toFixed(2)} ${totalDoseUnit}` : ketorolacCalc.displayDoseString;
 
           ketorolacInfoBox = `<div class="info-box ketorolac-specific"><strong>Ketorolac Dosing for ${patient.weight.toFixed(1)} kg (${patient.ageYears} Y, ${patient.ageMonths} M):</strong><div>${ketorolacCalc.doseInfo}</div><div>${ketorolacCalc.duration}</div>${ketorolacCalc.specialNote ? `<div>**Note:** ${ketorolacCalc.specialNote}</div>` : ''}</div>`;
           
@@ -4181,7 +4056,6 @@
           `;
 
         } else {
-          // --- Logic for ALL OTHER drugs ---
           dosePerKg = getDoseByRoute(drug, drug.currentRoute);
 
           if (drug.name.includes('Paracetamol') && patient.weight > 0 && patient.weight < 10){
@@ -4198,7 +4072,7 @@
           if (drug.minDose && totalDose < drug.minDose){ totalDose = drug.minDose; limitApplied = true; }
 
           if (drug.unit.includes('mcg') && totalDose < 1) { doseDisplay = `${(totalDose * 1000).toFixed(0)} mcg`; }
-          else { doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; } // <-- for header
+          else { doseDisplay = `${totalDose.toFixed(2)} ${totalDoseUnit}`; }
 
           concentration = getConcentration(drug);
 
@@ -4214,8 +4088,8 @@
             concentrationDisplay = `${currentConc} ${drug.concentrationUnit}${currentConc !== concentration ? ' (Diluted)' : ''}`;
           }
           
-          if(limitApplied) limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`; // <-- Assign to high-level var
-          if(doseAdjusted) adjustedInfoHtml = `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>`; // <-- Assign to high-level var
+          if(limitApplied) limitInfoHtml = `<span class="dose-limit-applied">(MAX Limit Applied)</span>`;
+          if(doseAdjusted) adjustedInfoHtml = `<span class="dose-limit-applied">(Adjusted for weight < 10 kg)</span>`;
 
           calculationHtml = `
             <div class="calculation-result" ${resultColorStyle}>${doseDisplay} ${limitInfoHtml} ${adjustedInfoHtml}</div>
@@ -4224,9 +4098,6 @@
           `;
         }
         
-        // --- Caution, Contraindication, and Edit Logic (ALL drugs) ---
-        
-        // Check for High Dose
         let isCustomDoseHigh = drug.isCustomDoseHigh || false;
         const currentDoseForRangeCheck = getDoseByRoute(drug, drug.currentRoute);
         const rangeMax = parseMaxDoseFromRange(drug.range);
@@ -4234,7 +4105,6 @@
             isCustomDoseHigh = true; 
         }
 
-        // Check for Contraindication
         let isContraindicated = false;
         let contraindicationText = '';
 
@@ -4246,13 +4116,11 @@
             isContraindicated = true;
             contraindicationText = `Contraindicated for age < ${drug.ageMinMonths} months.`;
         }
-        // Specific check for Calcium Gluconate in neonates (< 28 days / ~0.077 years)
         if (drug.name.includes('Calcium Gluconate') && patient.age < 0.077) { 
             isContraindicated = true;
-            contraindicationText = drug.caution; // The caution already has the full warning
+            contraindicationText = drug.caution;
         }
         
-        // Determine overall caution state and popup content
         let cautionActive = drug.caution || isCustomDoseHigh || isContraindicated;
         let cautionIconHtml = '';
         let cautionPopupHtml = '';
@@ -4262,7 +4130,6 @@
             
             let popupMessage = '';
             if (isContraindicated) {
-                // Combine contraindication text with general caution if it exists
                 popupMessage = `<strong>CONTRAINDICATION:</strong> ${contraindicationText} ${drug.caution ? ` <br><br><strong>Also:</strong> ${drug.caution.replace('**CONTRAINDICATION:**', '')}` : ''}`;
             } else if (isCustomDoseHigh) {
                 popupMessage = `<strong>CAUTION:</strong> Custom dose (${currentDoseForRangeCheck} ${drug.unit}) exceeds recommended range (${drug.range}). ${drug.caution ? ` <br><br><strong>Also:</strong> ${drug.caution}` : ''}`;
@@ -4312,11 +4179,6 @@
 
         const isExpandedClass = (allExpanded || drug.isExpanded) ? 'expanded' : '';
         
-        // --- (END) CORRECTED CODE BLOCK ---
-
-
-        // --- (START) CORRECTED HTML BLOCK ---
-
         html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${haloClass}" id="drug-card-${originalIndex}">
 
             ${cautionPopupHtml}
@@ -4355,13 +4217,10 @@
             </div>
           </div>`;
           
-        // --- (END) CORRECTED HTML BLOCK ---
       });
 
-      // We must re-run the filter logic *after* regenerating the HTML
-      // Otherwise, the `drug-card-${index}` elements won't exist yet
       drugResultsDiv.innerHTML = html;
-      filterDrugs(); // <-- ADD THIS CALL
+      filterDrugs();
 
       document.getElementById('toggleAllBtn').textContent = allExpanded ? 'Collapse All' : 'Expand All / Collapse All';
     }
@@ -4396,7 +4255,6 @@
       const infusion = infusionDrugs[index];
       if (!infusion) return;
 
-      // Use requestAnimationFrame to batch updates and avoid layout thrashing
       requestAnimationFrame(() => {
           const doseInput = document.getElementById(`infusion-dose-${index}`);
           const amountInput = document.getElementById(`infusion-dilution-amount-${index}`);
@@ -4419,7 +4277,6 @@
               if (!isNaN(vol)) infusion.currentDilutionVol = vol;
           }
 
-          // After updating state, re-render the infusions
           calculateInfusions();
       });
     }
@@ -4440,30 +4297,27 @@
       infusionDrugs.forEach((infusion, index) => {
         const weight = patient.weight;
 
-        // --- Calculation Logic ---
         let concentrationInMcgOrUnits;
         if (infusion.currentDilutionUnit === 'mg') {
           concentrationInMcgOrUnits = (infusion.currentDilutionAmount * 1000) / infusion.currentDilutionVol;
         } else {
-          // This handles 'mcg' and 'units' directly
           concentrationInMcgOrUnits = infusion.currentDilutionAmount / infusion.currentDilutionVol;
         }
 
         let totalDosePerHr;
         if (infusion.infusionDoseRange.unit.includes('/min')) {
-          totalDosePerHr = infusion.currentDose * weight * 60; // (mcg/kg/min) * (kg) * (60 min/hr) = mcg/hr
+          totalDosePerHr = infusion.currentDose * weight * 60;
         } else {
-          totalDosePerHr = infusion.currentDose * weight; // (mcg/kg/hr) * (kg) = mcg/hr
+          totalDosePerHr = infusion.currentDose * weight;
         }
 
-        let rate = totalDosePerHr / concentrationInMcgOrUnits; // (mcg/hr) / (mcg/mL) = mL/hr
+        let rate = totalDosePerHr / concentrationInMcgOrUnits;
         if (isNaN(rate) || !isFinite(rate) || rate < 0) {
           rate = 0;
         }
 
         const concUnit = (infusion.currentDilutionUnit === 'units') ? 'units/mL' : 'mcg/mL';
         const concDisplay = `${concentrationInMcgOrUnits.toFixed(2)} ${concUnit}`;
-        // --- End Calculation Logic ---
 
         const isModified = isInfusionModified(infusion);
         let isCautionNeeded = infusion.caution ? true : false;
@@ -4477,12 +4331,10 @@
 
         const isExpandedClass = (allInfusionsExpanded || infusion.isExpanded) ? 'expanded' : '';
 
-        // Define unit options for the select dropdown
         let unitOptions = `
           <option value="mcg" ${infusion.currentDilutionUnit === 'mcg' ? 'selected' : ''}>mcg</option>
           <option value="mg" ${infusion.currentDilutionUnit === 'mg' ? 'selected' : ''}>mg</option>
         `;
-        // Only show 'units' for drugs that use it by default (Vasopressin)
         if (infusion.defaultDilutionUnit === 'units') {
           unitOptions = `<option value="units" ${infusion.currentDilutionUnit === 'units' ? 'selected' : ''}>units</option>`;
         }
@@ -4551,14 +4403,10 @@
 
       drug.isExpanded = !drug.isExpanded;
 
-      // If we are CLOSING the card and its edit pane is open...
       if (!drug.isExpanded && activeEditIndex === index) {
           activeEditIndex = null;
-          // We must call calculateDrugs() to re-render the card with
-          // the correct "Edit..." button text and no 'expanded' class.
           calculateDrugs();
       } else {
-          // Otherwise, just toggle the class.
           requestAnimationFrame(() => {
               document.getElementById(`drug-card-${index}`).classList.toggle('expanded', drug.isExpanded);
           });
@@ -4582,7 +4430,6 @@
 
     function toggleAllDrugs() {
       allExpanded = !allExpanded;
-      // Update the persistent state for all drugs
       drugs.forEach(drug => { drug.isExpanded = allExpanded; });
 
       requestAnimationFrame(() => {
@@ -4602,7 +4449,6 @@
           const card = document.getElementById(`infusion-card-${index}`);
           if (card) { card.classList.toggle('expanded', allInfusionsExpanded); }
         });
-        // We must call calculateInfusions to render the cards with the correct class
         calculateInfusions();
         setTimeout(() => { document.getElementById('toggleAllInfusionsBtn').textContent = allInfusionsExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
       });
@@ -4612,7 +4458,7 @@
       allAntibioticsExpanded = !allAntibioticsExpanded;
       requestAnimationFrame(() => {
         antibioticExpanded.fill(allAntibioticsExpanded);
-        calculateAntibiotics(); // This will re-render with the correct 'expanded' class
+        calculateAntibiotics();
         setTimeout(() => { document.getElementById('toggleAllAntibioticsBtn').textContent = allAntibioticsExpanded ? 'Collapse All' : 'Expand All / Collapse All'; }, 300);
       });
     }
@@ -4622,16 +4468,12 @@
       if (!drug) return;
 
       if (activeEditIndex === index) {
-        // We are CLOSING the pane
         activeEditIndex = null;
-        // drug.isExpanded remains true (we don't collapse the card)
       } else {
-        // We are OPENING the pane
         activeEditIndex = index;
-        drug.isExpanded = true; // Force the card to be expanded
+        drug.isExpanded = true;
       }
 
-      // Re-render the drug list to show the open/closed pane
       calculateDrugs();
     }
 
@@ -4647,7 +4489,6 @@
             drug.customConcentration = null;
             drug.isCustomDoseHigh = false;
 
-            // Re-run calculations
             saveLastUsedDrugValues();
             calculateDrugs();
             checkForCustomDrugValues();
@@ -4671,13 +4512,12 @@
 
       if (isInjectable) {
           newConcInput = document.getElementById(`conc-${index}`);
-          if (newConcInput) { // Check if conc input exists
+          if (newConcInput) {
               newConc = parseFloat(newConcInput.value);
           }
       }
 
       if (!isNaN(newDose) && newDose > 0) {
-          // Update Dose based on current route
           switch (drug.currentRoute) {
               case 'IV':
                   const defaultIVDose = (drug.name === 'Ketorolac') ? calculateKetorolacDoseAndInfo(getPatientData(), drug).dosePerKg : initialDrug.defaultDose;
@@ -4695,15 +4535,12 @@
       }
 
       if (newConc !== null && !isNaN(newConc) && newConc > 0) {
-          // Update Concentration
           const defaultConc = initialDrug.concentration;
           drug.customConcentration = (newConc !== defaultConc) ? newConc : null;
       } else if (newConcInput && newConcInput.value === '') {
-          // Handle clearing the concentration field
           drug.customConcentration = null;
       }
 
-      // Check for high dose
       drug.isCustomDoseHigh = false;
       const currentDose = getDoseByRoute(drug, drug.currentRoute);
       const rangeMax = parseMaxDoseFromRange(drug.range);
@@ -4726,21 +4563,17 @@
       const popup = document.getElementById(`infusion-caution-popup-${index}`);
       if (popup) { popup.style.display = popup.style.display === 'block' ? 'none' : 'block'; }
     }
-
     function toggleAntibioticCautionPopup(index) {
       const popup = document.getElementById(`antibiotic-caution-popup-${index}`);
       if (popup) { popup.style.display = popup.style.display === 'block' ? 'none' : 'block'; }
     }
 
-    // Close popups when clicking anywhere else
     document.addEventListener('click', function(e) {
       if (!e.target.classList.contains('caution-icon')) {
         document.querySelectorAll('.caution-popup').forEach(popup => { popup.style.display = 'none'; });
       }
     });
-    // --- START: BMI-for-Age (Simplified Lookup) ---
-
-    // Simplified BMI percentile cutoffs for BOYS (Ages 2-20)
+    
     const bmi_percentiles_boys = [
       { minAge: 24,  label: "2 Yrs", p5: 14.8, p85: 18.0, p95: 18.9 }, // 24-35 mos
       { minAge: 36,  label: "3 Yrs", p5: 14.5, p85: 17.8, p95: 18.6 }, // 36-47 mos
@@ -4753,7 +4586,6 @@
       { minAge: 192, label: "16-20 Yrs", p5: 17.8, p85: 25.9, p95: 30.6 }  // 192-240 mos
     ];
 
-    // Simplified BMI percentile cutoffs for GIRLS (Ages 2-20)
     const bmi_percentiles_girls = [
       { minAge: 24,  label: "2 Yrs", p5: 14.4, p85: 17.8, p95: 18.7 }, // 24-35 mos
       { minAge: 36,  label: "3 Yrs", p5: 14.0, p85: 17.5, p95: 18.4 }, // 36-47 mos
@@ -4766,25 +4598,19 @@
       { minAge: 192, label: "16-20 Yrs", p5: 17.3, p85: 25.7, p95: 30.8 }  // 192-240 mos
     ];
     
-    // Main function to calculate BMI-for-Age (Simplified Lookup Method)
     function calculateBMIForAge(patient, bmi) {
-        // Data is for 24 months (2 years) to 240 months (20 years)
         if (patient.totalAgeInMonths < 24 || patient.totalAgeInMonths > 240) {
             return { percentile: 'N/A', status: 'Age out of range (2-20y)' };
         }
 
         const dataSet = patient.sex === 'male' ? bmi_percentiles_boys : bmi_percentiles_girls;
 
-        // Find the correct age group
-        // We reverse the array to find the *last* matching 'minAge' that the patient qualifies for
         const ageGroupData = dataSet.slice().reverse().find(d => patient.totalAgeInMonths >= d.minAge);
 
         if (!ageGroupData) {
-            // This should not happen if age is in range, but good to have
             return { percentile: 'N/A', status: 'Data not found' };
         }
 
-        // Now, just categorize based on the cutoffs
         if (bmi < ageGroupData.p5) {
             return { percentile: '< 5th', status: 'Underweight' };
         } else if (bmi >= ageGroupData.p95) {
@@ -4796,33 +4622,27 @@
         }
     }
     
-    // --- END: BMI-for-Age ---
-
     function calculateAll() {
-      const patient = getPatientData(); // Get patient data once
+      const patient = getPatientData();
 
-      // --- NEW: Get references for placeholder and badge ---
       const weightInput = document.getElementById('weight');
       const weightBmiStatus = document.getElementById('weight-bmi-status');
-      const obesityWarning = document.getElementById('obesity-warning-box'); // <-- ADD THIS
+      const obesityWarning = document.getElementById('obesity-warning-box');
       const defaultPlaceholderKg = 'Enter weight in kg';
       const defaultPlaceholderLbs = 'Enter weight in lbs';
-      // --- END NEW ---
 
-      // --- NEW SAFETY HEADER UPDATE ---
       const safetyHeader = document.getElementById('patient-safety-header');
       const safetyAge = document.getElementById('safety-header-age');
       const safetyWeight = document.getElementById('safety-header-weight');
-      const safetyBmi = document.getElementById('safety-header-bmi'); // Get BMI span
+      const safetyBmi = document.getElementById('safety-header-bmi');
       const safetyBmiPercentile = document.getElementById('safety-header-bmi-percentile');
-      const safetyBsa = document.getElementById('safety-header-bsa'); // Get BSA span
+      const safetyBsa = document.getElementById('safety-header-bsa');
 
       if (patient.weight > 0 || (patient.ageYears > 0 || patient.ageMonths > 0) || patient.height > 0) {
           safetyHeader.style.display = 'flex';
           safetyAge.textContent = `AGE: ${patient.ageYears} Y, ${patient.ageMonths} M`;
           
-          // Display weight in the currently selected unit
-          let displayWeight = patient.weight; // patient.weight is always in kg
+          let displayWeight = patient.weight;
           let displayUnit = 'kg';
           if (currentWeightUnit === 'lbs') {
               displayWeight = patient.weight * KG_TO_LBS;
@@ -4830,7 +4650,6 @@
           }
           safetyWeight.textContent = `WEIGHT: ${displayWeight.toFixed(1)} ${displayUnit}`;
 
-          // --- NEW: BMI Calculation and Display ---
           let bmi = 0;
           if (patient.weight > 0 && patient.height > 0) {
             const heightInM = patient.height / 100;
@@ -4843,63 +4662,47 @@
           } else {
             safetyBmi.style.display = 'none';
           }
-          // --- END: BMI ---
           
-          // --- NEW: BMI-for-Age Percentile ---
-          if (bmi > 0 && patient.totalAgeInMonths >= 24) { // CDC data starts at 24 months
+          if (bmi > 0 && patient.totalAgeInMonths >= 24) {
               const bmiData = calculateBMIForAge(patient, bmi);
-              // safetyBmiPercentile.textContent = `BMI: ${bmiData.percentile} %tile`; // No longer needed
-              safetyBmiPercentile.style.display = 'none'; // Hide percentile from header
+              safetyBmiPercentile.style.display = 'none';
               
-              // Set color based on status
               if (bmiData.status === 'Underweight') {
-                  safetyBmiPercentile.style.background = 'var(--induction)'; // Blue
+                  safetyBmiPercentile.style.background = 'var(--induction)';
                   safetyBmiPercentile.style.color = '#fff';
               } else if (bmiData.status === 'Overweight' || bmiData.status === 'Obese') {
-                  safetyBmiPercentile.style.background = 'var(--reversal)'; // Red
+                  safetyBmiPercentile.style.background = 'var(--reversal)';
                   safetyBmiPercentile.style.color = '#fff';
-              } else { // Healthy Weight
+              } else {
                   safetyBmiPercentile.style.background = 'var(--primary-accent-light)';
                   safetyBmiPercentile.style.color = 'var(--primary-accent-dark)';
               }
 
-              // --- NEW: Update Weight Badge and Placeholder ---
-              
-              // 1. Show BMI Status Badge
               weightBmiStatus.textContent = `${bmiData.status} *`;
               weightBmiStatus.style.display = 'inline-block';
 
-              // 2. Control Badge Color and Warning Box
               if (bmiData.status === 'Overweight' || bmiData.status === 'Obese') {
                   weightBmiStatus.style.color = 'var(--reversal)';
-                  if (obesityWarning) obesityWarning.style.display = 'block'; // <-- ADD THIS
+                  if (obesityWarning) obesityWarning.style.display = 'block';
               } else if (bmiData.status === 'Underweight') {
                   weightBmiStatus.style.color = 'var(--induction)';
-                  if (obesityWarning) obesityWarning.style.display = 'none'; // <-- ADD THIS
-              } else { // Healthy Weight
+                  if (obesityWarning) obesityWarning.style.display = 'none';
+              } else {
                   weightBmiStatus.style.color = 'var(--primary-accent-dark)';
-                  if (obesityWarning) obesityWarning.style.display = 'none'; // <-- ADD THIS
+                  if (obesityWarning) obesityWarning.style.display = 'none';
               }
               
-              // 3. Reset placeholder (we are no longer using it for status)
               weightInput.placeholder = (currentWeightUnit === 'lbs') ? defaultPlaceholderLbs : defaultPlaceholderKg;
-              // --- END: New Logic ---
 
           } else {
               safetyBmiPercentile.style.display = 'none';
-
-              // --- NEW: Reset placeholder and hide badge/warning ---
               weightInput.placeholder = (currentWeightUnit === 'lbs') ? defaultPlaceholderLbs : defaultPlaceholderKg;
               if (weightBmiStatus) weightBmiStatus.style.display = 'none';
-              if (obesityWarning) obesityWarning.style.display = 'none'; // <-- ADD THIS
-              // --- END: New Logic ---
+              if (obesityWarning) obesityWarning.style.display = 'none';
           }
-          // --- END: BMI-for-Age ---
           
-          // --- NEW: BSA Calculation and Display ---
           let bsa = 0;
           if (patient.weight > 0 && patient.height > 0) {
-            // Using Mosteller formula
             bsa = Math.sqrt((patient.height * patient.weight) / 3600);
           }
           
@@ -4909,16 +4712,11 @@
           } else {
             safetyBsa.style.display = 'none';
           }
-          // --- END: BSA ---
 
       } else {
           safetyHeader.style.display = 'none';
-          
-          // --- NEW: Hide badge if no patient data ---
           if (weightBmiStatus) weightBmiStatus.style.display = 'none';
-          // --- END NEW ---
       }
-      // --- END SAFETY HEADER UPDATE ---
 
       calculateEquipment();
       calculateFluids();
@@ -4937,26 +4735,22 @@
         drug.customDoseOral = null;
         drug.customConcentration = null;
         drug.isCustomDoseHigh = false;
-        drug.currentRoute = drug.defaultRoute; // Reset route as well
+        drug.currentRoute = drug.defaultRoute;
       });
       localStorage.removeItem('pediatricAnesthesiaLastUsedDrugValues');
       calculateDrugs();
       document.getElementById('custom-drugs-indicator').style.display = 'none';
     }
 
-    // Patient Profiles
     function savePatientProfile() {
       const profileName = document.getElementById('patient-profile-name').value.trim();
       if (!profileName) { console.error('Please enter a profile name'); return; }
       
-      // --- NEW: Ensure weight is saved in KG ---
       let weightToSave = parseFloat(document.getElementById('weight').value) || 0;
       if (currentWeightUnit === 'lbs' && weightToSave > 0) {
-        weightToSave = (weightToSave / KG_TO_LBS).toFixed(2); // Save in kg
+        weightToSave = (weightToSave / KG_TO_LBS).toFixed(2);
       }
-      // --- END: Weight Unit ---
 
-      // Get height in CM from the master function
       const currentPatientData = getPatientData();
       const heightToSave = currentPatientData.height > 0 ? currentPatientData.height.toFixed(1) : '';
 
@@ -4965,7 +4759,6 @@
       const existingIndex = savedProfiles.findIndex(p => p.name === profileName);
 
       if (existingIndex !== -1) {
-        // Simple confirm replacement
         console.log(`Profile "${profileName}" already exists. Overwriting.`);
         savedProfiles[existingIndex] = patientData;
       } else { savedProfiles.push(patientData); }
@@ -4983,7 +4776,6 @@
 
       savedProfiles.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-      // --- CORRECTED TEMPLATE LITERAL ---
       container.innerHTML = savedProfiles.map(profile => {
         let heightDetail = profile.height ? ` | ${profile.height} cm` : '';
         return `
@@ -5000,9 +4792,8 @@
             <button class="saved-item-btn delete" onclick="deletePatientProfile('${profile.name}')" title="Delete"><i class="fas fa-trash"></i></button>
           </div>
         </div>
-        `; // Note: The template literal is now self-contained and correct.
+        `;
       }).join('');
-      // --- END CORRECTION ---
     }
 
     function applyPatientProfile(profileName) {
@@ -5011,18 +4802,15 @@
         document.getElementById('age-years').value = profile.ageYears || '';
         document.getElementById('age-months').value = profile.ageMonths || '';
         
-        // --- NEW: Handle weight unit conversion on load ---
         let weightToDisplay = parseFloat(profile.weight) || 0;
         if (currentWeightUnit === 'lbs' && weightToDisplay > 0) {
           weightToDisplay = (weightToDisplay * KG_TO_LBS).toFixed(1);
         }
         document.getElementById('weight').value = weightToDisplay || '';
-        // --- END: Weight Unit ---
         
         document.getElementById('currentHb').value = profile.currentHb || '';
         document.getElementById('targetHb').value = profile.targetHb || '';
         
-        // --- NEW: Load Height ---
         const heightInCm = parseFloat(profile.height) || 0;
         if (heightInCm > 0) {
             if (currentHeightUnit === 'cm') {
@@ -5030,7 +4818,6 @@
                 document.getElementById('height-ft').value = '';
                 document.getElementById('height-in').value = '';
             } else {
-                // Convert cm to ft and inches
                 const totalInches = heightInCm * CM_TO_IN;
                 const feet = Math.floor(totalInches / 12);
                 const inches = (totalInches % 12).toFixed(1);
@@ -5043,7 +4830,6 @@
              document.getElementById('height-ft').value = '';
              document.getElementById('height-in').value = '';
         }
-        // --- END: Load Height ---
 
         calculateAll();
       }
@@ -5063,7 +4849,6 @@
       loadPatientProfiles();
     }
 
-    // Drug Sets
     function saveDrugSet() {
       const setName = document.getElementById('drug-set-name').value.trim();
       if (!setName) { console.error('Please enter a drug set name'); return; }
@@ -5129,13 +4914,11 @@
           if (!drug) return;
 
           if (savedDrug.customDoseIV !== undefined) {
-              // New format
               drug.customDoseIV = savedDrug.customDoseIV;
               drug.customDoseIM = savedDrug.customDoseIM;
               drug.customDoseOral = savedDrug.customDoseOral;
               drug.customConcentration = savedDrug.customConcentration;
           } else {
-              // Old format compatibility
               const initialDrug = initialDrugs.find(d => d.name === savedDrug.name);
               if (initialDrug) {
                   drug.customDoseIV = (savedDrug.defaultDose !== initialDrug.defaultDose) ? savedDrug.defaultDose : null;
@@ -5148,7 +4931,7 @@
           drug.isCustomDoseHigh = savedDrug.isCustomDoseHigh;
         });
 
-        saveLastUsedDrugValues(); // Save in the *new* format
+        saveLastUsedDrugValues();
         calculateDrugs();
         document.getElementById('custom-drugs-indicator').style.display = 'flex';
         document.getElementById('current-drug-set-name').textContent = setName;
@@ -5216,7 +4999,6 @@ function clearAllDrugSets() {
       if (modifiedCount > 0) {
         indicator.style.display = 'flex';
         document.getElementById('modified-drugs-count').textContent = modifiedCount;
-        // Try to find a matching saved set name
         const savedSets = JSON.parse(localStorage.getItem('pediatricAnesthesiaDrugSets') || '[]');
         let currentSetName = 'Custom';
         const currentValues = JSON.stringify(drugs.map(d => d.customDoseIV + d.customDoseIM + d.customDoseOral + d.customConcentration));
@@ -5238,9 +5020,7 @@ function clearAllDrugSets() {
     function toggleDisclaimer() {
       const content = document.getElementById('disclaimer-content');
       const arrow = document.getElementById('disclaimer-arrow');
-      // Toggle class on content
       content.classList.toggle('expanded');
-      // Toggle arrow direction
       arrow.classList.toggle('fa-chevron-down');
       arrow.classList.toggle('fa-chevron-up');
     }
@@ -5265,7 +5045,6 @@ function clearAllDrugSets() {
       }
     }
 
-    // --- NEW: Weight Unit Functions ---
     function updateWeightUnitUI() {
         const weightInput = document.getElementById('weight');
         const weightLabel = document.getElementById('weight-label');
@@ -5282,7 +5061,7 @@ function clearAllDrugSets() {
             weightInput.placeholder = 'Enter weight in lbs';
             unitToggleBtn.classList.add('lbs-active');
             unitOptionLbs.classList.add('active');
-        } else { // 'kg'
+        } else {
             weightLabel.textContent = 'Weight (kg)';
             weightInput.placeholder = 'Enter weight in kg';
             unitOptionKg.classList.add('active');
@@ -5294,13 +5073,11 @@ function clearAllDrugSets() {
         let currentWeight = parseFloat(weightInput.value) || 0;
 
         if (currentWeightUnit === 'kg') {
-            // --- Switching from KG to LBS ---
             currentWeightUnit = 'lbs';
             if (currentWeight > 0) {
                 weightInput.value = (currentWeight * KG_TO_LBS).toFixed(1);
             }
         } else {
-            // --- Switching from LBS to KG ---
             currentWeightUnit = 'kg';
             if (currentWeight > 0) {
                 weightInput.value = (currentWeight / KG_TO_LBS).toFixed(1);
@@ -5310,14 +5087,9 @@ function clearAllDrugSets() {
         localStorage.setItem('weightUnit', currentWeightUnit);
         updateWeightUnitUI();
         
-        // We call calculateAll, which will use getPatientData(). 
-        // getPatientData() will read the *newly converted* value and 
-        // (if in lbs) convert it *back* to kg for the calculations.
         calculateAll();
     }
-    // --- END: Weight Unit Functions ---
 
-    // --- NEW: Height Unit Functions ---
     function updateHeightUnitUI() {
         const heightInputContainer = document.getElementById('height-input-container');
         const heightLabel = document.getElementById('height-label');
@@ -5325,7 +5097,6 @@ function clearAllDrugSets() {
         const unitOptionCm = unitToggleBtn.querySelector('.unit-option[data-unit="cm"]');
         const unitOptionFt = unitToggleBtn.querySelector('.unit-option[data-unit="ft"]');
 
-        // Use 'lbs-active' class, it's generic enough
         unitToggleBtn.classList.remove('lbs-active');
         unitOptionCm.classList.remove('active');
         unitOptionFt.classList.remove('active');
@@ -5336,14 +5107,13 @@ function clearAllDrugSets() {
             unitToggleBtn.classList.add('lbs-active');
             unitOptionFt.classList.add('active');
             heightInputContainer.classList.add('ft-active');
-        } else { // 'cm'
+        } else {
             heightLabel.textContent = 'Height (cm)';
             unitOptionCm.classList.add('active');
         }
     }
 
     function toggleHeightUnit() {
-        // Get current values BEFORE toggling
         const cmInput = document.getElementById('height-cm');
         const ftInput = document.getElementById('height-ft');
         const inInput = document.getElementById('height-in');
@@ -5353,7 +5123,6 @@ function clearAllDrugSets() {
         const heightIn = parseFloat(inInput.value) || 0;
 
         if (currentHeightUnit === 'cm') {
-            // --- Switching from CM to FT ---
             currentHeightUnit = 'ft';
             if (heightCm > 0) {
                 const totalInches = heightCm * CM_TO_IN;
@@ -5361,15 +5130,14 @@ function clearAllDrugSets() {
                 const inches = (totalInches % 12);
                 ftInput.value = feet;
                 inInput.value = inches > 0 ? inches.toFixed(1) : '';
-                cmInput.value = ''; // Clear old input
+                cmInput.value = '';
             }
         } else {
-            // --- Switching from FT to CM ---
             currentHeightUnit = 'cm';
             const totalCm = (heightFt * FT_TO_CM) + (heightIn * IN_TO_CM);
             if (totalCm > 0) {
                 cmInput.value = totalCm.toFixed(1);
-                ftInput.value = ''; // Clear old inputs
+                ftInput.value = '';
                 inInput.value = '';
             }
         }
@@ -5377,15 +5145,11 @@ function clearAllDrugSets() {
         localStorage.setItem('heightUnit', currentHeightUnit);
         updateHeightUnitUI();
         
-        // This will read the newly populated fields
         calculateAll();
     }
-    // --- END: Height Unit Functions ---
     
-    // --- NEW: Font Size Functions ---
     function adjustFontSize(direction) {
       const newIndex = currentFontSizeIndex + direction;
-      // Clamp index within bounds
       if (newIndex >= 0 && newIndex < FONT_SIZE_STEPS_PX.length) {
         currentFontSizeIndex = newIndex;
         applyFontSize();
@@ -5396,12 +5160,10 @@ function clearAllDrugSets() {
       const newSize = FONT_SIZE_STEPS_PX[currentFontSizeIndex];
       document.body.style.fontSize = `${newSize}px`;
 
-      // Update indicator
-      const defaultSize = FONT_SIZE_STEPS_PX[2]; // 14px
+      const defaultSize = FONT_SIZE_STEPS_PX[2];
       const percentage = Math.round((newSize / defaultSize) * 100);
       document.getElementById('font-size-indicator').textContent = `${percentage}%`;
 
-      // Save preference
       localStorage.setItem('fontSizeIndex', currentFontSizeIndex);
     }
 
@@ -5414,102 +5176,83 @@ function clearAllDrugSets() {
         document.getElementById('height-in').value = '';
         document.getElementById('currentHb').value = '';
         document.getElementById('targetHb').value = '';
-        document.getElementById('sex-male').checked = true; // Reset sex to default
+        document.getElementById('sex-male').checked = true;
         
-        // Also clear the profile name input, as it's part of the "patient"
         document.getElementById('patient-profile-name').value = '';
 
-        // We must call calculateAll() to update the UI
         calculateAll(); 
     }
 
-    // DOMContentLoaded: Setup listeners and initial state
     document.addEventListener('DOMContentLoaded', function() {
       
-      // --- NEW: Create Sticky Wrapper and Move Bars ---
       try {
         const container = document.querySelector('.container');
         const header = document.querySelector('header');
-        const disclaimer = document.querySelector('.disclaimer-container'); // <-- Find the disclaimer
+        const disclaimer = document.querySelector('.disclaimer-container');
         const safetyBar = document.getElementById('patient-safety-header');
         const tabNav = document.querySelector('.tab-navigation');
         
-        // Add disclaimer to the check
         if (container && header && disclaimer && safetyBar && tabNav) { 
           const stickyWrapper = document.createElement('div');
           stickyWrapper.className = 'sticky-header-wrapper';
           
-          // Move the safety bar and tab nav into the new wrapper
           stickyWrapper.appendChild(safetyBar);
           stickyWrapper.appendChild(tabNav);
           
-          // Insert the wrapper after the DISCLAIMER, not the header
           disclaimer.parentNode.insertBefore(stickyWrapper, disclaimer.nextSibling);
         }
       } catch (e) {
         console.error("Failed to create sticky wrapper:", e);
       }
-      // --- END NEW ---
 
       const tabButtons = document.querySelectorAll('.tab-button');
       const tabContents = document.querySelectorAll('.tab-content');
 
       tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-          // Deactivate all
           tabButtons.forEach(btn => btn.classList.remove('active'));
           tabContents.forEach(content => content.classList.remove('active'));
 
-          // Activate clicked
           button.classList.add('active');
           const targetTab = document.getElementById(button.getAttribute('data-tab'));
           if (targetTab) {
               targetTab.classList.add('active');
           }
 
-          // Scroll tab into view if needed
           button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         });
       });
 
-      // Check for saved dark mode preference
       const savedDarkMode = localStorage.getItem('darkMode') === 'true';
       if (savedDarkMode) {
         document.body.classList.add('dark-mode');
       }
-      updateDarkModeButton(); // Update button text/icon regardless
+      updateDarkModeButton();
       
-      // --- NEW: Load saved weight unit ---
       const savedWeightUnit = localStorage.getItem('weightUnit');
       if (savedWeightUnit === 'lbs') {
         currentWeightUnit = 'lbs';
       }
       updateWeightUnitUI();
 
-      // --- NEW: Add click listeners for the new toggle ---
       document.getElementById('unit-toggle').addEventListener('click', toggleWeightUnit);
-      // --- END: Weight Unit ---
       
-      // --- NEW: Load saved height unit ---
       const savedHeightUnit = localStorage.getItem('heightUnit');
       if (savedHeightUnit === 'ft') {
         currentHeightUnit = 'ft';
       }
       updateHeightUnitUI();
       document.getElementById('height-unit-toggle').addEventListener('click', toggleHeightUnit);
-      // --- END: Height Unit ---
 
-      // --- NEW: Load saved font size ---
       const savedFontSizeIndex = localStorage.getItem('fontSizeIndex');
       if (savedFontSizeIndex !== null) {
         currentFontSizeIndex = parseInt(savedFontSizeIndex, 10);
         if (isNaN(currentFontSizeIndex) || currentFontSizeIndex < 0 || currentFontSizeIndex >= FONT_SIZE_STEPS_PX.length) {
-          currentFontSizeIndex = 2; // Reset if invalid
+          currentFontSizeIndex = 2;
         }
       }
-      applyFontSize(); // Apply loaded or default font size
+      applyFontSize();
 
-      // Load data and run initial calculations
       loadFavorites();
       loadLastUsedDrugValues();
       calculateAll();

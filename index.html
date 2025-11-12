@@ -19,13 +19,13 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#059669">
 
-    <title>Pediatric Anesthesia & Emergency Drug Dosage Calculator | Free Medical Tool</title>
-    <meta name="description" content="Free pediatric anesthesia calculator for medical professionals. Calculate drug doses, airway equipment sizing, fluid management, and emergency medications based on weight and age.">
-    <meta name="keywords" content="pediatric anesthesia calculator, emergency drug calculator, airway sizing, PALS algorithms, medical calculator, anesthesia drugs, pediatric dosage, Dr. Kiranraj">
+    <title>Pediatric Anesthesia Calculator: Drug Doses, PALS & Airway | Free Online Tool</title>
+    <meta name="description" content="Free online pediatric anesthesia calculator by Dr. Kiranraj. Instant weight-based calculation for emergency drugs (PALS), airway equipment (ETT/LMA), fluid management (4-2-1), and infusions. Designed for anesthesiologists and emergency physicians.">
+    <meta name="keywords" content="pediatric anesthesia calculator, weight based drug dosage, PALS algorithms 2025, airway sizing calculator, Cole's formula, emergency drug doses, pediatric fluid maintenance, anesthesia pharmacology, Dr. Kiranraj, medical calculator">
     <meta name="author" content="Dr. Kiranraj">
     <meta name="robots" content="index, follow">
     
-    <link rel="canonical" href="https://YOUR-WEBSITE-URL.com/" />
+    <link rel="canonical" href="https://pedicalc.pages.dev/" />
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Pediatric Anesthesia Calculator by Dr. Kiranraj">
@@ -1920,32 +1920,93 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Pediatric Anesthesia Calculator",
-      "operatingSystem": "Web Browser, iOS, Android",
-      "applicationCategory": "MedicalApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "author": {
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Pediatric Anesthesia Calculator",
+          "operatingSystem": "Web Browser, iOS, Android",
+          "applicationCategory": "MedicalApplication",
+          "url": "https://YOUR-WEBSITE-URL.com/",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "author": {
+              "@id": "#kiranraj"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "124",
+            "bestRating": "5",
+            "worstRating": "1"
+          },
+          "featureList": "Pediatric Drug Dosage, PALS Emergency Algorithms, Airway Equipment Sizing, Fluid Maintenance (4-2-1), LAST Protocol",
+          "audience": {
+            "@type": "MedicalAudience",
+            "audienceType": "Clinician"
+          }
+        },
+        {
+          "@type": "MedicalWebPage",
+          "@id": "https://pedicalc.pages.dev/",
+          "name": "Pediatric Anesthesia & Emergency Drug Dosage Calculator",
+          "description": "Free pediatric anesthesia calculator for medical professionals. Calculate drug doses, airway equipment sizing, fluid management, and emergency medications based on weight and age.",
+          "lastReviewed": "2025-11-12",
+          "author": {
+              "@id": "#kiranraj"
+          },
+          "specialty": [
+            { "@type": "MedicalSpecialty", "name": "Anesthesia" },
+            { "@type": "MedicalSpecialty", "name": "Pediatrics" },
+            { "@type": "MedicalSpecialty", "name": "Emergency Medicine" }
+          ],
+          "about": {
+            "@type": "MedicalEntity",
+            "name": "Pediatric Drug Dosage Calculation"
+          }
+        },
+        {
           "@type": "Person",
+          "@id": "#kiranraj",
           "name": "Dr. Kiran Raj",
-          "jobTitle": "Anesthesiologist"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "124",
-        "bestRating": "5",
-        "worstRating": "1"
-      },
-      "featureList": "Pediatric Drug Dosage, PALS Emergency Algorithms, Airway Equipment Sizing, Fluid Maintenance (4-2-1), LAST Protocol",
-      "audience": {
-        "@type": "MedicalAudience",
-        "audienceType": "Clinician"
-      }
+          "jobTitle": "Anesthesiologist",
+          "url": "https://www.instagram.com/kiranrajkp?igsh=MWR0OG9ncjVvMnQ0Zw==/"
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do you calculate pediatric ETT size?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "For uncuffed tubes, use Cole's Formula: (Age / 4) + 4. For cuffed tubes, the formula is typically (Age / 4) + 3.5. This calculator automatically determines the internal diameter and insertion depth based on patient age."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the 4-2-1 rule for fluid maintenance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Holliday-Segar rule calculates hourly fluid requirements: 4 mL/kg/hr for the first 10kg, 2 mL/kg/hr for the next 10kg, and 1 mL/kg/hr for every kg thereafter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the pediatric dose for Epinephrine in cardiac arrest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The standard PALS dose for Epinephrine in cardiac arrest is 0.01 mg/kg (10 mcg/kg), which equates to 0.1 mL/kg of the 1:10,000 concentration."
+          }
+        }
+      ]
     }
     </script>
 </head>
@@ -2099,7 +2160,7 @@
         <section class="memory-section">
             <h2><i class="fas fa-save"></i> Patient Memory</h2>
             <div class="info-box">
-                <strong>Save Patient Profiles:</strong> Store patient details for quick recall. Data is saved locally in your browser.
+                <strong>Save Patient Profiles:</strong> Store patient details for quick recall. Data is saved locally in your device.
             </div>
 
             <div class="input-field">
@@ -2119,6 +2180,10 @@
             <div id="patient-profiles-list" class="saved-items-container">
             </div>
         </section>
+
+        <div style="margin-top: 10px; padding: 10px; border: 1px dashed var(--border-color); border-radius: var(--radius-card); font-size: 0.8em; color: var(--text-tertiary); text-align: center; background: var(--bg-secondary);">
+            <strong>About PediCalc:</strong> A rapid <strong>pediatric anesthesia calculator</strong> for PALS algorithms, airway sizing, and fluid management. Enter <strong>Age & Weight</strong> above to instantly generate all parameters. Some parameters may require optional additional inputs. <br><em>*BMI estimates are based on simplified CDC growth charts. For accurate values refer official website.</em>
+        </div>
     </div>
 
     <div class="tab-content" id="airway-fluids">
@@ -2407,6 +2472,73 @@
                 <li><strong>Initial Shock:</strong> 2 Joules/kg</li>
                 <li><strong>Subsequent Shocks:</strong> Escalate to 4 Joules/kg</li>
             </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Malignant Hyperthermia (MH) Crisis</h3>
+            <p>MH is a hypermetabolic crisis triggered by volatile anesthetics (e.g., Sevoflurane) or Succinylcholine. Immediate recognition is key.</p>
+            <div class="info-box" style="border-left-color: var(--reversal);">
+                <strong>Dantrolene Dose:</strong> 2.5 mg/kg rapid IV bolus. Repeat prn until signs abate. Max 10 mg/kg.
+            </div>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Triggers:</strong> Hypercarbia (early sign), Tachycardia, Muscle Rigidity, Hyperthermia (late sign).</li>
+                <li><strong>Action:</strong> Stop volatile agents, hyperventilate with 100% O2, administer Dantrolene, cool patient.</li>
+            </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Laryngospasm Management</h3>
+            <p>A common pediatric airway emergency, often occurring during light planes of anesthesia (induction/emergence).</p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Step 1:</strong> 100% Oxygen, CPAP, Jaw Thrust (Larson's maneuver).</li>
+                <li><strong>Step 2 (If Hypoxia):</strong> Propofol (0.5-1 mg/kg) IV.</li>
+                <li><strong>Step 3 (Refractory):</strong> Succinylcholine (0.5-1 mg/kg IV or 4 mg/kg IM) + Atropine.</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions (FAQs)</h2>
+            <div class="info-box">
+                Tap a question below to reveal clinical pearls and calculation logic.
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                
+                <details style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-input); padding: 10px; cursor: pointer;">
+                    <summary style="font-weight: 600; color: var(--primary-accent); outline: none;">Why use Cuffed vs. Uncuffed ETT in pediatrics?</summary>
+                    <div style="padding-top: 10px; font-size: 0.9em; color: var(--text-secondary); border-top: 1px dashed var(--border-color); margin-top: 10px;">
+                        Historically, uncuffed tubes were used to minimize subglottic stenosis. However, modern <strong>Microcuff</strong> tubes allow for better seal, accurate End-Tidal CO2 (EtCO2) monitoring, and reduced aspiration risk without increasing mucosal pressure, provided cuff pressure is monitored (< 20 cmH2O).
+                    </div>
+                </details>
+
+                <details style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-input); padding: 10px; cursor: pointer;">
+                    <summary style="font-weight: 600; color: var(--primary-accent); outline: none;">How is the "4-2-1" fluid rule calculated?</summary>
+                    <div style="padding-top: 10px; font-size: 0.9em; color: var(--text-secondary); border-top: 1px dashed var(--border-color); margin-top: 10px;">
+                        The Holliday-Segar method estimates maintenance fluid requirements:
+                        <ul>
+                            <li><strong>1st 10 kg:</strong> 4 mL/kg/hr</li>
+                            <li><strong>2nd 10 kg:</strong> 2 mL/kg/hr</li>
+                            <li><strong>Remaining weight:</strong> 1 mL/kg/hr</li>
+                        </ul>
+                        Example: A 25kg child gets (10x4) + (10x2) + (5x1) = 65 mL/hr.
+                    </div>
+                </details>
+
+                <details style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-input); padding: 10px; cursor: pointer;">
+                    <summary style="font-weight: 600; color: var(--primary-accent); outline: none;">What is the correct Atropine dose for bradycardia?</summary>
+                    <div style="padding-top: 10px; font-size: 0.9em; color: var(--text-secondary); border-top: 1px dashed var(--border-color); margin-top: 10px;">
+                        The PALS recommended dose is <strong>0.02 mg/kg</strong>. Critically, there is a minimum dose of <strong>0.1 mg</strong> to prevent paradoxical bradycardia (a central vagal effect seen with low doses). The max single dose is 0.5 mg for a child and 1 mg for an adolescent.
+                    </div>
+                </details>
+
+                <details style="background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-input); padding: 10px; cursor: pointer;">
+                    <summary style="font-weight: 600; color: var(--primary-accent); outline: none;">How to manage Local Anesthetic Systemic Toxicity (LAST)?</summary>
+                    <div style="padding-top: 10px; font-size: 0.9em; color: var(--text-secondary); border-top: 1px dashed var(--border-color); margin-top: 10px;">
+                        <strong>1. Airway:</strong> 100% O2, suppress seizures (Benzodiazepines).<br>
+                        <strong>2. Lipid Rescue:</strong> 20% Intralipid Emulsion.<br>
+                        <strong>3. Bolus:</strong> 1.5 mL/kg over 1 min.<br>
+                        <strong>4. Infusion:</strong> 0.25 mL/kg/min.<br>
+                        Avoid Vasopressin, Calcium channel blockers, and Lidocaine. Use small doses of Epinephrine (< 1 mcg/kg) if needed.
+                    </div>
+                </details>
+
+            </div>
         </section>
 
         <section class="section">
@@ -2419,33 +2551,61 @@
                 <li>Local Anesthetic Systemic Toxicity (LAST): <a href="https://www.lipidrescue.org/" target="_blank">lipidrescue.org</a></li>
             </ul>
         </section>
+
+        <section class="section">
+            <h2><i class="fas fa-book-medical"></i> Clinical Reference Guide & Pharmacology Notes</h2>
+            
+            <div class="info-box">
+                <strong>Note:</strong> This section outlines the pharmacological principles used in this calculator to ensure accuracy and safety in pediatric anesthesia practice.
+            </div>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Pediatric Pharmacokinetics</h3>
+            <p>
+                Dosing in neonates and infants requires adjustment not just for weight, but for physiological maturity. This calculator accounts for standard weight-based dosing (mg/kg). Clinicians must be aware that:
+            </p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Total Body Water:</strong> Neonates have 70-80% water content compared to 60% in adults, requiring higher loading doses for water-soluble drugs (e.g., Succinylcholine).</li>
+                <li><strong>Protein Binding:</strong> Lower albumin levels in infants lead to higher fractions of free (active) drug for highly protein-bound agents (e.g., Bupivacaine, Propofol).</li>
+                <li><strong>Clearance:</strong> Hepatic and renal function are immature at birth. Maintenance intervals for drugs like antibiotics or muscle relaxants may need extension in neonates.</li>
+            </ul>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Safety in Emergency Algorithms (PALS)</h3>
+            <p>
+                During critical events like Cardiac Arrest, SVT, or Anaphylaxis, cognitive load is high. This tool digitizes the <strong>2020-2025 AHA PALS algorithms</strong>.
+            </p>
+            <p style="margin-top: 5px;">
+                <strong>Key Considerations:</strong>
+                <br>
+                1. <strong>Epinephrine:</strong> The calculator distinguishes between Cardiac Arrest (10 mcg/kg) and Anaphylaxis/Hypotension doses to prevent 10-fold dosing errors.
+                <br>
+                2. <strong>Defibrillation:</strong> Energy selection (2 J/kg initial, 4 J/kg subsequent) is critical for shockable rhythms (VF/pVT).
+                <br>
+                3. <strong>Adenosine:</strong> Rapid administration via a proximal vein is required due to its half-life of <10 seconds.
+            </p>
+
+            <h3 style="font-weight: 600; font-size: 1.1em; margin-top: 15px; margin-bottom: 5px;">Airway Equipment Selection</h3>
+            <p>
+                Proper sizing of the Endotracheal Tube (ETT) and Supraglottic Airway (LMA/i-gel) reduces the risk of subglottic stenosis and aspiration.
+            </p>
+            <ul style="margin-left: 20px; margin-top: 5px; list-style-type: disc; padding-left: 15px;">
+                <li><strong>Cuffed vs. Uncuffed:</strong> Modern pediatric practice favors cuffed tubes (Microcuff) even in infants, provided cuff pressure is monitored (< 20 cmH2O).</li>
+                <li><strong>Blade Selection:</strong> A straight (Miller) blade is often preferred in infants < 2 years to lift the floppy, U-shaped epiglottis.</li>
+            </ul>
+        </section>
     </div>
     
-    <section class="seo-content" style="padding: 20px 15px; background: var(--bg-card); margin-top: 20px; border-top: 1px solid var(--border-color);">
-        <h2 style="font-size: 1.1em; color: var(--primary-accent); margin-bottom: 10px;">About the Pedi Calc Tool</h2>
-        <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6;">
-            This pediatric anesthesia calculator assists clinicians in rapidly determining weight-based interventions. By standardizing calculations for airway equipment, fluid management (4-2-1 rule), and PALS emergency algorithms, it aims to reduce cognitive load during critical perioperative moments.
-        </p>
-
-        <h3 style="font-size: 1em; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">How to Use This Calculator</h3>
-        <ol style="font-size: 0.9em; color: var(--text-secondary); margin-left: 20px; line-height: 1.6; margin-bottom: 15px;">
-            <li style="margin-bottom: 5px;"><strong>Input Patient Data:</strong> Enter the patient's Age and Weight in the 'Patient Info' tab. This triggers the automatic calculation of all parameters.</li>
-            <li style="margin-bottom: 5px;"><strong>Review Safety:</strong> Check the sticky header for real-time BMI and BSA calculations to ensure data accuracy.</li>
-            <li style="margin-bottom: 5px;"><strong>Navigate & Search:</strong> Use the tabs to switch between Airway, Drugs, and Infusions. Use the search bar to find specific medications (e.g., "Fentanyl") instantly.</li>
-            <li style="margin-bottom: 5px;"><strong>Customization:</strong> Tap the "Edit" button on any drug card to modify the standard dose or concentration for your specific institutional protocols.</li>
-        </ol>
-        
-        <p style="font-size: 0.8em; margin-top: 15px; color: var(--text-tertiary); border-top: 1px dashed var(--border-color); padding-top: 10px;">
-            <em>*BMI-for-age categories are estimation based on a simplified model of CDC growth charts. For definitive clinical assessment, please consult official sources.</em>
-        </p>
-    </section>
+     
 
     <footer style="background: var(--bg-primary); padding: 20px; text-align: center; border-top: 1px solid var(--border-color);">
         <div style="margin-bottom: 10px;">
-            <a href="https://www.t.me/utopiccc" style="margin-right: 15px; text-decoration: none; color: var(--text-secondary); font-weight: 600;">&copy; 2025 Dr. Kiranraj</a>
-            <a href="https://sites.google.com/view/pedicalcprivacypolicy" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Privacy Policy</a>
+            <a href="https://www.t.me/utopiccc" target="_blank" rel="noopener" style="text-decoration: none; color: var(--primary-accent); font-weight: 600;">&copy; 2025 Dr. Kiranraj</a>
+            <span style="margin: 0 10px; color: var(--border-color);">|</span>
+            <a href="https://sites.google.com/view/pedicalcprivacypolicy" target="_blank" rel="noopener" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Privacy Policy</a>
             <span style="margin: 0 10px; color: var(--border-color);">|</span>
             <a href="mailto:kiranraj120@gmail.com" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Contact</a>
+        </div>
+        <div style="font-size: 0.75em; color: var(--text-tertiary); margin-top: 8px;">
+            Last Updated: Nov 2025 | <a href="https://schema.org/" target="_blank" rel="nofollow" style="color: inherit; text-decoration: none;">v2.4</a>
         </div>
     </footer>
 </div>

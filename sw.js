@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pedicalc-v3'; // Bumped version to force update
+const CACHE_NAME = 'pedicalc-v4'; // Updated version to v4 to trigger a new install
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -6,7 +6,8 @@ const ASSETS_TO_CACHE = [
   './icon-192.png',
   './icon-512.png',
   './calc.html',
-  './mlad.html'
+  './mlad.html',
+  './html2pdf.bundle.min.js' // Added: Local PDF library
 ];
 
 // Install Event (Cache files immediately)
@@ -14,6 +15,8 @@ self.addEventListener('install', (event) => {
   self.skipWaiting(); // Force new worker to activate
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      // Important: If ANY file in this list is missing, the install fails.
+      // Ensure html2pdf.bundle.min.js is actually in the folder.
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
@@ -38,7 +41,6 @@ self.addEventListener('fetch', (event) => {
       .then((networkResponse) => {
         // If network works, return response AND cache it for later
         return caches.open(CACHE_NAME).then((cache) => {
-          // We copy the response because a stream can only be consumed once
           cache.put(event.request, networkResponse.clone());
           return networkResponse;
         });

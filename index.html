@@ -28,7 +28,7 @@
     <link rel="canonical" href="https://pedicalc.pages.dev/" />
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Pediatric Anesthesia Calculator ">
+    <meta property="og:title" content="Pediatric Anesthesia Calculator by Dr. Kiranraj">
     <meta property="og:description" content="Instant calculation of pediatric drug doses, airway equipment, and emergency algorithms.">
     <meta property="og:site_name" content="Pediatric Anesthesia Calculator">
     
@@ -6043,39 +6043,44 @@ function generatePrintSheet(onlyFavorites) {
        });
 
        // --- SHARED CSS (Used for both Preview and Final Print) ---
+       // UPDATED: Compact layout to fit single page
        const sharedCSS = `
            :root { --primary: #059669; --bg-light: #f3f4f6; --border: #d1d5db; --text: #111827; }
-           body { font-family: 'Segoe UI', sans-serif; font-size: 11px; color: #111827; margin: 0; padding: 0; background: white; }
-           .paper { background: white; padding: 20px; max-width: 800px; margin: 0 auto; }
-           .header-banner { border-bottom: 3px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
-           h1 { margin: 0; font-size: 22px; color: #059669; font-weight: 900; text-transform: uppercase; }
-           .meta { font-size: 11px; color: #555; margin-top: 4px; }
+           body { font-family: 'Segoe UI', sans-serif; font-size: 10px; color: #111827; margin: 0; padding: 0; background: white; }
+           .paper { background: white; padding: 15px; max-width: 800px; margin: 0 auto; }
+           /* Tighter Header */
+           .header-banner { border-bottom: 2px solid #059669; padding-bottom: 5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; }
+           h1 { margin: 0; font-size: 18px; color: #059669; font-weight: 900; text-transform: uppercase; }
+           .meta { font-size: 9px; color: #555; margin-top: 2px; }
            .patient-box { text-align: right; }
-           .pt-weight { font-size: 26px; font-weight: 800; line-height: 1; }
-           .pt-details { font-size: 13px; font-weight: 600; color: #333; }
-           .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-           .stat-box { background: #f3f4f6; padding: 8px; border-radius: 4px; text-align: center; border: 1px solid #e5e7eb; }
-           .stat-label { font-size: 9px; color: #666; text-transform: uppercase; font-weight: 600; }
-           .stat-val { font-size: 14px; font-weight: 800; color: #111; margin: 2px 0; }
+           .pt-weight { font-size: 20px; font-weight: 800; line-height: 1; }
+           .pt-details { font-size: 11px; font-weight: 600; color: #333; }
+           /* Tighter Stats Grid */
+           .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+           .stat-box { background: #f3f4f6; padding: 4px 6px; border-radius: 4px; text-align: center; border: 1px solid #e5e7eb; }
+           .stat-label { font-size: 8px; color: #666; text-transform: uppercase; font-weight: 600; }
+           .stat-val { font-size: 12px; font-weight: 800; color: #111; margin: 1px 0; }
            .stat-sub { font-size: 8px; color: #666; }
            .text-danger { color: #dc2626 !important; }
            .text-blue { color: #0284c7 !important; }
-           .print-warning { background: #fff1f2; border-left: 4px solid #dc2626; color: #991b1b; padding: 10px; margin-bottom: 15px; font-size: 11px; border-radius: 4px; }
-           .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+           .print-warning { background: #fff1f2; border-left: 3px solid #dc2626; color: #991b1b; padding: 6px; margin-bottom: 10px; font-size: 9px; border-radius: 4px; }
+           /* Tighter Cards */
+           .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
            .card { border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; page-break-inside: avoid; }
-           .card-head { background: #f3f4f6; padding: 6px 10px; font-weight: 700; font-size: 12px; border-bottom: 1px solid #d1d5db; text-transform: uppercase; }
-           .card-body { padding: 8px 10px; }
-           .row { display: flex; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px dotted #eee; padding-bottom: 2px; }
+           .card-head { background: #f3f4f6; padding: 4px 8px; font-weight: 700; font-size: 10px; border-bottom: 1px solid #d1d5db; text-transform: uppercase; }
+           .card-body { padding: 4px 8px; }
+           .row { display: flex; justify-content: space-between; margin-bottom: 2px; border-bottom: 1px dotted #eee; padding-bottom: 1px; }
            .row:last-child { border-bottom: none; }
            .lbl { color: #555; } .val { font-weight: 700; }
-           table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
+           /* Tighter Table */
+           table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px; }
            thead { background-color: #059669; color: white; }
-           th { text-align: left; padding: 8px; font-weight: 600; text-transform: uppercase; font-size: 10px; }
-           td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+           th { text-align: left; padding: 4px 6px; font-weight: 600; text-transform: uppercase; font-size: 9px; }
+           td { padding: 3px 6px; border-bottom: 1px solid #eee; vertical-align: middle; }
            tr:nth-child(even) { background-color: #f9fafb; }
-           .drug-name { font-weight: 700; font-size: 12px; display: block; }
-           .drug-cat { font-size: 9px; color: #666; text-transform: uppercase; }
-           .footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d1d5db; text-align: center; color: #666; font-size: 10px; }
+           .drug-name { font-weight: 700; font-size: 11px; display: block; }
+           .drug-cat { font-size: 8px; color: #666; text-transform: uppercase; }
+           .footer { margin-top: 15px; padding-top: 5px; border-top: 1px solid #d1d5db; text-align: center; color: #666; font-size: 8px; }
            /* Force Print Colors */
            @media print {
                 body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -6165,12 +6170,15 @@ function generatePrintSheet(onlyFavorites) {
                        if(btn) btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
                    }
                } else {
-                   // Fallback for Browser/PC testing (Downloads the file)
-                   html2pdf().set(opt).from(element).save();
-                   if(btn) {
-                       btn.innerHTML = '<i class="fas fa-download"></i> Downloaded';
-                       setTimeout(() => { btn.innerHTML = originalText; }, 2000);
-                   }
+                   // iOS / Browser Fallback
+                   // .save() is a promise, we reset the button AFTER it initiates
+                   html2pdf().set(opt).from(element).save().then(function(){
+                       if(btn) {
+                           // On iOS, the file opens in a new view. We reset the button immediately 
+                           // so it's ready when the user swipes back.
+                           btn.innerHTML = originalText; 
+                       }
+                   });
                }
            }).catch(function(err) {
                console.error("PDF Generation Error:", err);
@@ -6216,8 +6224,22 @@ function generatePrintSheet(onlyFavorites) {
        const styleTag = document.createElement('style');
        styleTag.innerHTML = `
            ${sharedCSS}
-           /* Toolbar specific to preview */
-           .print-toolbar { position: sticky; top: 0; left: 0; right: 0; background: #fff; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; z-index: 100; margin-bottom: 20px; }
+           /* Toolbar specific to preview - Fixed for iOS Notch */
+           .print-toolbar { 
+               position: sticky; 
+               top: 0; 
+               left: 0; 
+               right: 0; 
+               background: #fff; 
+               /* Add safe area inset for iOS notch + standard padding */
+               padding: 15px;
+               padding-top: calc(15px + env(safe-area-inset-top)); 
+               box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+               display: flex; 
+               gap: 10px; 
+               z-index: 100; 
+               margin-bottom: 20px; 
+           }
            .btn-back { flex: 1; padding: 12px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 700; cursor: pointer; }
            .btn-print { flex: 1; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2); }
            /* Hide main app scrollbar */

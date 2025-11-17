@@ -1158,6 +1158,66 @@
           border-color: var(--text-secondary);
         }
 
+        /* Print Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: var(--radius-card);
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            text-align: center;
+            animation: popIn 0.3s var(--anim-bezier);
+        }
+        .modal-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .modal-btn {
+            padding: 12px;
+            border-radius: var(--radius-input);
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .modal-btn:hover {
+            background: var(--primary-accent);
+            color: white;
+            border-color: var(--primary-accent);
+        }
+        .modal-btn.cancel {
+            color: var(--text-secondary);
+        }
+        .modal-btn.cancel:hover {
+            background: var(--bg-secondary);
+            color: var(--reversal);
+            border-color: var(--reversal);
+        }
+
         .infusion-rate-btn {
             background: var(--primary-accent);
             color: var(--bg-card);
@@ -1839,7 +1899,85 @@
           }
         }
 
+        /* --- New Attractive Print Button Styles --- */
+        .print-featured-btn {
+            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--primary-accent-dark) 100%);
+            color: white !important; /* Force white text for contrast */
+            border: none;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px var(--primary-accent-light);
+            transition: all 0.3s var(--anim-bezier);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            animation: gentlePulse 3s infinite;
+            margin-top: 0; 
+            margin-bottom: 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .print-featured-btn i {
+            font-size: 1.1em;
+        }
+
+        .print-featured-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px var(--primary-accent-light);
+            filter: brightness(1.05);
+        }
+        
+        .print-featured-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px var(--primary-accent-light);
+        }
+
+        /* Shimmer effect on hover */
+        .print-featured-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .print-featured-btn:hover::after {
+            left: 100%;
+            transition: 0.5s;
+        }
+
+        @keyframes gentlePulse {
+            0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(5, 150, 105, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+        }
+        
+        /* Adjust for dark mode specific contrast */
+        body.dark-mode .print-featured-btn {
+             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+             color: #000 !important; /* Dark text on the brighter neon green in dark mode */
+             text-shadow: none;
+        }
+        body.dark-mode .print-featured-btn:hover {
+            box-shadow: 0 6px 15px rgba(52, 211, 153, 0.3);
+        }
         @media (max-width: 480px) {
+          .print-featured-btn {
+              padding: 6px 12px;
+          }
+          .print-featured-btn span {
+              display: none; /* Hide text "Summary" on very small screens if needed, or keep it */
+          }
           .tab-button {
             min-width: 90px;
             padding: 8px 6px;
@@ -2030,6 +2168,8 @@
       ]
     }
     </script>
+	
+<script src="html2pdf.bundle.min.js"></script>
 </head>
 
 <body>
@@ -2091,6 +2231,10 @@
             <i class="fas fa-lungs"></i>
             <span>Airway & Fluids</span>
         </div>
+        <div class="tab-button" data-tab="normal-values">
+            <i class="fas fa-heartbeat"></i>
+            <span>Normal Values</span>
+        </div>
         <div class="tab-button" data-tab="local-anesthetics">
             <i class="fas fa-syringe"></i>
             <span>Local Anesthetics</span>
@@ -2117,9 +2261,14 @@
         <section class="patient-info">
             <h2 style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <span><i class="fas fa-user-circle"></i> Patient Information</span>
-                <button class="memory-btn secondary" id="clear-patient-info-btn" style="padding: 4px 8px; font-size: 0.6em; margin-top: 0; margin-bottom: 0;" onclick="clearPatientInfo()">
-                    <i class="fas fa-times"></i> Reset
-                </button>
+                <div style="display:flex; gap:10px; align-items: center;">
+                    <button class="print-featured-btn" onclick="openPrintModal()">
+                        <i class="fas fa-print"></i> Print Summary
+                    </button>
+                    <button class="memory-btn secondary" id="clear-patient-info-btn" style="padding: 6px 12px; font-size: 0.7em; margin-top: 0; margin-bottom: 0; height: 100%;" onclick="clearPatientInfo()">
+                        <i class="fas fa-times"></i> Reset
+                    </button>
+                </div>
             </h2>
             <div class="input-group">
                 <div class="input-field">
@@ -2221,6 +2370,20 @@
         <section class="section">
             <h2><i class="fas fa-tint"></i> Fluid & Blood Loss Requirements</h2>
             <div id="fluid-results" class="equipment-grid"></div>
+        </section>
+    </div>
+
+    <div class="tab-content" id="normal-values">
+        <section class="section">
+            <h2><i class="fas fa-heartbeat"></i> Normal Physiological Values</h2>
+            <div class="info-box">
+                <strong>Age-Specific Data:</strong> These values are estimates for the patient's age group. Clinical judgment is required.
+            </div>
+            <div id="normal-values-results" class="equipment-grid"></div>
+            <div style="font-size: 0.75em; color: var(--text-tertiary); margin-top: 15px; text-align: center;">
+                Data compiled from standard pediatric and PALS reference guidelines.
+                <a href="https://www.ahajournals.org/doi/10.1161/CIR.0000000000000901" target="_blank" rel="noopener" style="color: var(--primary-accent);">[Source: 2020 AHA PALS Guidelines]</a>
+            </div>
         </section>
     </div>
 
@@ -2622,11 +2785,29 @@
     
      
 
+    <div id="print-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title"><i class="fas fa-print"></i> Print Summary Sheet</div>
+            <p style="margin-bottom: 15px; font-size: 0.9em; color: var(--text-secondary);">Select content to include in the generated report:</p>
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="generatePrintSheet(false)">
+                    <i class="fas fa-list"></i> Include All Drugs
+                </button>
+                <button class="modal-btn" onclick="generatePrintSheet(true)">
+                    <i class="fas fa-star"></i> Favorites Only
+                </button>
+                <button class="modal-btn cancel" onclick="closePrintModal()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer style="background: var(--bg-primary); padding: 20px; text-align: center; border-top: 1px solid var(--border-color);">
         <div style="margin-bottom: 10px;">
             <a href="https://www.t.me/utopiccc" target="_blank" rel="noopener" style="text-decoration: none; color: var(--primary-accent); font-weight: 600;">&copy; 2025 Dr. Kiranraj</a>
             <span style="margin: 0 10px; color: var(--border-color);">|</span>
-            <a href="/privacy.html" target="_blank" rel="noopener" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Privacy Policy</a>
+            <a href="privacy.html" target="_blank" rel="noopener" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Privacy Policy</a>
             <span style="margin: 0 10px; color: var(--border-color);">|</span>
             <a href="mailto:kiranraj120@gmail.com" style="font-size: 0.9em; color: var(--primary-accent); text-decoration: none;">Contact</a>
         </div>
@@ -2737,6 +2918,9 @@
       { name:'Flumazenil', category:'reversal', categoryLabel:'Reversal Agent', defaultDose:0.01, unit:'mg/kg', concentration:0.1, concentrationUnit:'mg/mL', useParam:'weight', range:'10 mcg/kg (titrate, max 200mcg)', maxDose:0.2, defaultRoute:'IV', description: 'Benzodiazepine Antagonist (Benzodiazepine Reversal)' },
       { name:'Adrenaline (Epinephrine) Arrest', category:'emergency', categoryLabel:'Cardiac Arrest', defaultDose:10, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'10 mcg/kg IV (1:10,000)', defaultRoute:'IV' },
       { name:'Adrenaline (Epinephrine) Anaphylaxis', category:'emergency', categoryLabel:'Anaphylaxis (IV)', defaultDose:1, unit:'mcg/kg', concentration:10, concentrationUnit:'mcg/mL', useParam:'weight', range:'1 mcg/kg (1:10,000)', defaultRoute:'IV' },
+      { name:'Defibrillation (First Shock)', category:'emergency', categoryLabel:'Resuscitation Energy', defaultDose:2, unit:'Joules', concentration:1, concentrationUnit:'N/A', useParam:'weight', range:'2 J/kg', defaultRoute:'External' },
+      { name:'Defibrillation (Subsequent)', category:'emergency', categoryLabel:'Resuscitation Energy', defaultDose:4, unit:'Joules', concentration:1, concentrationUnit:'N/A', useParam:'weight', range:'4-10 J/kg', defaultRoute:'External' },
+      { name:'Cardioversion (Sync)', category:'emergency', categoryLabel:'Resuscitation Energy', defaultDose:1, unit:'Joules', concentration:1, concentrationUnit:'N/A', useParam:'weight', range:'0.5-1 J/kg', defaultRoute:'External' },
       { name:'Atropine', category:'emergency', categoryLabel:'Bradycardia', defaultDose:0.02, unit:'mg/kg', concentration:0.6, concentrationUnit:'mg/mL', useParam:'weight', range:'20 mcg/kg (min 100mcg, max 600mcg)', minDose:0.1, maxDose:0.6, defaultRoute:'IV' },
       { name:'Lignocaine (Anti-Arrhythmic)', category:'emergency', categoryLabel:'Anti-Arrhythmic', defaultDose:1, unit:'mg/kg', concentration:10, concentrationUnit:'mg/mL', useParam:'weight', range:'0.5-1 mg/kg', defaultRoute:'IV' },
       { name:'Magnesium Sulphate', category:'emergency', categoryLabel:'Asthma/Torsades', defaultDose:50, unit:'mg/kg', concentration:500, concentrationUnit:'mg/mL', useParam:'weight', range:'25-50 mg/kg', caution:'Infuse over 10-20 minutes.', defaultRoute:'IV' },
@@ -3845,6 +4029,15 @@
           <div class="equipment-value">${cuffedSize}</div>
           <div class="equipment-detail">Depth: ${depth} cm at lips</div>
         </div>
+        
+        <div class="equipment-card" style="background-color: #f0f9ff; border-color: #0ea5e9;">
+          <div class="equipment-title" style="color: #0369a1;">Nasal ETT Depth</div>
+          <div class="equipment-value" style="color: #0369a1;">${
+             (patient.age < 1 && patient.weight > 0) ? (patient.weight + 7).toFixed(1) : 
+             (patient.age >= 1) ? (15 + (patient.age / 2)).toFixed(1) : 'N/A'
+          }</div>
+          <div class="equipment-detail">cm at nares</div>
+        </div>
         <div class="equipment-card">
           <div class="equipment-title">Laryngoscope Blade</div>
           <div class="equipment-value">${blade}</div>
@@ -4133,6 +4326,7 @@
         let concentrationDisplay = '';
         let volumeDisplay = 'N/A';
         let totalDoseUnit = drug.unit.includes('mcg') ? 'mcg' : 'mg';
+		if (drug.unit.toLowerCase().includes('joules')) totalDoseUnit = 'Joules';
         let isInjectable = drug.currentRoute === 'IV' || drug.currentRoute === 'IM';
         
         let ketorolacInfoBox = '';
@@ -4914,6 +5108,7 @@
       calculateLocalAnesthetics();
       calculateInfusions();
       calculateAntibiotics();
+      calculateNormalValues();
     }
 
 
@@ -5458,6 +5653,149 @@ function clearAllDrugSets() {
       checkForCustomDrugValues();
       antibioticExpanded = new Array(antibiotics.length).fill(false);
     });
+const normalValuesData = [
+      { key: 'preterm', name: 'Preterm Neonate', ageMinMonths: 0, ageMaxMonths: 0, hr: '120-180', rr: '40-70', sbp: '55-75', dbp: '35-45', map: '45-55', hgb: '13.5-20.5', plt: '150-450', glucose: '> 45', uo: '1-2' },
+      { key: 'term', name: 'Term Neonate (<28d)', ageMinMonths: 0, ageMaxMonths: 0.9, hr: '100-180', rr: '30-60', sbp: '65-85', dbp: '45-55', map: '50-60', hgb: '14.0-22.0', plt: '150-450', glucose: '> 60', uo: '1-2' },
+      { key: 'infant', name: 'Infant (1-12m)', ageMinMonths: 1, ageMaxMonths: 12, hr: '100-160', rr: '30-50', sbp: '70-100', dbp: '50-65', map: '60-75', hgb: '10.5-13.5', plt: '200-475', glucose: '> 60', uo: '1-2' },
+      { key: 'toddler', name: 'Toddler (1-2y)', ageMinMonths: 12, ageMaxMonths: 24, hr: '90-150', rr: '24-40', sbp: '80-100', dbp: '55-65', map: '65-75', hgb: '11.0-13.0', plt: '180-450', glucose: '> 60', uo: '1.0' },
+      { key: 'preschool', name: 'Preschool (3-5y)', ageMinMonths: 24, ageMaxMonths: 60, hr: '80-140', rr: '22-34', sbp: '80-110', dbp: '55-75', map: '70-80', hgb: '11.5-14.5', plt: '180-450', glucose: '> 60', uo: '1.0' },
+      { key: 'school', name: 'School-age (6-12y)', ageMinMonths: 60, ageMaxMonths: 144, hr: '70-120', rr: '18-30', sbp: '90-120', dbp: '60-80', map: '75-90', hgb: '11.5-15.5', plt: '150-400', glucose: '> 60', uo: '0.5-1' },
+      { key: 'adolescent', name: 'Adolescent (13+y)', ageMinMonths: 144, ageMaxMonths: 240, hr: '60-100', rr: '12-16', sbp: '110-130', dbp: '65-85', map: '85-100', hgb: '12.0-16.0', plt: '150-400', glucose: '> 70', uo: '0.5' }
+    ];
+
+    function getAgeBracket(ageInMonths, ageInYears) {
+        if (ageInMonths === 0 && ageInYears === 0) return null; // No age entered
+        
+        // Prioritize term neonate for 0-1 month
+        if (ageInMonths < 1 && ageInYears === 0) return normalValuesData.find(v => v.key === 'term');
+        
+        const bracket = normalValuesData.find(v => ageInMonths >= v.ageMinMonths && ageInMonths < v.ageMaxMonths);
+        return bracket || normalValuesData[normalValuesData.length - 1]; // Default to last bracket if > 18y
+    }
+
+    function calculateNormalValues() {
+        const patient = getPatientData();
+        const resultsDiv = document.getElementById('normal-values-results');
+
+        // 1. Get Age Bracket
+        const ageBracket = getAgeBracket(patient.totalAgeInMonths, patient.age);
+
+        if (!ageBracket) {
+            resultsDiv.innerHTML = '<p style="color: var(--text-secondary); grid-column: 1/-1; text-align: center;">Enter patient age to display normal values</p>';
+            return;
+        }
+
+        // 2. Calculate PALS Hypotension Limit (Lower Limit SBP)
+        let lowerLimitSBP = 0;
+        let lowerLimitNote = "";
+        if (patient.totalAgeInMonths < 1) {
+            lowerLimitSBP = 60;
+            lowerLimitNote = "< 1 month";
+        } else if (patient.totalAgeInMonths < 12) {
+            lowerLimitSBP = 70;
+            lowerLimitNote = "1m - 1y";
+        } else if (patient.ageYears <= 10) {
+            lowerLimitSBP = 70 + (2 * patient.ageYears);
+            lowerLimitNote = `70 + (2 × ${patient.ageYears})`;
+        } else {
+            lowerLimitSBP = 90;
+            lowerLimitNote = "> 10 years";
+        }
+
+        // 3. Calculate Tidal Volume (6-8 mL/kg)
+        let tvDisplay = "N/A";
+        if (patient.weight > 0) {
+            const tvMin = (patient.weight * 6).toFixed(0);
+            const tvMax = (patient.weight * 8).toFixed(0);
+            tvDisplay = `${tvMin} - ${tvMax}`;
+        }
+
+        // 4. Calculate Absolute Urine Output (mL/hr)
+        let uoDisplay = "Enter Weight";
+        let uoDetail = `${ageBracket.uo} mL/kg/hr`;
+
+        if (patient.weight > 0) {
+            if (ageBracket.uo.includes('-')) {
+                const parts = ageBracket.uo.split('-');
+                const min = parseFloat(parts[0]);
+                const max = parseFloat(parts[1]);
+                // ParseFloat(toFixed) removes unnecessary trailing zeros (e.g., "10.0" becomes "10")
+                const minAbs = parseFloat((min * patient.weight).toFixed(1));
+                const maxAbs = parseFloat((max * patient.weight).toFixed(1));
+                uoDisplay = `${minAbs} - ${maxAbs}`;
+            } else {
+                const val = parseFloat(ageBracket.uo);
+                const abs = parseFloat((val * patient.weight).toFixed(1));
+                uoDisplay = `> ${abs}`;
+            }
+            uoDetail = `mL/hr (Ref: ${ageBracket.uo} mL/kg/hr)`;
+        }
+
+        // 5. Generate HTML with Grouping
+        const html = `
+        <div class="category-heading" style="margin-top:0;"><i class="fas fa-heartbeat"></i> Hemodynamics</div>
+        
+        <div class="equipment-card" style="border-color: var(--emergency); background-color: #fff1f2;">
+          <div class="equipment-title" style="color: var(--reversal);"> Hypotension Limit (SBP)</div>
+          <div class="equipment-value" style="color: var(--reversal);">< ${lowerLimitSBP}</div>
+          <div class="equipment-detail">PALS Definition (${lowerLimitNote})</div>
+        </div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Heart Rate</div>
+          <div class="equipment-value">${ageBracket.hr}</div>
+          <div class="equipment-detail">beats/min</div>
+        </div>
+        
+        <div class="equipment-card">
+          <div class="equipment-title">Systolic BP</div>
+          <div class="equipment-value">${ageBracket.sbp}</div>
+          <div class="equipment-detail">mmHg</div>
+        </div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Mean Arterial (MAP)</div>
+          <div class="equipment-value">${ageBracket.map}</div>
+          <div class="equipment-detail">mmHg (Target)</div>
+        </div>
+
+        <div class="category-heading"><i class="fas fa-lungs"></i> Respiratory</div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Respiratory Rate</div>
+          <div class="equipment-value">${ageBracket.rr}</div>
+          <div class="equipment-detail">breaths/min</div>
+        </div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Tidal Volume</div>
+          <div class="equipment-value">${tvDisplay}</div>
+          <div class="equipment-detail">mL (Target 6-8 mL/kg)</div>
+        </div>
+
+        <div class="category-heading"><i class="fas fa-flask"></i> Metabolic & Labs</div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Urine Output Goal</div>
+          <div class="equipment-value">${uoDisplay}</div>
+          <div class="equipment-detail">${uoDetail}</div>
+        </div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Hypoglycemia Limit</div>
+          <div class="equipment-value" style="color: var(--caution-color);">${ageBracket.glucose}</div>
+          <div class="equipment-detail">mg/dL (Target)</div>
+        </div>
+
+        <div class="equipment-card">
+          <div class="equipment-title">Hemoglobin</div>
+          <div class="equipment-value">${ageBracket.hgb}</div>
+          <div class="equipment-detail">g/dL</div>
+        </div>
+    `;
+
+        resultsDiv.innerHTML = html;
+    }
 </script>
 <script>
     if ('serviceWorker' in navigator) {
@@ -5577,6 +5915,324 @@ window.addEventListener('appinstalled', () => {
        setTimeout(function() {
            document.getElementById('ios-install-prompt').style.display = 'block';
        }, 2500);
+   }
+
+   // --- Print Logic ---
+   function openPrintModal() {
+       const patient = getPatientData();
+       if (!patient.weight) {
+           alert("Please enter patient weight before printing.");
+           return;
+       }
+       document.getElementById('print-modal').style.display = 'flex';
+   }
+
+   function closePrintModal() {
+       document.getElementById('print-modal').style.display = 'none';
+   }
+
+function generatePrintSheet(onlyFavorites) {
+       // 1. Close existing modal
+       closePrintModal();
+       
+       const patient = getPatientData();
+       const date = new Date().toLocaleDateString();
+       const time = new Date().toLocaleTimeString();
+
+       // --- UNIT DISPLAY LOGIC ---
+       // If user selected Lbs, show Lbs (with kg in small text for safety)
+       let weightDisplay = `${patient.weight} kg`;
+       if (currentWeightUnit === 'lbs') {
+           const weightLbs = (patient.weight * 2.20462).toFixed(1);
+           weightDisplay = `${weightLbs} lbs <span style="font-size:0.5em; opacity:0.7; vertical-align: middle;">(${patient.weight.toFixed(1)} kg)</span>`;
+       }
+
+       // If user selected Feet, show Ft/In
+       let heightDisplay = `${patient.height} cm`;
+       if (currentHeightUnit === 'ft' && patient.height > 0) {
+           const totalInches = patient.height * 0.393701;
+           const feet = Math.floor(totalInches / 12);
+           const inches = (totalInches % 12).toFixed(1);
+           heightDisplay = `${feet}' ${inches}"`;
+       }
+       
+       // --- CALCULATIONS ---
+       const ettUncuffed = calculateETTSize(patient.age, patient.weight);
+       const ettCuffed = calculateCuffedETTSize(patient.age, patient.weight);
+       const depth = calculateETTDepth(patient.age, patient.weight);
+       const lma = calculateProSealLMASize(patient.weight);
+       const igel = (patient.weight > 0) ? calculateIGelSize(patient.weight) : 'N/A';
+       const fluidMaint = calculateMaintenanceFluid(patient.weight);
+       const fluidBolus = patient.weight * 10;
+       const ebv = calculateEBV(patient.weight, patient.age);
+       
+       let mablDisplay = '-';
+       if (patient.currentHb > 0 && patient.targetHb > 0) {
+           const mabl = calculateMABL(ebv, patient.currentHb, patient.targetHb);
+           mablDisplay = `<strong>${mabl.toFixed(0)} mL</strong> (Hb ${patient.currentHb}&rarr;${patient.targetHb})`;
+       } else {
+           mablDisplay = `${(ebv * 0.2).toFixed(0)} mL (Est 20%)`;
+       }
+
+       // --- ANTHROPOMETRY ---
+       let anthroHtml = '';
+       let warningHtml = '';
+       if (patient.height > 0 && patient.weight > 0) {
+           const heightM = patient.height / 100;
+           const bmi = patient.weight / (heightM * heightM);
+           const bsa = Math.sqrt((patient.height * patient.weight) / 3600);
+           
+           let bmiStatus = 'N/A';
+           let bmiClass = '';
+           
+           if (patient.totalAgeInMonths >= 24 && patient.totalAgeInMonths <= 240) {
+               const bmiData = calculateBMIForAge(patient, bmi);
+               bmiStatus = bmiData.status;
+               if (bmiData.status === 'Obese' || bmiData.status === 'Overweight') {
+                   bmiClass = 'text-danger';
+                   warningHtml = `<div class="print-warning"><strong><i class="fas fa-exclamation-triangle"></i> Obesity Caution:</strong> Patient is ${bmiData.status}. Consider dosing hydrophilic drugs on Ideal Body Weight (IBW).</div>`;
+               } else if (bmiData.status === 'Underweight') {
+                   bmiClass = 'text-blue';
+               }
+           }
+           anthroHtml = `
+               <div class="stats-grid">
+                   <div class="stat-box"><div class="stat-label">Height</div><div class="stat-val">${heightDisplay}</div></div>
+                   <div class="stat-box"><div class="stat-label">BSA</div><div class="stat-val">${bsa.toFixed(2)} m²</div></div>
+                   <div class="stat-box"><div class="stat-label">BMI</div><div class="stat-val ${bmiClass}">${bmi.toFixed(1)}</div><div class="stat-sub ${bmiClass}">${bmiStatus}</div></div>
+               </div>`;
+       }
+
+       // --- DRUG ROWS ---
+       let drugRows = '';
+       drugs.forEach(drug => {
+           if (onlyFavorites && !drug.isFavorite) return;
+           
+           // 1. Check for Custom Values (Asterisk)
+           const isCustom = hasCustomValues(drug);
+           const customMark = isCustom ? '<span style="color:#059669; font-weight:900; margin-left:3px; vertical-align: super; font-size: 0.8em;">*</span>' : '';
+
+           const dosePerKg = getDoseByRoute(drug, drug.currentRoute);
+           
+           // 2. Check for High Dose / Exceeds Range (Exclamation)
+           const rangeMax = parseMaxDoseFromRange(drug.range);
+           let highDoseMark = '';
+           if (rangeMax && dosePerKg > rangeMax) {
+               highDoseMark = '<span style="color:#dc2626; font-weight:900; margin-left:4px; font-size:1.1em;" title="Exceeds recommended range">!</span>';
+           }
+
+           let totalDose = patient.weight * dosePerKg;
+           let limitMsg = '';
+           if (drug.maxDose && totalDose > drug.maxDose) { totalDose = drug.maxDose; limitMsg = '<small style="color:#dc2626;">(Max Limit)</small>'; }
+           if (drug.minDose && totalDose < drug.minDose) { totalDose = drug.minDose; limitMsg = '<small>(Min)</small>'; }
+
+           const concentration = getConcentration(drug);
+           let volStr = '-';
+           let concStr = '-';
+           if ((drug.currentRoute === 'IV' || drug.currentRoute === 'IM') && concentration) {
+               let volume = totalDose / concentration;
+               volStr = `<strong>${volume.toFixed(2)} mL</strong>`;
+               concStr = `${concentration} ${drug.concentrationUnit}`;
+           }
+
+           let doseDisplay = drug.unit.toLowerCase().includes('joules') ? `<strong>${totalDose.toFixed(0)} J</strong>` : 
+               (drug.unit.includes('mcg') && totalDose < 1 ? `<strong>${(totalDose * 1000).toFixed(0)} mcg</strong>` : `<strong>${totalDose.toFixed(2)}</strong> ${drug.unit.includes('mcg')?'mcg':'mg'}`);
+           if(drug.unit.toLowerCase().includes('joules')) { volStr = 'Shock'; concStr = '-'; }
+
+           drugRows += `<tr><td><div class="drug-name">${drug.name}${customMark}${highDoseMark}</div><div class="drug-cat">${drug.categoryLabel}</div></td><td>${doseDisplay} ${limitMsg}</td><td>${volStr}</td><td>${concStr}</td><td style="color:#666;">${dosePerKg} ${drug.unit}</td></tr>`;
+       });
+
+       // --- SHARED CSS (Used for both Preview and Final Print) ---
+       const sharedCSS = `
+           :root { --primary: #059669; --bg-light: #f3f4f6; --border: #d1d5db; --text: #111827; }
+           body { font-family: 'Segoe UI', sans-serif; font-size: 11px; color: #111827; margin: 0; padding: 0; background: white; }
+           .paper { background: white; padding: 20px; max-width: 800px; margin: 0 auto; }
+           .header-banner { border-bottom: 3px solid #059669; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+           h1 { margin: 0; font-size: 22px; color: #059669; font-weight: 900; text-transform: uppercase; }
+           .meta { font-size: 11px; color: #555; margin-top: 4px; }
+           .patient-box { text-align: right; }
+           .pt-weight { font-size: 26px; font-weight: 800; line-height: 1; }
+           .pt-details { font-size: 13px; font-weight: 600; color: #333; }
+           .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+           .stat-box { background: #f3f4f6; padding: 8px; border-radius: 4px; text-align: center; border: 1px solid #e5e7eb; }
+           .stat-label { font-size: 9px; color: #666; text-transform: uppercase; font-weight: 600; }
+           .stat-val { font-size: 14px; font-weight: 800; color: #111; margin: 2px 0; }
+           .stat-sub { font-size: 8px; color: #666; }
+           .text-danger { color: #dc2626 !important; }
+           .text-blue { color: #0284c7 !important; }
+           .print-warning { background: #fff1f2; border-left: 4px solid #dc2626; color: #991b1b; padding: 10px; margin-bottom: 15px; font-size: 11px; border-radius: 4px; }
+           .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+           .card { border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; page-break-inside: avoid; }
+           .card-head { background: #f3f4f6; padding: 6px 10px; font-weight: 700; font-size: 12px; border-bottom: 1px solid #d1d5db; text-transform: uppercase; }
+           .card-body { padding: 8px 10px; }
+           .row { display: flex; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px dotted #eee; padding-bottom: 2px; }
+           .row:last-child { border-bottom: none; }
+           .lbl { color: #555; } .val { font-weight: 700; }
+           table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
+           thead { background-color: #059669; color: white; }
+           th { text-align: left; padding: 8px; font-weight: 600; text-transform: uppercase; font-size: 10px; }
+           td { padding: 6px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+           tr:nth-child(even) { background-color: #f9fafb; }
+           .drug-name { font-weight: 700; font-size: 12px; display: block; }
+           .drug-cat { font-size: 9px; color: #666; text-transform: uppercase; }
+           .footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid #d1d5db; text-align: center; color: #666; font-size: 10px; }
+           /* Force Print Colors */
+           @media print {
+                body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                .card, table, th, td, .header-banner { border-color: #000 !important; }
+                h1, .val, .drug-name { color: #000 !important; }
+           }
+       `;
+
+       const reportBody = `
+           <div class="header-banner">
+               <div><h1>Anesthesia Plan</h1><div class="meta">Generated: ${date} ${time}</div></div>
+               <div class="patient-box"><div class="pt-weight">${weightDisplay}</div><div class="pt-details">${patient.ageYears}y ${patient.ageMonths}m | ${patient.sex.toUpperCase()}</div></div>
+           </div>
+           ${anthroHtml} ${warningHtml}
+           <div class="grid-2">
+               <div class="card"><div class="card-head">Airway Equipment</div><div class="card-body">
+                   <div class="row"><span class="lbl">ETT Uncuffed</span> <span class="val">${ettUncuffed}</span></div>
+                   <div class="row"><span class="lbl">ETT Cuffed</span> <span class="val">${ettCuffed}</span></div>
+                   <div class="row"><span class="lbl">Depth (at lip)</span> <span class="val">${depth} cm</span></div>
+                   <div class="row"><span class="lbl">Blade</span> <span class="val">${calculateLaryngoscopeBlade(patient.age)}</span></div>
+                   <div class="row"><span class="lbl">LMA / i-gel</span> <span class="val">#${lma.size} / #${igel}</span></div>
+               </div></div>
+               <div class="card"><div class="card-head">Fluids & Blood</div><div class="card-body">
+                   <div class="row"><span class="lbl">Maint. (4-2-1)</span> <span class="val">${fluidMaint.toFixed(0)} mL/hr</span></div>
+                   <div class="row"><span class="lbl">Bolus (10ml/kg)</span> <span class="val">${fluidBolus.toFixed(0)} mL</span></div>
+                   <div class="row"><span class="lbl">EBV</span> <span class="val">${ebv.toFixed(0)} mL</span></div>
+                   <div class="row"><span class="lbl">MABL</span> <span class="val">${mablDisplay}</span></div>
+                   <div class="row"><span class="lbl">NPO Deficit (~6h)</span> <span class="val">${(fluidMaint * 6).toFixed(0)} mL</span></div>
+               </div></div>
+           </div>
+           <table><thead><tr><th width="35%">Drug</th><th width="20%">Dose</th><th width="15%">Vol</th><th width="15%">Conc</th><th width="15%">Ref</th></tr></thead><tbody>${drugRows}</tbody></table>
+           <div class="footer">
+               <div style="margin-bottom:5px; font-size:9px; color:#555; border-bottom:1px solid #eee; padding-bottom:5px;">
+                   <span style="margin-right:15px;"><strong style="color:#059669;">*</strong> Custom Value</span> 
+                   <span><strong style="color:#dc2626;">!</strong> Exceeds Range</span>
+               </div>
+               <strong>Disclaimer:</strong> Advisory Aid Only: This tool is intended to supplement, not replace, professional clinical judgment. All calculations must be independently verified against standard medical literature and hospital protocols before administration. The user assumes full responsibility for patient care.
+           </div>
+       `;
+
+       // --- LOGIC: PDF GENERATION & OPEN (Direct View) ---
+       // Uses local html2pdf library to generate Base64 and send to Android
+       window.executeMobilePrint = function() {
+           // 1. Create a temporary container to hold the clean HTML
+           const element = document.createElement('div');
+           
+           // Force white background and proper padding for the PDF
+           // We override specific styles to ensure it looks like a document, not a web page
+           const pdfCSS = sharedCSS + " .paper { padding: 20px !important; width: 100% !important; max-width: none !important; box-shadow: none !important; } body { background: #fff; }";
+           
+           element.innerHTML = `<style>${pdfCSS}</style><div class="paper">${reportBody}</div>`;
+
+           // 2. Feedback for the user (change button text)
+           const btn = document.querySelector('.btn-print');
+           let originalText = '';
+           if(btn) { 
+               originalText = btn.innerHTML;
+               btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating PDF...';
+           }
+
+           // 3. Configure PDF options
+           const opt = {
+               margin:       0.3,
+               filename:     'patient_report.pdf',
+               image:        { type: 'jpeg', quality: 0.98 },
+               html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+               jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+           };
+
+           // 4. Generate and Send to Android
+           // We output as 'datauristring' (Base64) so we can pass it to Java
+           html2pdf().set(opt).from(element).outputPdf('datauristring').then(function(pdfAsString) {
+               // The string comes as "data:application/pdf;base64,JVBERi0..."
+               // We need to strip the prefix to get raw Base64 data
+               var base64 = pdfAsString.split(',')[1];
+
+               if (typeof AndroidApp !== 'undefined' && AndroidApp.saveAndOpenPdf) {
+                   try {
+                       AndroidApp.saveAndOpenPdf(base64); // Call the Android Java Code
+                       
+                       if(btn) {
+                           btn.innerHTML = '<i class="fas fa-check"></i> Opening...';
+                           setTimeout(() => { closePrintModal(); }, 1500);
+                       }
+                   } catch(e) {
+                       alert("Android Bridge Error: " + e.message);
+                       if(btn) btn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+                   }
+               } else {
+                   // Fallback for Browser/PC testing (Downloads the file)
+                   html2pdf().set(opt).from(element).save();
+                   if(btn) {
+                       btn.innerHTML = '<i class="fas fa-download"></i> Downloaded';
+                       setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+                   }
+               }
+           }).catch(function(err) {
+               console.error("PDF Generation Error:", err);
+               alert("Error generating PDF. Please restart the app.");
+               if(btn) btn.innerHTML = originalText;
+           });
+       };
+
+       // --- PREVIEW OVERLAY ---
+       // Shows the user what they are about to print
+       
+       // Clean up existing
+       if(document.getElementById('print-preview-overlay')) { 
+           document.body.removeChild(document.getElementById('print-preview-overlay')); 
+       }
+
+       const overlayHTML = `
+           <div class="print-toolbar">
+               <button class="btn-back" onclick="closePrintPreview()"><i class="fas fa-arrow-left"></i> Back</button>
+               <button class="btn-print" onclick="executeMobilePrint()"><i class="fas fa-print"></i> PRINT REPORT</button>
+           </div>
+           <div class="paper">
+               ${reportBody}
+           </div>
+       `;
+
+       const overlay = document.createElement('div');
+       overlay.id = 'print-preview-overlay';
+       overlay.innerHTML = overlayHTML;
+       
+       // Inline Styles for Overlay
+       overlay.style.position = 'fixed';
+       overlay.style.top = '0';
+       overlay.style.left = '0';
+       overlay.style.width = '100%';
+       overlay.style.height = '100%';
+       overlay.style.background = '#eef2ff';
+       overlay.style.zIndex = '99999';
+       overlay.style.overflowY = 'auto';
+       overlay.style.fontFamily = "'Segoe UI', sans-serif";
+
+       // Inject specific styles for the preview elements
+       const styleTag = document.createElement('style');
+       styleTag.innerHTML = `
+           ${sharedCSS}
+           /* Toolbar specific to preview */
+           .print-toolbar { position: sticky; top: 0; left: 0; right: 0; background: #fff; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; gap: 10px; z-index: 100; margin-bottom: 20px; }
+           .btn-back { flex: 1; padding: 12px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; font-weight: 700; cursor: pointer; }
+           .btn-print { flex: 1; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px rgba(5, 150, 105, 0.2); }
+           /* Hide main app scrollbar */
+           body { overflow: hidden; }
+       `;
+       overlay.appendChild(styleTag);
+       document.body.appendChild(overlay);
+
+       // --- GLOBAL CLOSE FUNCTION ---
+       window.closePrintPreview = function() {
+           document.body.removeChild(overlay);
+           document.body.style.overflow = ''; // Restore scroll
+           delete window.closePrintPreview;
+           delete window.executeMobilePrint;
+       };
    }
 </script>
 

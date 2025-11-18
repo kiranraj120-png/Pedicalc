@@ -2433,9 +2433,12 @@
                     <strong>Route Selection:</strong> Some drugs can be administered via different routes. Select the appropriate route for your clinical scenario.
                 </div>
                 
-                <div class="favorites-filter-container">
+                <div class="favorites-filter-container" style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="favorites-filter-toggle" id="favorites-filter-toggle" onclick="toggleFavoritesFilter()">
                         <i class="fas fa-star"></i> Show Favorites Only
+                    </button>
+                    <button class="favorites-filter-toggle" onclick="openAddDrugModal()">
+                        <i class="fas fa-plus-circle"></i> Add New Drug
                     </button>
                 </div>
 
@@ -2785,6 +2788,76 @@
     
      
 
+    <div id="add-drug-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px; text-align: left;">
+            <div class="modal-title"><i class="fas fa-pills"></i> Add Custom Drug</div>
+            <div class="edit-inputs-content" style="border: none; padding: 0;">
+                
+                <div class="input-field" style="margin-bottom: 10px;">
+                    <label>Drug Name</label>
+                    <input type="text" id="new-drug-name" placeholder="e.g., Hydroxyzine">
+                </div>
+
+                <div class="edit-input-grid" style="margin-bottom: 10px;">
+                    <div class="edit-input-field">
+                        <label>Dose</label>
+                        <input type="number" id="new-drug-dose" placeholder="1.0" step="0.1">
+                    </div>
+                    <div class="edit-input-field">
+                        <label>Dose Unit</label>
+                        <select id="new-drug-unit" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                            <option value="mg/kg">mg/kg</option>
+                            <option value="mcg/kg">mcg/kg</option>
+                            <option value="Joules">Joules</option>
+                            <option value="g/kg">g/kg</option>
+                            <option value="units/kg">units/kg</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="edit-input-grid" style="margin-bottom: 10px;">
+                    <div class="edit-input-field" style="flex: 1;">
+                        <label>Concentration</label>
+                        <input type="number" id="new-drug-conc" placeholder="Val" style="margin-bottom: 5px;">
+                    </div>
+                    <div class="edit-input-field" style="flex: 1;">
+                        <label>Conc. Unit</label>
+                        <select id="new-drug-conc-unit" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                            <option value="mg/mL">mg/mL</option>
+                            <option value="mcg/mL">mcg/mL</option>
+                            <option value="units/mL">units/mL</option>
+                            <option value="%">%</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="input-field" style="margin-bottom: 10px;">
+                     <label>Category</label>
+                     <select id="new-drug-category" onchange="toggleCustomCategoryInput()" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
+                        <option value="custom">Custom (Default)</option>
+                        <option value="induction">Induction</option>
+                        <option value="analgesic">Analgesic</option>
+                        <option value="antibiotic">Antibiotic</option>
+                        <option value="emergency">Emergency</option>
+                        <option value="adjunct">Adjunct</option>
+                        <option value="other" style="font-weight:bold; color:var(--primary-accent);">+ Create New Category</option>
+                    </select>
+                    <input type="text" id="new-drug-custom-cat" placeholder="Enter Category Name (e.g., Sedatives)" style="display: none; margin-top: 5px; width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-primary); color: var(--text-primary);">
+                </div>
+                
+                <div class="input-field">
+                    <label>Notes / Range</label>
+                    <input type="text" id="new-drug-range" placeholder="e.g., 0.5-1.0 mg/kg">
+                </div>
+
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button class="modal-btn" style="background: var(--primary-accent); color: white;" onclick="saveNewDrug()">Save Drug</button>
+                <button class="modal-btn cancel" onclick="closeAddDrugModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div id="print-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-title"><i class="fas fa-print"></i> Print Summary Sheet</div>
@@ -3121,6 +3194,13 @@
     }
 
     ];
+
+    // --- LOAD CUSTOM DRUGS START ---
+    const savedCustomDrugs = JSON.parse(localStorage.getItem('pediatricAnesthesiaCustomDrugs') || '[]');
+    if (savedCustomDrugs.length > 0) {
+        drugs.push(...savedCustomDrugs);
+    }
+    // --- LOAD CUSTOM DRUGS END ---
 
     drugs.forEach(drug => {
               drug.customDoseIV = null;
@@ -4563,11 +4643,18 @@
 
         const isExpandedClass = (allExpanded || drug.isExpanded) ? 'expanded' : '';
         
+        // Logic for Delete Button on Custom Drugs
+        let deleteActionHtml = '';
+        if (drug.isCustomAdded) {
+            deleteActionHtml = `<span class="favorite-toggle-btn" style="color: var(--reversal); margin-right: 5px;" onclick="event.stopPropagation(); deleteCustomDrug('${drug.id}')"><i class="fas fa-trash"></i></span>`;
+        }
+
         html += `<div class="drug-card ${drug.category} ${isExpandedClass} ${haloClass}" id="drug-card-${originalIndex}">
 
             ${cautionPopupHtml}
             <div class="drug-header" onclick="toggleDrugCard(${originalIndex})">
               <div class="drug-name${customIndicator}">
+                ${deleteActionHtml}
                 <span class="favorite-toggle-btn ${drug.isFavorite ? 'favorited' : ''}" id="fav-btn-${originalIndex}" onclick="event.stopPropagation(); toggleFavorite(${originalIndex})">
                     <i class="fas fa-star"></i>
                 </span>
@@ -6255,6 +6342,143 @@ function generatePrintSheet(onlyFavorites) {
            delete window.closePrintPreview;
            delete window.executeMobilePrint;
        };
+   }
+
+   // --- Custom Drug Logic ---
+   function openAddDrugModal() {
+       document.getElementById('add-drug-modal').style.display = 'flex';
+   }
+
+   function closeAddDrugModal() {
+       document.getElementById('add-drug-modal').style.display = 'none';
+       // Clear inputs
+       document.getElementById('new-drug-name').value = '';
+       document.getElementById('new-drug-dose').value = '';
+       document.getElementById('new-drug-conc').value = '';
+       document.getElementById('new-drug-range').value = '';
+       document.getElementById('new-drug-custom-cat').value = '';
+       document.getElementById('new-drug-custom-cat').style.display = 'none';
+       document.getElementById('new-drug-category').value = 'custom';
+   }
+
+   function toggleCustomCategoryInput() {
+       const catSelect = document.getElementById('new-drug-category');
+       const customInput = document.getElementById('new-drug-custom-cat');
+       if (catSelect.value === 'other') {
+           customInput.style.display = 'block';
+           customInput.focus();
+       } else {
+           customInput.style.display = 'none';
+       }
+   }
+
+   function saveNewDrug() {
+       const name = document.getElementById('new-drug-name').value.trim();
+       const dose = parseFloat(document.getElementById('new-drug-dose').value);
+       const unit = document.getElementById('new-drug-unit').value;
+       const concInput = document.getElementById('new-drug-conc').value;
+       const concentration = concInput ? parseFloat(concInput) : null;
+       const concUnit = document.getElementById('new-drug-conc-unit').value;
+       const categoryKey = document.getElementById('new-drug-category').value;
+       const customCategoryName = document.getElementById('new-drug-custom-cat').value.trim();
+       const range = document.getElementById('new-drug-range').value.trim();
+
+       if (!name || isNaN(dose)) {
+           alert("Please enter at least a Name and a Dose.");
+           return;
+       }
+
+       // Determine Label based on key
+       let catLabel = 'Custom Drugs';
+       let catStyleClass = categoryKey; 
+
+       if(categoryKey === 'induction') catLabel = 'Induction Agent';
+       else if(categoryKey === 'analgesic') catLabel = 'Analgesic';
+       else if(categoryKey === 'antibiotic') catLabel = 'Antibiotic';
+       else if(categoryKey === 'emergency') catLabel = 'Emergency';
+       else if(categoryKey === 'adjunct') catLabel = 'Adjunct';
+       else if(categoryKey === 'custom') { catLabel = 'Custom Drugs'; catStyleClass = 'adjunct'; }
+       else if(categoryKey === 'other') {
+           catLabel = customCategoryName || 'Custom Category';
+           catStyleClass = 'adjunct'; // Use generic styling for custom categories
+       }
+
+       const newDrug = {
+           id: 'custom_' + new Date().getTime(), // Unique ID for deletion
+           name: name,
+           category: catStyleClass,
+           categoryLabel: catLabel,
+           defaultDose: dose,
+           unit: unit,
+           concentration: concentration || 1, // Prevent division by zero if omitted
+           concentrationUnit: concUnit,
+           useParam: 'weight',
+           range: range || `${dose} ${unit}`,
+           defaultRoute: 'IV',
+           routes: ['IV'],
+           isCustomAdded: true
+       };
+
+       // 1. Save to Local Storage
+       const currentCustoms = JSON.parse(localStorage.getItem('pediatricAnesthesiaCustomDrugs') || '[]');
+       currentCustoms.push(newDrug);
+       localStorage.setItem('pediatricAnesthesiaCustomDrugs', JSON.stringify(currentCustoms));
+
+       // 2. Add to Runtime Array
+       // We need to set the runtime properties that are usually set in the initialization loop
+       newDrug.customDoseIV = null;
+       newDrug.customDoseIM = null;
+       newDrug.customDoseOral = null;
+       newDrug.customConcentration = null;
+       newDrug.isExpanded = false;
+       newDrug.isFavorite = false;
+       newDrug.currentRoute = 'IV';
+
+       drugs.push(newDrug);
+       
+       // 3. Update InitialDrugs reference (for reset logic)
+       initialDrugs.push({
+            name: newDrug.name,
+            defaultDose: newDrug.defaultDose,
+            imDose: undefined,
+            oralDose: undefined,
+            concentration: newDrug.concentration
+       });
+
+       // 4. Refresh UI
+       closeAddDrugModal();
+       calculateDrugs();
+       alert(`${name} added successfully.`);
+   }
+
+   function deleteCustomDrug(id) {
+       if(!confirm("Are you sure you want to remove this custom drug?")) return;
+
+       // 1. Remove from Local Storage
+       let currentCustoms = JSON.parse(localStorage.getItem('pediatricAnesthesiaCustomDrugs') || '[]');
+       currentCustoms = currentCustoms.filter(d => d.id !== id);
+       localStorage.setItem('pediatricAnesthesiaCustomDrugs', JSON.stringify(currentCustoms));
+
+       // 2. Remove from Runtime Arrays
+       const drugIndex = drugs.findIndex(d => d.id === id);
+       if (drugIndex > -1) {
+           // Remove from drugs array
+           drugs.splice(drugIndex, 1);
+           // Remove from initialDrugs (needs match by name usually, but we need to be careful with index alignment)
+           // Re-creating initialDrugs is safer
+           initialDrugs.length = 0; // Clear
+           drugs.forEach(d => {
+               initialDrugs.push({
+                    name: d.name,
+                    defaultDose: d.defaultDose,
+                    imDose: d.imDose,
+                    oralDose: d.oralDose,
+                    concentration: d.concentration
+               });
+           });
+       }
+
+       calculateDrugs();
    }
 </script>
 

@@ -87,12 +87,16 @@
           --caution-color: #f59e0b;
           --reset-color: #ef4444;
 
-          --radius-card: 12px;
-          --radius-input: 8px;
-          --radius-tab: 8px;
+          --radius-card: 16px;  /* Modern softer corners */
+          --radius-input: 12px; /* Matches Apple/Material standards */
+          --radius-tab: 50px;   /* Fully rounded for tab pills */
 
-          --anim-bezier: cubic-bezier(0.4, 0, 0.2, 1);
+          --anim-bezier: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother ease-out */
         }
+        
+        /* Modern Input Backgrounds */
+        :root { --input-bg: #f3f4f6; }
+        body.dark-mode { --input-bg: rgba(255,255,255,0.05); }
 
         body.dark-mode {
           /* Primary Accent */
@@ -236,16 +240,20 @@
         
         .sticky-header-wrapper {
             position: sticky;
-            top: 5px;
+            top: calc(5px + env(safe-area-inset-top)); /* Respects iPhone Notch/Status Bar */
             z-index: 101;
-            background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-card);
-            padding: 8px;
-            margin-bottom: 15px;
-            box-shadow: var(--shadow-md);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px) saturate(180%); /* "Apple-style" glass */
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 24px; /* Very round, modern feel */
+            padding: 8px 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); /* Soft, deep shadow */
+        }
+        body.dark-mode .sticky-header-wrapper {
+            background: rgba(28, 25, 23, 0.75);
+            border-color: rgba(255,255,255,0.1);
         }
         
         .patient-safety-header {
@@ -378,15 +386,16 @@
         .tab-navigation {
           display: flex;
           overflow-x: auto;
-          gap: 5px;
-          padding: 4px 0;
+          gap: 4px;
+          padding: 5px;
           scrollbar-width: none;
           -ms-overflow-style: none;
           z-index: 100;
-          background: transparent;
+          background: rgba(0,0,0,0.05); /* Light track background */
           border-radius: var(--radius-tab);
           border: none;
         }
+        body.dark-mode .tab-navigation { background: rgba(255,255,255,0.06); }
 
         .tab-navigation::-webkit-scrollbar {
           display: none;
@@ -394,40 +403,47 @@
 
         .tab-button {
           flex: 1;
-          min-width: 120px;
+          min-width: 100px;
           background: transparent;
-          border: 1px solid transparent;
-          padding: 12px 15px;
+          border: none;
+          padding: 10px 12px;
           border-radius: var(--radius-tab);
           cursor: pointer;
           font-size: 0.8em;
-          font-weight: 600;
+          font-weight: 700;
           text-align: center;
-          transition: all 0.3s var(--anim-bezier);
+          transition: all 0.2s ease;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 5px;
+          gap: 4px;
           color: var(--text-secondary);
-          box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+          opacity: 0.7;
+          box-shadow: none;
         }
 
-        .tab-button i {
-          font-size: 1.4em;
-        }
+        .tab-button i { font-size: 1.3em; margin-bottom: 2px; }
 
         .tab-button.active {
-          background: var(--primary-accent);
-          color: white;
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px var(--primary-accent-light);
+          background: linear-gradient(135deg, var(--primary-accent), var(--primary-accent-dark)); /* Bold Gradient */
+          color: white; /* High contrast text */
+          opacity: 1;
+          box-shadow: 0 4px 12px var(--primary-accent-light);
+          transform: none;
+          border: 1px solid transparent;
+        }
+        body.dark-mode .tab-button.active {
+             background: linear-gradient(135deg, var(--primary-accent), var(--primary-accent-dark));
+             color: #000; /* Better contrast on neon green in dark mode, or keep white if preferred */
+             color: white;
+             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .tab-button:not(.active):hover {
-          background: var(--bg-card);
-          color: var(--text-primary);
-          transform: translateY(-2px);
-          box-shadow: var(--shadow);
+          background: rgba(0,0,0,0.03);
+          opacity: 1;
+          transform: none;
+          box-shadow: none;
         }
 
         .tab-content {
@@ -598,19 +614,21 @@
 
         .input-field input {
           width: 100%;
-          padding: 8px 12px;
-          border: 2px solid var(--border-color);
+          padding: 12px 16px; /* Taller for easier tapping */
+          border: 1px solid transparent; /* Cleaner look */
           border-radius: var(--radius-input);
-          font-size: .9em;
-          background: var(--bg-primary);
+          font-size: 16px; /* Prevents iOS auto-zoom */
+          background: var(--input-bg); 
           color: var(--text-primary);
-          transition: border-color .3s var(--anim-bezier), box-shadow .3s var(--anim-bezier);
+          transition: all 0.2s ease;
+          box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
         }
 
         .input-field input:focus {
           outline: none;
+          background: var(--bg-card);
           border-color: var(--primary-accent);
-          box-shadow: 0 0 0 3px var(--primary-accent-light);
+          box-shadow: 0 0 0 4px var(--primary-accent-light);
         }
 
         .weight-input-container {
@@ -806,17 +824,32 @@
         }
 
         .drug-card {
-          border-radius: var(--radius-card);
-          padding: 12px;
-          border-left: 6px solid;
+          border-radius: 16px;
+          padding: 16px;
+          border: 1px solid transparent; 
+          border-left: none !important; /* Override JS styling */
           background: var(--bg-secondary);
-          transition: all .35s var(--anim-bezier);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
           position: relative;
           z-index: 1;
-          will-change: transform, box-shadow, background-color;
-          animation: cardAppear 0.5s var(--anim-bezier);
-          border: 1px solid var(--border-color);
-          box-shadow: var(--shadow);
+          will-change: transform, box-shadow;
+          animation: cardAppear 0.4s ease-out;
+          /* Modern diffused shadow */
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); 
+        }
+
+        /* Subtle tints instead of heavy borders */
+        .drug-card.induction { background: linear-gradient(to right, rgba(14, 165, 233, 0.08), var(--bg-secondary) 150px); }
+        .drug-card.muscle-relaxant { background: linear-gradient(to right, rgba(245, 158, 11, 0.08), var(--bg-secondary) 150px); }
+        .drug-card.analgesic { background: linear-gradient(to right, rgba(5, 150, 105, 0.08), var(--bg-secondary) 150px); }
+        .drug-card.emergency { background: linear-gradient(to right, rgba(249, 115, 22, 0.1), var(--bg-secondary) 150px); }
+        .drug-card.antibiotic { background: linear-gradient(to right, rgba(79, 70, 229, 0.08), var(--bg-secondary) 150px); }
+        .drug-card.infusion { background: linear-gradient(to right, rgba(6, 182, 212, 0.08), var(--bg-secondary) 150px); }
+        .drug-card.reversal { background: linear-gradient(to right, rgba(239, 68, 68, 0.08), var(--bg-secondary) 150px); }
+
+        body.dark-mode .drug-card {
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes cardAppear {
@@ -1537,6 +1570,120 @@
           line-height: 1.3;
         }
 
+        /* --- LA Toxicity Calculator Styles --- */
+        .la-calc-container {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-input);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Stepper Input Styling */
+        .stepper-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            width: 100%;
+        }
+        
+        .stepper-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--primary-accent);
+            border-radius: var(--radius-input);
+            width: 40px;
+            height: 42px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .stepper-btn:active {
+            background: var(--primary-accent);
+            color: white;
+            transform: scale(0.95);
+        }
+
+        /* Dose List Styling */
+        .added-dose-list {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .dose-item {
+            background: var(--bg-secondary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85em;
+            animation: slideIn 0.3s var(--anim-bezier);
+        }
+
+        .dose-remove-btn {
+            color: var(--reversal);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.1em;
+        }
+        
+        .progress-container {
+            height: 24px;
+            /* Darker background for the track to make the bar pop */
+            background-color: rgba(0,0,0,0.05); 
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            margin: 15px 0 5px 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
+            border-radius: 50px;
+            position: relative;
+        }
+
+        /* Dynamic Color State handled by JS */
+        .progress-bar {
+            /* Default fallback */
+            background-color: var(--analgesic); 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            font-weight: 700;
+            margin-top: 5px;
+            color: var(--text-secondary);
+        }
+
+        .toxicity-percentage {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75em;
+            font-weight: 800;
+            color: rgba(0,0,0,0.6);
+            z-index: 2;
+        }
+
         .infusion-details, .antibiotic-details {
           display: grid;
           grid-template-rows: 0fr;
@@ -1901,28 +2048,35 @@
 
         /* --- New Attractive Print Button Styles --- */
         .print-featured-btn {
-            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--primary-accent-dark) 100%);
-            color: white !important; /* Force white text for contrast */
+            background: var(--primary-accent);
+            color: white !important;
             border: none;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 0.75em;
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-size: 0.85em;
             font-weight: 700;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 10px var(--primary-accent-light);
-            transition: all 0.3s var(--anim-bezier);
-            position: relative;
-            overflow: hidden;
+            /* Modern colored glow shadow */
+            box-shadow: 0 10px 20px -5px rgba(5, 150, 105, 0.4);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             text-decoration: none;
-            animation: gentlePulse 3s infinite;
-            margin-top: 0; 
-            margin-bottom: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin: 0;
         }
+        
+        .print-featured-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(5, 150, 105, 0.5);
+            filter: brightness(1.1);
+        }
+        
+        .print-featured-btn:active { transform: translateY(0); }
+        
+        /* Remove shimmer/pulse animation for a cleaner, less distracting look */
+        .print-featured-btn::after, .print-featured-btn { animation: none; }
         
         .print-featured-btn i {
             font-size: 1.1em;
@@ -2389,11 +2543,65 @@
 
     <div class="tab-content" id="local-anesthetics">
         <section class="section">
-            <h2><i class="fas fa-syringe"></i> Local Anesthetics - Maximum Doses</h2>
+            <h2><i class="fas fa-calculator"></i> Toxicity Meter (Real-time)</h2>
+            <div class="la-calc-container">
+                <div class="input-group" style="margin-top:0; align-items: flex-end;">
+                    <div class="input-field" style="flex: 3;">
+                        <label><i class="fas fa-vial"></i> Select Agent</label>
+                        <select id="la-calc-agent" onchange="calculateLAToxicity()" style="width: 100%; padding: 10px; border-radius: var(--radius-input); border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); height: 42px;">
+                            <option value="ropivacaine-0.2">Ropivacaine 0.2%</option>
+                            <option value="ropivacaine-0.5">Ropivacaine 0.5%</option>
+                            <option value="ropivacaine-0.75">Ropivacaine 0.75%</option>
+                            <option value="bupivacaine-0.25">Bupivacaine 0.25%</option>
+                            <option value="bupivacaine-0.5">Bupivacaine 0.5%</option>
+                            <option value="lidocaine-plain-1">Lidocaine 1% (Plain)</option>
+                            <option value="lidocaine-plain-2">Lidocaine 2% (Plain)</option>
+                            <option value="lidocaine-epi-1">Lido 1% + Adr</option>
+                            <option value="lidocaine-epi-2">Lido 2% + Adr</option>
+                            <option value="levobupivacaine-0.25">Levobupivacaine 0.25%</option>
+                            <option value="levobupivacaine-0.5">Levobupivacaine 0.5%</option>
+                        </select>
+                    </div>
+                    <div class="input-field" style="flex: 2; min-width: 120px;">
+                        <label><i class="fas fa-syringe"></i> Volume (mL)</label>
+                        <div class="stepper-group">
+                            <button class="stepper-btn" onclick="adjustLAVolume(-1)">-</button>
+                            <input type="number" id="la-calc-volume" placeholder="0" step="0.5" min="0" oninput="calculateLAToxicity()" style="text-align:center; padding: 8px; height: 42px;">
+                            <button class="stepper-btn" onclick="adjustLAVolume(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="infusion-rate-btn" onclick="addLADose()" style="margin-top: 10px; width: 100%;">
+                    <i class="fas fa-plus"></i> Add Dose to Total
+                </button>
+
+                <div class="progress-container" style="height: 30px; margin-top: 20px;">
+                    <div class="progress-bar" id="la-progress-bar"></div>
+                    <div class="toxicity-percentage" id="la-progress-percent" style="color: #000; text-shadow: 0 0 2px #fff;">0%</div>
+                </div>
+                
+                <div class="progress-text">
+                    <span id="la-status-text">Safe</span>
+                    <span id="la-cumulative-toxicity">0% of Toxic Dose</span>
+                </div>
+
+                <div id="la-dose-list" class="added-dose-list"></div>
+
+                <div style="text-align: right; margin-top: 10px;">
+                    <button class="memory-btn secondary" onclick="resetLACalculator()" style="font-size: 0.8em;">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-list-ul"></i> Maximum Dose Reference Table</h2>
             <div class="info-box">
                 <strong>Note:</strong> These are maximum recommended doses. Always use the lowest effective dose and consider patient factors.
             </div>
-            <div id="local-anesthetics-results" classs="drugs-grid"></div>
+            <div id="local-anesthetics-results" class="drugs-grid"></div>
         </section>
         
         <section class="section">
@@ -2834,7 +3042,7 @@
                 <div class="input-field" style="margin-bottom: 10px;">
                      <label>Category</label>
                      <select id="new-drug-category" onchange="toggleCustomCategoryInput()" style="width: 100%; padding: 6px; border: 1px solid var(--border-color); border-radius: 5px; background: var(--bg-secondary); color: var(--text-primary);">
-                        <option value="custom">Custom (Default)</option>
+                        <option value="custom">Custom</option>
                         <option value="induction">Induction</option>
                         <option value="analgesic">Analgesic</option>
                         <option value="antibiotic">Antibiotic</option>
@@ -2892,6 +3100,7 @@
 
 <script>
     // Global state variables
+    let lastProcessedWeight = 0; 
     let allExpanded = false;
     let allInfusionsExpanded = false;
     let allAntibioticsExpanded = false;
@@ -3506,6 +3715,16 @@
       }
     ];
 
+    const normalValuesData = [
+      { key: 'preterm', name: 'Preterm Neonate', ageMinMonths: 0, ageMaxMonths: 0, hr: '120-180', rr: '40-70', sbp: '55-75', dbp: '35-45', map: '45-55', hgb: '13.5-20.5', plt: '150-450', glucose: '> 45', uo: '1-2' },
+      { key: 'term', name: 'Term Neonate (<28d)', ageMinMonths: 0, ageMaxMonths: 0.9, hr: '100-180', rr: '30-60', sbp: '65-85', dbp: '45-55', map: '50-60', hgb: '14.0-22.0', plt: '150-450', glucose: '> 60', uo: '1-2' },
+      { key: 'infant', name: 'Infant (1-12m)', ageMinMonths: 1, ageMaxMonths: 12, hr: '100-160', rr: '30-50', sbp: '70-100', dbp: '50-65', map: '60-75', hgb: '10.5-13.5', plt: '200-475', glucose: '> 60', uo: '1-2' },
+      { key: 'toddler', name: 'Toddler (1-2y)', ageMinMonths: 12, ageMaxMonths: 24, hr: '90-150', rr: '24-40', sbp: '80-100', dbp: '55-65', map: '65-75', hgb: '11.0-13.0', plt: '180-450', glucose: '> 60', uo: '1.0' },
+      { key: 'preschool', name: 'Preschool (3-5y)', ageMinMonths: 24, ageMaxMonths: 60, hr: '80-140', rr: '22-34', sbp: '80-110', dbp: '55-75', map: '70-80', hgb: '11.5-14.5', plt: '180-450', glucose: '> 60', uo: '1.0' },
+      { key: 'school', name: 'School-age (6-12y)', ageMinMonths: 60, ageMaxMonths: 144, hr: '70-120', rr: '18-30', sbp: '90-120', dbp: '60-80', map: '75-90', hgb: '11.5-15.5', plt: '150-400', glucose: '> 60', uo: '0.5-1' },
+      { key: 'adolescent', name: 'Adolescent (13+y)', ageMinMonths: 144, ageMaxMonths: 240, hr: '60-100', rr: '12-16', sbp: '110-130', dbp: '65-85', map: '85-100', hgb: '12.0-16.0', plt: '150-400', glucose: '> 70', uo: '0.5' }
+    ];
+
     const infusionDrugs = [
       {
         name: 'Adrenaline (Epinephrine) Infusion', category: 'infusion', categoryLabel: 'Vasopressor Infusion', isExpanded: false,
@@ -3611,8 +3830,189 @@
       { name: 'Bupivacaine (Plain)', maxDose: 2, unit: 'mg/kg', caution: 'Without epinephrine' },
       { name: 'Bupivacaine (With Epinephrine)', maxDose: 3, unit: 'mg/kg', caution: 'With epinephrine 1:200,000' },
       { name: 'Ropivacaine', maxDose: 3, unit: 'mg/kg', caution: 'Maximum recommended dose' }
-	  
-    ];
+  ];
+
+  // Data for Real-Time Calculator (ID mapping)
+  const laCalcData = {
+      'lidocaine-plain-1': { name: 'Lidocaine 1%', mgPerMl: 10, maxMgPerKg: 4.5 },
+      'lidocaine-plain-2': { name: 'Lidocaine 2%', mgPerMl: 20, maxMgPerKg: 4.5 },
+      'lidocaine-epi-1':   { name: 'Lido 1% + Adr', mgPerMl: 10, maxMgPerKg: 7.0 },
+      'lidocaine-epi-2':   { name: 'Lido 2% + Adr', mgPerMl: 20, maxMgPerKg: 7.0 },
+      'bupivacaine-0.25':  { name: 'Bupivacaine 0.25%', mgPerMl: 2.5, maxMgPerKg: 2.0 },
+      'bupivacaine-0.5':   { name: 'Bupivacaine 0.5%', mgPerMl: 5.0, maxMgPerKg: 2.0 },
+      'ropivacaine-0.2':   { name: 'Ropivacaine 0.2%', mgPerMl: 2.0, maxMgPerKg: 3.0 },
+      'ropivacaine-0.5':   { name: 'Ropivacaine 0.5%', mgPerMl: 5.0, maxMgPerKg: 3.0 },
+      'ropivacaine-0.75':  { name: 'Ropivacaine 0.75%', mgPerMl: 7.5, maxMgPerKg: 3.0 },
+      'levobupivacaine-0.25': { name: 'Levo-Bupiv 0.25%', mgPerMl: 2.5, maxMgPerKg: 2.0 },
+      'levobupivacaine-0.5':  { name: 'Levo-Bupiv 0.5%', mgPerMl: 5.0, maxMgPerKg: 2.0 }
+  };
+
+  let laDosesGiven = [];
+
+  function adjustLAVolume(amount) {
+      const input = document.getElementById('la-calc-volume');
+      let currentVal = parseFloat(input.value) || 0;
+      currentVal += amount;
+      if (currentVal < 0) currentVal = 0;
+      input.value = currentVal;
+      // Trigger update immediately
+      calculateLAToxicity();
+  }
+
+  function addLADose() {
+      const patient = getPatientData();
+      if (!patient.weight || patient.weight <= 0) {
+          alert("Please enter patient weight first.");
+          return;
+      }
+
+      const selectEl = document.getElementById('la-calc-agent');
+      const volInput = document.getElementById('la-calc-volume');
+      const volume = parseFloat(volInput.value);
+
+      if (!volume || volume <= 0) return;
+
+      const drugKey = selectEl.value;
+      const drugData = laCalcData[drugKey];
+
+      // Calculate metrics for this specific dose
+      const mgGiven = volume * drugData.mgPerMl;
+      const maxMgForAgent = patient.weight * drugData.maxMgPerKg;
+      const toxicityFraction = (mgGiven / maxMgForAgent) * 100;
+
+      const doseEntry = {
+          id: Date.now(),
+          name: drugData.name,
+          volume: volume,
+          mg: mgGiven,
+          toxicityPercent: toxicityFraction
+      };
+
+      laDosesGiven.push(doseEntry);
+      volInput.value = ''; // Reset input
+      
+      renderLADoses(); // Render list
+      calculateLAToxicity(); // Render bar (now 0 input + list)
+  }
+
+  function removeLADose(id) {
+      laDosesGiven = laDosesGiven.filter(d => d.id !== id);
+      renderLADoses();
+      calculateLAToxicity();
+  }
+
+  function resetLACalculator() {
+      laDosesGiven = [];
+      document.getElementById('la-calc-volume').value = '';
+      renderLADoses();
+      calculateLAToxicity();
+  }
+
+  function renderLADoses() {
+      const listContainer = document.getElementById('la-dose-list');
+      
+      if (laDosesGiven.length === 0) {
+          listContainer.innerHTML = `<div style="text-align:center; color:var(--text-tertiary); font-size:0.8em; font-style:italic; padding:10px;">No doses added to total yet.</div>`;
+          return;
+      }
+
+      listContainer.innerHTML = laDosesGiven.map(dose => `
+          <div class="dose-item">
+              <div>
+                  <div style="font-weight:700; color:var(--text-primary);">${dose.name}</div>
+                  <div style="color:var(--text-secondary); font-size:0.9em;">${dose.volume} mL (${dose.mg.toFixed(1)} mg)</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-weight:600; color:${getGradientColor(dose.toxicityPercent)}">${dose.toxicityPercent.toFixed(1)}% Load</span>
+                  <div class="dose-remove-btn" onclick="removeLADose(${dose.id})"><i class="fas fa-times-circle"></i></div>
+              </div>
+          </div>
+      `).join('');
+  }
+
+  // Main Real-Time Calculation Function
+  function calculateLAToxicity() {
+      const patient = getPatientData();
+      const weight = patient.weight;
+      
+      const volInput = document.getElementById('la-calc-volume');
+      // Sanitize: ensure non-negative
+      if (volInput.value && parseFloat(volInput.value) < 0) volInput.value = 0;
+
+      const progressBar = document.getElementById('la-progress-bar');
+      const progressPercentEl = document.getElementById('la-progress-percent');
+      const statusText = document.getElementById('la-status-text');
+      const cumulativeText = document.getElementById('la-cumulative-toxicity');
+      
+      // If no weight, ensure bar is reset to confirmed doses only (or 0)
+      if (!weight || weight <= 0) {
+           const confirmedToxicity = laDosesGiven.reduce((sum, dose) => sum + dose.toxicityPercent, 0);
+           updateLAVisuals(confirmedToxicity);
+           return;
+      }
+
+      // 1. Calculate Confirmed Toxicity (from List)
+      const confirmedToxicity = laDosesGiven.reduce((sum, dose) => sum + dose.toxicityPercent, 0);
+
+      // 2. Calculate Current Input Toxicity (Preview)
+      let currentInputToxicity = 0;
+      const selectEl = document.getElementById('la-calc-agent');
+      const vol = parseFloat(volInput.value);
+
+      if (vol > 0 && selectEl.value) {
+          const drugData = laCalcData[selectEl.value];
+          const mg = vol * drugData.mgPerMl;
+          const maxMg = weight * drugData.maxMgPerKg;
+          if (maxMg > 0) {
+              currentInputToxicity = (mg / maxMg) * 100;
+          }
+      }
+
+      // 3. Total Projected Toxicity
+      const totalToxicity = confirmedToxicity + currentInputToxicity;
+      updateLAVisuals(totalToxicity);
+  }
+
+  function updateLAVisuals(totalToxicity) {
+      const progressBar = document.getElementById('la-progress-bar');
+      const progressPercentEl = document.getElementById('la-progress-percent');
+      const statusText = document.getElementById('la-status-text');
+      const cumulativeText = document.getElementById('la-cumulative-toxicity');
+
+      const visualWidth = Math.min(totalToxicity, 100);
+      progressBar.style.width = `${visualWidth}%`;
+      progressPercentEl.textContent = `${totalToxicity.toFixed(0)}%`;
+
+      let hue = 120 - (totalToxicity * 1.2);
+      if (hue < 0) hue = 0;
+      const color = `hsl(${hue}, 100%, 40%)`;
+      
+      progressBar.style.backgroundColor = color;
+      progressBar.style.boxShadow = `0 0 15px ${color}`;
+
+      cumulativeText.textContent = `${totalToxicity.toFixed(1)}% of Toxic Threshold`;
+      
+      if (totalToxicity >= 100) {
+          statusText.textContent = "TOXIC DOSE EXCEEDED";
+          statusText.style.color = "var(--reversal)";
+          progressBar.style.animation = "pulse 0.5s infinite alternate";
+      } else if (totalToxicity >= 80) {
+          statusText.textContent = "High Risk";
+          statusText.style.color = color;
+          progressBar.style.animation = "none";
+      } else {
+          statusText.textContent = "Safe Range";
+          statusText.style.color = color;
+          progressBar.style.animation = "none";
+      }
+  }
+     
+
+  function getGradientColor(percent) {
+      let hue = 120 - (percent * 1.2);
+      if (hue < 0) hue = 0;
+      return `hsl(${hue}, 100%, 35%)`;
+  }
 
     function toggleFavorite(index) {
         const drug = drugs[index];
@@ -4443,11 +4843,12 @@
           concentration = getConcentration(drug);
           concentrationDisplay = `${concentration} ${drug.concentrationUnit}`;
 
+          // Use currentBaseDeficit variable to ensure value persists during re-renders
           bicarbInputHtml = `
             <div class="edit-input-field" style="margin-bottom: 10px; padding: 10px; background: var(--bg-primary); border-radius: var(--radius-input); border: 1px dashed var(--border-color);">
               <label for="base-deficit-input" style="font-weight: 600;">Base Deficit (mEq/L)</label>
               <div style="display: flex; gap: 10px;">
-                <input type="number" id="base-deficit-input" value="${baseDeficit > 0 ? baseDeficit : ''}" placeholder="Enter base deficit (if known)" style="flex: 1;">
+                <input type="number" id="base-deficit-input" value="${currentBaseDeficit !== 0 ? currentBaseDeficit : ''}" onchange="currentBaseDeficit = parseFloat(this.value) || 0;" placeholder="Enter base deficit (if known)" style="flex: 1;">
                 <button class="edit-btn" onclick="calculateBicarbDeficit()" style="margin-top: 0; padding: 6px 12px; font-size: 0.8em;">Calculate</button>
               </div>
             </div>
@@ -5096,6 +5497,19 @@
     function calculateAll() {
       const patient = getPatientData();
 
+      // Auto-reset LA Calculator if weight changes
+      if (patient.weight !== lastProcessedWeight) {
+          if (typeof laDosesGiven !== 'undefined' && laDosesGiven.length > 0) {
+              resetLACalculator();
+          }
+          lastProcessedWeight = patient.weight;
+      }
+
+      // Auto-reset LA Calculator if weight is cleared/reset to 0
+      if (patient.weight === 0 && typeof laDosesGiven !== 'undefined' && laDosesGiven.length > 0) {
+          resetLACalculator();
+      }
+
       const weightInput = document.getElementById('weight');
       const weightBmiStatus = document.getElementById('weight-bmi-status');
       const obesityWarning = document.getElementById('obesity-warning-box');
@@ -5192,7 +5606,8 @@
       calculateEquipment();
       calculateFluids();
       calculateDrugs();
-      calculateLocalAnesthetics();
+      calculateLocalAnesthetics(); // Calculates the static table
+      calculateLAToxicity();       // Calculates the dynamic progress bar
       calculateInfusions();
       calculateAntibiotics();
       calculateNormalValues();
@@ -5659,6 +6074,11 @@ function clearAllDrugSets() {
         
         document.getElementById('patient-profile-name').value = '';
 
+        // CRITICAL: Clear LA Toxicity Calculator Memory
+        if (typeof resetLACalculator === 'function') {
+            resetLACalculator();
+        }
+
         calculateAll(); 
     }
 
@@ -5740,15 +6160,7 @@ function clearAllDrugSets() {
       checkForCustomDrugValues();
       antibioticExpanded = new Array(antibiotics.length).fill(false);
     });
-const normalValuesData = [
-      { key: 'preterm', name: 'Preterm Neonate', ageMinMonths: 0, ageMaxMonths: 0, hr: '120-180', rr: '40-70', sbp: '55-75', dbp: '35-45', map: '45-55', hgb: '13.5-20.5', plt: '150-450', glucose: '> 45', uo: '1-2' },
-      { key: 'term', name: 'Term Neonate (<28d)', ageMinMonths: 0, ageMaxMonths: 0.9, hr: '100-180', rr: '30-60', sbp: '65-85', dbp: '45-55', map: '50-60', hgb: '14.0-22.0', plt: '150-450', glucose: '> 60', uo: '1-2' },
-      { key: 'infant', name: 'Infant (1-12m)', ageMinMonths: 1, ageMaxMonths: 12, hr: '100-160', rr: '30-50', sbp: '70-100', dbp: '50-65', map: '60-75', hgb: '10.5-13.5', plt: '200-475', glucose: '> 60', uo: '1-2' },
-      { key: 'toddler', name: 'Toddler (1-2y)', ageMinMonths: 12, ageMaxMonths: 24, hr: '90-150', rr: '24-40', sbp: '80-100', dbp: '55-65', map: '65-75', hgb: '11.0-13.0', plt: '180-450', glucose: '> 60', uo: '1.0' },
-      { key: 'preschool', name: 'Preschool (3-5y)', ageMinMonths: 24, ageMaxMonths: 60, hr: '80-140', rr: '22-34', sbp: '80-110', dbp: '55-75', map: '70-80', hgb: '11.5-14.5', plt: '180-450', glucose: '> 60', uo: '1.0' },
-      { key: 'school', name: 'School-age (6-12y)', ageMinMonths: 60, ageMaxMonths: 144, hr: '70-120', rr: '18-30', sbp: '90-120', dbp: '60-80', map: '75-90', hgb: '11.5-15.5', plt: '150-400', glucose: '> 60', uo: '0.5-1' },
-      { key: 'adolescent', name: 'Adolescent (13+y)', ageMinMonths: 144, ageMaxMonths: 240, hr: '60-100', rr: '12-16', sbp: '110-130', dbp: '65-85', map: '85-100', hgb: '12.0-16.0', plt: '150-400', glucose: '> 70', uo: '0.5' }
-    ];
+ 
 
     function getAgeBracket(ageInMonths, ageInYears) {
         if (ageInMonths === 0 && ageInYears === 0) return null; // No age entered
@@ -6090,28 +6502,25 @@ function generatePrintSheet(onlyFavorites) {
                </div>`;
        }
 
-       // --- DRUG ROWS ---
-       let drugRows = '';
+       // --- DRUG ROWS (Generated as FLEX BLOCKS, not Table) ---
+       let drugItemsHTML = '';
        drugs.forEach(drug => {
            if (onlyFavorites && !drug.isFavorite) return;
            
-           // 1. Check for Custom Values (Asterisk)
            const isCustom = hasCustomValues(drug);
-           const customMark = isCustom ? '<span style="color:#059669; font-weight:900; margin-left:3px; vertical-align: super; font-size: 0.8em;">*</span>' : '';
+           const customMark = isCustom ? '<span class="mark-custom">*</span>' : '';
 
            const dosePerKg = getDoseByRoute(drug, drug.currentRoute);
-           
-           // 2. Check for High Dose / Exceeds Range (Exclamation)
            const rangeMax = parseMaxDoseFromRange(drug.range);
            let highDoseMark = '';
            if (rangeMax && dosePerKg > rangeMax) {
-               highDoseMark = '<span style="color:#dc2626; font-weight:900; margin-left:4px; font-size:1.1em;" title="Exceeds recommended range">!</span>';
+               highDoseMark = '<span class="mark-alert">!</span>';
            }
 
            let totalDose = patient.weight * dosePerKg;
            let limitMsg = '';
-           if (drug.maxDose && totalDose > drug.maxDose) { totalDose = drug.maxDose; limitMsg = '<small style="color:#dc2626;">(Max Limit)</small>'; }
-           if (drug.minDose && totalDose < drug.minDose) { totalDose = drug.minDose; limitMsg = '<small>(Min)</small>'; }
+           if (drug.maxDose && totalDose > drug.maxDose) { totalDose = drug.maxDose; limitMsg = '<span class="limit-msg">(Max)</span>'; }
+           if (drug.minDose && totalDose < drug.minDose) { totalDose = drug.minDose; limitMsg = '<span class="limit-msg">(Min)</span>'; }
 
            const concentration = getConcentration(drug);
            let volStr = '-';
@@ -6124,56 +6533,71 @@ function generatePrintSheet(onlyFavorites) {
 
            let doseDisplay = drug.unit.toLowerCase().includes('joules') ? `<strong>${totalDose.toFixed(0)} J</strong>` : 
                (drug.unit.includes('mcg') && totalDose < 1 ? `<strong>${(totalDose * 1000).toFixed(0)} mcg</strong>` : `<strong>${totalDose.toFixed(2)}</strong> ${drug.unit.includes('mcg')?'mcg':'mg'}`);
+           
            if(drug.unit.toLowerCase().includes('joules')) { volStr = 'Shock'; concStr = '-'; }
-
-           drugRows += `<tr><td><div class="drug-name">${drug.name}${customMark}${highDoseMark}</div><div class="drug-cat">${drug.categoryLabel}</div></td><td>${doseDisplay} ${limitMsg}</td><td>${volStr}</td><td>${concStr}</td><td style="color:#666;">${dosePerKg} ${drug.unit}</td></tr>`;
+           
+           // New Layout: Flexible Div Block
+           drugItemsHTML += `
+           <div class="drug-item">
+             <div class="di-top">
+                <span class="di-name">${drug.name}${customMark}${highDoseMark} <span class="di-cat">${drug.categoryLabel}</span></span>
+                <span class="di-dose">${doseDisplay} ${limitMsg}</span>
+             </div>
+             <div class="di-bottom">
+                <span>Vol: ${volStr}</span>
+                ${concStr !== '-' ? `<span class="di-sep">|</span> <span>Conc: ${concStr}</span>` : ''}
+                <span class="di-sep">|</span> <span>Ref: ${dosePerKg} ${drug.unit}</span>
+             </div>
+           </div>`;
        });
 
-       // --- SHARED CSS (Used for both Preview and Final Print) ---
-       // UPDATED: Compact layout to fit single page
+       // --- SHARED CSS (Base Styles - Readable Preview) ---
+       // This CSS is optimized for the PHONE SCREEN preview (Normal sizes)
        const sharedCSS = `
-           :root { --primary: #059669; --bg-light: #f3f4f6; --border: #d1d5db; --text: #111827; }
-           body { font-family: 'Segoe UI', sans-serif; font-size: 10px; color: #111827; margin: 0; padding: 0; background: white; }
-           .paper { background: white; padding: 15px; max-width: 800px; margin: 0 auto; }
-           /* Tighter Header */
-           .header-banner { border-bottom: 2px solid #059669; padding-bottom: 5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: flex-end; }
-           h1 { margin: 0; font-size: 18px; color: #059669; font-weight: 900; text-transform: uppercase; }
-           .meta { font-size: 9px; color: #555; margin-top: 2px; }
-           .patient-box { text-align: right; }
-           .pt-weight { font-size: 20px; font-weight: 800; line-height: 1; }
-           .pt-details { font-size: 11px; font-weight: 600; color: #333; }
-           /* Tighter Stats Grid */
-           .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-           .stat-box { background: #f3f4f6; padding: 4px 6px; border-radius: 4px; text-align: center; border: 1px solid #e5e7eb; }
-           .stat-label { font-size: 8px; color: #666; text-transform: uppercase; font-weight: 600; }
-           .stat-val { font-size: 12px; font-weight: 800; color: #111; margin: 1px 0; }
-           .stat-sub { font-size: 8px; color: #666; }
-           .text-danger { color: #dc2626 !important; }
-           .text-blue { color: #0284c7 !important; }
-           .print-warning { background: #fff1f2; border-left: 3px solid #dc2626; color: #991b1b; padding: 6px; margin-bottom: 10px; font-size: 9px; border-radius: 4px; }
-           /* Tighter Cards */
-           .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-           .card { border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden; page-break-inside: avoid; }
-           .card-head { background: #f3f4f6; padding: 4px 8px; font-weight: 700; font-size: 10px; border-bottom: 1px solid #d1d5db; text-transform: uppercase; }
-           .card-body { padding: 4px 8px; }
-           .row { display: flex; justify-content: space-between; margin-bottom: 2px; border-bottom: 1px dotted #eee; padding-bottom: 1px; }
+           :root { --primary: #059669; --bg-light: #f3f4f6; --border: #e5e7eb; --text: #1f2937; }
+           body { font-family: 'Segoe UI', sans-serif; font-size: 12px; color: var(--text); margin: 0; padding: 0; background: white; line-height: 1.4; }
+           .paper { padding: 20px; max-width: 800px; margin: 0 auto; background: white; }
+           
+           /* Header */
+           .header-banner { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end; }
+           h1 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 800; text-transform: uppercase; }
+           .meta { font-size: 10px; color: #666; }
+           .pt-weight { font-size: 24px; font-weight: 800; line-height: 1; }
+           .pt-details { font-size: 12px; font-weight: 600; color: #333; }
+
+           /* Stats & Cards */
+           .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+           .stat-box { background: var(--bg-light); padding: 8px; border-radius: 6px; text-align: center; border: 1px solid var(--border); }
+           .stat-label { font-size: 9px; color: #666; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+           .stat-val { font-size: 14px; font-weight: 800; color: #111; margin: 2px 0; }
+           .stat-sub { font-size: 10px; color: #666; }
+           
+           .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+           .card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+           .card-head { background: var(--bg-light); padding: 6px 10px; font-weight: 700; font-size: 11px; border-bottom: 1px solid var(--border); text-transform: uppercase; color: #444; }
+           .card-body { padding: 8px 10px; }
+           .row { display: flex; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px dotted #eee; padding-bottom: 2px; }
            .row:last-child { border-bottom: none; }
-           .lbl { color: #555; } .val { font-weight: 700; }
-           /* Tighter Table */
-           table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px; }
-           thead { background-color: #059669; color: white; }
-           th { text-align: left; padding: 4px 6px; font-weight: 600; text-transform: uppercase; font-size: 9px; }
-           td { padding: 3px 6px; border-bottom: 1px solid #eee; vertical-align: middle; }
-           tr:nth-child(even) { background-color: #f9fafb; }
-           .drug-name { font-weight: 700; font-size: 11px; display: block; }
-           .drug-cat { font-size: 8px; color: #666; text-transform: uppercase; }
-           .footer { margin-top: 15px; padding-top: 5px; border-top: 1px solid #d1d5db; text-align: center; color: #666; font-size: 8px; }
-           /* Force Print Colors */
-           @media print {
-                body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                .card, table, th, td, .header-banner { border-color: #000 !important; }
-                h1, .val, .drug-name { color: #000 !important; }
-           }
+           .lbl { color: #555; font-weight: 500; } .val { font-weight: 700; color: #000; }
+
+           /* Drug List Items */
+           .drug-container { margin-top: 10px; }
+           .drug-item { padding: 8px 0; border-bottom: 1px solid #eee; page-break-inside: avoid; }
+           .di-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+           .di-name { font-weight: 700; font-size: 13px; color: #000; }
+           .di-cat { font-size: 9px; color: #fff; background: #9ca3af; padding: 1px 4px; border-radius: 3px; margin-left: 4px; vertical-align: middle; font-weight: 600; }
+           .di-dose { font-weight: 800; color: var(--primary); font-size: 13px; }
+           .di-bottom { font-size: 11px; color: #555; }
+           .di-sep { color: #ddd; margin: 0 4px; }
+           
+           .mark-custom { color: var(--primary); font-weight: 900; }
+           .mark-alert { color: #dc2626; font-weight: 900; }
+           .limit-msg { font-size: 0.8em; color: #dc2626; }
+           .print-warning { background: #fff1f2; border-left: 4px solid #dc2626; color: #991b1b; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 11px; }
+           .text-danger { color: #dc2626 !important; }
+           
+           /* Helpers */
+           .footer { margin-top: 30px; padding-top: 10px; border-top: 1px solid var(--border); text-align: center; color: #888; font-size: 10px; }
        `;
 
        const reportBody = `
@@ -6198,25 +6622,52 @@ function generatePrintSheet(onlyFavorites) {
                    <div class="row"><span class="lbl">NPO Deficit (~6h)</span> <span class="val">${(fluidMaint * 6).toFixed(0)} mL</span></div>
                </div></div>
            </div>
-           <table><thead><tr><th width="35%">Drug</th><th width="20%">Dose</th><th width="15%">Vol</th><th width="15%">Conc</th><th width="15%">Ref</th></tr></thead><tbody>${drugRows}</tbody></table>
+           <div class="drug-container">
+               ${drugItemsHTML}
+           </div>
            <div class="footer">
-               <div style="margin-bottom:5px; font-size:9px; color:#555; border-bottom:1px solid #eee; padding-bottom:5px;">
+               <div style="margin-bottom:5px; border-bottom:1px solid #eee; padding-bottom:5px;">
                    <span style="margin-right:15px;"><strong style="color:#059669;">*</strong> Custom Value</span> 
                    <span><strong style="color:#dc2626;">!</strong> Exceeds Range</span>
                </div>
-               <strong>Disclaimer:</strong> Advisory Aid Only: This tool is intended to supplement, not replace, professional clinical judgment. All calculations must be independently verified against standard medical literature and hospital protocols before administration. The user assumes full responsibility for patient care.
+               <strong>Disclaimer:</strong> Advisory Aid Only: Supplement to clinical judgment. Verify all calculations.
            </div>
        `;
 
-       // --- LOGIC: PDF GENERATION & OPEN (Direct View) ---
-       // Uses local html2pdf library to generate Base64 and send to Android
+       // --- LOGIC: PDF GENERATION ---
        window.executeMobilePrint = function() {
-           // 1. Create a temporary container to hold the clean HTML
+           // 1. Create a temporary container
            const element = document.createElement('div');
            
-           // Force white background and proper padding for the PDF
-           // We override specific styles to ensure it looks like a document, not a web page
-           const pdfCSS = sharedCSS + " .paper { padding: 20px !important; width: 100% !important; max-width: none !important; box-shadow: none !important; } body { background: #fff; }";
+           // 2. DEFINE PDF-SPECIFIC CSS (2 Columns + Compact Fonts)
+           // This is injected ONLY for the PDF render, keeping the preview normal.
+           const pdfCSS = sharedCSS + `
+               body { font-size: 9px; }
+               .paper { padding: 15px !important; width: 100% !important; max-width: none !important; box-shadow: none !important; }
+               
+               h1 { font-size: 16px; }
+               .pt-weight { font-size: 18px; }
+               .pt-details { font-size: 10px; }
+               
+               .stat-val { font-size: 11px; }
+               .stat-label { font-size: 7px; }
+               
+               .grid-2 { gap: 8px; margin-bottom: 10px; }
+               .card { border-radius: 4px; }
+               .card-head { padding: 3px 6px; font-size: 9px; }
+               .card-body { padding: 4px 6px; }
+               .row { margin-bottom: 1px; padding-bottom: 1px; }
+               
+               /* --- 2 COLUMN MAGIC --- */
+               .drug-container { column-count: 2; column-gap: 15px; }
+               .drug-item { padding: 4px 0; border-bottom: 1px dotted #ccc; break-inside: avoid; }
+               .di-name { font-size: 10px; }
+               .di-dose { font-size: 10px; }
+               .di-bottom { font-size: 8px; color: #444; }
+               .di-cat { font-size: 7px; padding: 0 3px; }
+               
+               .footer { margin-top: 15px; font-size: 7px; }
+           `;
            
            element.innerHTML = `<style>${pdfCSS}</style><div class="paper">${reportBody}</div>`;
 
@@ -6230,11 +6681,11 @@ function generatePrintSheet(onlyFavorites) {
 
            // 3. Configure PDF options
            const opt = {
-               margin:       0.3,
+               margin:       0.15, // Very tight margins (approx 4mm)
                filename:     'patient_report.pdf',
                image:        { type: 'jpeg', quality: 0.98 },
                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-               jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+               jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' } // A4 is taller than Letter
            };
 
            // 4. Generate and Send to Android

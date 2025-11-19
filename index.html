@@ -6522,11 +6522,21 @@ function generatePrintSheet(onlyFavorites) {
            if (drug.maxDose && totalDose > drug.maxDose) { totalDose = drug.maxDose; limitMsg = '<span class="limit-msg">(Max)</span>'; }
            if (drug.minDose && totalDose < drug.minDose) { totalDose = drug.minDose; limitMsg = '<span class="limit-msg">(Min)</span>'; }
 
-           const concentration = getConcentration(drug);
+           let concentration = getConcentration(drug);
            let volStr = '-';
            let concStr = '-';
            if ((drug.currentRoute === 'IV' || drug.currentRoute === 'IM') && concentration) {
                let volume = totalDose / concentration;
+
+               // Sync Dilution Logic with Main Calculator
+               if (volume < 1 && dilutionTiers[drug.name]){
+                  const newConc = dilutionTiers[drug.name].find(conc => (totalDose / conc) >= 1);
+                  if (newConc){ 
+                      volume = totalDose / newConc; 
+                      concentration = newConc; 
+                  }
+               }
+
                volStr = `<strong>${volume.toFixed(2)} mL</strong>`;
                concStr = `${concentration} ${drug.concentrationUnit}`;
            }

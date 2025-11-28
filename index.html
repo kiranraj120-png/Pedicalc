@@ -3940,14 +3940,104 @@
     ];
 
     const normalValuesData = [
-      { key: 'preterm', name: 'Preterm Neonate', ageMinMonths: 0, ageMaxMonths: 0, hr: '120-180', rr: '40-70', sbp: '55-75', dbp: '35-45', map: '45-55', hgb: '13.5-20.5', plt: '150-450', glucose: '< 45', uo: '1-2' },
-      { key: 'term', name: 'Term Neonate (<28d)', ageMinMonths: 0, ageMaxMonths: 0.9, hr: '100-180', rr: '30-60', sbp: '65-85', dbp: '45-55', map: '50-60', hgb: '14.0-22.0', plt: '150-450', glucose: '< 60', uo: '1-2' },
-      { key: 'infant', name: 'Infant (1-12m)', ageMinMonths: 1, ageMaxMonths: 12, hr: '100-160', rr: '30-50', sbp: '70-100', dbp: '50-65', map: '60-75', hgb: '10.5-13.5', plt: '200-475', glucose: '< 60', uo: '1-2' },
-      { key: 'toddler', name: 'Toddler (1-2y)', ageMinMonths: 12, ageMaxMonths: 24, hr: '90-150', rr: '24-40', sbp: '80-100', dbp: '55-65', map: '65-75', hgb: '11.0-13.0', plt: '180-450', glucose: '< 60', uo: '1.0' },
-      { key: 'preschool', name: 'Preschool (3-5y)', ageMinMonths: 24, ageMaxMonths: 60, hr: '80-140', rr: '22-34', sbp: '80-110', dbp: '55-75', map: '70-80', hgb: '11.5-14.5', plt: '180-450', glucose: '< 60', uo: '1.0' },
-      { key: 'school', name: 'School-age (6-12y)', ageMinMonths: 60, ageMaxMonths: 144, hr: '70-120', rr: '18-30', sbp: '90-120', dbp: '60-80', map: '75-90', hgb: '11.5-15.5', plt: '150-400', glucose: '< 60', uo: '0.5-1' },
-      { key: 'adolescent', name: 'Adolescent (13+y)', ageMinMonths: 144, ageMaxMonths: 240, hr: '60-100', rr: '12-16', sbp: '110-130', dbp: '65-85', map: '85-100', hgb: '12.0-16.0', plt: '150-400', glucose: '< 70', uo: '0.5' }
-    ];
+  { 
+    key: 'preterm', 
+    name: 'Preterm Neonate (<1kg)', 
+    ageMinMonths: 0, 
+    ageMaxMonths: 0, 
+    hr: '100-205', 
+    rr: '30-53', 
+    sbp: '39-59', 
+    dbp: '16-36', 
+    map: '28-42', 
+    hgb: '13.5-20.5', plt: '150-450', glucose: '< 45', uo: '1-2' 
+  },
+  { 
+    key: 'term', 
+    name: 'Term Neonate', 
+    // FIXED: Changed 0.9 to 1 to close the gap with Infant group
+    ageMinMonths: 0, 
+    ageMaxMonths: 1, 
+    hr: '100-205', 
+    rr: '30-53', 
+    sbp: '67-84', 
+    dbp: '35-53', 
+    map: '45-60', 
+    hgb: '14.0-22.0', plt: '150-450', glucose: '< 60', uo: '1-2' 
+  },
+  { 
+    key: 'infant', 
+    name: 'Infant (1-12m)', 
+    ageMinMonths: 1, 
+    ageMaxMonths: 12, 
+    hr: '100-180', 
+    rr: '30-53', 
+    sbp: '72-104', 
+    dbp: '37-56', 
+    map: '50-62', 
+    hgb: '10.5-13.5', plt: '200-475', glucose: '< 60', uo: '1-2' 
+  },
+  { 
+    key: 'toddler', 
+    name: 'Toddler (1-2y)', 
+    ageMinMonths: 12, 
+    ageMaxMonths: 36, 
+    hr: '98-140', 
+    rr: '22-37', 
+    sbp: '86-106', 
+    dbp: '42-63', 
+    map: '49-62', 
+    hgb: '11.0-13.0', plt: '180-450', glucose: '< 60', uo: '1.0' 
+  },
+  { 
+    key: 'preschool', 
+    name: 'Preschool (3-5y)', 
+    ageMinMonths: 36, 
+    ageMaxMonths: 72, 
+    hr: '80-120', 
+    rr: '20-37', 
+    sbp: '89-112', 
+    dbp: '46-72', 
+    map: '58-69', 
+    hgb: '11.5-14.5', plt: '180-450', glucose: '< 60', uo: '1.0' 
+  },
+  { 
+    key: 'school_6_7', 
+    name: 'School-age (6-7y)', 
+    ageMinMonths: 72, 
+    ageMaxMonths: 96, 
+    hr: '75-118', 
+    rr: '18-25', 
+    sbp: '97-115', 
+    dbp: '57-76', 
+    map: '66-72', 
+    hgb: '11.5-15.5', plt: '150-400', glucose: '< 60', uo: '0.5-1' 
+  },
+  { 
+    key: 'school_10_12', 
+    name: 'School-age (10-12y)', 
+    ageMinMonths: 120, 
+    ageMaxMonths: 156, 
+    hr: '75-118', 
+    rr: '18-25', 
+    sbp: '102-120', 
+    dbp: '61-80', 
+    map: '71-79', 
+    hgb: '11.5-15.5', plt: '150-400', glucose: '< 60', uo: '0.5-1' 
+  },
+  { 
+    key: 'adolescent', 
+    name: 'Adolescent (12-15y)', 
+    ageMinMonths: 156, 
+    ageMaxMonths: 240, 
+    hr: '60-100', 
+    rr: '12-20', 
+    sbp: '110-131', 
+    dbp: '64-83', 
+    map: '73-84', 
+    hgb: '12.0-16.0', plt: '150-400', glucose: '< 70', uo: '0.5' 
+  }
+];
 
     const infusionDrugs = [
       {

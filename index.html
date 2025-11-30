@@ -6644,6 +6644,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 // 2. The function triggered by the button click
 async function installPWA() {
+  // Check if the user is on Android
+  const ua = navigator.userAgent.toLowerCase();
+  const isAndroid = ua.indexOf("android") > -1;
+
+  if (isAndroid) {
+      // Redirect to Play Store
+      window.open('https://play.google.com/store/apps/details?id=com.kiran.pedicalc', '_blank');
+      return;
+  }
+
+  // Standard PWA install for Desktop/Other
   if (!deferredPrompt) {
       return;
   }

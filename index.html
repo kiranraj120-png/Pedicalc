@@ -2757,24 +2757,37 @@
         <section class="section">
             <h2><i class="fas fa-calculator"></i> Toxicity Meter (Real-time)</h2>
             <div class="la-calc-container">
-                <div class="input-group" style="margin-top:0; align-items: flex-end;">
-                    <div class="input-field" style="flex: 3;">
-                        <label><i class="fas fa-vial"></i> Select Agent</label>
-                        <select id="la-calc-agent" onchange="calculateLAToxicity()" style="width: 100%; padding: 10px; border-radius: var(--radius-input); border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); height: 42px;">
-                            <option value="ropivacaine-0.2">Ropivacaine 0.2%</option>
-                            <option value="ropivacaine-0.5">Ropivacaine 0.5%</option>
-                            <option value="ropivacaine-0.75">Ropivacaine 0.75%</option>
-                            <option value="bupivacaine-0.25">Bupivacaine 0.25%</option>
-                            <option value="bupivacaine-0.5">Bupivacaine 0.5%</option>
-                            <option value="lidocaine-plain-1">Lidocaine 1% (Plain)</option>
-                            <option value="lidocaine-plain-2">Lidocaine 2% (Plain)</option>
-                            <option value="lidocaine-epi-1">Lido 1% + Adr</option>
-                            <option value="lidocaine-epi-2">Lido 2% + Adr</option>
-                            <option value="levobupivacaine-0.25">Levobupivacaine 0.25%</option>
-                            <option value="levobupivacaine-0.5">Levobupivacaine 0.5%</option>
+                <div class="input-group" style="margin-top:0; align-items: flex-end; gap: 10px;">
+                    
+                    <div class="input-field" style="flex: 2; min-width: 160px;">
+                        <label><i class="fas fa-vial"></i> Agent</label>
+                        <select id="la-calc-agent" onchange="toggleLAConcInputs(); calculateLAToxicity()" style="width: 100%; padding: 10px; border-radius: var(--radius-input); border: 2px solid var(--border-color); background: var(--bg-secondary); color: var(--text-primary); height: 42px;">
+                            <optgroup label="Custom Concentration">
+                                <option value="ropivacaine-custom">Ropivacaine</option>
+                                <option value="bupivacaine-custom">Bupivacaine (Plain)</option>
+                                <option value="levobupivacaine-custom">Levobupivacaine</option>
+                                <option value="lidocaine-custom">Lidocaine (Plain)</option>
+                            </optgroup>
+                            <optgroup label="Fixed Combinations">
+                                <option value="lidocaine-epi-1">Lido 1% + Adr</option>
+                                <option value="lidocaine-epi-2">Lido 2% + Adr</option>
+                                <option value="bupivacaine-epi-0.25">Bupi 0.25% + Adr</option>
+                            </optgroup>
                         </select>
                     </div>
-                    <div class="input-field" style="flex: 2; min-width: 120px;">
+
+                    <div class="input-field" id="la-conc-wrapper" style="flex: 2; min-width: 140px;">
+                        <label>Dilution</label>
+                        <div style="display: flex; gap: 0;">
+                            <input type="number" id="la-calc-conc" placeholder="0.2" step="0.05" oninput="calculateLAToxicity()" style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: none; height: 42px;">
+                            <select id="la-calc-unit" onchange="calculateLAToxicity()" style="width: 90px; padding: 0 5px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-top-right-radius: var(--radius-input); border-bottom-right-radius: var(--radius-input); height: 42px; font-size: 0.9em;">
+                                <option value="%">%</option>
+                                <option value="mg/mL">mg/mL</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-field" style="flex: 2; min-width: 140px;">
                         <label><i class="fas fa-syringe"></i> Volume (mL)</label>
                         <div class="stepper-group">
                             <button class="stepper-btn" onclick="adjustLAVolume(-1)">-</button>
@@ -4148,17 +4161,16 @@
 
   // Data for Real-Time Calculator (ID mapping)
   const laCalcData = {
-      'lidocaine-plain-1': { name: 'Lidocaine 1%', mgPerMl: 10, maxMgPerKg: 4.5 },
-      'lidocaine-plain-2': { name: 'Lidocaine 2%', mgPerMl: 20, maxMgPerKg: 4.5 },
-      'lidocaine-epi-1':   { name: 'Lido 1% + Adr', mgPerMl: 10, maxMgPerKg: 7.0 },
-      'lidocaine-epi-2':   { name: 'Lido 2% + Adr', mgPerMl: 20, maxMgPerKg: 7.0 },
-      'bupivacaine-0.25':  { name: 'Bupivacaine 0.25%', mgPerMl: 2.5, maxMgPerKg: 2.0 },
-      'bupivacaine-0.5':   { name: 'Bupivacaine 0.5%', mgPerMl: 5.0, maxMgPerKg: 2.0 },
-      'ropivacaine-0.2':   { name: 'Ropivacaine 0.2%', mgPerMl: 2.0, maxMgPerKg: 3.0 },
-      'ropivacaine-0.5':   { name: 'Ropivacaine 0.5%', mgPerMl: 5.0, maxMgPerKg: 3.0 },
-      'ropivacaine-0.75':  { name: 'Ropivacaine 0.75%', mgPerMl: 7.5, maxMgPerKg: 3.0 },
-      'levobupivacaine-0.25': { name: 'Levo-Bupiv 0.25%', mgPerMl: 2.5, maxMgPerKg: 2.0 },
-      'levobupivacaine-0.5':  { name: 'Levo-Bupiv 0.5%', mgPerMl: 5.0, maxMgPerKg: 2.0 }
+      // Custom Agents
+      'ropivacaine-custom':     { name: 'Ropivacaine',         type: 'custom', maxMgPerKg: 3.0, defaultConc: 0.2, defaultUnit: '%' },
+      'bupivacaine-custom':     { name: 'Bupivacaine (Plain)', type: 'custom', maxMgPerKg: 2.0, defaultConc: 0.25, defaultUnit: '%' },
+      'levobupivacaine-custom': { name: 'Levobupivacaine',     type: 'custom', maxMgPerKg: 2.0, defaultConc: 0.25, defaultUnit: '%' },
+      'lidocaine-custom':       { name: 'Lidocaine (Plain)',   type: 'custom', maxMgPerKg: 4.5, defaultConc: 1.0, defaultUnit: '%' },
+      
+      // Fixed Combinations (Adrenaline)
+      'lidocaine-epi-1':        { name: 'Lidocaine 1% + Adr',  type: 'fixed', maxMgPerKg: 7.0, mgPerMl: 10 },
+      'lidocaine-epi-2':        { name: 'Lidocaine 2% + Adr',  type: 'fixed', maxMgPerKg: 7.0, mgPerMl: 20 },
+      'bupivacaine-epi-0.25':   { name: 'Bupi 0.25% + Adr',    type: 'fixed', maxMgPerKg: 3.0, mgPerMl: 2.5 }
   };
 
   let laDosesGiven = [];
@@ -4169,8 +4181,27 @@
       currentVal += amount;
       if (currentVal < 0) currentVal = 0;
       input.value = currentVal;
-      // Trigger update immediately
       calculateLAToxicity();
+  }
+  
+  function toggleLAConcInputs() {
+      const selectEl = document.getElementById('la-calc-agent');
+      const wrapper = document.getElementById('la-conc-wrapper');
+      const concInput = document.getElementById('la-calc-conc');
+      const unitSelect = document.getElementById('la-calc-unit');
+      
+      const drugKey = selectEl.value;
+      const drugData = laCalcData[drugKey];
+      
+      if (drugData && drugData.type === 'custom') {
+          wrapper.style.display = 'block';
+          if (concInput.value === '') {
+              concInput.value = drugData.defaultConc;
+              unitSelect.value = drugData.defaultUnit;
+          }
+      } else {
+          wrapper.style.display = 'none';
+      }
   }
 
   function addLADose() {
@@ -4183,30 +4214,54 @@
       const selectEl = document.getElementById('la-calc-agent');
       const volInput = document.getElementById('la-calc-volume');
       const volume = parseFloat(volInput.value);
-
+      
       if (!volume || volume <= 0) return;
 
       const drugKey = selectEl.value;
       const drugData = laCalcData[drugKey];
+      
+      let mgPerMl = 0;
+      let displayName = drugData.name;
 
-      // Calculate metrics for this specific dose
-      const mgGiven = volume * drugData.mgPerMl;
+      // Determine Concentration
+      if (drugData.type === 'custom') {
+          const concVal = parseFloat(document.getElementById('la-calc-conc').value);
+          const unit = document.getElementById('la-calc-unit').value;
+          
+          if (!concVal || concVal <= 0) {
+              alert("Please enter a valid concentration.");
+              return;
+          }
+          
+          if (unit === '%') {
+              mgPerMl = concVal * 10;
+              displayName = `${drugData.name} ${concVal}%`;
+          } else {
+              mgPerMl = concVal;
+              displayName = `${drugData.name} ${concVal} mg/mL`;
+          }
+      } else {
+          mgPerMl = drugData.mgPerMl;
+      }
+
+      // Calculate metrics
+      const mgGiven = volume * mgPerMl;
       const maxMgForAgent = patient.weight * drugData.maxMgPerKg;
       const toxicityFraction = (mgGiven / maxMgForAgent) * 100;
 
       const doseEntry = {
           id: Date.now(),
-          name: drugData.name,
+          name: displayName,
           volume: volume,
           mg: mgGiven,
           toxicityPercent: toxicityFraction
       };
 
       laDosesGiven.push(doseEntry);
-      volInput.value = ''; // Reset input
+      volInput.value = ''; // Reset volume input
       
-      renderLADoses(); // Render list
-      calculateLAToxicity(); // Render bar (now 0 input + list)
+      renderLADoses(); 
+      calculateLAToxicity(); 
   }
 
   function removeLADose(id) {
@@ -4250,15 +4305,9 @@
       const weight = patient.weight;
       
       const volInput = document.getElementById('la-calc-volume');
-      // Sanitize: ensure non-negative
       if (volInput.value && parseFloat(volInput.value) < 0) volInput.value = 0;
 
-      const progressBar = document.getElementById('la-progress-bar');
-      const progressPercentEl = document.getElementById('la-progress-percent');
-      const statusText = document.getElementById('la-status-text');
-      const cumulativeText = document.getElementById('la-cumulative-toxicity');
-      
-      // If no weight, ensure bar is reset to confirmed doses only (or 0)
+      // If no weight, ensure bar is reset to confirmed doses only
       if (!weight || weight <= 0) {
            const confirmedToxicity = laDosesGiven.reduce((sum, dose) => sum + dose.toxicityPercent, 0);
            updateLAVisuals(confirmedToxicity);
@@ -4272,11 +4321,25 @@
       let currentInputToxicity = 0;
       const selectEl = document.getElementById('la-calc-agent');
       const vol = parseFloat(volInput.value);
+      const drugKey = selectEl.value;
+      
+      if (vol > 0 && drugKey && laCalcData[drugKey]) {
+          const drugData = laCalcData[drugKey];
+          let mgPerMl = 0;
+          
+          if (drugData.type === 'custom') {
+              const concVal = parseFloat(document.getElementById('la-calc-conc').value);
+              const unit = document.getElementById('la-calc-unit').value;
+              if (concVal > 0) {
+                  mgPerMl = (unit === '%') ? concVal * 10 : concVal;
+              }
+          } else {
+              mgPerMl = drugData.mgPerMl;
+          }
 
-      if (vol > 0 && selectEl.value) {
-          const drugData = laCalcData[selectEl.value];
-          const mg = vol * drugData.mgPerMl;
+          const mg = vol * mgPerMl;
           const maxMg = weight * drugData.maxMgPerKg;
+          
           if (maxMg > 0) {
               currentInputToxicity = (mg / maxMg) * 100;
           }
@@ -6469,6 +6532,7 @@ function clearAllDrugSets() {
       loadFavorites();
       loadLastUsedDrugValues();
       calculateAll();
+      toggleLAConcInputs(); // Initialize LA inputs visibility
       loadPatientProfiles();
       loadDrugSets();
       checkForCustomDrugValues();

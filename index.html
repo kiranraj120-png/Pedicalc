@@ -2769,6 +2769,7 @@
                                 <option value="lidocaine-custom">Lidocaine (Plain)</option>
                             </optgroup>
                             <optgroup label="Fixed Combinations">
+                                <option value="lidocaine-epi-0.5">Lido 0.5% + Adr</option>
                                 <option value="lidocaine-epi-1">Lido 1% + Adr</option>
                                 <option value="lidocaine-epi-2">Lido 2% + Adr</option>
                                 <option value="bupivacaine-epi-0.25">Bupi 0.25% + Adr</option>
@@ -3545,7 +3546,7 @@
       notes: 'For hyperkalemia (with ECG changes) or symptomatic hypocalcemia.'
     },
  {
-      name: 'Sodium Bicarbonate (8.4%)',
+      name: 'Sodium Bicarbonate',
       category: 'emergency',
       categoryLabel: 'Alkalinizer',
       defaultDose: 1,
@@ -3557,6 +3558,7 @@
       caution: 'Ensure adequate ventilation to blow off CO2. Can cause hypernatremia/hyperosmolality. Incompatible with catecholamines & calcium.',
       routes: ['IV'],
       defaultRoute: 'IV',
+      description: '<b>Concentrations:</b> 8.4% = 1 mEq/mL; 7.5% ≈ 0.9 mEq/mL.',
       notes: 'Emergency Bolus (no deficit): 1-2 mEq/kg. Calculated Dose (with deficit): 0.3 x Wt(kg) x Base Deficit.',
       specialHandling: 'bicarbonate'
     },
@@ -4148,6 +4150,16 @@
       currentDilutionVol: 50,
       caution: 'Requires continuous cardiac monitoring. Causes significant tachycardia and hypokalemia. Use with caution in cardiac disease.',
       notes: 'Standard prep: 5 mg in 50 mL (100 mcg/mL). For severe status asthmaticus unresponsive to nebulizers or for hyperkalemia.'
+    },
+    {
+      name: 'Propofol Infusion', category: 'infusion', categoryLabel: 'TIVA / Sedation', isExpanded: false,
+      loadingDose: { dose: 1, unit: 'mg/kg', note: 'Induction: 1-2.5 mg/kg. Titrate to effect.' },
+      infusionDoseRange: { min: 100, max: 300, unit: 'mcg/kg/min' },
+      defaultDose: 150, currentDose: 150,
+      defaultDilutionAmount: 500, defaultDilutionUnit: 'mg', defaultDilutionVol: 50,
+      currentDilutionAmount: 500, currentDilutionUnit: 'mg', currentDilutionVol: 50,
+      caution: 'Strict asepsis required. Monitor for respiratory depression and hypotension. Pain on injection.',
+      notes: 'Standard 1% Propofol = 10 mg/mL (500mg in 50mL). Usually administered undiluted (Neat).'
     }
 
   ];
@@ -4168,6 +4180,7 @@
       'lidocaine-custom':       { name: 'Lidocaine (Plain)',   type: 'custom', maxMgPerKg: 4.5, defaultConc: 1.0, defaultUnit: '%' },
       
       // Fixed Combinations (Adrenaline)
+      'lidocaine-epi-0.5':      { name: 'Lidocaine 0.5% + Adr', type: 'fixed', maxMgPerKg: 7.0, mgPerMl: 5 },
       'lidocaine-epi-1':        { name: 'Lidocaine 1% + Adr',  type: 'fixed', maxMgPerKg: 7.0, mgPerMl: 10 },
       'lidocaine-epi-2':        { name: 'Lidocaine 2% + Adr',  type: 'fixed', maxMgPerKg: 7.0, mgPerMl: 20 },
       'bupivacaine-epi-0.25':   { name: 'Bupi 0.25% + Adr',    type: 'fixed', maxMgPerKg: 3.0, mgPerMl: 2.5 }
@@ -5497,6 +5510,30 @@
 
       calculateInfusions();
     }
+
+    window.toggleVasoUnit = function(index) {
+      const infusion = infusionDrugs[index];
+      if (!infusion) return;
+
+      if (infusion.name.includes('Vasopressin')) {
+          if (infusion.infusionDoseRange.unit === 'units/kg/hr') {
+              infusion.infusionDoseRange.unit = 'units/kg/min';
+              infusion.infusionDoseRange.min = 0.0002; infusion.infusionDoseRange.max = 0.008; infusion.currentDose = 0.0002;
+          } else {
+              infusion.infusionDoseRange.unit = 'units/kg/hr';
+              infusion.infusionDoseRange.min = 0.01; infusion.infusionDoseRange.max = 0.48; infusion.currentDose = 0.01;
+          }
+      } else if (infusion.name.includes('Propofol')) {
+          if (infusion.infusionDoseRange.unit === 'mcg/kg/min') {
+              infusion.infusionDoseRange.unit = 'mg/kg/hr';
+              infusion.infusionDoseRange.min = 6; infusion.infusionDoseRange.max = 12; infusion.currentDose = 9;
+          } else {
+              infusion.infusionDoseRange.unit = 'mcg/kg/min';
+              infusion.infusionDoseRange.min = 100; infusion.infusionDoseRange.max = 300; infusion.currentDose = 150;
+          }
+      }
+      calculateInfusions();
+    };
     /**
      * Updates an infusion's custom values based on input fields.
      */
@@ -5559,6 +5596,11 @@
         } else {
           totalDosePerHr = infusion.currentDose * weight;
         }
+        
+        // Correct numerator for Propofol when using mg/kg/hr (convert mg to mcg to match concentration denominator)
+        if (infusion.infusionDoseRange.unit.startsWith('mg') && infusion.currentDilutionUnit === 'mg') {
+             totalDosePerHr = totalDosePerHr * 1000;
+        }
 
         let rate = totalDosePerHr / concentrationInMcgOrUnits;
         if (isNaN(rate) || !isFinite(rate) || rate < 0) {
@@ -5576,6 +5618,15 @@
         let loadingDoseHtml = '';
         if (infusion.loadingDose && infusion.loadingDose.dose > 0) {
           loadingDoseHtml = `<div class="infusion-detail-row"><div class="infusion-label">Loading Dose:</div><div class="infusion-value">${infusion.loadingDose.dose} ${infusion.loadingDose.unit}</div></div><div class="infusion-note">${infusion.loadingDose.note}</div>`;
+        }
+
+        let vasoToggleHtml = '';
+        if (infusion.name.includes('Vasopressin')) {
+             const isMin = infusion.infusionDoseRange.unit.includes('min');
+             vasoToggleHtml = `<div style="text-align:center; margin-bottom: 5px;"><button class="saved-item-btn" style="width:100%;" onclick="event.stopPropagation(); toggleVasoUnit(${index})"><i class="fas fa-exchange-alt"></i> Use ${isMin ? 'units/kg/hr' : 'units/kg/min'}</button></div>`;
+        } else if (infusion.name.includes('Propofol')) {
+             const isMcg = infusion.infusionDoseRange.unit.includes('mcg');
+             vasoToggleHtml = `<div style="text-align:center; margin-bottom: 5px;"><button class="saved-item-btn" style="width:100%;" onclick="event.stopPropagation(); toggleVasoUnit(${index})"><i class="fas fa-exchange-alt"></i> Switch to ${isMcg ? 'mg/kg/hr' : 'mcg/kg/min'}</button></div>`;
         }
 
         const isExpandedClass = (allInfusionsExpanded || infusion.isExpanded) ? 'expanded' : '';
@@ -5604,12 +5655,13 @@
                   <div class="infusion-label">Dose Range:</div>
                   <div class="infusion-value">${infusion.infusionDoseRange.min}-${infusion.infusionDoseRange.max} ${infusion.infusionDoseRange.unit}</div>
                 </div>
+                ${vasoToggleHtml}
                 ${loadingDoseHtml}
 
                 <div class="infusion-edit-pane">
                   <div class="edit-input-field">
                     <label for="infusion-dose-${index}">Dose (${infusion.infusionDoseRange.unit})</label>
-                    <input type="number" id="infusion-dose-${index}" value="${infusion.currentDose}" step="0.01" min="0">
+                    <input type="number" id="infusion-dose-${index}" value="${infusion.currentDose}" step="${infusion.name.includes('Vasopressin') && infusion.infusionDoseRange.unit.includes('min') ? '0.0001' : (infusion.name.includes('Propofol') && infusion.infusionDoseRange.unit.includes('mcg') ? '5' : '0.01')}" min="0">
                   </div>
                   <div class="infusion-dilution-input">
                     <label>Dilution</label>
